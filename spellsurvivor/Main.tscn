@@ -1,3 +1,15 @@
-[gd_scene format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=4 format=3 uid="uid://c8nr5w2kj67dx"]
+
+[ext_resource type="Script" path="res://spellsurvivor/Main.cs" id="1_tk8vx"]
+[ext_resource type="PackedScene" uid="uid://mkn2sovps75c" path="res://spellsurvivor/Player/Player.tscn" id="2_26378"]
+[ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://spellsurvivor/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
 
 [node name="Main" type="Node"]
+script = ExtResource("1_tk8vx")
+
+[node name="BG" type="TextureRect" parent="."]
+offset_right = 256.0
+offset_bottom = 256.0
+texture = ExtResource("2_b1ok3")
+
+[node name="Player" parent="." instance=ExtResource("2_26378")]

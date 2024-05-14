@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://b1rmuwxvcnuj8"]
+
+[ext_resource type="Script" path="res://spellsurvivor/Player/Mouse.cs" id="1_71o0l"]
+[ext_resource type="Script" path="res://spellsurvivor/Player/MouseCollider.cs" id="2_l0o7s"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xghxg"]
+
+[node name="Mouse" type="Node2D"]
+script = ExtResource("1_71o0l")
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+offset_left = -6.0
+offset_top = -1.0
+offset_right = 6.0
+offset_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -1.0
+offset_top = -6.0
+offset_right = 1.0
+offset_bottom = 6.0
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+script = ExtResource("2_l0o7s")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+scale = Vector2(0.2, 0.2)
+shape = SubResource("CircleShape2D_xghxg")
