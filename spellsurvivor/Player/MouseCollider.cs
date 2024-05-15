@@ -1,5 +1,5 @@
 using Godot;
-using System;
+
 namespace spellsurvivor;
 
 public partial class MouseCollider : Area2D

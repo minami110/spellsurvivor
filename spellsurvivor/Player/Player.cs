@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using Godot;
 
@@ -5,72 +6,110 @@ namespace spellsurvivor;
 
 public partial class Player : Area2D, IEntity
 {
-    private Vector2 _screenSize; // Size of the game window.
+    private static readonly StringName InputMoveRight = "move_right";
+    private static readonly StringName InputMoveLeft = "move_left";
+    private static readonly StringName InputMoveUp = "move_up";
+    private static readonly StringName InputMoveDown = "move_down";
+    private static readonly StringName InputPrimary = "primary";
+
+    private Vector2 _screenSize;
 
     [Export]
+    private ProgressBar _healthBar = null!;
+
+    [Export]
+    public float MoveSpeed { get; private set; } = 400;
+
+    [Export(PropertyHint.Range, "0, 100")]
     public float Health { get; private set; } = 100f;
 
-    [Export] 
+    [Export(PropertyHint.Range, "0, 100")]
     public float MaxHealth { get; private set; } = 100f;
 
-    [Export]
-    public float Speed { get; private set; } = 400;
+    public Race Race => Race.Player;
 
-    public override void _Ready()
+    void IEntity.TakeDamage(float amount, IEntity? instigator)
     {
-        _screenSize = GetViewportRect().Size;
-        
-        // Update Health bar
-        var healthBar = GetNode<ProgressBar>("HealthBar");
-        healthBar.MaxValue = MaxHealth;
-        healthBar.Value = Health;
-    }
-    
-    void IEntity.TakeDamage(float damage)
-    {
-        Health -= damage;
+        Health -= amount;
         if (Health <= 0)
         {
             Health = 0;
             // Emit signal to main scene
             throw new NotImplementedException();
         }
-        
+
         // Update Health bar
-        var healthBar = GetNode<ProgressBar>("HealthBar");
-        healthBar.Value = Health;
+        _healthBar.MaxValue = MaxHealth;
+        _healthBar.Value = Health;
+    }
+
+    public override void _Ready()
+    {
+        _screenSize = GetViewportRect().Size;
+
+        // Update Health bar
+        _healthBar.MaxValue = MaxHealth;
+        _healthBar.Value = Health;
     }
 
     public override void _Process(double delta)
     {
+        if (Input.IsActionJustPressed(InputPrimary))
+        {
+            OnPrimaryPressed();
+        }
+        else if (Input.IsActionJustReleased(InputPrimary))
+        {
+            OnPrimaryReleased();
+        }
+
+        ProcessMovement(delta);
+    }
+
+    private void OnPrimaryPressed()
+    {
+        var equipment = GetNodeOrNull<IEquipment>("Equipment");
+        if (equipment is null)
+        {
+            GD.Print("Equipment is missing");
+            return;
+        }
+
+        equipment.PrimaryPress();
+    }
+
+    private void OnPrimaryReleased()
+    {
+    }
+
+    private void ProcessMovement(double delta)
+    {
         var velocity = Vector2.Zero; // The player's movement vector.
 
-        if (Input.IsActionPressed("move_right"))
+        if (Input.IsActionPressed(InputMoveRight))
         {
             velocity.X += 1;
         }
 
-        if (Input.IsActionPressed("move_left"))
+        if (Input.IsActionPressed(InputMoveLeft))
         {
             velocity.X -= 1;
         }
 
-        if (Input.IsActionPressed("move_down"))
+        if (Input.IsActionPressed(InputMoveDown))
         {
             velocity.Y += 1;
         }
 
-        if (Input.IsActionPressed("move_up"))
+        if (Input.IsActionPressed(InputMoveUp))
         {
             velocity.Y -= 1;
         }
 
         if (velocity.Length() > 0)
         {
-            velocity = velocity.Normalized() * Speed;
+            velocity = velocity.Normalized() * MoveSpeed;
             Position += velocity * (float)delta;
         }
     }
-
-
 }
