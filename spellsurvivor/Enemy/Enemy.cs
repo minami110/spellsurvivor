@@ -4,7 +4,7 @@ using Godot;
 
 namespace spellsurvivor;
 
-public partial class Enemy : Area2D, IEntity
+public partial class Enemy : RigidBody2D, IEntity
 {
     [Export(PropertyHint.Range, "0,100,1")]
     public float MaxHealth { get; private set; } = 100f;
@@ -59,6 +59,7 @@ public partial class Enemy : Area2D, IEntity
         // Move to player
         var direction = playerPosition - GlobalPosition;
         direction = direction.Normalized();
-        GlobalPosition += direction * MoveSpeed * (float)delta;
+        var force =  direction * MoveSpeed;
+        ApplyForce(force);
     }
 }

@@ -30,8 +30,8 @@ public partial class Projectile : Area2D
 
     public override void _Ready()
     {
-        var d1 = this.AreaEnteredAsObservable()
-            .Cast<Area2D, IEntity>()
+        var d1 = this.BodyEnteredAsObservable()
+            .Cast<Node2D, IEntity>()
             .Subscribe(this, (entity, state) =>
             {
                 state.ApplyDamageToEntity(entity);
