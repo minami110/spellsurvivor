@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using Godot;
 using R3;
@@ -7,6 +6,7 @@ namespace spellsurvivor;
 
 public partial class Projectile : Area2D
 {
+    private IDisposable? _disposable;
     private float _lifeTimeCounter;
     private Vector2 _velocity;
 
@@ -20,8 +20,6 @@ public partial class Projectile : Area2D
 
     public IEntity Instigator { get; internal set; } = null!;
 
-    private IDisposable? _disposable;
-
     protected override void Dispose(bool disposing)
     {
         _disposable?.Dispose();
@@ -32,10 +30,7 @@ public partial class Projectile : Area2D
     {
         var d1 = this.BodyEnteredAsObservable()
             .Cast<Node2D, IEntity>()
-            .Subscribe(this, (entity, state) =>
-            {
-                state.ApplyDamageToEntity(entity);
-            });
+            .Subscribe(this, (entity, state) => { state.ApplyDamageToEntity(entity); });
 
         _disposable = d1;
 

@@ -1,11 +1,7 @@
 using Godot;
-using System;
-using System.Diagnostics;
 
 public partial class EscapeGUI : Node2D
 {
-    private bool _isShowing = false;
-
     public void OnExitPressed()
     {
         // Exit application
@@ -14,40 +10,39 @@ public partial class EscapeGUI : Node2D
 
     public void OnResumePressed()
     {
-            GD.Print("Resume Game");
-            
-        if (_isShowing)
+        if (!Visible)
         {
-            _isShowing = false;
-            GetTree().Paused = false;
-            Hide();
+            return;
         }
+
+        HideGui();
     }
 
     public override void _Ready()
     {
-        _isShowing = false;
         Hide();
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
+    public override void _Input(InputEvent inputEvent)
     {
-        if (Input.IsActionJustPressed("open_pose"))
+        if (inputEvent.IsActionPressed("open_pose"))
         {
-            if (_isShowing)
+            if (Visible)
             {
-                _isShowing = false;
-                GetTree().Paused = false;
-                Hide();
+                HideGui();
             }
             else
             {
-                _isShowing = true;
                 // Pause Game
                 GetTree().Paused = true;
                 Show();
             }
         }
+    }
+
+    private void HideGui()
+    {
+        Hide();
+        GetTree().Paused = false;
     }
 }

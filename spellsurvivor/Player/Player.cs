@@ -1,12 +1,7 @@
-#nullable enable
-using System;
-using System.Threading;
 using Godot;
 using R3;
 
 namespace spellsurvivor;
-
-
 
 public partial class Player : Area2D, IEntity
 {
@@ -16,26 +11,21 @@ public partial class Player : Area2D, IEntity
     private static readonly StringName InputMoveDown = "move_down";
     private static readonly StringName InputPrimary = "primary";
 
-    private Vector2 _screenSize;
+    private readonly Subject<Unit> _deadSubject = new();
 
     [Export] private ProgressBar _healthBar = null!;
 
+    private Vector2 _screenSize;
+
     [Export] public float MoveSpeed { get; private set; } = 400;
+
+    public Observable<Unit> Dead => _deadSubject;
 
     [Export(PropertyHint.Range, "0, 100")] public float Health { get; private set; } = 100f;
 
     [Export(PropertyHint.Range, "0, 100")] public float MaxHealth { get; private set; } = 100f;
 
     public Race Race => Race.Player;
-
-    public Observable<Unit> Dead => _deadSubject;
-
-    private readonly Subject<Unit> _deadSubject = new();
-
-    public override void _ExitTree()
-    {
-        _deadSubject.Dispose();
-    }
 
     void IEntity.TakeDamage(float amount, IEntity? instigator)
     {
@@ -50,6 +40,11 @@ public partial class Player : Area2D, IEntity
         // Update Health bar
         _healthBar.MaxValue = MaxHealth;
         _healthBar.Value = Health;
+    }
+
+    public override void _ExitTree()
+    {
+        _deadSubject.Dispose();
     }
 
     public override void _Ready()

@@ -50,21 +50,23 @@ rotation = 1.5708
 
 [node name="EscapeGUI" type="Node2D" parent="Player"]
 process_mode = 3
-z_index = 1000
+z_index = 4000
 z_as_relative = false
 script = ExtResource("7_es73p")
 
 [node name="AspectRatioContainer" type="Panel" parent="Player/EscapeGUI"]
+process_mode = 2
 offset_left = -536.0
 offset_top = -304.0
 offset_right = 536.0
-offset_bottom = 296.0
+offset_bottom = 304.0
 
 [node name="ColorRect" type="ColorRect" parent="Player/EscapeGUI/AspectRatioContainer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_stretch_ratio = 3.6
@@ -101,7 +103,8 @@ offset_bottom = 304.0
 color = Color(0, 0, 0, 0.662745)
 
 [node name="DebugGUI" type="Node2D" parent="Player"]
-z_index = 10
+process_mode = 3
+z_index = 4010
 position = Vector2(-528, -296)
 script = ExtResource("4_vfsrx")
 

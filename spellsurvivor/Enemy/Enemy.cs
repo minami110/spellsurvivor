@@ -1,18 +1,17 @@
-#nullable enable
-using System.Collections.Generic;
 using Godot;
 
 namespace spellsurvivor;
 
 public partial class Enemy : RigidBody2D, IEntity
 {
+    [Export(PropertyHint.Range, "0,1000,1")]
+    public float MoveSpeed { get; set; } = 50f;
+
     [Export(PropertyHint.Range, "0,100,1")]
     public float MaxHealth { get; private set; } = 100f;
 
     [Export(PropertyHint.Range, "0,100,1")]
     public float Health { get; private set; } = 100f;
-
-    [Export(PropertyHint.Range, "0,1000,1")] public float MoveSpeed { get;  set; } = 50f;
 
     public Race Race => Race.Slime;
 
@@ -43,7 +42,7 @@ public partial class Enemy : RigidBody2D, IEntity
     {
         var notifier = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
         notifier.ScreenExited += QueueFree;
-            
+
         UpdateHealthBar();
     }
 
@@ -58,11 +57,11 @@ public partial class Enemy : RigidBody2D, IEntity
     public override void _Process(double delta)
     {
         var playerPosition = Main.GetPlayerGlobalPosition();
-        
+
         // Move to player
         var direction = playerPosition - GlobalPosition;
         direction = direction.Normalized();
-        var force =  direction * MoveSpeed;
+        var force = direction * MoveSpeed;
         ApplyForce(force);
     }
 }

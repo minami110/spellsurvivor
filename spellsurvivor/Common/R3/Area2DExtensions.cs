@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Threading;
+﻿using System.Threading;
 using Godot;
 using R3;
 
@@ -7,7 +6,8 @@ namespace spellsurvivor;
 
 public static class Area2DExtensions
 {
-    public static Observable<Area2D> AreaEnteredAsObservable(this Area2D area2D, CancellationToken cancellationToken = default)
+    public static Observable<Area2D> AreaEnteredAsObservable(this Area2D area2D,
+        CancellationToken cancellationToken = default)
     {
         return Observable.FromEvent<Area2D.AreaEnteredEventHandler, Area2D>(
             h => new Area2D.AreaEnteredEventHandler(h),
@@ -16,8 +16,9 @@ public static class Area2DExtensions
             cancellationToken
         );
     }
-    
-    public static Observable<Area2D> AreaExitedAsObservable(this Area2D area2D, CancellationToken cancellationToken = default)
+
+    public static Observable<Area2D> AreaExitedAsObservable(this Area2D area2D,
+        CancellationToken cancellationToken = default)
     {
         return Observable.FromEvent<Area2D.AreaExitedEventHandler, Area2D>(
             h => new Area2D.AreaExitedEventHandler(h),
@@ -26,8 +27,9 @@ public static class Area2DExtensions
             cancellationToken
         );
     }
-    
-    public static Observable<Node2D> BodyEnteredAsObservable(this Area2D area2D, CancellationToken cancellationToken = default)
+
+    public static Observable<Node2D> BodyEnteredAsObservable(this Area2D area2D,
+        CancellationToken cancellationToken = default)
     {
         return Observable.FromEvent<Area2D.BodyEnteredEventHandler, Node2D>(
             h => new Area2D.BodyEnteredEventHandler(h),
@@ -36,8 +38,9 @@ public static class Area2DExtensions
             cancellationToken
         );
     }
-    
-    public static Observable<Node2D> BodyExitedAsObservable(this Area2D area2D, CancellationToken cancellationToken = default)
+
+    public static Observable<Node2D> BodyExitedAsObservable(this Area2D area2D,
+        CancellationToken cancellationToken = default)
     {
         return Observable.FromEvent<Area2D.BodyExitedEventHandler, Node2D>(
             h => new Area2D.BodyExitedEventHandler(h),

@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using Godot;
 
@@ -7,9 +6,9 @@ namespace spellsurvivor;
 public partial class Main : Node
 {
     private static Main? _instance;
-    
+
     private Player _player = null!;
-    
+
     public override void _Ready()
     {
         if (_instance is null)
@@ -20,10 +19,10 @@ public partial class Main : Node
         {
             throw new AggregateException("Main instance already exists");
         }
-        
+
         _player = GetNode<Player>("Player");
     }
-    
+
     public override void _ExitTree()
     {
         if (_instance == this)

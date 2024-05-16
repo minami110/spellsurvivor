@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace spellsurvivor;
+﻿namespace spellsurvivor;
 
 public enum Race
 {
@@ -11,16 +10,14 @@ public enum Race
 public interface IEntity
 {
     public Race Race { get; }
-    
+
     /// <summary>
-    /// 
     /// </summary>
     public float MaxHealth { get; }
-    
+
     /// <summary>
-    /// 
     /// </summary>
     public float Health { get; }
-    
+
     public void TakeDamage(float amount, IEntity? instigator);
 }
