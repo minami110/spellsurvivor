@@ -1,5 +1,7 @@
 #nullable enable
+using System;
 using Godot;
+using R3;
 
 namespace spellsurvivor;
 
@@ -8,23 +10,34 @@ public partial class Projectile : Area2D
     private float _lifeTimeCounter;
     private Vector2 _velocity;
 
-    [Export]
-    public Vector2 Direction { get; set; } = Vector2.Right;
+    [Export] public Vector2 Direction { get; set; } = Vector2.Right;
 
-    [Export]
-    public float InitialSpeed { get; set; } = 50f;
+    [Export] public float InitialSpeed { get; set; } = 50f;
 
-    [Export(PropertyHint.Range, "0, 100")]
-    public float Acceleration { get; set; } = 50f;
+    [Export(PropertyHint.Range, "0, 100")] public float Acceleration { get; set; } = 50f;
 
-    [Export(PropertyHint.Range, "0, 10")]
-    public float LifeTime { get; set; } = 1f;
+    [Export(PropertyHint.Range, "0, 10")] public float LifeTime { get; set; } = 1f;
 
     public IEntity Instigator { get; internal set; } = null!;
 
+    private IDisposable? _disposable;
+
+    protected override void Dispose(bool disposing)
+    {
+        _disposable?.Dispose();
+        base.Dispose(disposing);
+    }
+
     public override void _Ready()
     {
-        AreaEntered += OnAreaEntered;
+        var d1 = this.AreaEnteredAsObservable()
+            .Cast<Area2D, IEntity>()
+            .Subscribe(this, (entity, state) =>
+            {
+                state.ApplyDamageToEntity(entity);
+            });
+
+        _disposable = d1;
 
         _velocity = InitialSpeed * Direction;
     }
@@ -44,13 +57,8 @@ public partial class Projectile : Area2D
         }
     }
 
-    private void OnAreaEntered(Area2D area)
+    private void ApplyDamageToEntity(IEntity entity)
     {
-        if (area is not IEntity entity)
-        {
-            return;
-        }
-
         entity.TakeDamage(50, Instigator);
         KillThis();
     }
