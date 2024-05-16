@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=15 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://spellsurvivor/Main.cs" id="1_tk8vx"]
 [ext_resource type="PackedScene" uid="uid://mkn2sovps75c" path="res://spellsurvivor/Player/Player.tscn" id="2_26378"]
@@ -8,13 +8,28 @@
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://spellsurvivor/Fonts/Verdana.ttf" id="4_pfm2y"]
 [ext_resource type="Script" path="res://spellsurvivor/DebugGUI.cs" id="4_vfsrx"]
 [ext_resource type="Script" path="res://spellsurvivor/PlayerLazyTracker.cs" id="6_ils86"]
-[ext_resource type="Script" path="res://spellsurvivor/EscapeGUI.cs" id="7_es73p"]
+[ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://spellsurvivor/PoseMenu.tscn" id="7_lf4kb"]
+[ext_resource type="Script" path="res://spellsurvivor/ShopMenu.cs" id="8_02jml"]
 
 [sub_resource type="Curve2D" id="Curve2D_dcvq1"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 768, -448, 0, 0, 0, 0, 768, 448, 0, 0, 0, 0, -768, 448, 0, 0, 0, 0, -768, -448, 0, 0, 0, 0, 768, -448)
 }
 point_count = 5
+
+[sub_resource type="LabelSettings" id="LabelSettings_gt8kx"]
+line_spacing = 0.0
+font = ExtResource("4_pfm2y")
+font_size = 12
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_c1s86"]
+font = ExtResource("4_pfm2y")
+font_size = 41
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pys6q"]
+bg_color = Color(0.199027, 0.284133, 0.159504, 1)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_tk8vx")
@@ -48,80 +63,64 @@ rotation = 1.5708
 
 [node name="Player" parent="." instance=ExtResource("2_26378")]
 
-[node name="EscapeGUI" type="Node2D" parent="Player"]
-process_mode = 3
-z_index = 4000
-z_as_relative = false
-script = ExtResource("7_es73p")
-
-[node name="AspectRatioContainer" type="Panel" parent="Player/EscapeGUI"]
-process_mode = 2
-offset_left = -536.0
-offset_top = -304.0
-offset_right = 536.0
-offset_bottom = 304.0
-
-[node name="ColorRect" type="ColorRect" parent="Player/EscapeGUI/AspectRatioContainer"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_bottom = 8.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_stretch_ratio = 3.6
-color = Color(0, 0, 0, 0.196078)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Player/EscapeGUI/AspectRatioContainer"]
-layout_mode = 1
-offset_left = 424.0
-offset_top = 192.0
-offset_right = 648.0
-offset_bottom = 416.0
-alignment = 1
-metadata/_edit_group_ = true
-
-[node name="Resume" type="Button" parent="Player/EscapeGUI/AspectRatioContainer/VBoxContainer"]
-layout_mode = 2
-text = "Resume"
-
-[node name="ExitToDesktop" type="Button" parent="Player/EscapeGUI/AspectRatioContainer/VBoxContainer"]
-layout_mode = 2
-text = "Exit to Desktop"
-
-[node name="Shop" type="Node2D" parent="Player"]
+[node name="PoseMenu" parent="Player" instance=ExtResource("7_lf4kb")]
 visible = false
-z_index = 5
-z_as_relative = false
-
-[node name="ColorRect" type="ColorRect" parent="Player/Shop"]
-visible = false
-offset_left = -536.0
-offset_top = -304.0
-offset_right = 536.0
-offset_bottom = 304.0
-color = Color(0, 0, 0, 0.662745)
 
 [node name="DebugGUI" type="Node2D" parent="Player"]
 process_mode = 3
 z_index = 4010
+z_as_relative = false
 position = Vector2(-528, -296)
 script = ExtResource("4_vfsrx")
 
-[node name="FPS" type="Label" parent="Player/DebugGUI"]
-offset_right = 99.0
-offset_bottom = 26.0
-theme_override_fonts/font = ExtResource("4_pfm2y")
-theme_override_font_sizes/font_size = 20
-text = "FPS: "
+[node name="DictionaryLabel" type="Label" parent="Player/DebugGUI"]
+offset_right = 134.0
+offset_bottom = 84.0
+text = "FPS: 
+Foo: 1
+Bar: TooLong
+Bar: TooLong
+Bar: TooLongTooLongTooLongTooLong
+Bar: TooLong
+Bar: TooLong
+Bar: TooLong"
+label_settings = SubResource("LabelSettings_gt8kx")
 
-[node name="CurrentWave" type="Label" parent="Player/DebugGUI"]
-offset_top = 20.0
-offset_right = 99.0
-offset_bottom = 46.0
-theme_override_fonts/font = ExtResource("4_pfm2y")
-theme_override_font_sizes/font_size = 20
-text = "Wave: 0"
+[node name="CanvasLayer" type="CanvasLayer" parent="Player"]
 
-[connection signal="pressed" from="Player/EscapeGUI/AspectRatioContainer/VBoxContainer/Resume" to="Player/EscapeGUI" method="OnResumePressed"]
-[connection signal="pressed" from="Player/EscapeGUI/AspectRatioContainer/VBoxContainer/ExitToDesktop" to="Player/EscapeGUI" method="OnExitPressed"]
+[node name="ShopMenu" type="Node2D" parent="Player/CanvasLayer"]
+z_index = 100
+script = ExtResource("8_02jml")
+
+[node name="ColorRect" type="ColorRect" parent="Player/CanvasLayer/ShopMenu"]
+offset_left = -536.0
+offset_top = -304.0
+offset_right = 536.0
+offset_bottom = 304.0
+color = Color(0, 0, 0, 0.360784)
+
+[node name="Label" type="Label" parent="Player/CanvasLayer/ShopMenu"]
+offset_left = -56.0
+offset_top = -280.0
+offset_right = 60.0
+offset_bottom = -229.0
+text = "SHOP
+"
+label_settings = SubResource("LabelSettings_c1s86")
+
+[node name="Button" type="Button" parent="Player/CanvasLayer/ShopMenu"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 344.0
+offset_top = 192.0
+offset_right = 512.0
+offset_bottom = 272.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pys6q")
+text = "Next Wave"
+
+[connection signal="pressed" from="Player/CanvasLayer/ShopMenu/Button" to="Player/CanvasLayer/ShopMenu" method="CloseShop"]
