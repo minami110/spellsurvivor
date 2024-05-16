@@ -10,7 +10,8 @@ public interface IEquipment
 
 public partial class Wand : Area2D, IEquipment
 {
-    [Export] private PackedScene _projectileScene;
+    [Export]
+    private PackedScene _projectileScene = null!;
 
     void IEquipment.PrimaryPress()
     {
