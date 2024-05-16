@@ -41,6 +41,9 @@ public partial class Enemy : RigidBody2D, IEntity
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        var notifier = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
+        notifier.ScreenExited += QueueFree;
+            
         UpdateHealthBar();
     }
 

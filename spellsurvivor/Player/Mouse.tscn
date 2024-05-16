@@ -6,6 +6,8 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_xghxg"]
 
 [node name="Mouse" type="Node2D"]
+process_mode = 3
+z_index = 4096
 script = ExtResource("1_71o0l")
 
 [node name="ColorRect" type="ColorRect" parent="."]
