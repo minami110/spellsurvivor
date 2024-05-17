@@ -76,14 +76,6 @@ public partial class Enemy : RigidBody2D, IEntity
     {
         var notifier = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
         notifier.ScreenExited += () => { Deth(new DeadReason("Screen", "OutOfScreen")); };
-
-        // Update material to default
-        var tex = GetNode<TextureRect>("Texture");
-        if (tex.Material is ShaderMaterial sm)
-        {
-            sm.SetShaderParameter("hit", 0.0f);
-        }
-
         UpdateHealthBar();
     }
 
