@@ -52,7 +52,21 @@ public partial class DebugGUI : CanvasLayer
 
     public static bool RemoveKey(string key)
     {
-        return _instance is not null && _instance._dict.Remove(key);
+        if (_instance is null)
+        {
+            return false;
+        }
+
+        var removeKeys = new List<string>();
+        foreach (var (k, _) in _instance._dict)
+            if (k.Contains(key))
+            {
+                removeKeys.Add(k);
+            }
+
+        foreach (var k in removeKeys) _instance._dict.Remove(k);
+
+        return true;
     }
 
     public override void _Process(double delta)

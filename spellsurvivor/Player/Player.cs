@@ -11,7 +11,7 @@ public partial class Player : Area2D, IEntity
     private static readonly StringName InputMoveDown = "move_down";
     private static readonly StringName InputPrimary = "primary";
 
-    private readonly Subject<Unit> _deadSubject = new();
+    private readonly Subject<DeadReason> _deadSubject = new();
 
     [Export] private ProgressBar _healthBar = null!;
 
@@ -19,7 +19,7 @@ public partial class Player : Area2D, IEntity
 
     [Export] public float MoveSpeed { get; private set; } = 400;
 
-    public Observable<Unit> Dead => _deadSubject;
+    public Observable<DeadReason> Dead => _deadSubject;
 
     [Export(PropertyHint.Range, "0, 100")] public float Health { get; private set; } = 100f;
 
@@ -29,12 +29,17 @@ public partial class Player : Area2D, IEntity
 
     void IEntity.TakeDamage(float amount, IEntity? instigator)
     {
+        if (instigator is null)
+        {
+            return;
+        }
+
         Health -= amount;
         if (Health <= 0)
         {
             Health = 0;
             // Emit signal to main scene
-            _deadSubject.OnNext(Unit.Default);
+            _deadSubject.OnNext(new DeadReason(instigator.Race.ToString(), "Attack"));
         }
 
         // Update Health bar

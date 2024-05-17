@@ -1,9 +1,12 @@
 using Godot;
+using R3;
 
 namespace spellsurvivor;
 
 public partial class Enemy : RigidBody2D, IEntity
 {
+    private readonly Subject<DeadReason> _deadSubject = new();
+
     [Export(PropertyHint.Range, "0,1000,1")]
     public float MoveSpeed { get; set; } = 50f;
 
@@ -13,23 +16,27 @@ public partial class Enemy : RigidBody2D, IEntity
     [Export(PropertyHint.Range, "0,100,1")]
     public float Health { get; private set; } = 100f;
 
+    public Observable<DeadReason> Dead => _deadSubject;
+
     public Race Race => Race.Slime;
 
     void IEntity.TakeDamage(float amount, IEntity? instigator)
     {
-        if (instigator is not null)
+        if (instigator is null)
         {
-            if (instigator.Race != Race.Player)
-            {
-                return;
-            }
+            return;
+        }
+
+        if (instigator.Race != Race.Player)
+        {
+            return;
         }
 
         Health -= amount;
         if (Health <= 0)
         {
             Health = 0;
-            QueueFree();
+            Deth(new DeadReason(instigator.Race.ToString(), "Projectile"));
         }
         else
         {
@@ -37,11 +44,17 @@ public partial class Enemy : RigidBody2D, IEntity
         }
     }
 
+    private void Deth(in DeadReason reason)
+    {
+        _deadSubject.OnNext(reason);
+        QueueFree();
+    }
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         var notifier = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
-        notifier.ScreenExited += QueueFree;
+        notifier.ScreenExited += () => { Deth(new DeadReason("Screen", "OutOfScreen")); };
 
         UpdateHealthBar();
     }
@@ -63,5 +76,11 @@ public partial class Enemy : RigidBody2D, IEntity
         direction = direction.Normalized();
         var force = direction * MoveSpeed;
         ApplyForce(force);
+    }
+
+    public override void _ExitTree()
+    {
+        _deadSubject.Dispose();
+        base._ExitTree();
     }
 }

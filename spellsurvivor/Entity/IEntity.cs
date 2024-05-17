@@ -1,4 +1,6 @@
-﻿namespace spellsurvivor;
+﻿using R3;
+
+namespace spellsurvivor;
 
 public enum Race
 {
@@ -9,6 +11,8 @@ public enum Race
 
 public interface IEntity
 {
+    public Observable<DeadReason> Dead { get; }
+
     public Race Race { get; }
 
     /// <summary>

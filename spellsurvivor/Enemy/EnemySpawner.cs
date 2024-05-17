@@ -6,6 +6,7 @@ namespace spellsurvivor;
 
 public partial class EnemySpawner : Node2D
 {
+    private DisposableBag _disposableBag;
     private IDisposable _disposableOnExitTree = null!;
     private int _enemyDeadCount;
     [Export] private PackedScene _enemyScene = null!;
@@ -55,7 +56,7 @@ public partial class EnemySpawner : Node2D
         _enemySpawnedCount = 0;
         _enemyDeadCount = 0;
         _enemyTotalCount = _waveSettings[currentWave - 1].EnemyCount;
-        DebugGUI.CommitText("EnemyTotalCount", _enemyTotalCount.ToString());
+        DebugGUI.CommitText("Spawner/Total", _enemyTotalCount.ToString());
 
         // Start Timer
         GetNode<Timer>("EnemySpawnTimer").Start();
@@ -63,17 +64,19 @@ public partial class EnemySpawner : Node2D
 
     private void StopWave()
     {
+        // Clean up disposableBag
+        _disposableBag.Dispose();
+        _disposableBag = new DisposableBag();
+
         // Stop Timer
         GetNode<Timer>("EnemySpawnTimer").Stop();
-        DebugGUI.RemoveKey("EnemyTotalCount");
-        DebugGUI.RemoveKey("EnemySpawnCount");
-        DebugGUI.RemoveKey("EnemyDeadCount");
+        DebugGUI.RemoveKey("Spawner");
     }
 
-    private void AddEnemyDeadCount()
+    private void OnSpawnEnemyDead(in DeadReason reason)
     {
         _enemyDeadCount += 1;
-        DebugGUI.CommitText("EnemyDeadCount", _enemyDeadCount.ToString());
+        DebugGUI.CommitText($"Spawner/DeadBy/{reason.Instigator}", _enemyDeadCount.ToString());
 
         if (_enemyTotalCount == _enemyDeadCount)
         {
@@ -89,7 +92,7 @@ public partial class EnemySpawner : Node2D
         }
 
         _enemySpawnedCount++;
-        DebugGUI.CommitText("EnemySpawnCount", _enemySpawnedCount.ToString());
+        DebugGUI.CommitText("Spawner/Spawned", _enemySpawnedCount.ToString());
 
         // pick random point on path
         var spawnPoint = GetNode<PathFollow2D>("SpawnPath/SpawnPoint");
@@ -99,7 +102,10 @@ public partial class EnemySpawner : Node2D
         // Spawn Enemy
         var enemy = _enemyScene.Instantiate<Enemy>();
         enemy.MoveSpeed = (float)GD.RandRange(20d, 100d);
-        enemy.TreeExitedAsObservable().Take(1).Subscribe(_ => AddEnemyDeadCount());
+        enemy.Dead
+            .Take(1)
+            .Subscribe(reason => OnSpawnEnemyDead(in reason))
+            .AddTo(ref _disposableBag);
 
         // Add scene
         GetTree().Root.AddChild(enemy);
