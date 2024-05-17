@@ -10,7 +10,7 @@
 [ext_resource type="Script" path="res://spellsurvivor/GameMode/WaveSetting.cs" id="6_34bq1"]
 [ext_resource type="Script" path="res://spellsurvivor/PlayerLazyTracker.cs" id="6_ils86"]
 [ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://spellsurvivor/PoseMenu.tscn" id="7_lf4kb"]
-[ext_resource type="Script" path="res://spellsurvivor/ShopMenu.cs" id="8_02jml"]
+[ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://spellsurvivor/Shop/ShopHUD.tscn" id="9_a7daw"]
 [ext_resource type="PackedScene" uid="uid://b1rmuwxvcnuj8" path="res://spellsurvivor/Player/Mouse.tscn" id="12_e0mmc"]
 
 [sub_resource type="Resource" id="Resource_os3gk"]
@@ -29,16 +29,19 @@ _data = {
 }
 point_count = 5
 
-[sub_resource type="LabelSettings" id="LabelSettings_c1s86"]
-font = ExtResource("4_pfm2y")
-font_size = 41
-
 [sub_resource type="LabelSettings" id="LabelSettings_gt8kx"]
 line_spacing = 0.0
 font = ExtResource("4_pfm2y")
 font_size = 12
 outline_size = 3
 outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Environment" id="Environment_23x7m"]
+background_mode = 3
+glow_enabled = true
+glow_strength = 1.5
+glow_hdr_threshold = 2.7
+fog_light_energy = 16.0
 
 [node name="Main" type="Node"]
 script = ExtResource("1_tk8vx")
@@ -78,56 +81,8 @@ rotation = 1.5708
 
 [node name="Mouse" parent="." instance=ExtResource("12_e0mmc")]
 
-[node name="ShopHUD (Layer 2)" type="CanvasLayer" parent="."]
-layer = 2
-script = ExtResource("8_02jml")
-
-[node name="Container" type="Control" parent="ShopHUD (Layer 2)"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="BG" type="ColorRect" parent="ShopHUD (Layer 2)/Container"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_vertical = 4
-color = Color(0, 0, 0, 0.0588235)
-
-[node name="Label" type="Label" parent="ShopHUD (Layer 2)/Container"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.028
-offset_left = -58.0
-offset_top = 30.0
-offset_right = 58.0
-offset_bottom = 61.8
-grow_horizontal = 2
-text = "LET'S SHOP TIME"
-label_settings = SubResource("LabelSettings_c1s86")
-
-[node name="Button" type="Button" parent="ShopHUD (Layer 2)/Container"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -197.0
-offset_top = -111.0
-offset_right = -29.0
-offset_bottom = -31.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Next Wave"
+[node name="ShopHUD (Layer 2)" parent="." instance=ExtResource("9_a7daw")]
+visible = false
 
 [node name="PoseHUD (Layer 10)" parent="." instance=ExtResource("7_lf4kb")]
 visible = false
@@ -152,4 +107,5 @@ Bar: TooLong
 Bar: TooLong"
 label_settings = SubResource("LabelSettings_gt8kx")
 
-[connection signal="pressed" from="ShopHUD (Layer 2)/Container/Button" to="ShopHUD (Layer 2)" method="CloseShop"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_23x7m")

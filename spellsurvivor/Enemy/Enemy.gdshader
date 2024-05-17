@@ -8,7 +8,5 @@ void vertex() {
 
 void fragment() {
 	COLOR = texture(TEXTURE, UV);
-	COLOR.r += hit * 0.5;
-	COLOR.g += hit * 0.5;
-	COLOR.b += hit * 0.5;
+	COLOR.rgb += hit;
 }

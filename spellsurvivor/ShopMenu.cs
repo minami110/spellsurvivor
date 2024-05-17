@@ -1,26 +1,26 @@
 using Godot;
-using R3;
 
 namespace spellsurvivor;
 
 public partial class ShopMenu : CanvasLayer
 {
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        Hide();
+    [Signal]
+    public delegate void ClosedEventHandler();
 
-        Main.GameMode.WaveEnded.Subscribe(_ => { OpenShop(); });
-    }
-
-    private void OpenShop()
+    /// <summary>
+    ///     Open ShopMenu
+    /// </summary>
+    public void Open()
     {
         Show();
     }
 
-    public void CloseShop()
+    /// <summary>
+    ///     Close ShopMenu
+    /// </summary>
+    public void Close()
     {
-        Main.GameMode.ExitShop();
         Hide();
+        EmitSignal(SignalName.Closed);
     }
 }

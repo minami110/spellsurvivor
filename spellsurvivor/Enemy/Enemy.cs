@@ -7,6 +7,8 @@ public partial class Enemy : RigidBody2D, IEntity
 {
     private readonly Subject<DeadReason> _deadSubject = new();
 
+    private bool _isHitStopping;
+
     [Export(PropertyHint.Range, "0,1000,1")]
     public float MoveSpeed { get; set; } = 50f;
 
@@ -56,12 +58,12 @@ public partial class Enemy : RigidBody2D, IEntity
 
         // Hitstop and blink shader
         sm.SetShaderParameter("hit", 1.0f);
-        var def = LinearDamp;
-        LinearDamp = 20f;
+        _isHitStopping = true;
+        LinearVelocity = Vector2.Zero;
 
         await this.WaitForSeconds(0.1f);
 
-        LinearDamp = def;
+        _isHitStopping = false;
         sm.SetShaderParameter("hit", 0.0f);
     }
 
@@ -89,13 +91,18 @@ public partial class Enemy : RigidBody2D, IEntity
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
+        if (_isHitStopping)
+        {
+            return;
+        }
+
         var playerPosition = Main.GetPlayerGlobalPosition();
 
         // Move to player
         var direction = playerPosition - GlobalPosition;
         direction = direction.Normalized();
         var force = direction * MoveSpeed;
-        ConstantForce = force;
+        LinearVelocity = force;
     }
 
     public override void _ExitTree()

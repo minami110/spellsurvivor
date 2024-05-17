@@ -1,0 +1,119 @@
+[gd_scene load_steps=7 format=3 uid="uid://dvwlkv2f4pl2i"]
+
+[ext_resource type="Script" path="res://spellsurvivor/ShopMenu.cs" id="1_y0fo4"]
+[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://spellsurvivor/Fonts/Verdana.ttf" id="2_161hv"]
+[ext_resource type="Script" path="res://spellsurvivor/Shop/Spell.cs" id="3_mkeei"]
+[ext_resource type="PackedScene" uid="uid://3i5a02yf3hh" path="res://spellsurvivor/Control/DraggableArea.tscn" id="4_21j2b"]
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://icon.svg" id="4_83511"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_c1s86"]
+font = ExtResource("2_161hv")
+font_size = 41
+
+[node name="ShopHUD (Layer 2)" type="CanvasLayer"]
+layer = 2
+script = ExtResource("1_y0fo4")
+
+[node name="Container" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BG" type="ColorRect" parent="Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+color = Color(0, 0, 0, 0.301961)
+
+[node name="Title" type="Label" parent="Container"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.028
+offset_left = -58.0
+offset_top = 30.0
+offset_right = 58.0
+offset_bottom = 61.8
+grow_horizontal = 2
+text = "LET'S SHOP TIME"
+label_settings = SubResource("LabelSettings_c1s86")
+
+[node name="Button" type="Button" parent="Container"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -197.0
+offset_top = -111.0
+offset_right = -29.0
+offset_bottom = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Next Wave"
+
+[node name="HSplitContainer" type="HBoxContainer" parent="Container"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -38.0
+offset_bottom = 124.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="DraggableArea" parent="Container/HSplitContainer" instance=ExtResource("4_21j2b")]
+layout_mode = 2
+size_flags_horizontal = 4
+metadata/_edit_group_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/HSplitContainer/DraggableArea"]
+layout_mode = 1
+offset_right = 128.0
+offset_bottom = 155.0
+
+[node name="TextureRect" type="TextureRect" parent="Container/HSplitContainer/DraggableArea/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("4_83511")
+
+[node name="Label" type="Label" parent="Container/HSplitContainer/DraggableArea/VBoxContainer"]
+layout_mode = 2
+text = "Spell Name"
+horizontal_alignment = 1
+
+[node name="Spell" type="Area2D" parent="Container/HSplitContainer/DraggableArea"]
+position = Vector2(74, 129)
+collision_mask = 0
+script = ExtResource("3_mkeei")
+
+[node name="DraggableArea2" parent="Container/HSplitContainer" instance=ExtResource("4_21j2b")]
+layout_mode = 2
+size_flags_horizontal = 4
+metadata/_edit_group_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/HSplitContainer/DraggableArea2"]
+layout_mode = 1
+offset_right = 128.0
+offset_bottom = 155.0
+
+[node name="TextureRect" type="TextureRect" parent="Container/HSplitContainer/DraggableArea2/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("4_83511")
+
+[node name="Label" type="Label" parent="Container/HSplitContainer/DraggableArea2/VBoxContainer"]
+layout_mode = 2
+text = "Spell Name"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Container/Button" to="." method="CloseShop"]
