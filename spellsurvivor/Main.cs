@@ -76,9 +76,10 @@ public partial class Main : Node
 
     public void EnterWave()
     {
-        _waveStartedSub.OnNext(Unit.Default);
         _waveRp.Value++;
         DebugGUI.CommitText("Wave", _waveRp.Value.ToString());
+
+        _waveStartedSub.OnNext(Unit.Default);
     }
 
     public void ExitShop()

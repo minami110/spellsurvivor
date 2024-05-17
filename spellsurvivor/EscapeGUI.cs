@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class EscapeGUI : Node2D
+public partial class EscapeGUI : CanvasLayer
 {
     public void OnExitPressed()
     {

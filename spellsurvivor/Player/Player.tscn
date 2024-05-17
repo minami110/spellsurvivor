@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://mkn2sovps75c"]
+[gd_scene load_steps=4 format=3 uid="uid://mkn2sovps75c"]
 
 [ext_resource type="Script" path="res://spellsurvivor/Player/Player.cs" id="1_8jc05"]
-[ext_resource type="PackedScene" uid="uid://b1rmuwxvcnuj8" path="res://spellsurvivor/Player/Mouse.tscn" id="2_sorr6"]
 [ext_resource type="PackedScene" uid="uid://bohpylu6dlsr1" path="res://spellsurvivor/Equipments/Wand.tscn" id="3_7pb46"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
@@ -14,8 +13,6 @@ MoveSpeed = 200.0
 
 [node name="MainCamera" type="Camera2D" parent="."]
 zoom = Vector2(1.5, 1.5)
-
-[node name="Mouse" parent="MainCamera" instance=ExtResource("2_sorr6")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_awajj")

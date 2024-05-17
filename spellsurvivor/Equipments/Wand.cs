@@ -10,12 +10,11 @@ public interface IEquipment
 
 public partial class Wand : Area2D, IEquipment
 {
-    [Export]
-    private PackedScene _projectileScene = null!;
+    [Export] private PackedScene _projectileScene = null!;
 
     void IEquipment.PrimaryPress()
     {
-        var mousePosition = GetMouseGlobalPosition();
+        var mousePosition = GetGlobalMousePosition();
         var projectileSpawnPosition = GetNode<Marker2D>("ProjectileSpawnPoint").GlobalPosition;
 
         // Instantiate Projectile
@@ -37,16 +36,10 @@ public partial class Wand : Area2D, IEquipment
         GD.Print("Wand released");
     }
 
-    private Vector2 GetMouseGlobalPosition()
-    {
-        var mouse = GetNode<Mouse>("../MainCamera/Mouse");
-        return mouse.GlobalPosition;
-    }
-
     public override void _Process(double delta)
     {
         // Rotate this to face mouse
-        var mousePosition = GetMouseGlobalPosition();
+        var mousePosition = GetGlobalMousePosition();
         var direction = (mousePosition - GlobalPosition).Normalized();
         Rotation = direction.Angle();
     }

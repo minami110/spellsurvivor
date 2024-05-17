@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Godot;
 using R3;
 
@@ -8,17 +7,29 @@ namespace spellsurvivor;
 public partial class EnemySpawner : Node2D
 {
     private IDisposable _disposableOnExitTree = null!;
+    private int _enemyDeadCount;
     [Export] private PackedScene _enemyScene = null!;
-    
-    private int _enemySpawnCount = 0;
-    private int _enemyDeadCount = 0;
+    private int _enemySpawnedCount;
+
+    private int _enemyTotalCount;
+    [Export] private WaveSetting[] _waveSettings = null!;
 
     public override void _Ready()
     {
-        var timer = GetNode<Timer>("EnemySpawnTimer");
-        var d1 = Main.GameMode.WaveStarted.Subscribe(this, (_, state) => { state.StartWave(); });
-        var d2 = Main.GameMode.WaveEnded.Subscribe(timer, (_, t) => { t.Stop(); });
-        var d3 = timer.TimeoutAsObservable().Subscribe(this, (_, s) => s.SpawnEnemy());
+        var d1 = Main.GameMode.WaveStarted.Subscribe(
+            this,
+            (_, state) => state.StartWave()
+        );
+        var d2 = Main.GameMode.WaveEnded.Subscribe(
+            this,
+            (_, state) => state.StopWave()
+        );
+        var d3 = GetNode<Timer>("EnemySpawnTimer")
+            .TimeoutAsObservable()
+            .Subscribe(
+                this,
+                (_, s) => s.SpawnEnemy()
+            );
         _disposableOnExitTree = Disposable.Combine(d1, d2, d3);
     }
 
@@ -29,26 +40,42 @@ public partial class EnemySpawner : Node2D
 
     private void StartWave()
     {
+        var currentWave = Main.GameMode.Wave.CurrentValue;
+        if (currentWave < 1)
+        {
+            return;
+        }
+
+        if (currentWave > _waveSettings.Length)
+        {
+            throw new NotImplementedException("WaveSettings is not enough.");
+        }
+
+        // Reset Enemy Counter
+        _enemySpawnedCount = 0;
+        _enemyDeadCount = 0;
+        _enemyTotalCount = _waveSettings[currentWave - 1].EnemyCount;
+        DebugGUI.CommitText("EnemyTotalCount", _enemyTotalCount.ToString());
+
         // Start Timer
         GetNode<Timer>("EnemySpawnTimer").Start();
-        
-        // Reset Enemy Counter
-        _enemySpawnCount = 0;
-        _enemyDeadCount = 0;
     }
-    
-    private void AddEnemySpawnCount(int count = 1)
+
+    private void StopWave()
     {
-        _enemySpawnCount += count;
-        DebugGUI.CommitText("EnemySpawnCount", _enemySpawnCount.ToString());
+        // Stop Timer
+        GetNode<Timer>("EnemySpawnTimer").Stop();
+        DebugGUI.RemoveKey("EnemyTotalCount");
+        DebugGUI.RemoveKey("EnemySpawnCount");
+        DebugGUI.RemoveKey("EnemyDeadCount");
     }
-    
+
     private void AddEnemyDeadCount()
     {
         _enemyDeadCount += 1;
         DebugGUI.CommitText("EnemyDeadCount", _enemyDeadCount.ToString());
-        
-        if (_enemySpawnCount == _enemyDeadCount)
+
+        if (_enemyTotalCount == _enemyDeadCount)
         {
             Main.GameMode.CompleteWave();
         }
@@ -56,15 +83,14 @@ public partial class EnemySpawner : Node2D
 
     private void SpawnEnemy()
     {
-        if (Main.GameMode.Wave.CurrentValue == 1)
+        if (_enemySpawnedCount >= _enemyTotalCount)
         {
-            // First wave has only 10 enemy
-            if (_enemySpawnCount >= 1)
-            {
-                return;
-            }
+            return;
         }
-        
+
+        _enemySpawnedCount++;
+        DebugGUI.CommitText("EnemySpawnCount", _enemySpawnedCount.ToString());
+
         // pick random point on path
         var spawnPoint = GetNode<PathFollow2D>("SpawnPath/SpawnPoint");
         spawnPoint.ProgressRatio = GD.Randf();
@@ -78,7 +104,5 @@ public partial class EnemySpawner : Node2D
         // Add scene
         GetTree().Root.AddChild(enemy);
         enemy.GlobalPosition = spawnGlobalPosition;
-        
-        AddEnemySpawnCount();
     }
 }

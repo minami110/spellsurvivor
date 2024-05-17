@@ -10,22 +10,10 @@ process_mode = 3
 z_index = 4096
 script = ExtResource("1_71o0l")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-offset_left = -1.0
-offset_top = -6.0
-offset_right = 1.0
-offset_bottom = 6.0
-
-[node name="ColorRect2" type="ColorRect" parent="."]
-offset_left = -6.0
-offset_top = -1.0
-offset_right = 6.0
-offset_bottom = 1.0
-
-[node name="Area2D" type="Area2D" parent="."]
+[node name="MouseCollider" type="Area2D" parent="."]
 collision_layer = 0
 script = ExtResource("2_l0o7s")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="Circle" type="CollisionShape2D" parent="MouseCollider"]
 scale = Vector2(0.2, 0.2)
 shape = SubResource("CircleShape2D_xghxg")

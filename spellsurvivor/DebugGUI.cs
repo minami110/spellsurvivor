@@ -5,13 +5,13 @@ using System.Text;
 using Godot;
 
 namespace spellsurvivor;
-public partial class DebugGUI : Node2D
-{
-    private readonly StringBuilder _sb = new();
-    private readonly Dictionary<string, string> _dict = new();
-    private Label _label = null!;
 
+public partial class DebugGUI : CanvasLayer
+{
     private static DebugGUI? _instance;
+    private readonly Dictionary<string, string> _dict = new();
+    private readonly StringBuilder _sb = new();
+    private Label _label = null!;
 
     public override void _Ready()
     {
@@ -19,16 +19,16 @@ public partial class DebugGUI : Node2D
         {
             throw new ApplicationException("DebugGUI instance already exists");
         }
-        
+
         _instance = this;
-        
+
         // Cache node
         _label = GetNode<Label>("DictionaryLabel");
-        
+
         // First value
         _dict["FPS"] = "0";
     }
-    
+
     public override void _ExitTree()
     {
         if (_instance == this)
@@ -36,7 +36,7 @@ public partial class DebugGUI : Node2D
             _instance = null;
         }
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -50,17 +50,23 @@ public partial class DebugGUI : Node2D
         }
     }
 
+    public static bool RemoveKey(string key)
+    {
+        return _instance is not null && _instance._dict.Remove(key);
+    }
+
     public override void _Process(double delta)
     {
         // Update FPS
         var fps = Engine.GetFramesPerSecond();
         _dict["FPS"] = fps.ToString(CultureInfo.InvariantCulture);
-        
+
         // Update Label
-        foreach(var (key, value) in _dict)
+        foreach (var (key, value) in _dict)
         {
             _sb.Append($"{key}: {value}\n");
         }
+
         _label.Text = _sb.ToString();
         _sb.Clear();
     }

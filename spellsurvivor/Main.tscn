@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=18 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://spellsurvivor/Main.cs" id="1_tk8vx"]
 [ext_resource type="PackedScene" uid="uid://mkn2sovps75c" path="res://spellsurvivor/Player/Player.tscn" id="2_26378"]
@@ -7,15 +7,31 @@
 [ext_resource type="Script" path="res://spellsurvivor/Enemy/EnemySpawner.cs" id="4_jccyu"]
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://spellsurvivor/Fonts/Verdana.ttf" id="4_pfm2y"]
 [ext_resource type="Script" path="res://spellsurvivor/DebugGUI.cs" id="4_vfsrx"]
+[ext_resource type="Script" path="res://spellsurvivor/GameMode/WaveSetting.cs" id="6_34bq1"]
 [ext_resource type="Script" path="res://spellsurvivor/PlayerLazyTracker.cs" id="6_ils86"]
 [ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://spellsurvivor/PoseMenu.tscn" id="7_lf4kb"]
 [ext_resource type="Script" path="res://spellsurvivor/ShopMenu.cs" id="8_02jml"]
+[ext_resource type="PackedScene" uid="uid://b1rmuwxvcnuj8" path="res://spellsurvivor/Player/Mouse.tscn" id="12_e0mmc"]
+
+[sub_resource type="Resource" id="Resource_os3gk"]
+script = ExtResource("6_34bq1")
+EnemyCount = 1
+SpawnInterval = 0.5
+
+[sub_resource type="Resource" id="Resource_fbyxr"]
+script = ExtResource("6_34bq1")
+EnemyCount = 2
+SpawnInterval = 0.5
 
 [sub_resource type="Curve2D" id="Curve2D_dcvq1"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 768, -448, 0, 0, 0, 0, 768, 448, 0, 0, 0, 0, -768, 448, 0, 0, 0, 0, -768, -448, 0, 0, 0, 0, 768, -448)
 }
 point_count = 5
+
+[sub_resource type="LabelSettings" id="LabelSettings_c1s86"]
+font = ExtResource("4_pfm2y")
+font_size = 41
 
 [sub_resource type="LabelSettings" id="LabelSettings_gt8kx"]
 line_spacing = 0.0
@@ -24,22 +40,18 @@ font_size = 12
 outline_size = 3
 outline_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_c1s86"]
-font = ExtResource("4_pfm2y")
-font_size = 41
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pys6q"]
-bg_color = Color(0.199027, 0.284133, 0.159504, 1)
-
 [node name="Main" type="Node"]
 script = ExtResource("1_tk8vx")
 
-[node name="BG" type="TextureRect" parent="."]
-modulate = Color(0.589096, 0.589096, 0.589096, 1)
-offset_left = -2500.0
-offset_top = -2500.0
-offset_right = 2500.0
-offset_bottom = 2500.0
+[node name="BG (Layer -100)" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="BG (Layer -100)"]
+motion_mirroring = Vector2(2048, 2048)
+
+[node name="TextureRect" type="TextureRect" parent="BG (Layer -100)/ParallaxLayer"]
+modulate = Color(0.377919, 0.377919, 0.377919, 1)
+offset_right = 2048.0
+offset_bottom = 2048.0
 texture = ExtResource("2_b1ok3")
 stretch_mode = 1
 
@@ -51,6 +63,7 @@ _player = NodePath("../Player")
 process_mode = 1
 script = ExtResource("4_jccyu")
 _enemyScene = ExtResource("4_8okuu")
+_waveSettings = Array[Object]([SubResource("Resource_os3gk"), SubResource("Resource_fbyxr")])
 
 [node name="SpawnPath" type="Path2D" parent="PlayerLazyTracker/EnemySpawner"]
 curve = SubResource("Curve2D_dcvq1")
@@ -63,19 +76,73 @@ rotation = 1.5708
 
 [node name="Player" parent="." instance=ExtResource("2_26378")]
 
-[node name="PoseMenu" parent="Player" instance=ExtResource("7_lf4kb")]
+[node name="Mouse" parent="." instance=ExtResource("12_e0mmc")]
+
+[node name="ShopHUD (Layer 2)" type="CanvasLayer" parent="."]
+layer = 2
+script = ExtResource("8_02jml")
+
+[node name="Container" type="Control" parent="ShopHUD (Layer 2)"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BG" type="ColorRect" parent="ShopHUD (Layer 2)/Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+color = Color(0, 0, 0, 0.0588235)
+
+[node name="Label" type="Label" parent="ShopHUD (Layer 2)/Container"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.028
+offset_left = -58.0
+offset_top = 30.0
+offset_right = 58.0
+offset_bottom = 61.8
+grow_horizontal = 2
+text = "SHOP
+"
+label_settings = SubResource("LabelSettings_c1s86")
+
+[node name="Button" type="Button" parent="ShopHUD (Layer 2)/Container"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -197.0
+offset_top = -111.0
+offset_right = -29.0
+offset_bottom = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Next Wave"
+
+[node name="PoseHUD (Layer 10)" parent="." instance=ExtResource("7_lf4kb")]
 visible = false
 
-[node name="DebugGUI" type="Node2D" parent="Player"]
+[node name="DebugHUD (Layer 20)" type="CanvasLayer" parent="."]
 process_mode = 3
-z_index = 4010
-z_as_relative = false
-position = Vector2(-528, -296)
+layer = 20
 script = ExtResource("4_vfsrx")
 
-[node name="DictionaryLabel" type="Label" parent="Player/DebugGUI"]
-offset_right = 134.0
-offset_bottom = 84.0
+[node name="DictionaryLabel" type="Label" parent="DebugHUD (Layer 20)"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 240.0
+offset_bottom = 138.0
 text = "FPS: 
 Foo: 1
 Bar: TooLong
@@ -86,41 +153,4 @@ Bar: TooLong
 Bar: TooLong"
 label_settings = SubResource("LabelSettings_gt8kx")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="Player"]
-
-[node name="ShopMenu" type="Node2D" parent="Player/CanvasLayer"]
-z_index = 100
-script = ExtResource("8_02jml")
-
-[node name="ColorRect" type="ColorRect" parent="Player/CanvasLayer/ShopMenu"]
-offset_left = -536.0
-offset_top = -304.0
-offset_right = 536.0
-offset_bottom = 304.0
-color = Color(0, 0, 0, 0.360784)
-
-[node name="Label" type="Label" parent="Player/CanvasLayer/ShopMenu"]
-offset_left = -56.0
-offset_top = -280.0
-offset_right = 60.0
-offset_bottom = -229.0
-text = "SHOP
-"
-label_settings = SubResource("LabelSettings_c1s86")
-
-[node name="Button" type="Button" parent="Player/CanvasLayer/ShopMenu"]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 344.0
-offset_top = 192.0
-offset_right = 512.0
-offset_bottom = 272.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_pys6q")
-text = "Next Wave"
-
-[connection signal="pressed" from="Player/CanvasLayer/ShopMenu/Button" to="Player/CanvasLayer/ShopMenu" method="CloseShop"]
+[connection signal="pressed" from="ShopHUD (Layer 2)/Container/Button" to="ShopHUD (Layer 2)" method="CloseShop"]
