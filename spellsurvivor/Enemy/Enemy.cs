@@ -16,6 +16,7 @@ public partial class Enemy : RigidBody2D, IEntity
     [Export(PropertyHint.Range, "0,100,1")]
     public float Health { get; private set; } = 100f;
 
+
     public Observable<DeadReason> Dead => _deadSubject;
 
     public Race Race => Race.Slime;
@@ -40,8 +41,28 @@ public partial class Enemy : RigidBody2D, IEntity
         }
         else
         {
+            TakeDamageAnimationAsync();
             UpdateHealthBar();
         }
+    }
+
+    private async void TakeDamageAnimationAsync()
+    {
+        var tex = GetNode<TextureRect>("Texture");
+        if (tex.Material is not ShaderMaterial sm)
+        {
+            return;
+        }
+
+        // Hitstop and blink shader
+        sm.SetShaderParameter("hit", 1.0f);
+        var def = LinearDamp;
+        LinearDamp = 20f;
+
+        await this.WaitForSeconds(0.1f);
+
+        LinearDamp = def;
+        sm.SetShaderParameter("hit", 0.0f);
     }
 
     private void Deth(in DeadReason reason)
@@ -55,6 +76,13 @@ public partial class Enemy : RigidBody2D, IEntity
     {
         var notifier = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
         notifier.ScreenExited += () => { Deth(new DeadReason("Screen", "OutOfScreen")); };
+
+        // Update material to default
+        var tex = GetNode<TextureRect>("Texture");
+        if (tex.Material is ShaderMaterial sm)
+        {
+            sm.SetShaderParameter("hit", 0.0f);
+        }
 
         UpdateHealthBar();
     }
@@ -75,7 +103,7 @@ public partial class Enemy : RigidBody2D, IEntity
         var direction = playerPosition - GlobalPosition;
         direction = direction.Normalized();
         var force = direction * MoveSpeed;
-        ApplyForce(force);
+        ConstantForce = force;
     }
 
     public override void _ExitTree()

@@ -15,7 +15,7 @@
 
 [sub_resource type="Resource" id="Resource_os3gk"]
 script = ExtResource("6_34bq1")
-EnemyCount = 10
+EnemyCount = 5
 SpawnInterval = 0.5
 
 [sub_resource type="Resource" id="Resource_fbyxr"]
@@ -111,8 +111,7 @@ offset_top = 30.0
 offset_right = 58.0
 offset_bottom = 61.8
 grow_horizontal = 2
-text = "SHOP
-"
+text = "LET'S SHOP TIME"
 label_settings = SubResource("LabelSettings_c1s86")
 
 [node name="Button" type="Button" parent="ShopHUD (Layer 2)/Container"]

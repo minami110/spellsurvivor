@@ -23,7 +23,7 @@ public partial class Wand : Area2D, IEquipment
             projectile.Instigator = GetNode<IEntity>("../");
             projectile.InitialSpeed = 500f;
             projectile.Acceleration = 1000f;
-            projectile.Direction = (mousePosition - projectileSpawnPosition).Normalized();
+            projectile.Direction = (mousePosition - GlobalPosition).Normalized();
         }
 
         // Attach Root
