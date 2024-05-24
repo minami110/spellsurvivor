@@ -1,7 +1,6 @@
 [gd_scene load_steps=21 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://spellsurvivor/Main.cs" id="1_tk8vx"]
-[ext_resource type="PackedScene" uid="uid://mkn2sovps75c" path="res://spellsurvivor/Player/Player.tscn" id="2_26378"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://spellsurvivor/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://spellsurvivor/Enemy/Enemy.tscn" id="4_8okuu"]
 [ext_resource type="Script" path="res://spellsurvivor/Enemy/EnemySpawner.cs" id="4_jccyu"]
@@ -13,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://spellsurvivor/Shop/ShopHUD.tscn" id="9_a7daw"]
 [ext_resource type="PackedScene" uid="uid://b1rmuwxvcnuj8" path="res://spellsurvivor/Player/Mouse.tscn" id="12_e0mmc"]
 [ext_resource type="Script" path="res://spellsurvivor/Core/PlayerController.cs" id="13_5xgke"]
+[ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://spellsurvivor/Player/MeMe.tscn" id="13_ihbaa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2x8fi"]
 size = Vector2(100, 1200)
@@ -50,12 +50,15 @@ glow_strength = 1.5
 glow_hdr_threshold = 2.7
 fog_light_energy = 16.0
 
-[node name="Main" type="Node"]
+[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn")]
 script = ExtResource("1_tk8vx")
+_playerController = NodePath("PlayerController")
+_playerPawn = NodePath("MeMe")
 
-[node name="PlayerController" type="Node" parent="." node_paths=PackedStringArray("_player")]
+[node name="PlayerController" type="Node" parent="."]
 script = ExtResource("13_5xgke")
-_player = NodePath("../Player")
+
+[node name="MeMe" parent="." instance=ExtResource("13_ihbaa")]
 
 [node name="BG Static (Layer -100)" type="CanvasLayer" parent="."]
 layer = -100
@@ -111,7 +114,7 @@ stretch_mode = 1
 
 [node name="PlayerLazyTracker" type="Node2D" parent="." node_paths=PackedStringArray("_player")]
 script = ExtResource("6_ils86")
-_player = NodePath("../Player")
+_player = NodePath("../MeMe")
 
 [node name="EnemySpawner" type="Node2D" parent="PlayerLazyTracker"]
 process_mode = 1
@@ -127,8 +130,6 @@ position = Vector2(768, -448)
 rotation = 1.5708
 
 [node name="EnemySpawnTimer" type="Timer" parent="PlayerLazyTracker/EnemySpawner"]
-
-[node name="Player" parent="." instance=ExtResource("2_26378")]
 
 [node name="Mouse" parent="." instance=ExtResource("12_e0mmc")]
 

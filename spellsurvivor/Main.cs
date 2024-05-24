@@ -14,7 +14,11 @@ public partial class Main : Node
 
     private readonly Subject<Unit> _waveStartedSub = new();
 
-    private Player _player = null!;
+    [Export]
+    private PlayerController _playerController = null!;
+
+    [Export]
+    private Node2D _playerPawn = null!;
 
     public static Main GameMode
     {
@@ -41,10 +45,9 @@ public partial class Main : Node
 
     public override async void _Ready()
     {
-        _player = GetNode<Player>("Player");
+        _playerController.Possess((IPawn)_playerPawn);
 
         await this.WaitForSeconds(1f);
-
         StartGame();
     }
 
@@ -63,7 +66,7 @@ public partial class Main : Node
     {
         if (_instance is not null)
         {
-            return _instance._player.GlobalPosition;
+            return _instance._playerPawn.GlobalPosition;
         }
 
         throw new ApplicationException("Main instance is null");

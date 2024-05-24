@@ -1,4 +1,3 @@
-using System;
 using Godot;
 
 namespace spellsurvivor;
@@ -19,24 +18,37 @@ public partial class PlayerController : Node
     private static readonly StringName InputMoveDown = "move_down";
     private static readonly StringName InputPrimary = "primary";
 
-    [Export] private Node _player = null!;
+    private IPawn? _posessedPawn;
 
-    private IPawn _posessedPawn = null!;
-
-    public override void _Ready()
+    /// <summary>
+    /// </summary>
+    /// <param name="pawn"></param>
+    public void Possess(IPawn pawn)
     {
-        if (_player is IPawn pawn)
-        {
-            _posessedPawn = pawn;
-        }
-        else
-        {
-            throw new ApplicationException("Player must implement IPawn interface.");
-        }
+        _posessedPawn = pawn;
+        SetProcess(true);
+    }
+
+    /// <summary>
+    /// </summary>
+    public void Unpossess()
+    {
+        _posessedPawn = null;
+        SetProcess(false);
+    }
+
+    public override void _EnterTree()
+    {
+        SetProcess(false);
     }
 
     public override void _Process(double delta)
     {
+        if (_posessedPawn is null)
+        {
+            return;
+        }
+
         // Bool Inputs
         if (Input.IsActionJustPressed(InputPrimary))
         {
