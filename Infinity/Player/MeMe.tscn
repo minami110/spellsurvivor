@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bfke7q0b0owyb"]
 
-[ext_resource type="Script" path="res://spellsurvivor/Player/MeMe.cs" id="1_xi18f"]
-[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://icon.svg" id="2_8bqg8"]
+[ext_resource type="Script" path="res://Infinity/Player/MeMe.cs" id="1_xi18f"]
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Textures/icon.svg" id="2_8bqg8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
 radius = 20.0

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://gmh4ja31pvql"
-path="res://.godot/imported/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png-4ad0ccf1fd5ecd1d6aba69b3a13873c0.ctex"
+path="res://.godot/imported/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png-dffe8f246d2bd1181a0fb37496e81684.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://spellsurvivor/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png"
-dest_files=["res://.godot/imported/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png-4ad0ccf1fd5ecd1d6aba69b3a13873c0.ctex"]
+source_file="res://Common/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png"
+dest_files=["res://.godot/imported/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png-dffe8f246d2bd1181a0fb37496e81684.ctex"]
 
 [params]
 

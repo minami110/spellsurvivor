@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://bohpylu6dlsr1"]
 
-[ext_resource type="Script" path="res://spellsurvivor/Equipments/Wand.cs" id="1_2ydft"]
-[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://spellsurvivor/Equipments/Projectile.tscn" id="2_mn6ma"]
-[ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://spellsurvivor/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="3_o52q7"]
+[ext_resource type="Script" path="res://Infinity/Equipments/Wand.cs" id="1_2ydft"]
+[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Equipments/Projectile.tscn" id="2_mn6ma"]
+[ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="3_o52q7"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5mxvx"]
 

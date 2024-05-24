@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bagncidt6rgvp"]
 
-[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://icon.svg" id="1_74mp5"]
-[ext_resource type="Script" path="res://spellsurvivor/Equipments/Projectile.cs" id="1_aucnt"]
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Textures/icon.svg" id="1_74mp5"]
+[ext_resource type="Script" path="res://Infinity/Equipments/Projectile.cs" id="1_aucnt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gdwp8"]
 radius = 3.0

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://3i5a02yf3hh"]
 
-[ext_resource type="Script" path="res://spellsurvivor/Control/DraggableArea.cs" id="1_g1dav"]
+[ext_resource type="Script" path="res://Common/Control/DraggableArea.cs" id="1_g1dav"]
 
 [node name="DraggableArea" type="Control"]
 custom_minimum_size = Vector2(128, 128)

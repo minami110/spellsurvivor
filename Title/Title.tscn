@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://btwg0ccbd6qst"]
 
 [ext_resource type="Script" path="res://Title/Title.cs" id="1_1tswy"]
-[ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://spellsurvivor/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="1_eylnh"]
-[ext_resource type="PackedScene" uid="uid://c8nr5w2kj67dx" path="res://spellsurvivor/Main.tscn" id="2_ro7cr"]
+[ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="1_eylnh"]
+[ext_resource type="PackedScene" uid="uid://c8nr5w2kj67dx" path="res://Infinity/Infinity.tscn" id="2_ro7cr"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8xkta"]
 font_size = 12

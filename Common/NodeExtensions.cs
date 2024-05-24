@@ -5,7 +5,7 @@ namespace fms;
 public static partial class NodeExtensions
 {
     /// <summary>
-    /// Wrapper for GetTree().CreateTimer()
+    ///     Wrapper for GetTree().CreateTimer()
     /// </summary>
     /// <param name="node"></param>
     /// <param name="timeSec"></param>

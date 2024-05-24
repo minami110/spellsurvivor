@@ -38,7 +38,6 @@ public partial class DebugGUI : CanvasLayer
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="key"></param>
     /// <param name="value"></param>
@@ -76,10 +75,7 @@ public partial class DebugGUI : CanvasLayer
         _dict["FPS"] = fps.ToString(CultureInfo.InvariantCulture);
 
         // Update Label
-        foreach (var (key, value) in _dict)
-        {
-            _sb.Append($"{key}: {value}\n");
-        }
+        foreach (var (key, value) in _dict) _sb.Append($"{key}: {value}\n");
 
         _label.Text = _sb.ToString();
         _sb.Clear();

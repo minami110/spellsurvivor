@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://dh7nt37deh6b1"]
+
+[ext_resource type="Script" path="res://Common/Debugging/DebugGUI.cs" id="1_2o3st"]
+[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Fonts/Verdana.ttf" id="2_few3r"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_gt8kx"]
+line_spacing = 0.0
+font = ExtResource("2_few3r")
+font_size = 12
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[node name="DebugHUD (Layer 20)" type="CanvasLayer"]
+process_mode = 3
+layer = 20
+script = ExtResource("1_2o3st")
+
+[node name="DictionaryLabel" type="Label" parent="."]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 240.0
+offset_bottom = 138.0
+text = "FPS: 
+Foo: 1
+Bar: TooLong
+Bar: TooLong
+Bar: TooLongTooLongTooLongTooLong
+Bar: TooLong
+Bar: TooLong
+Bar: TooLong"
+label_settings = SubResource("LabelSettings_gt8kx")

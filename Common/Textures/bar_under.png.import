@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ca0vli65s8g1m"
-path="res://.godot/imported/enemyFlyingAlt_1.png-b1f929b8de6f2c53bda013fb2a56f230.ctex"
+uid="uid://137blds3e4yk"
+path="res://.godot/imported/bar_under.png-1b63d3a51181e510ba67ee9767f211fe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://spellsurvivor/Enemy/enemyFlyingAlt_1.png"
-dest_files=["res://.godot/imported/enemyFlyingAlt_1.png-b1f929b8de6f2c53bda013fb2a56f230.ctex"]
+source_file="res://Common/Textures/bar_under.png"
+dest_files=["res://.godot/imported/bar_under.png-1b63d3a51181e510ba67ee9767f211fe.ctex"]
 
 [params]
 

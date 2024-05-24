@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cfoh2vs087f48"]
 
-[ext_resource type="Script" path="res://spellsurvivor/EscapeGUI.cs" id="1_4hbvv"]
+[ext_resource type="Script" path="res://Common/PoseMenu/EscapeGUI.cs" id="1_4hbvv"]
 
 [node name="PoseMenu" type="CanvasLayer"]
 process_mode = 3

@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://dfjwy1udqlp80"]
 
-[ext_resource type="Texture2D" uid="uid://ca0vli65s8g1m" path="res://spellsurvivor/Enemy/enemyFlyingAlt_1.png" id="1_26unp"]
-[ext_resource type="Script" path="res://spellsurvivor/Enemy/Enemy.cs" id="1_cjt84"]
-[ext_resource type="Shader" path="res://spellsurvivor/Enemy/Enemy.gdshader" id="2_2u1e8"]
-[ext_resource type="Script" path="res://spellsurvivor/Enemy/DamageArea.cs" id="3_fwj5h"]
+[ext_resource type="Texture2D" uid="uid://ca0vli65s8g1m" path="res://Infinity/Enemy/enemyFlyingAlt_1.png" id="1_26unp"]
+[ext_resource type="Script" path="res://Infinity/Enemy/Enemy.cs" id="1_cjt84"]
+[ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_2u1e8"]
+[ext_resource type="Script" path="res://Infinity/Enemy/DamageArea.cs" id="3_fwj5h"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ppa8f"]
 resource_local_to_scene = true
