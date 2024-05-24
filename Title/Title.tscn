@@ -1,0 +1,107 @@
+[gd_scene load_steps=6 format=3 uid="uid://btwg0ccbd6qst"]
+
+[ext_resource type="Script" path="res://Title/Title.cs" id="1_1tswy"]
+[ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://spellsurvivor/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="1_eylnh"]
+[ext_resource type="PackedScene" uid="uid://c8nr5w2kj67dx" path="res://spellsurvivor/Main.tscn" id="2_ro7cr"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8xkta"]
+font_size = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_55c07"]
+font_size = 50
+
+[node name="Title" type="Node" node_paths=PackedStringArray("_appNameLabel", "_appVersionLabel", "_godotVersionLabel")]
+script = ExtResource("1_1tswy")
+_appNameLabel = NodePath("Control/appTitle")
+_appVersionLabel = NodePath("Control/appVersion")
+_godotVersionLabel = NodePath("powerdbygodot")
+_mainGameScene = ExtResource("2_ro7cr")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(0.219501, 0.219501, 0.219501, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_eylnh")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.0
+offset_top = 91.0
+offset_right = 35.0
+offset_bottom = 192.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button Start" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Start"
+
+[node name="Button Exit" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Exit"
+
+[node name="powerdbygodot" type="Label" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -30.0
+offset_right = -14.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Powered by Godot 0.0.0 (state)"
+label_settings = SubResource("LabelSettings_8xkta")
+horizontal_alignment = 2
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -68.0
+offset_right = 100.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="appTitle" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -348.0
+offset_bottom = 69.0
+grow_horizontal = 0
+text = "sample"
+label_settings = SubResource("LabelSettings_55c07")
+horizontal_alignment = 2
+
+[node name="appVersion" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -151.0
+offset_top = 54.0
+offset_bottom = 84.0
+grow_horizontal = 0
+text = "0.0.0"
+label_settings = SubResource("LabelSettings_8xkta")
+horizontal_alignment = 2
+
+[connection signal="pressed" from="VBoxContainer/Button Start" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/Button Exit" to="." method="OnExitButtonPressed"]
