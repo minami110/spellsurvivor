@@ -7,6 +7,7 @@
 
 [node name="Player" type="Area2D" node_paths=PackedStringArray("_healthBar")]
 process_mode = 1
+collision_mask = 0
 script = ExtResource("1_8jc05")
 _healthBar = NodePath("HealthBar")
 MoveSpeed = 200.0

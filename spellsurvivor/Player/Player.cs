@@ -3,17 +3,13 @@ using R3;
 
 namespace spellsurvivor;
 
-public partial class Player : Area2D, IEntity
+public partial class Player : Area2D, IPawn, IEntity
 {
-    private static readonly StringName InputMoveRight = "move_right";
-    private static readonly StringName InputMoveLeft = "move_left";
-    private static readonly StringName InputMoveUp = "move_up";
-    private static readonly StringName InputMoveDown = "move_down";
-    private static readonly StringName InputPrimary = "primary";
-
     private readonly Subject<DeadReason> _deadSubject = new();
 
     [Export] private ProgressBar _healthBar = null!;
+
+    private Vector2 _nextMoveDirection;
 
     private Vector2 _screenSize;
 
@@ -47,6 +43,27 @@ public partial class Player : Area2D, IEntity
         _healthBar.Value = Health;
     }
 
+    void IPawn.PrimaryPressed()
+    {
+        var equipment = GetNodeOrNull<IEquipment>("Equipment");
+        if (equipment is null)
+        {
+            GD.Print("Equipment is missing");
+            return;
+        }
+
+        equipment.PrimaryPress();
+    }
+
+    void IPawn.PrimaryReleased()
+    {
+    }
+
+    void IPawn.MoveForward(in Vector2 dir)
+    {
+        _nextMoveDirection = dir;
+    }
+
     public override void _ExitTree()
     {
         _deadSubject.Dispose();
@@ -63,62 +80,10 @@ public partial class Player : Area2D, IEntity
 
     public override void _Process(double delta)
     {
-        if (Input.IsActionJustPressed(InputPrimary))
+        if (_nextMoveDirection.LengthSquared() > 0f)
         {
-            OnPrimaryPressed();
-        }
-        else if (Input.IsActionJustReleased(InputPrimary))
-        {
-            OnPrimaryReleased();
-        }
-
-        ProcessMovement(delta);
-    }
-
-    private void OnPrimaryPressed()
-    {
-        var equipment = GetNodeOrNull<IEquipment>("Equipment");
-        if (equipment is null)
-        {
-            GD.Print("Equipment is missing");
-            return;
-        }
-
-        equipment.PrimaryPress();
-    }
-
-    private void OnPrimaryReleased()
-    {
-    }
-
-    private void ProcessMovement(double delta)
-    {
-        var velocity = Vector2.Zero; // The player's movement vector.
-
-        if (Input.IsActionPressed(InputMoveRight))
-        {
-            velocity.X += 1;
-        }
-
-        if (Input.IsActionPressed(InputMoveLeft))
-        {
-            velocity.X -= 1;
-        }
-
-        if (Input.IsActionPressed(InputMoveDown))
-        {
-            velocity.Y += 1;
-        }
-
-        if (Input.IsActionPressed(InputMoveUp))
-        {
-            velocity.Y -= 1;
-        }
-
-        if (velocity.Length() > 0)
-        {
-            velocity = velocity.Normalized() * MoveSpeed;
-            Position += velocity * (float)delta;
+            Position += _nextMoveDirection * (float)delta * MoveSpeed;
+            _nextMoveDirection = Vector2.Zero;
         }
     }
 }

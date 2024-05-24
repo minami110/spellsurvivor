@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=21 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://spellsurvivor/Main.cs" id="1_tk8vx"]
 [ext_resource type="PackedScene" uid="uid://mkn2sovps75c" path="res://spellsurvivor/Player/Player.tscn" id="2_26378"]
@@ -12,6 +12,13 @@
 [ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://spellsurvivor/PoseMenu.tscn" id="7_lf4kb"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://spellsurvivor/Shop/ShopHUD.tscn" id="9_a7daw"]
 [ext_resource type="PackedScene" uid="uid://b1rmuwxvcnuj8" path="res://spellsurvivor/Player/Mouse.tscn" id="12_e0mmc"]
+[ext_resource type="Script" path="res://spellsurvivor/Core/PlayerController.cs" id="13_5xgke"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2x8fi"]
+size = Vector2(100, 1200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rh687"]
+size = Vector2(1200, 100)
 
 [sub_resource type="Resource" id="Resource_os3gk"]
 script = ExtResource("6_34bq1")
@@ -46,12 +53,56 @@ fog_light_energy = 16.0
 [node name="Main" type="Node"]
 script = ExtResource("1_tk8vx")
 
-[node name="BG (Layer -100)" type="ParallaxBackground" parent="."]
+[node name="PlayerController" type="Node" parent="." node_paths=PackedStringArray("_player")]
+script = ExtResource("13_5xgke")
+_player = NodePath("../Player")
 
-[node name="ParallaxLayer" type="ParallaxLayer" parent="BG (Layer -100)"]
+[node name="BG Static (Layer -100)" type="CanvasLayer" parent="."]
+layer = -100
+follow_viewport_enabled = true
+
+[node name="TextureRect" type="TextureRect" parent="BG Static (Layer -100)"]
+modulate = Color(0.377919, 0.377919, 0.377919, 1)
+offset_left = -500.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 500.0
+texture = ExtResource("2_b1ok3")
+stretch_mode = 1
+
+[node name="StaticBody2D" type="StaticBody2D" parent="BG Static (Layer -100)"]
+collision_layer = 16
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BG Static (Layer -100)/StaticBody2D"]
+visible = false
+position = Vector2(550, 0)
+shape = SubResource("RectangleShape2D_2x8fi")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="BG Static (Layer -100)/StaticBody2D"]
+visible = false
+position = Vector2(0, -550)
+shape = SubResource("RectangleShape2D_rh687")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="BG Static (Layer -100)/StaticBody2D"]
+visible = false
+position = Vector2(0, 550)
+shape = SubResource("RectangleShape2D_rh687")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="BG Static (Layer -100)/StaticBody2D"]
+visible = false
+position = Vector2(-550, 0)
+shape = SubResource("RectangleShape2D_2x8fi")
+
+[node name="BG Parallax (Layer -100)" type="ParallaxBackground" parent="."]
+visible = false
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="BG Parallax (Layer -100)"]
+visible = false
 motion_mirroring = Vector2(2048, 2048)
 
-[node name="TextureRect" type="TextureRect" parent="BG (Layer -100)/ParallaxLayer"]
+[node name="TextureRect" type="TextureRect" parent="BG Parallax (Layer -100)/ParallaxLayer"]
+visible = false
 modulate = Color(0.377919, 0.377919, 0.377919, 1)
 offset_right = 2048.0
 offset_bottom = 2048.0
