@@ -2,7 +2,7 @@ using System;
 using Godot;
 using R3;
 
-namespace spellsurvivor;
+namespace fms;
 
 public sealed partial class InGameHUD : CanvasLayer
 {

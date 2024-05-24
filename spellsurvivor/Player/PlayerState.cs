@@ -2,7 +2,7 @@
 using Godot;
 using R3;
 
-namespace spellsurvivor;
+namespace fms;
 
 public partial class PlayerState : Node
 {

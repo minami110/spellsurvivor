@@ -1,6 +1,6 @@
 using Godot;
 
-namespace spellsurvivor;
+namespace fms;
 
 public partial class PlayerLazyTracker : Node2D
 {

@@ -1,6 +1,6 @@
 ﻿using R3;
 
-namespace spellsurvivor;
+namespace fms;
 
 public enum Race
 {

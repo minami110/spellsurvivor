@@ -2,7 +2,7 @@ using System;
 using Godot;
 using R3;
 
-namespace spellsurvivor;
+namespace fms;
 
 public partial class Projectile : Area2D
 {
@@ -10,13 +10,17 @@ public partial class Projectile : Area2D
     private float _lifeTimeCounter;
     private Vector2 _velocity;
 
-    [Export] public Vector2 Direction { get; set; } = Vector2.Right;
+    [Export]
+    public Vector2 Direction { get; set; } = Vector2.Right;
 
-    [Export] public float InitialSpeed { get; set; } = 50f;
+    [Export]
+    public float InitialSpeed { get; set; } = 50f;
 
-    [Export(PropertyHint.Range, "0, 100")] public float Acceleration { get; set; } = 50f;
+    [Export(PropertyHint.Range, "0, 100")]
+    public float Acceleration { get; set; } = 50f;
 
-    [Export(PropertyHint.Range, "0, 10")] public float LifeTime { get; set; } = 1f;
+    [Export(PropertyHint.Range, "0, 10")]
+    public float LifeTime { get; set; } = 1f;
 
     public IEntity Instigator { get; internal set; } = null!;
 

@@ -2,7 +2,7 @@
 using Godot;
 using R3;
 
-namespace spellsurvivor;
+namespace fms;
 
 public static partial class NodeExtensions
 {
@@ -15,7 +15,7 @@ public static partial class NodeExtensions
             cancellationToken
         );
     }
-    
+
     public static Observable<Unit> TreeExitingAsObservable(this Node node,
         CancellationToken cancellationToken = default)
     {
@@ -25,7 +25,7 @@ public static partial class NodeExtensions
             cancellationToken
         );
     }
-    
+
     public static Observable<Unit> TreeExitedAsObservable(this Node node,
         CancellationToken cancellationToken = default)
     {

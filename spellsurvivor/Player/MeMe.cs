@@ -1,7 +1,7 @@
 using Godot;
 using R3;
 
-namespace spellsurvivor;
+namespace fms;
 
 public partial class MeMe : CharacterBody2D, IPawn, IEntity
 {

@@ -1,11 +1,13 @@
 ﻿using Godot;
 
-namespace spellsurvivor;
+namespace fms;
 
 [GlobalClass]
 public partial class WaveSetting : Resource
 {
-    [Export] public int EnemyCount;
+    [Export]
+    public int EnemyCount;
 
-    [Export] public float SpawnInterval;
+    [Export]
+    public float SpawnInterval;
 }

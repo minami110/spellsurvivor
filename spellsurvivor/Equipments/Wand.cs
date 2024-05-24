@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace spellsurvivor;
+namespace fms;
 
 public interface IEquipment
 {
@@ -10,7 +10,8 @@ public interface IEquipment
 
 public partial class Wand : Area2D, IEquipment
 {
-    [Export] private PackedScene _projectileScene = null!;
+    [Export]
+    private PackedScene _projectileScene = null!;
 
     void IEquipment.PrimaryPress()
     {

@@ -1,9 +1,8 @@
 ﻿using System.Threading;
-using Godot;
 using R3;
 using Timer = Godot.Timer;
 
-namespace spellsurvivor;
+namespace fms;
 
 public static class TimerExtensions
 {

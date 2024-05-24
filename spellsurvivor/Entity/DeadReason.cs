@@ -1,4 +1,4 @@
-﻿namespace spellsurvivor;
+﻿namespace fms;
 
 public readonly struct DeadReason
 {

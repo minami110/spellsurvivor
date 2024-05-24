@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using Godot;
 
-namespace spellsurvivor;
+namespace fms;
 
 public partial class DebugGUI : CanvasLayer
 {

@@ -2,18 +2,23 @@ using System;
 using Godot;
 using R3;
 
-namespace spellsurvivor;
+namespace fms;
 
 public partial class EnemySpawner : Node2D
 {
     private DisposableBag _disposableBag;
     private IDisposable _disposableOnExitTree = null!;
     private int _enemyDeadCount;
-    [Export] private PackedScene _enemyScene = null!;
+
+    [Export]
+    private PackedScene _enemyScene = null!;
+
     private int _enemySpawnedCount;
 
     private int _enemyTotalCount;
-    [Export] private WaveSetting[] _waveSettings = null!;
+
+    [Export]
+    private WaveSetting[] _waveSettings = null!;
 
     public override void _Ready()
     {
