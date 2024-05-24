@@ -12,11 +12,9 @@ public partial class MeMe : CharacterBody2D, IPawn, IEntity
     [Export(PropertyHint.Range, "0,1000,50")]
     public float MoveSpeed { get; private set; } = 200;
 
-    [Export(PropertyHint.Range, "0,100,")]
-    public float Health { get; private set; } = 100f;
+    public float Health => Main.GameMode.GetPlayerState().Health.CurrentValue;
 
-    [Export(PropertyHint.Range, "0,100,")]
-    public float MaxHealth { get; private set; } = 100f;
+    public float MaxHealth => Main.GameMode.GetPlayerState().MaxHealth.CurrentValue;
 
     /// <summary>
     /// </summary>
@@ -31,10 +29,11 @@ public partial class MeMe : CharacterBody2D, IPawn, IEntity
             return;
         }
 
-        Health -= amount;
-        if (Health <= 0)
+        var state = Main.GameMode.GetPlayerState();
+        state.Health.Value -= amount;
+        if (state.Health.Value <= 0)
         {
-            Health = 0;
+            state.Health.Value = 0;
             // Emit signal to main scene
             _deadSubject.OnNext(new DeadReason(instigator.Race.ToString(), "Attack"));
         }
@@ -56,10 +55,6 @@ public partial class MeMe : CharacterBody2D, IPawn, IEntity
     public override void _ExitTree()
     {
         _deadSubject.Dispose();
-    }
-
-    public override void _Ready()
-    {
     }
 
     public override void _Process(double delta)

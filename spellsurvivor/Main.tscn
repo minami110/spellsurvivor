@@ -1,7 +1,8 @@
-[gd_scene load_steps=21 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=26 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://spellsurvivor/Main.cs" id="1_tk8vx"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://spellsurvivor/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
+[ext_resource type="Script" path="res://spellsurvivor/Player/PlayerState.cs" id="3_gennh"]
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://spellsurvivor/Enemy/Enemy.tscn" id="4_8okuu"]
 [ext_resource type="Script" path="res://spellsurvivor/Enemy/EnemySpawner.cs" id="4_jccyu"]
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://spellsurvivor/Fonts/Verdana.ttf" id="4_pfm2y"]
@@ -10,9 +11,12 @@
 [ext_resource type="Script" path="res://spellsurvivor/PlayerLazyTracker.cs" id="6_ils86"]
 [ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://spellsurvivor/PoseMenu.tscn" id="7_lf4kb"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://spellsurvivor/Shop/ShopHUD.tscn" id="9_a7daw"]
+[ext_resource type="Script" path="res://spellsurvivor/InGameHUD.cs" id="10_exw8i"]
+[ext_resource type="Texture2D" uid="uid://137blds3e4yk" path="res://spellsurvivor/Textures/bar_under.png" id="11_i183l"]
 [ext_resource type="PackedScene" uid="uid://b1rmuwxvcnuj8" path="res://spellsurvivor/Player/Mouse.tscn" id="12_e0mmc"]
 [ext_resource type="Script" path="res://spellsurvivor/Core/PlayerController.cs" id="13_5xgke"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://spellsurvivor/Player/MeMe.tscn" id="13_ihbaa"]
+[ext_resource type="Texture2D" uid="uid://1f5a4kkhea7v" path="res://spellsurvivor/Textures/bar_progress.png" id="13_vsmj2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2x8fi"]
 size = Vector2(100, 1200)
@@ -36,6 +40,10 @@ _data = {
 }
 point_count = 5
 
+[sub_resource type="LabelSettings" id="LabelSettings_ntlvd"]
+font = ExtResource("4_pfm2y")
+font_size = 30
+
 [sub_resource type="LabelSettings" id="LabelSettings_gt8kx"]
 line_spacing = 0.0
 font = ExtResource("4_pfm2y")
@@ -50,13 +58,17 @@ glow_strength = 1.5
 glow_hdr_threshold = 2.7
 fog_light_energy = 16.0
 
-[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn")]
+[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerState", "_playerPawn")]
 script = ExtResource("1_tk8vx")
 _playerController = NodePath("PlayerController")
+_playerState = NodePath("PlayerState")
 _playerPawn = NodePath("MeMe")
 
 [node name="PlayerController" type="Node" parent="."]
 script = ExtResource("13_5xgke")
+
+[node name="PlayerState" type="Node" parent="."]
+script = ExtResource("3_gennh")
 
 [node name="MeMe" parent="." instance=ExtResource("13_ihbaa")]
 
@@ -133,7 +145,46 @@ rotation = 1.5708
 
 [node name="Mouse" parent="." instance=ExtResource("12_e0mmc")]
 
-[node name="ShopHUD (Layer 2)" parent="." instance=ExtResource("9_a7daw")]
+[node name="InGameHUD (Layer 2)" type="CanvasLayer" parent="." node_paths=PackedStringArray("_healthBar", "_healthText")]
+script = ExtResource("10_exw8i")
+_healthBar = NodePath("Container/HBoxContainer/HealthBar")
+_healthText = NodePath("Container/HBoxContainer/Label")
+
+[node name="Container" type="Control" parent="InGameHUD (Layer 2)"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="InGameHUD (Layer 2)/Container"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -301.0
+offset_top = 24.0
+offset_right = 343.0
+offset_bottom = 62.0
+grow_horizontal = 2
+
+[node name="HealthBar" type="TextureProgressBar" parent="InGameHUD (Layer 2)/Container/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+value = 50.0
+texture_under = ExtResource("11_i183l")
+texture_progress = ExtResource("13_vsmj2")
+
+[node name="Label" type="Label" parent="InGameHUD (Layer 2)/Container/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "NA/NA"
+label_settings = SubResource("LabelSettings_ntlvd")
+
+[node name="ShopHUD (Layer 4)" parent="." instance=ExtResource("9_a7daw")]
+layer = 4
 visible = false
 
 [node name="PoseHUD (Layer 10)" parent="." instance=ExtResource("7_lf4kb")]

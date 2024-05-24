@@ -7,12 +7,12 @@ public partial class DamageArea : Area2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        AreaEntered += OnAreaEntered;
+        BodyEntered += OnBodyEntered;
     }
 
-    private void OnAreaEntered(Area2D area)
+    private void OnBodyEntered(Node2D body)
     {
-        if (area is IEntity entity)
+        if (body is IEntity entity)
         {
             entity.TakeDamage(10, GetNode<Enemy>(".."));
         }

@@ -20,18 +20,10 @@ public partial class Main : Node
     [Export]
     private Node2D _playerPawn = null!;
 
-    public static Main GameMode
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _instance ?? throw new ApplicationException("Main instance is null");
-    }
+    [Export]
+    private PlayerState _playerState = null!;
 
-    public ReadOnlyReactiveProperty<int> Wave => _waveRp;
-
-    public Observable<Unit> WaveStarted => _waveStartedSub;
-    public Observable<Unit> WaveEnded => _waveEndedSub;
-
-    public override void _EnterTree()
+    public Main()
     {
         if (_instance is null)
         {
@@ -42,6 +34,29 @@ public partial class Main : Node
             throw new AggregateException("Main instance already exists");
         }
     }
+
+
+    /// <summary>
+    ///     Get Main instance
+    /// </summary>
+    /// <exception cref="ApplicationException"></exception>
+    public static Main GameMode
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _instance ?? throw new ApplicationException("Main instance is null");
+    }
+
+    public ReadOnlyReactiveProperty<int> Wave => _waveRp;
+
+    /// <summary>
+    ///     Battale Wave が開始したとき
+    /// </summary>
+    public Observable<Unit> WaveStarted => _waveStartedSub;
+
+    /// <summary>
+    ///     Battele Wave が終了した時
+    /// </summary>
+    public Observable<Unit> WaveEnded => _waveEndedSub;
 
     public override async void _Ready()
     {
@@ -61,6 +76,7 @@ public partial class Main : Node
             _instance = null;
         }
     }
+
 
     public static Vector2 GetPlayerGlobalPosition()
     {
@@ -95,5 +111,10 @@ public partial class Main : Node
         _waveEndedSub.OnNext(Unit.Default);
 
         // ToDO: Open Shop Time
+    }
+
+    public PlayerState GetPlayerState()
+    {
+        return _playerState;
     }
 }
