@@ -15,6 +15,9 @@ public partial class EnemySpawner : Node2D
 
     private int _enemySpawnedCount;
 
+    [Export]
+    private Node _enemySpawnRoot = null!;
+
     private int _enemyTotalCount;
 
     [Export]
@@ -113,7 +116,7 @@ public partial class EnemySpawner : Node2D
             .AddTo(ref _disposableBag);
 
         // Add scene
-        GetTree().Root.AddChild(enemy);
+        _enemySpawnRoot.AddChild(enemy);
         enemy.GlobalPosition = spawnGlobalPosition;
     }
 }

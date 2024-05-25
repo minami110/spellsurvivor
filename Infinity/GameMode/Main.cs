@@ -35,7 +35,6 @@ public partial class Main : Node
         }
     }
 
-
     /// <summary>
     ///     Get Main instance
     /// </summary>

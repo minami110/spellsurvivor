@@ -2,8 +2,16 @@ using Godot;
 
 public partial class EscapeGUI : CanvasLayer
 {
+    [Export(PropertyHint.File, "*.tscn")]
+    private string _titleScene = null!;
+
     public void OnExitPressed()
     {
+        if (!Visible)
+        {
+            return;
+        }
+
         // Exit application
         GetTree().Quit();
     }
@@ -16,6 +24,18 @@ public partial class EscapeGUI : CanvasLayer
         }
 
         HideGui();
+    }
+
+    public void OnTitlePressed()
+    {
+        if (!Visible)
+        {
+            return;
+        }
+
+        // ポーズ解除する
+        GetTree().Paused = false;
+        GetTree().ChangeSceneToFile(_titleScene);
     }
 
     public override void _Ready()
