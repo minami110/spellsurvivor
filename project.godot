@@ -29,6 +29,10 @@ window/size/viewport_height=900
 
 project/assembly_name="spellsurvivor"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [input]
 
 move_right={
