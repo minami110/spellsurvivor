@@ -1,8 +1,7 @@
 ﻿using System.Threading;
-using R3;
 using Timer = Godot.Timer;
 
-namespace fms;
+namespace R3;
 
 public static class TimerExtensions
 {

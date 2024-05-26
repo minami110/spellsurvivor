@@ -10,8 +10,28 @@ public static partial class NodeExtensions
     /// <param name="node"></param>
     /// <param name="timeSec"></param>
     /// <returns></returns>
-    public static SignalAwaiter WaitForSeconds(this Node node, float timeSec)
+    public static SignalAwaiter WaitForSecondsAsync(this Node node, float timeSec)
     {
         return node.ToSignal(node.GetTree().CreateTimer(timeSec), SceneTreeTimer.SignalName.Timeout);
+    }
+
+    /// <summary>
+    ///     Wrapper for SceneTree ProcessFrame signal awaiter
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    public static SignalAwaiter BeginOfProcessAsync(this Node node)
+    {
+        return node.ToSignal(node.GetTree(), SceneTree.SignalName.ProcessFrame);
+    }
+
+    /// <summary>
+    ///     Wrapper for SceneTree PhysicsFrame signal awaiter
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    public static SignalAwaiter BeginOfPhysicsFrameAsync(this Node node)
+    {
+        return node.ToSignal(node.GetTree(), SceneTree.SignalName.PhysicsFrame);
     }
 }

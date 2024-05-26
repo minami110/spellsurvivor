@@ -140,8 +140,8 @@ rotation = 1.5708
 
 [node name="InGameHUD (Layer 2)" type="CanvasLayer" parent="." node_paths=PackedStringArray("_healthBar", "_healthText")]
 script = ExtResource("10_exw8i")
-_healthBar = NodePath("Container/HBoxContainer/HealthBar")
-_healthText = NodePath("Container/HBoxContainer/Label")
+_healthBar = NodePath("Container/HBox Health HUD/HealthBar")
+_healthText = NodePath("Container/HBox Health HUD/Label")
 
 [node name="Container" type="Control" parent="InGameHUD (Layer 2)"]
 layout_mode = 3
@@ -151,7 +151,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="InGameHUD (Layer 2)/Container"]
+[node name="HBox Health HUD" type="HBoxContainer" parent="InGameHUD (Layer 2)/Container"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -162,7 +162,7 @@ offset_right = 343.0
 offset_bottom = 62.0
 grow_horizontal = 2
 
-[node name="HealthBar" type="TextureProgressBar" parent="InGameHUD (Layer 2)/Container/HBoxContainer"]
+[node name="HealthBar" type="TextureProgressBar" parent="InGameHUD (Layer 2)/Container/HBox Health HUD"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -170,7 +170,7 @@ value = 50.0
 texture_under = ExtResource("11_i183l")
 texture_progress = ExtResource("13_vsmj2")
 
-[node name="Label" type="Label" parent="InGameHUD (Layer 2)/Container/HBoxContainer"]
+[node name="Label" type="Label" parent="InGameHUD (Layer 2)/Container/HBox Health HUD"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "NA/NA"

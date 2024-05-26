@@ -61,7 +61,7 @@ public partial class Enemy : RigidBody2D, IEntity
         _isHitStopping = true;
         LinearVelocity = Vector2.Zero;
 
-        await this.WaitForSeconds(0.1f);
+        await this.WaitForSecondsAsync(0.1f);
 
         _isHitStopping = false;
         sm.SetShaderParameter("hit", 0.0f);

@@ -61,7 +61,7 @@ public partial class Main : Node
     {
         _playerController.Possess((IPawn)_playerPawn);
 
-        await this.WaitForSeconds(1f);
+        await this.WaitForSecondsAsync(1f);
         StartGame();
     }
 
