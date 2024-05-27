@@ -37,7 +37,8 @@ public partial class EscapeGUI : CanvasLayer
 
         // ポーズ解除する
         GetTree().Paused = false;
-        GetNode<SceneManager>("/root/SceneManager").GoToScene(_titleScene);
+        // タイトル画面に遷移する
+        SceneManager.GoToScene(_titleScene);
     }
 
     public override void _Ready()

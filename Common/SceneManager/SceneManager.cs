@@ -1,18 +1,29 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 using Array = Godot.Collections.Array;
 
 namespace fms;
 
+/// <summary>
+///     This node is assigned as Singleton in the project settings.
+/// </summary>
 public partial class SceneManager : Node
 {
+    private static SceneManager _singleton = null!;
     private readonly Array _loadingProgress = new();
     private bool _isSceneChanging;
 
-    public void GoToScene(string packedScenePath)
+    public override void _EnterTree()
     {
-        if (_isSceneChanging)
+        // アプリケーション終了時まで常にこの Instance が存在するため, ExitTree での処理は省略
+        _singleton = this;
+    }
+
+    public static void GoToScene(string packedScenePath)
+    {
+        if (_singleton._isSceneChanging)
         {
             GD.PushError("Scene is already changing");
             return;
@@ -23,8 +34,8 @@ public partial class SceneManager : Node
             throw new InvalidProgramException($"Specified scene does not exist: {packedScenePath}");
         }
 
-        _isSceneChanging = true;
-        CallDeferred(MethodName.GoToSceneInternal, packedScenePath);
+        _singleton._isSceneChanging = true;
+        _singleton.CallDeferred(MethodName.GoToSceneInternal, packedScenePath);
     }
 
     private async void GoToSceneInternal(string packedScenePath)
@@ -76,7 +87,7 @@ public partial class SceneManager : Node
             return;
         }
 
-        this.DebugLog("[Completed loading!");
+        this.DebugLog("Completed loading!");
 
         // シーンを読み込む
         var packedScene = (PackedScene)ResourceLoader.LoadThreadedGet(packedScenePath);
@@ -89,18 +100,26 @@ public partial class SceneManager : Node
         _isSceneChanging = false;
     }
 
-    private async ValueTask<bool> WaitLoadThreadedRequestAsync(string resourcePath)
+    private async ValueTask<bool> WaitLoadThreadedRequestAsync(string resourcePath, CancellationToken token = default)
     {
         _loadingProgress.Clear();
         while (true)
         {
+            if (token.IsCancellationRequested)
+            {
+                return false;
+            }
+
+            // ロード中
+            await this.BeginOfProcessAsync();
+
             var status = ResourceLoader.LoadThreadedGetStatus(resourcePath, _loadingProgress);
             GD.Print($"  progress: {(float)_loadingProgress[0] * 100f: 000.0} %");
 
             switch (status)
             {
                 case ResourceLoader.ThreadLoadStatus.InProgress:
-                    break;
+                    continue;
                 case ResourceLoader.ThreadLoadStatus.Loaded:
                     return true;
                 case ResourceLoader.ThreadLoadStatus.InvalidResource:
@@ -108,9 +127,6 @@ public partial class SceneManager : Node
                 default:
                     return false;
             }
-
-            // ロード中
-            await this.BeginOfProcessAsync();
         }
     }
 }

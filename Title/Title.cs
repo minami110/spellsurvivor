@@ -19,7 +19,7 @@ public partial class Title : Node
 
     public async void OnStartButtonPressed()
     {
-        GetNode<SceneManager>("/root/SceneManager").GoToScene(_mainGameScene);
+        SceneManager.GoToScene(_mainGameScene);
     }
 
     public void OnExitButtonPressed()
