@@ -34,4 +34,9 @@ public static partial class NodeExtensions
     {
         return node.ToSignal(node.GetTree(), SceneTree.SignalName.PhysicsFrame);
     }
+
+    public static void DebugLog(this Node node, string message)
+    {
+        GD.Print($"[{node.GetType()}] {message}");
+    }
 }

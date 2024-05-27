@@ -7,13 +7,23 @@ namespace fms;
 
 public partial class SceneManager : Node
 {
+    private readonly Array _loadingProgress = new();
+    private bool _isSceneChanging;
+
     public void GoToScene(string packedScenePath)
     {
+        if (_isSceneChanging)
+        {
+            GD.PushError("Scene is already changing");
+            return;
+        }
+
         if (!ResourceLoader.Exists(packedScenePath))
         {
             throw new InvalidProgramException($"Specified scene does not exist: {packedScenePath}");
         }
 
+        _isSceneChanging = true;
         CallDeferred(MethodName.GoToSceneInternal, packedScenePath);
     }
 
@@ -26,10 +36,11 @@ public partial class SceneManager : Node
         if (!IsInstanceValid(currentScene))
         {
             GD.PushError("Failed to get valid current scene");
+            _isSceneChanging = false;
             return;
         }
 
-        GD.Print($"[{nameof(Title)}] Free current scene: {currentScene.GetPath()}");
+        this.DebugLog($"Free current scene: {currentScene.GetPath()}");
         currentScene.Free();
 
         // ToDo: ロード画面を用意する
@@ -37,10 +48,10 @@ public partial class SceneManager : Node
         // 別スレッドでの PackedScene の読み込みを開始する
         const ResourceLoader.CacheMode cacheMode = ResourceLoader.CacheMode.Ignore;
 
-        GD.Print($"[{nameof(Title)}] Loading request started\n" +
-                 $"  path: {packedScenePath}\n" +
-                 $"  useSubThreads: {true}\n" +
-                 $"  cache mode: {cacheMode}");
+        this.DebugLog("Loading request started\n" +
+                      $"  path: {packedScenePath}\n" +
+                      $"  useSubThreads: {true}\n" +
+                      $"  cache mode: {cacheMode}");
 
         var error = ResourceLoader.LoadThreadedRequest(
             packedScenePath,
@@ -52,6 +63,7 @@ public partial class SceneManager : Node
         if (error != Error.Ok)
         {
             GD.PushError($"Failed to load {packedScenePath}, error: {error}");
+            _isSceneChanging = false;
             return;
         }
 
@@ -60,10 +72,11 @@ public partial class SceneManager : Node
         if (!success)
         {
             GD.PushError($"Failed to load {packedScenePath}");
+            _isSceneChanging = false;
             return;
         }
 
-        GD.Print($"[{nameof(Title)}] Completed loading!");
+        this.DebugLog("[Completed loading!");
 
         // シーンを読み込む
         var packedScene = (PackedScene)ResourceLoader.LoadThreadedGet(packedScenePath);
@@ -73,15 +86,16 @@ public partial class SceneManager : Node
         tree.Root.AddChild(scene);
         tree.CurrentScene = scene;
         GD.Print($"[{nameof(Title)}] Updated current scene: {tree.CurrentScene.GetPath()}");
+        _isSceneChanging = false;
     }
 
-    private async Task<bool> WaitLoadThreadedRequestAsync(string resourcePath)
+    private async ValueTask<bool> WaitLoadThreadedRequestAsync(string resourcePath)
     {
-        var loadingProgress = new Array();
+        _loadingProgress.Clear();
         while (true)
         {
-            var status = ResourceLoader.LoadThreadedGetStatus(resourcePath, loadingProgress);
-            GD.Print($"  progress: {(float)loadingProgress[0] * 100f: 000.0} %");
+            var status = ResourceLoader.LoadThreadedGetStatus(resourcePath, _loadingProgress);
+            GD.Print($"  progress: {(float)_loadingProgress[0] * 100f: 000.0} %");
 
             switch (status)
             {
