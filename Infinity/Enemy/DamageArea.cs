@@ -14,7 +14,7 @@ public partial class DamageArea : Area2D
     {
         if (body is IEntity entity)
         {
-            entity.TakeDamage(10, GetNode<Enemy>(".."));
+            entity.TakeDamage(10);
         }
     }
 }

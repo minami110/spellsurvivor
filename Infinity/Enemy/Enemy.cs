@@ -23,23 +23,13 @@ public partial class Enemy : RigidBody2D, IEntity
 
     public Race Race => Race.Slime;
 
-    void IEntity.TakeDamage(float amount, IEntity? instigator)
+    void IEntity.TakeDamage(float amount)
     {
-        if (instigator is null)
-        {
-            return;
-        }
-
-        if (instigator.Race != Race.Player)
-        {
-            return;
-        }
-
         Health -= amount;
         if (Health <= 0)
         {
             Health = 0;
-            Deth(new DeadReason(instigator.Race.ToString(), "Projectile"));
+            Deth(new DeadReason("N/A", "Projectile"));
         }
         else
         {

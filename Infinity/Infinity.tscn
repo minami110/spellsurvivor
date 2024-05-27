@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=25 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Common/PlayerController.cs" id="2_1uq3r"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/Enemy.tscn" id="4_8okuu"]
 [ext_resource type="Script" path="res://Infinity/Enemy/EnemySpawner.cs" id="4_jccyu"]
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Fonts/Verdana.ttf" id="4_pfm2y"]
+[ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Equipments/AutoAimPistol.tscn" id="5_isohu"]
 [ext_resource type="Script" path="res://Infinity/GameMode/WaveSetting.cs" id="6_34bq1"]
 [ext_resource type="Script" path="res://Infinity/PlayerLazyTracker.cs" id="6_ils86"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/Shop/ShopHUD.tscn" id="9_a7daw"]
@@ -63,6 +64,8 @@ script = ExtResource("2_1uq3r")
 script = ExtResource("3_gennh")
 
 [node name="MeMe" parent="." instance=ExtResource("12_e0mmc")]
+
+[node name="AutoAimPistol" parent="MeMe" instance=ExtResource("5_isohu")]
 
 [node name="BG Static (Layer -100)" type="CanvasLayer" parent="."]
 layer = -100

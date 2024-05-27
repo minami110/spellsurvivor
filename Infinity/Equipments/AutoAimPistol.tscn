@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmr1iekscwraj"]
+
+[ext_resource type="Script" path="res://Infinity/Equipments/AutoAimPistol.cs" id="1_cqo88"]
+[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Equipments/Projectile.tscn" id="2_7pbav"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0ojw7"]
+radius = 1.0
+
+[node name="AutoAimPistol" type="Node2D" node_paths=PackedStringArray("_searchArea", "_collisionShape", "_timer", "_bulletSpawnNode")]
+script = ExtResource("1_cqo88")
+_bulletPackedScene = ExtResource("2_7pbav")
+_searchArea = NodePath("Area2D")
+_collisionShape = NodePath("Area2D/CollisionShape2D")
+_timer = NodePath("Timer")
+_bulletSpawnNode = NodePath("BulletSpawnRoot")
+metadata/_edit_group_ = true
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+scale = Vector2(10, 10)
+shape = SubResource("CircleShape2D_0ojw7")
+debug_color = Color(0.282353, 0.6, 0.294118, 0.054902)
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="BulletSpawnRoot" type="Node" parent="."]

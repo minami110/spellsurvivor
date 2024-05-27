@@ -12,13 +12,19 @@ public sealed partial class InGameHUD : CanvasLayer
     [Export]
     private Label _healthText = null!;
 
-    private IDisposable _waveStartSubscription;
+    private IDisposable _waveStartSubscription = null!;
 
     public override void _Ready()
     {
         var playerState = Main.GameMode.GetPlayerState();
-        playerState.Health.Subscribe(OnHealthChanged);
-        playerState.MaxHealth.Subscribe(OnHealthChanged);
+        var d1 = playerState.Health.Subscribe(OnHealthChanged);
+        var d2 = playerState.MaxHealth.Subscribe(OnHealthChanged);
+        _waveStartSubscription = Disposable.Combine(d1, d2);
+    }
+
+    public override void _ExitTree()
+    {
+        _waveStartSubscription.Dispose();
     }
 
     private void OnHealthChanged(float _)

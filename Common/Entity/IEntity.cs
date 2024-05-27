@@ -23,5 +23,5 @@ public interface IEntity
     /// </summary>
     public float Health { get; }
 
-    public void TakeDamage(float amount, IEntity? instigator);
+    public void TakeDamage(float amount);
 }

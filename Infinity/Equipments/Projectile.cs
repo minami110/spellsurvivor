@@ -22,8 +22,6 @@ public partial class Projectile : Area2D
     [Export(PropertyHint.Range, "0, 10")]
     public float LifeTime { get; set; } = 1f;
 
-    public IEntity Instigator { get; internal set; } = null!;
-
     protected override void Dispose(bool disposing)
     {
         _disposable?.Dispose();
@@ -58,7 +56,7 @@ public partial class Projectile : Area2D
 
     private void ApplyDamageToEntity(IEntity entity)
     {
-        entity.TakeDamage(50, Instigator);
+        entity.TakeDamage(50);
         KillThis();
     }
 

@@ -17,7 +17,7 @@ public partial class Title : Node
     private string _mainGameScene = string.Empty;
 
 
-    public async void OnStartButtonPressed()
+    public void OnStartButtonPressed()
     {
         SceneManager.GoToScene(_mainGameScene);
     }
