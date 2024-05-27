@@ -14,20 +14,17 @@ public partial class Title : Node
     private Label _godotVersionLabel = null!;
 
     [Export(PropertyHint.File, "*.tscn")]
-    private string _mainGameScene = null!;
+    private string _mainGameScene = string.Empty;
 
-    public void OnStartButtonPressed()
+
+    public async void OnStartButtonPressed()
     {
-        // Remove Title Scene
-        var error = GetTree().ChangeSceneToFile(_mainGameScene);
-        if (error != Error.Ok)
-        {
-            GD.PrintErr($"[Title]: ChangeSceneToFile error: {error}");
-        }
+        GetNode<SceneManager>("/root/SceneManager").GoToScene(_mainGameScene);
     }
 
     public void OnExitButtonPressed()
     {
+        // Close Application
         GetTree().Quit();
     }
 

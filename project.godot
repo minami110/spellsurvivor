@@ -16,6 +16,10 @@ run/main_scene="res://Title/Title.tscn"
 config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
 config/icon="res://Common/Textures/icon.svg"
 
+[autoload]
+
+SceneManager="*res://Common/SceneManager/SceneManager.cs"
+
 [debug]
 
 settings/stdout/verbose_stdout=true

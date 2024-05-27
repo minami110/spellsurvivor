@@ -84,7 +84,8 @@ public partial class Main : Node
             return _instance._playerPawn.GlobalPosition;
         }
 
-        throw new ApplicationException("Main instance is null");
+        GD.PrintErr("Main instance is null");
+        return Vector2.Zero;
     }
 
     public void StartGame()

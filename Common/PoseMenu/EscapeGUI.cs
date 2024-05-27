@@ -1,5 +1,7 @@
 using Godot;
 
+namespace fms;
+
 public partial class EscapeGUI : CanvasLayer
 {
     [Export(PropertyHint.File, "*.tscn")]
@@ -35,7 +37,7 @@ public partial class EscapeGUI : CanvasLayer
 
         // ポーズ解除する
         GetTree().Paused = false;
-        GetTree().ChangeSceneToFile(_titleScene);
+        GetNode<SceneManager>("/root/SceneManager").GoToScene(_titleScene);
     }
 
     public override void _Ready()
