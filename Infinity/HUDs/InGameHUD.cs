@@ -1,4 +1,3 @@
-using System;
 using Godot;
 using R3;
 
@@ -19,24 +18,21 @@ public sealed partial class InGameHUD : CanvasLayer
     [Export]
     private Label _waveTimerLabel = null!;
 
-    private IDisposable _waveStartSubscription = null!;
-
     public override void _Ready()
     {
+        var gm = Main.GameMode;
+        var ps = gm.GetPlayerState();
+
         // Subscribe player health
-        var playerState = Main.GameMode.GetPlayerState();
-        var d1 = playerState.Health.Subscribe(OnHealthChanged);
-        var d2 = playerState.MaxHealth.Subscribe(OnHealthChanged);
+        var d1 = ps.Health.Subscribe(OnHealthChanged);
+        var d2 = ps.MaxHealth.Subscribe(OnHealthChanged);
 
         // Subscribe wave info
-        var d3 = Main.GameMode.Wave.Subscribe(x => _currentWaveLabel.Text = $"Wave {x}");
+        var d3 = gm.Wave.Subscribe(x => _currentWaveLabel.Text = $"Wave {x}");
+        var d4 = gm.RemainingWaveSecond.Subscribe(x => _waveTimerLabel.Text = $"{x:000.0}");
 
-        _waveStartSubscription = Disposable.Combine(d1, d2, d3);
-    }
-
-    public override void _ExitTree()
-    {
-        _waveStartSubscription.Dispose();
+        // Add disposables when this node is exited tree
+        Disposable.Combine(d1, d2, d3, d4).AddTo(this);
     }
 
     private void OnHealthChanged(float _)

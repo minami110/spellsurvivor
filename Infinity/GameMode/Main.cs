@@ -134,7 +134,23 @@ public partial class Main : Node
         }
     }
 
-    public void EnterBattleWave()
+    public static Vector2 GetPlayerGlobalPosition()
+    {
+        if (_instance is not null)
+        {
+            return _instance._playerPawn.GlobalPosition;
+        }
+
+        GD.PrintErr("Main instance is null");
+        return Vector2.Zero;
+    }
+
+    public PlayerState GetPlayerState()
+    {
+        return _playerState;
+    }
+
+    private void EnterBattleWave()
     {
         // 現在の Wave Settings をもらう
         if (_waveRp.Value >= _waveSettings.Length)
@@ -159,7 +175,7 @@ public partial class Main : Node
         _waveStartedSub.OnNext(Unit.Default);
     }
 
-    public void ExitBattleWave()
+    private void ExitBattleWave()
     {
         _waveEndedSub.OnNext(Unit.Default);
 
@@ -167,28 +183,6 @@ public partial class Main : Node
 
         // Playerに報酬を与える
         _playerState.AddEffect(new AddMoneyEffect { Value = _currentWaveSettings.Money });
-    }
-
-    public void ExitShop()
-    {
-        EnterBattleWave();
-    }
-
-
-    public static Vector2 GetPlayerGlobalPosition()
-    {
-        if (_instance is not null)
-        {
-            return _instance._playerPawn.GlobalPosition;
-        }
-
-        GD.PrintErr("Main instance is null");
-        return Vector2.Zero;
-    }
-
-    public PlayerState GetPlayerState()
-    {
-        return _playerState;
     }
 
     private void ResetPlayerState()
