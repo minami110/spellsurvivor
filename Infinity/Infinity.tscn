@@ -1,14 +1,12 @@
-[gd_scene load_steps=24 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=22 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawnSettings.cs" id="3_d53fw"]
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="4_8okuu"]
 [ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) BigTako.tscn" id="4_rd0iv"]
-[ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Equipments/(Equipment) AutoAimPistol.tscn" id="5_isohu"]
 [ext_resource type="Script" path="res://Infinity/GameMode/WaveSetting.cs" id="6_34bq1"]
 [ext_resource type="Script" path="res://Common/Inputs/PlayerController.cs" id="6_m3lsh"]
-[ext_resource type="PackedScene" uid="uid://hvaujiufb0ew" path="res://Infinity/Equipments/(Equipment) ForwardKnife.tscn" id="8_3hiby"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawner.cs" id="8_lc8x0"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/ShopHUD.tscn" id="9_a7daw"]
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
@@ -55,12 +53,14 @@ size = Vector2(100, 1200)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rh687"]
 size = Vector2(1200, 100)
 
-[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_enemySpawner")]
+[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_enemySpawner", "_inGameHud", "_shopHud")]
 script = ExtResource("1_tk8vx")
 _waveSettings = Array[Object]([SubResource("Resource_qt72y"), SubResource("Resource_y2gxo")])
 _playerController = NodePath("PlayerController")
 _playerPawn = NodePath("MeMe (Player)")
 _enemySpawner = NodePath("EnemySpawner")
+_inGameHud = NodePath("HUDs/InGameHUD (Layer 2)")
+_shopHud = NodePath("HUDs/ShopHUD (Layer 4)")
 
 [node name="WaveTimer" type="Timer" parent="."]
 
@@ -68,10 +68,6 @@ _enemySpawner = NodePath("EnemySpawner")
 script = ExtResource("6_m3lsh")
 
 [node name="MeMe (Player)" parent="." instance=ExtResource("12_e0mmc")]
-
-[node name="AutoAimPistol" parent="MeMe (Player)" instance=ExtResource("5_isohu")]
-
-[node name="ForwardKnife" parent="MeMe (Player)" instance=ExtResource("8_3hiby")]
 
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("_enemySpawnRoot", "_spawnPath")]
 process_mode = 1
@@ -127,22 +123,8 @@ visible = false
 position = Vector2(-550, 0)
 shape = SubResource("RectangleShape2D_2x8fi")
 
-[node name="BG Parallax (Layer -100)" type="ParallaxBackground" parent="HUDs"]
-visible = false
-
-[node name="ParallaxLayer" type="ParallaxLayer" parent="HUDs/BG Parallax (Layer -100)"]
-visible = false
-motion_mirroring = Vector2(2048, 2048)
-
-[node name="TextureRect" type="TextureRect" parent="HUDs/BG Parallax (Layer -100)/ParallaxLayer"]
-visible = false
-modulate = Color(0.377919, 0.377919, 0.377919, 1)
-offset_right = 2048.0
-offset_bottom = 2048.0
-texture = ExtResource("2_b1ok3")
-stretch_mode = 1
-
 [node name="InGameHUD (Layer 2)" parent="HUDs" instance=ExtResource("11_3i81h")]
+visible = false
 
 [node name="ShopHUD (Layer 4)" parent="HUDs" instance=ExtResource("9_a7daw")]
 layer = 4

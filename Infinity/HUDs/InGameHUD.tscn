@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://Infinity/HUDs/InGameHUD.cs" id="1_6o03e"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Textures/white_4x4_srgb.png" id="2_l31n5"]
+[ext_resource type="PackedScene" uid="uid://bycglxvkrnadg" path="res://Infinity/HUDs/InGameEquipment.tscn" id="4_1mss2"]
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Fonts/Verdana.ttf" id="4_hsb5i"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ntlvd"]
@@ -9,17 +10,16 @@ font = ExtResource("4_hsb5i")
 font_size = 24
 
 [sub_resource type="LabelSettings" id="LabelSettings_iyokw"]
-font_size = 20
+font_size = 40
 
-[sub_resource type="LabelSettings" id="LabelSettings_wfcxv"]
-font_size = 10
-
-[node name="InGameHUD (Layer 2)" type="CanvasLayer" node_paths=PackedStringArray("_healthBar", "_healthText", "_currentWaveLabel", "_waveTimerLabel")]
+[node name="InGameHUD (Layer 2)" type="CanvasLayer" node_paths=PackedStringArray("_healthBar", "_healthText", "_currentWaveLabel", "_waveTimerLabel", "_equipmentContainer")]
 script = ExtResource("1_6o03e")
-_healthBar = NodePath("Container/VBoxContainer/HBox Health HUD/HealthBar")
-_healthText = NodePath("Container/VBoxContainer/HBox Health HUD/Label Health_MaxHealth")
-_currentWaveLabel = NodePath("Container/VBoxContainer/Label Wave Info")
-_waveTimerLabel = NodePath("Container/VBoxContainer/Label Wave Timer")
+_healthBar = NodePath("Container/HBox Health HUD/HealthBar")
+_healthText = NodePath("Container/HBox Health HUD/Label Health_MaxHealth")
+_currentWaveLabel = NodePath("Container/Top VBoxContainer/Label Wave Info")
+_waveTimerLabel = NodePath("Container/Top VBoxContainer/Label Wave Timer")
+_equipmentContainer = NodePath("Container/CurrentEquipment HUD Parent")
+_equipmentPackedScene = ExtResource("4_1mss2")
 
 [node name="Container" type="Control" parent="."]
 layout_mode = 3
@@ -45,21 +45,22 @@ offset_bottom = 250.0
 grow_vertical = 2
 color = Color(0.247059, 0.247059, 0.247059, 0.137255)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Container"]
+[node name="HBox Health HUD" type="HBoxContainer" parent="Container"]
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 7
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-offset_left = -150.0
-offset_right = 150.0
-offset_bottom = 102.0
+anchor_bottom = 1.0
+offset_left = -191.0
+offset_top = -166.0
+offset_right = 192.0
+offset_bottom = -135.0
 grow_horizontal = 2
-
-[node name="HBox Health HUD" type="HBoxContainer" parent="Container/VBoxContainer"]
-layout_mode = 2
+grow_vertical = 0
 alignment = 1
 
-[node name="HealthBar" type="TextureProgressBar" parent="Container/VBoxContainer/HBox Health HUD"]
+[node name="HealthBar" type="TextureProgressBar" parent="Container/HBox Health HUD"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 2
@@ -70,25 +71,34 @@ texture_progress = ExtResource("2_l31n5")
 tint_under = Color(0, 0, 0, 1)
 tint_progress = Color(0, 1, 0, 1)
 
-[node name="Label Health_MaxHealth" type="Label" parent="Container/VBoxContainer/HBox Health HUD"]
+[node name="Label Health_MaxHealth" type="Label" parent="Container/HBox Health HUD"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "NA/NA"
 label_settings = SubResource("LabelSettings_ntlvd")
 
-[node name="Label Wave Info" type="Label" parent="Container/VBoxContainer"]
+[node name="Top VBoxContainer" type="VBoxContainer" parent="Container"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_right = 150.0
+offset_bottom = 102.0
+grow_horizontal = 2
+
+[node name="Label Wave Info" type="Label" parent="Container/Top VBoxContainer"]
 layout_mode = 2
 text = "Wave: 1"
-label_settings = SubResource("LabelSettings_iyokw")
 horizontal_alignment = 1
 
-[node name="Label Wave Timer" type="Label" parent="Container/VBoxContainer"]
+[node name="Label Wave Timer" type="Label" parent="Container/Top VBoxContainer"]
 layout_mode = 2
 text = "00:00"
 label_settings = SubResource("LabelSettings_iyokw")
 horizontal_alignment = 1
 
-[node name="HBox Currrent Equipments" type="HBoxContainer" parent="Container"]
+[node name="CurrentEquipment HUD Parent" type="HBoxContainer" parent="Container"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -101,126 +111,3 @@ offset_right = 247.0
 grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
-
-[node name="EquipmentIngameHud" type="Control" parent="Container/HBox Currrent Equipments"]
-custom_minimum_size = Vector2(90, 120)
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="ColorRect" type="ColorRect" parent="Container/HBox Currrent Equipments/EquipmentIngameHud"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 5.0
-offset_right = -5.0
-offset_bottom = 80.0
-grow_horizontal = 2
-color = Color(0.481789, 0.481789, 0.481789, 1)
-
-[node name="Label" type="Label" parent="Container/HBox Currrent Equipments/EquipmentIngameHud"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -27.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "AutoAimPistol"
-label_settings = SubResource("LabelSettings_wfcxv")
-horizontal_alignment = 1
-
-[node name="ProgressBar" type="ProgressBar" parent="Container/HBox Currrent Equipments/EquipmentIngameHud"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 5.0
-offset_top = -27.0
-offset_right = -5.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="EquipmentIngameHud2" type="Control" parent="Container/HBox Currrent Equipments"]
-custom_minimum_size = Vector2(90, 120)
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="ColorRect" type="ColorRect" parent="Container/HBox Currrent Equipments/EquipmentIngameHud2"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 5.0
-offset_right = -5.0
-offset_bottom = 80.0
-grow_horizontal = 2
-color = Color(0.481789, 0.481789, 0.481789, 1)
-
-[node name="Label" type="Label" parent="Container/HBox Currrent Equipments/EquipmentIngameHud2"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -27.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "AutoAimPistol"
-label_settings = SubResource("LabelSettings_wfcxv")
-horizontal_alignment = 1
-
-[node name="ProgressBar" type="ProgressBar" parent="Container/HBox Currrent Equipments/EquipmentIngameHud2"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 5.0
-offset_top = -27.0
-offset_right = -5.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="EquipmentIngameHud3" type="Control" parent="Container/HBox Currrent Equipments"]
-custom_minimum_size = Vector2(90, 120)
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="ColorRect" type="ColorRect" parent="Container/HBox Currrent Equipments/EquipmentIngameHud3"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 5.0
-offset_right = -5.0
-offset_bottom = 80.0
-grow_horizontal = 2
-color = Color(0.481789, 0.481789, 0.481789, 1)
-
-[node name="Label" type="Label" parent="Container/HBox Currrent Equipments/EquipmentIngameHud3"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -27.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "AutoAimPistol"
-label_settings = SubResource("LabelSettings_wfcxv")
-horizontal_alignment = 1
-
-[node name="ProgressBar" type="ProgressBar" parent="Container/HBox Currrent Equipments/EquipmentIngameHud3"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 5.0
-offset_top = -27.0
-offset_right = -5.0
-grow_horizontal = 2
-grow_vertical = 0

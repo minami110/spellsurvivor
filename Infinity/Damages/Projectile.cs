@@ -1,4 +1,3 @@
-using System;
 using Godot;
 using R3;
 
@@ -21,7 +20,6 @@ public partial class Projectile : Area2D
     [Export(PropertyHint.Range, "0, 10")]
     public float LifeTime { get; set; } = 1f;
 
-    private IDisposable? _disposable;
     private float _lifeTimeCounter;
     private Vector2 _velocity;
 
@@ -31,8 +29,7 @@ public partial class Projectile : Area2D
             .Cast<Node2D, Enemy>()
             .Subscribe(this, (entity, state) => { state.ApplyDamageToEnemy(entity); });
 
-        _disposable = d1;
-
+        Disposable.Combine(d1).AddTo(this);
         _velocity = InitialSpeed * Direction;
     }
 
@@ -49,12 +46,6 @@ public partial class Projectile : Area2D
         {
             KillThis();
         }
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        _disposable?.Dispose();
-        base.Dispose(disposing);
     }
 
     private void ApplyDamageToEnemy(Enemy enemy)

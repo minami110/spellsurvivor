@@ -3,17 +3,8 @@ using R3;
 
 namespace fms;
 
-public partial class AutoAimPistol : Node2D
+public partial class AutoAimPistol : EquipmentBase
 {
-    [Export]
-    private float _damage = 34f;
-
-    [Export]
-    private float _radius = 100f;
-
-    [Export]
-    private float _cooldown = 1f;
-
     [ExportGroup("Internal Reference")]
     [Export]
     private PackedScene _bulletPackedScene = null!;
@@ -27,18 +18,18 @@ public partial class AutoAimPistol : Node2D
     [Export]
     private Area2D _searchArea = null!;
 
-    [Export]
-    private Timer _timer = null!;
-
     public override void _Ready()
     {
+        base._Ready();
+
         UpdateRadius();
 
-        _timer.WaitTime = _cooldown;
+        Timer.WaitTime = ItemSettings.CoolDown;
 
-        var d1 = Main.GameMode.WaveStarted.Subscribe(_ => _timer.Start());
-        var d2 = Main.GameMode.WaveEnded.Subscribe(_ => _timer.Stop());
-        var d3 = _timer.TimeoutAsObservable().Subscribe(_ => Fire());
+        var d1 = Main.GameMode.WaveStarted.Subscribe(_ => Timer.Start());
+        var d2 = Main.GameMode.WaveEnded.Subscribe(_ => Timer.Stop());
+        var d3 = Timer.TimeoutAsObservable().Subscribe(_ => Fire());
+
         Disposable.Combine(d1, d2, d3).AddTo(this);
     }
 
@@ -76,7 +67,7 @@ public partial class AutoAimPistol : Node2D
         // Spawn bullet
         var bullet = _bulletPackedScene.Instantiate<Projectile>();
         {
-            bullet.Damage = _damage;
+            bullet.Damage = ItemSettings.BaseAttack;
             bullet.Direction = direction;
             bullet.GlobalPosition = GlobalPosition;
             bullet.InitialSpeed = 1000f;
@@ -86,6 +77,6 @@ public partial class AutoAimPistol : Node2D
 
     private void UpdateRadius()
     {
-        _collisionShape.Scale = new Vector2(_radius, _radius);
+        _collisionShape.Scale = new Vector2(ItemSettings.Range, ItemSettings.Range);
     }
 }

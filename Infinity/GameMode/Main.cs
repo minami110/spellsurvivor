@@ -32,15 +32,31 @@ public partial class Main : Node
     [Export]
     private EnemySpawner _enemySpawner = null!;
 
+    [Export]
+    private InGameHUD _inGameHud = null!;
+
+    [Export]
+    private ShopHUD _shopHud = null!;
+
+
     private static Main? _instance;
     private readonly IDisposable _disposable;
     private readonly List<EnemySpawnTimer> _enemySpawnTimers = new();
 
+    // 現在 Player が装備しているアイテム
+    private readonly List<ShopItemSettings> _equipments = new();
+    private readonly Subject<ShopItemSettings> _equippedItemSub = new();
+
     private readonly PlayerState _playerState;
+
+    // 現在 Player が装備しているアイテム (実態 のほう) の辞書
+    private readonly Dictionary<ShopItemSettings, EquipmentBase> _realEquipmentDict = new();
+
     private readonly ReactiveProperty<float> _remainingWaveSecondRp = new();
     private readonly Subject<Unit> _waveEndedSub = new();
     private readonly ReactiveProperty<int> _waveRp = new();
     private readonly Subject<Unit> _waveStartedSub = new();
+
     private WaveSetting _currentWaveSettings = null!;
 
     private MainPhase _phase = MainPhase.INIT;
@@ -74,6 +90,15 @@ public partial class Main : Node
     ///     現在の Wave の残り時間
     /// </summary>
     public ReadOnlyReactiveProperty<float> RemainingWaveSecond => _remainingWaveSecondRp;
+
+    /// <summary>
+    ///     プレイヤーがアイテムを新しく装備したときに呼ばれる
+    /// </summary>
+    public Observable<ShopItemSettings> EquippedItem => _equippedItemSub;
+
+    public IReadOnlyList<ShopItemSettings> Equipments => _equipments;
+
+    public IReadOnlyDictionary<ShopItemSettings, EquipmentBase> RealEquipmentDict => _realEquipmentDict;
 
     /// <summary>
     ///     現在の Player の Global Position を取得
@@ -124,10 +149,11 @@ public partial class Main : Node
 
         // Create PlayerState
         _playerState = new PlayerState();
-        _disposable = Disposable.Combine(_playerState, _waveRp, _remainingWaveSecondRp, _waveEndedSub, _waveStartedSub);
+        _disposable = Disposable.Combine(_playerState, _waveRp, _remainingWaveSecondRp, _waveEndedSub, _waveStartedSub,
+            _equippedItemSub);
     }
 
-    public override async void _Ready()
+    public override void _Ready()
     {
         // デバッグ用の Collision を表示
         GetTree().DebugCollisionsHint = true;
@@ -135,13 +161,16 @@ public partial class Main : Node
         // PlayerController の初期化
         _playerController.Possess((IPawn)_playerPawn);
 
-        // TODO: 1秒後にバトルを開始
-        await this.WaitForSecondsAsync(1f);
+        // HUD をすべて非表示にする
+        _inGameHud.Hide();
+        _shopHud.Hide();
 
+        // 各種 Subscription
+        _shopHud.Closed.Subscribe(_ => CloseShop()).AddTo(this);
+
+        // 開始時点では Shop を開く
         ResetPlayerState();
-
-        // ToDo: 最初はショップ画面
-        EnterBattleWave();
+        OpenShop();
     }
 
     public override void _Process(double delta)
@@ -183,6 +212,29 @@ public partial class Main : Node
         }
     }
 
+    public void BuyItem(ShopItemSettings shopItemSettings)
+    {
+        // プレイヤーのお金を減らす
+        _playerState.AddEffect(new AddMoneyEffect { Value = -shopItemSettings.Price });
+        _playerState.SolveEffect();
+
+        // Player Pawn に Item を追加で装備させる
+        var equipment = shopItemSettings.EquipmentScene.Instantiate<EquipmentBase>();
+        equipment.ItemSettings = shopItemSettings;
+        _playerPawn.AddChild(equipment);
+        _realEquipmentDict.Add(shopItemSettings, equipment);
+
+        // 通知する
+        _equipments.Add(shopItemSettings);
+        _equippedItemSub.OnNext(shopItemSettings);
+    }
+
+    private void CloseShop()
+    {
+        _shopHud.Hide();
+        EnterBattleWave();
+    }
+
     private void EnterBattleWave()
     {
         // 現在の Wave Settings をもらう
@@ -208,6 +260,8 @@ public partial class Main : Node
         _waveRp.Value++;
         _waveStartedSub.OnNext(Unit.Default);
 
+        // InGame の HUD を表示する
+        _inGameHud.Show();
         _phase = MainPhase.BATTLE;
     }
 
@@ -218,12 +272,26 @@ public partial class Main : Node
         // 湧いた敵をすべてコロス
         GetTree().CallGroup("Enemy", "KillByWaveEnd");
 
-
         // ToDo: リザルト画面を表示する
-        _phase = MainPhase.BATTLE_RESULT;
+
+        // InGame HUD を非表示に
+        _inGameHud.Hide();
 
         // Playerに報酬を与える
         _playerState.AddEffect(new AddMoneyEffect { Value = _currentWaveSettings.Money });
+        _playerState.SolveEffect();
+
+        // Shop を開く
+        OpenShop();
+    }
+
+    private void OpenShop()
+    {
+        _phase = MainPhase.SHOP;
+        _shopHud.Show();
+        {
+            _shopHud.InitialRerollItems();
+        }
     }
 
     private void ResetPlayerState()

@@ -6,13 +6,13 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_0ojw7"]
 radius = 1.0
 
-[node name="AutoAimPistol" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_collisionShape", "_searchArea", "_timer")]
+[node name="AutoAimPistol" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_collisionShape", "_searchArea", "Timer")]
 script = ExtResource("1_cqo88")
 _bulletPackedScene = ExtResource("2_7pbav")
 _bulletSpawnNode = NodePath("BulletSpawnRoot")
 _collisionShape = NodePath("Area2D/CollisionShape2D")
 _searchArea = NodePath("Area2D")
-_timer = NodePath("Timer")
+Timer = NodePath("Timer")
 metadata/_edit_group_ = true
 
 [node name="Area2D" type="Area2D" parent="."]

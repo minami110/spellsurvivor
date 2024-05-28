@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://drwbgsefq8p33"]
+
+[ext_resource type="Script" path="res://Infinity/Shop/ShopSellingItem.cs" id="1_r8m76"]
+
+[node name="ShopSellingItem" type="VBoxContainer" node_paths=PackedStringArray("_iconTextureRect", "_nameLabel", "_buyButton")]
+script = ExtResource("1_r8m76")
+_iconTextureRect = NodePath("ItemImage")
+_nameLabel = NodePath("ItemName")
+_buyButton = NodePath("Button")
+
+[node name="ItemImage" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 3
+
+[node name="ItemName" type="Label" parent="."]
+layout_mode = 2
+text = "N/A"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+text = "Buy $N/A"

@@ -1,15 +1,27 @@
-[gd_scene load_steps=5 format=3 uid="uid://dvwlkv2f4pl2i"]
+[gd_scene load_steps=8 format=3 uid="uid://dvwlkv2f4pl2i"]
 
-[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Fonts/Verdana.ttf" id="2_161hv"]
-[ext_resource type="PackedScene" uid="uid://3i5a02yf3hh" path="res://Common/Control/DraggableArea.tscn" id="4_21j2b"]
-[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Textures/icon.svg" id="4_83511"]
+[ext_resource type="Script" path="res://Infinity/HUDs/ShopHUD.cs" id="1_0e5mr"]
+[ext_resource type="Script" path="res://Infinity/Shop/ShopManager.cs" id="1_5xunh"]
+[ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/ShopSellingItem.tscn" id="2_7j4ye"]
+[ext_resource type="Resource" uid="uid://dg1a0sshsyi4h" path="res://Infinity/Datebase/Items/(ShopItem) AutoAimPistol.tres" id="3_f2gna"]
+[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Textures/white_4x4_srgb.png" id="3_nlrg2"]
+[ext_resource type="Resource" uid="uid://brkbpmer5vx5k" path="res://Infinity/Datebase/Items/(ShopItem) ForwardKnife.tres" id="4_y7rr0"]
+[ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/ShopOwnItem.tscn" id="6_dux5n"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_c1s86"]
-font = ExtResource("2_161hv")
-font_size = 41
-
-[node name="ShopHUD (Layer 2)" type="CanvasLayer"]
+[node name="ShopHUD (Layer 2)" type="CanvasLayer" node_paths=PackedStringArray("_shopManager")]
 layer = 2
+script = ExtResource("1_0e5mr")
+_shopManager = NodePath("ShopManager")
+
+[node name="ShopManager" type="Node" parent="." node_paths=PackedStringArray("_shopItemSpawnParent", "_equipItemSpawnParent", "_rerollButton", "_playerMoneyLabel")]
+script = ExtResource("1_5xunh")
+_itemPool = [ExtResource("3_f2gna"), ExtResource("4_y7rr0")]
+_shopItemPackedScene = ExtResource("2_7j4ye")
+_shopOwnItemPackedScene = ExtResource("6_dux5n")
+_shopItemSpawnParent = NodePath("../Container/HBox Selling Item Parent")
+_equipItemSpawnParent = NodePath("../Container/HBox Equipment Item Parent")
+_rerollButton = NodePath("../Container/HBox Shop Buttons/Button RerollItems")
+_playerMoneyLabel = NodePath("../Container/VBoxContainer/Label Gold")
 
 [node name="Container" type="Control" parent="."]
 layout_mode = 3
@@ -18,6 +30,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_lock_ = true
 
 [node name="BG" type="ColorRect" parent="Container"]
 layout_mode = 1
@@ -27,85 +40,160 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 4
-color = Color(0, 0, 0, 0.301961)
+color = Color(0, 0, 0, 0.529412)
+metadata/_edit_lock_ = true
 
-[node name="Title" type="Label" parent="Container"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.028
-offset_left = -58.0
-offset_top = 30.0
-offset_right = 58.0
-offset_bottom = 61.8
-grow_horizontal = 2
-text = "LET'S SHOP TIME"
-label_settings = SubResource("LabelSettings_c1s86")
-
-[node name="Button" type="Button" parent="Container"]
+[node name="Button Buttle" type="Button" parent="Container"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -197.0
-offset_top = -111.0
-offset_right = -29.0
-offset_bottom = -31.0
+offset_left = -244.0
+offset_top = -170.0
+offset_right = -76.0
+offset_bottom = -90.0
 grow_horizontal = 0
 grow_vertical = 0
-text = "Next Wave"
+text = "Battle
+"
 
-[node name="HSplitContainer" type="HBoxContainer" parent="Container"]
+[node name="HBox Shop Buttons" type="HBoxContainer" parent="Container"]
 layout_mode = 1
-anchors_preset = 14
+anchors_preset = 8
+anchor_left = 0.5
 anchor_top = 0.5
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = -38.0
-offset_bottom = 124.0
+offset_left = -142.5
+offset_top = -362.0
+offset_right = 143.5
+offset_bottom = -331.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label ShopLevel" type="Label" parent="Container/HBox Shop Buttons"]
+layout_mode = 2
+text = "Shop Level: 1"
+
+[node name="Button UpgradeShop" type="Button" parent="Container/HBox Shop Buttons"]
+layout_mode = 2
+disabled = true
+text = "Upgrade (NotImpl)"
+
+[node name="Button RerollItems" type="Button" parent="Container/HBox Shop Buttons"]
+layout_mode = 2
+text = "Reroll ($1)"
+
+[node name="Button LockItems" type="Button" parent="Container/HBox Shop Buttons"]
+layout_mode = 2
+disabled = true
+text = "Lock (NotImpl)"
+
+[node name="HBox Selling Item Parent" type="HBoxContainer" parent="Container"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -403.0
+offset_top = -320.0
+offset_right = 403.0
+offset_bottom = -123.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="DraggableArea" parent="Container/HSplitContainer" instance=ExtResource("4_21j2b")]
-layout_mode = 2
-size_flags_horizontal = 4
-metadata/_edit_group_ = true
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Container/HSplitContainer/DraggableArea"]
+[node name="HBox Equipment Item Parent" type="HBoxContainer" parent="Container"]
 layout_mode = 1
-offset_right = 128.0
-offset_bottom = 155.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -529.0
+offset_top = -40.675
+offset_right = 529.0
+offset_bottom = 114.326
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Container/HSplitContainer/DraggableArea/VBoxContainer"]
-layout_mode = 2
-texture = ExtResource("4_83511")
-
-[node name="Label" type="Label" parent="Container/HSplitContainer/DraggableArea/VBoxContainer"]
-layout_mode = 2
-text = "Spell Name"
-horizontal_alignment = 1
-
-[node name="DraggableArea2" parent="Container/HSplitContainer" instance=ExtResource("4_21j2b")]
-layout_mode = 2
-size_flags_horizontal = 4
-metadata/_edit_group_ = true
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Container/HSplitContainer/DraggableArea2"]
+[node name="HBox Bin Item Parent" type="HBoxContainer" parent="Container"]
 layout_mode = 1
-offset_right = 128.0
-offset_bottom = 155.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -403.0
+offset_top = 232.0
+offset_right = 403.0
+offset_bottom = 398.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Container/HSplitContainer/DraggableArea2/VBoxContainer"]
+[node name="VBoxContainer9" type="VBoxContainer" parent="Container/HBox Bin Item Parent"]
 layout_mode = 2
-texture = ExtResource("4_83511")
 
-[node name="Label" type="Label" parent="Container/HSplitContainer/DraggableArea2/VBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="Container/HBox Bin Item Parent/VBoxContainer9"]
+modulate = Color(0.136826, 0.136826, 0.136826, 1)
+custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
-text = "Spell Name"
-horizontal_alignment = 1
+texture = ExtResource("3_nlrg2")
 
-[connection signal="pressed" from="Container/Button" to="." method="CloseShop"]
+[node name="VBoxContainer12" type="VBoxContainer" parent="Container/HBox Bin Item Parent"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Container/HBox Bin Item Parent/VBoxContainer12"]
+modulate = Color(0.136826, 0.136826, 0.136826, 1)
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture = ExtResource("3_nlrg2")
+
+[node name="VBoxContainer10" type="VBoxContainer" parent="Container/HBox Bin Item Parent"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Container/HBox Bin Item Parent/VBoxContainer10"]
+modulate = Color(0.136826, 0.136826, 0.136826, 1)
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture = ExtResource("3_nlrg2")
+
+[node name="VBoxContainer11" type="VBoxContainer" parent="Container/HBox Bin Item Parent"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Container/HBox Bin Item Parent/VBoxContainer11"]
+modulate = Color(0.136826, 0.136826, 0.136826, 1)
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture = ExtResource("3_nlrg2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -185.0
+offset_top = 178.0
+offset_right = -27.0
+offset_bottom = 595.0
+grow_horizontal = 0
+
+[node name="Label" type="Label" parent="Container/VBoxContainer"]
+layout_mode = 2
+text = "Player Status"
+
+[node name="Label Gold" type="Label" parent="Container/VBoxContainer"]
+layout_mode = 2
+text = "Gold: N/A"
+
+[node name="Label Gold2" type="Label" parent="Container/VBoxContainer"]
+layout_mode = 2
+text = "MaxHealth: 100
+MoveSpeed: 100"
+
+[connection signal="pressed" from="Container/Button Buttle" to="." method="OnCloseButtonPressed"]

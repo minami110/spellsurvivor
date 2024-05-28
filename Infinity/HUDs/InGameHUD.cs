@@ -18,6 +18,12 @@ public sealed partial class InGameHUD : CanvasLayer
     [Export]
     private Label _waveTimerLabel = null!;
 
+    [Export]
+    private Control _equipmentContainer = null!;
+
+    [Export]
+    private PackedScene _equipmentPackedScene = null!;
+
     public override void _Ready()
     {
         var gm = Main.GameMode;
@@ -29,10 +35,12 @@ public sealed partial class InGameHUD : CanvasLayer
 
         // Subscribe wave info
         var d3 = gm.Wave.Subscribe(x => _currentWaveLabel.Text = $"Wave {x}");
-        var d4 = gm.RemainingWaveSecond.Subscribe(x => _waveTimerLabel.Text = $"{x:000.0}");
+        var d4 = gm.RemainingWaveSecond.Subscribe(x => _waveTimerLabel.Text = $"{x:000}");
+        var d5 = gm.WaveStarted.Subscribe(_ => OnWaveStarted());
+        var d6 = gm.WaveEnded.Subscribe(_ => OnWaveEnded());
 
         // Add disposables when this node is exited tree
-        Disposable.Combine(d1, d2, d3, d4).AddTo(this);
+        Disposable.Combine(d1, d2, d3, d4, d5, d6).AddTo(this);
     }
 
     private void OnHealthChanged(float _)
@@ -46,5 +54,23 @@ public sealed partial class InGameHUD : CanvasLayer
 
         // Update health text
         _healthText.Text = $"{playerState.Health.CurrentValue} / {playerState.MaxHealth.CurrentValue}";
+    }
+
+    private void OnWaveEnded()
+    {
+        foreach (var child in _equipmentContainer.GetChildren()) child.QueueFree();
+    }
+
+    private void OnWaveStarted()
+    {
+        // Spawn equipments
+        foreach (var equipment in Main.GameMode.Equipments)
+        {
+            var node = _equipmentPackedScene.Instantiate<InGameEquipment>();
+            {
+                node.ItemSettings = equipment;
+            }
+            _equipmentContainer.AddChild(node);
+        }
     }
 }
