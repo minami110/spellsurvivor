@@ -8,7 +8,7 @@ namespace fms;
 /// <summary>
 ///     Player の体力やバフなどを管理するクラス
 /// </summary>
-public partial class PlayerState : Node
+public sealed class PlayerState : IDisposable
 {
     private readonly IDisposable _disposable;
 
@@ -29,7 +29,7 @@ public partial class PlayerState : Node
     public ReadOnlyReactiveProperty<float> MoveSpeed => _moveSpeed;
 
     /// <summary>
-    /// 現在の体力 
+    ///     現在の体力
     /// </summary>
     public ReadOnlyReactiveProperty<float> Health => _health;
 
@@ -112,9 +112,8 @@ public partial class PlayerState : Node
         _health.Value = health;
     }
 
-    protected override void Dispose(bool disposing)
+    public void Dispose()
     {
         _disposable.Dispose();
-        base.Dispose(disposing);
     }
 }

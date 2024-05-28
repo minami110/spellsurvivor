@@ -124,7 +124,7 @@ public partial class Main : Node
 
         // Create PlayerState
         _playerState = new PlayerState();
-        _disposable = Disposable.Combine(_waveRp, _remainingWaveSecondRp, _waveEndedSub, _waveStartedSub);
+        _disposable = Disposable.Combine(_playerState, _waveRp, _remainingWaveSecondRp, _waveEndedSub, _waveStartedSub);
     }
 
     public override async void _Ready()

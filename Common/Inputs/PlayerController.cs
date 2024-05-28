@@ -2,13 +2,6 @@ using Godot;
 
 namespace fms;
 
-public interface IPawn
-{
-    public void MoveForward(in Vector2 direction);
-    public void PrimaryPressed();
-    public void PrimaryReleased();
-}
-
 public partial class PlayerController : Node
 {
     private static readonly StringName InputMoveRight = "move_right";
