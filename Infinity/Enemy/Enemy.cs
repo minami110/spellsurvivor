@@ -34,7 +34,7 @@ public partial class Enemy : RigidBody2D, IEntity
             return;
         }
 
-        var playerPosition = Main.GetPlayerGlobalPosition();
+        var playerPosition = Main.PlayerGlobalPosition;
 
         // Move to player
         var direction = playerPosition - GlobalPosition;

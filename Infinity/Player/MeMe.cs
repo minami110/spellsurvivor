@@ -19,7 +19,7 @@ public partial class MeMe : CharacterBody2D, IPawn
         Rotation = angle;
 
         // Update Position
-        var speed = Main.GameMode.GetPlayerState().MoveSpeed.CurrentValue;
+        var speed = Main.PlayerState.MoveSpeed.CurrentValue;
 
         var motion = _nextMoveDirection * (float)delta * speed;
         MoveAndCollide(motion);
@@ -32,7 +32,7 @@ public partial class MeMe : CharacterBody2D, IPawn
             return;
         }
 
-        var state = Main.GameMode.GetPlayerState();
+        var state = Main.PlayerState;
 
         // ToDo: Create Physical Damage Effect
         var effect = new PhysicalDamageEffect

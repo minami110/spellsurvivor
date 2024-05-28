@@ -76,6 +76,42 @@ public partial class Main : Node
     /// </summary>
     public ReadOnlyReactiveProperty<float> RemainingWaveSecond => _remainingWaveSecondRp;
 
+    /// <summary>
+    ///     現在の Player の Global Position を取得
+    /// </summary>
+    /// <exception cref="AggregateException"></exception>
+    public static Vector2 PlayerGlobalPosition
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            if (_instance is not null)
+            {
+                return _instance._playerPawn.GlobalPosition;
+            }
+
+            throw new AggregateException("Main instance is null");
+        }
+    }
+
+    /// <summary>
+    ///     Get the PlayerState
+    /// </summary>
+    /// <exception cref="AggregateException"></exception>
+    public static PlayerState PlayerState
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            if (_instance is not null)
+            {
+                return _instance._playerState;
+            }
+
+            throw new AggregateException("Main instance is null");
+        }
+    }
+
     public Main()
     {
         if (_instance is null)
@@ -144,22 +180,6 @@ public partial class Main : Node
         {
             _instance = null;
         }
-    }
-
-    public static Vector2 GetPlayerGlobalPosition()
-    {
-        if (_instance is not null)
-        {
-            return _instance._playerPawn.GlobalPosition;
-        }
-
-        GD.PrintErr("Main instance is null");
-        return Vector2.Zero;
-    }
-
-    public PlayerState GetPlayerState()
-    {
-        return _playerState;
     }
 
     private void EnterBattleWave()

@@ -21,7 +21,7 @@ public sealed partial class InGameHUD : CanvasLayer
     public override void _Ready()
     {
         var gm = Main.GameMode;
-        var ps = gm.GetPlayerState();
+        var ps = Main.PlayerState;
 
         // Subscribe player health
         var d1 = ps.Health.Subscribe(OnHealthChanged);
@@ -37,7 +37,7 @@ public sealed partial class InGameHUD : CanvasLayer
 
     private void OnHealthChanged(float _)
     {
-        var playerState = Main.GameMode.GetPlayerState();
+        var playerState = Main.PlayerState;
 
         // Update health bar
         _healthBar.MinValue = 0f;
