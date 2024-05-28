@@ -3,28 +3,25 @@ using R3;
 
 namespace fms;
 
-public partial class Enemy : RigidBody2D, IEntity
+public partial class Enemy : RigidBody2D
 {
     [Export(PropertyHint.Range, "0,1000,1")]
-    public float MoveSpeed { get; set; } = 50f;
+    private float _defaultMoveSpeed = 50f;
 
     [Export(PropertyHint.Range, "0,1000,1")]
-    public float MaxHealth { get; private set; } = 100f;
-
-    [Export(PropertyHint.Range, "0,1000,1")]
-    public float Health { get; private set; } = 100f;
+    private float _defaultHealth = 100f;
 
     /// <summary>
     ///     プレイヤーに与えるダメージ
     /// </summary>
     [Export(PropertyHint.Range, "0,1000,1")]
-    public float Power { get; private set; } = 10f;
+    private float _power = 10f;
 
     /// <summary>
     ///     プレイヤーと重なっている時攻撃を発生させるクールダウン
     /// </summary>
     [Export]
-    public float AttachCooldown { get; private set; } = 0.333f;
+    private float _attackCoolDown = 0.333f;
 
     [ExportGroup("Internal References")]
     [Export]
@@ -36,7 +33,8 @@ public partial class Enemy : RigidBody2D, IEntity
     [Export]
     private Area2D _damageArea = null!;
 
-    private readonly Subject<DeadReason> _deadSubject = new();
+    private readonly EnemyState _state = new();
+
     private float _attachCooldownTimer;
 
     private bool _isHitStopping;
@@ -44,8 +42,17 @@ public partial class Enemy : RigidBody2D, IEntity
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        _attachCooldownTimer = _attackCoolDown;
+        _state.AddTo(this);
+
+        // Init state
+        _state.AddEffect(new AddMaxHealthEffect { Value = _defaultHealth });
+        _state.AddEffect(new AddHealthEffect { Value = _defaultHealth });
+        _state.AddEffect(new AddMoveSpeedEffect { Value = _defaultMoveSpeed });
+        _state.SolveEffect();
+
+        // Refresh HUD
         UpdateHealthBar();
-        _attachCooldownTimer = AttachCooldown;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -66,7 +73,7 @@ public partial class Enemy : RigidBody2D, IEntity
             return;
         }
 
-        _attachCooldownTimer = AttachCooldown;
+        _attachCooldownTimer = _attackCoolDown;
         var overlappingBodies = _damageArea.GetOverlappingBodies();
         if (overlappingBodies.Count <= 0)
         {
@@ -76,20 +83,26 @@ public partial class Enemy : RigidBody2D, IEntity
         foreach (var node in overlappingBodies)
             if (node is MeMe player)
             {
-                player.TakeDamage(Power);
+                player.TakeDamage(_power);
             }
     }
 
-    public override void _ExitTree()
-    {
-        _deadSubject.Dispose();
-        base._ExitTree();
-    }
 
-    private void Deth(in DeadReason reason)
+    public void TakeDamage(float amount)
     {
-        _deadSubject.OnNext(reason);
-        QueueFree();
+        _state.AddEffect(new PhysicalDamageEffect { Value = amount });
+        _state.SolveEffect();
+
+        if (_state.Health.CurrentValue <= 0)
+        {
+            // Dead
+            QueueFree();
+        }
+        else
+        {
+            TakeDamageAnimationAsync();
+            UpdateHealthBar();
+        }
     }
 
     private void MoveToPlayer(double delta)
@@ -97,7 +110,7 @@ public partial class Enemy : RigidBody2D, IEntity
         var playerPosition = Main.PlayerGlobalPosition;
         var direction = playerPosition - GlobalPosition;
         direction = direction.Normalized();
-        var force = direction * MoveSpeed;
+        var force = direction * _state.MoveSpeed.CurrentValue;
         LinearVelocity = force;
     }
 
@@ -121,26 +134,7 @@ public partial class Enemy : RigidBody2D, IEntity
 
     private void UpdateHealthBar()
     {
-        _progressBar.MaxValue = MaxHealth;
-        _progressBar.SetValueNoSignal(Health);
-    }
-
-    public Observable<DeadReason> Dead => _deadSubject;
-
-    public Race Race => Race.Slime;
-
-    void IEntity.TakeDamage(float amount)
-    {
-        Health -= amount;
-        if (Health <= 0)
-        {
-            Health = 0;
-            Deth(new DeadReason("N/A", "Projectile"));
-        }
-        else
-        {
-            TakeDamageAnimationAsync();
-            UpdateHealthBar();
-        }
+        _progressBar.MaxValue = _state.MaxHealth.CurrentValue;
+        _progressBar.SetValueNoSignal(_state.Health.CurrentValue);
     }
 }

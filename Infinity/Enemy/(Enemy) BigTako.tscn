@@ -9,9 +9,7 @@ shader = ExtResource("2_8uoah")
 shader_parameter/hit = 0.0
 
 [node name="Enemy" instance=ExtResource("1_phgd3")]
-MoveSpeed = 25.0
-MaxHealth = 200.0
-Health = 200.0
+_defaultMoveSpeed = 25.0
 
 [node name="Texture" parent="." index="0"]
 material = SubResource("ShaderMaterial_i0scs")

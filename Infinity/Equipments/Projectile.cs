@@ -28,8 +28,8 @@ public partial class Projectile : Area2D
     public override void _Ready()
     {
         var d1 = this.BodyEnteredAsObservable()
-            .Cast<Node2D, IEntity>()
-            .Subscribe(this, (entity, state) => { state.ApplyDamageToEntity(entity); });
+            .Cast<Node2D, Enemy>()
+            .Subscribe(this, (entity, state) => { state.ApplyDamageToEnemy(entity); });
 
         _disposable = d1;
 
@@ -57,9 +57,9 @@ public partial class Projectile : Area2D
         base.Dispose(disposing);
     }
 
-    private void ApplyDamageToEntity(IEntity entity)
+    private void ApplyDamageToEnemy(Enemy enemy)
     {
-        entity.TakeDamage(Damage);
+        enemy.TakeDamage(Damage);
         KillThis();
     }
 
