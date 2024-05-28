@@ -29,12 +29,12 @@ public partial class PlayerState : Node
     public ReadOnlyReactiveProperty<float> MoveSpeed => _moveSpeed;
 
     /// <summary>
-    ///     最大体力
+    /// 現在の体力 
     /// </summary>
     public ReadOnlyReactiveProperty<float> Health => _health;
 
     /// <summary>
-    ///     現在の体力
+    ///     最大体力
     /// </summary>
     public ReadOnlyReactiveProperty<float> MaxHealth => _maxHealth;
 
@@ -64,8 +64,8 @@ public partial class PlayerState : Node
             return;
         }
 
-        var maxHealth = _health.Value;
-        var health = _maxHealth.Value;
+        var maxHealth = _maxHealth.Value;
+        var health = _health.Value;
         var damage = 0f;
 
         foreach (var effect in _effects)
@@ -83,12 +83,12 @@ public partial class PlayerState : Node
                 }
                 case AddHealthEffect addHealthEffect:
                 {
-                    maxHealth += addHealthEffect.Value;
+                    health += addHealthEffect.Value;
                     break;
                 }
                 case AddMaxHealthEffect addMaxHealthEffect:
                 {
-                    health += addMaxHealthEffect.Value;
+                    maxHealth += addMaxHealthEffect.Value;
                     break;
                 }
                 case PhysicalDamageEffect physicalDamageEffect:

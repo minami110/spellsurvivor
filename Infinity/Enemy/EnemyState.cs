@@ -39,8 +39,8 @@ public sealed class EnemyState : IDisposable
             return;
         }
 
-        var maxHealth = _health.Value;
-        var health = _maxHealth.Value;
+        var maxHealth = _maxHealth.Value;
+        var health = _health.Value;
         var damage = 0f;
 
         foreach (var effect in _effects)
@@ -53,12 +53,12 @@ public sealed class EnemyState : IDisposable
                 }
                 case AddHealthEffect addHealthEffect:
                 {
-                    maxHealth += addHealthEffect.Value;
+                    health += addHealthEffect.Value;
                     break;
                 }
                 case AddMaxHealthEffect addMaxHealthEffect:
                 {
-                    health += addMaxHealthEffect.Value;
+                    maxHealth += addMaxHealthEffect.Value;
                     break;
                 }
                 case PhysicalDamageEffect physicalDamageEffect:
