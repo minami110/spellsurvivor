@@ -14,6 +14,14 @@ public partial class Enemy : RigidBody2D, IEntity
     [Export(PropertyHint.Range, "0,100,1")]
     public float Health { get; private set; } = 100f;
 
+    [ExportGroup("Internal References")]
+    [Export]
+    private TextureRect _mainTexture = null!;
+
+    [Export]
+    private TextureProgressBar _progressBar = null!;
+
+
     private readonly Subject<DeadReason> _deadSubject = new();
 
     private bool _isHitStopping;
@@ -21,8 +29,6 @@ public partial class Enemy : RigidBody2D, IEntity
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        var notifier = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
-        notifier.ScreenExited += () => { Deth(new DeadReason("Screen", "OutOfScreen")); };
         UpdateHealthBar();
     }
 
@@ -57,8 +63,7 @@ public partial class Enemy : RigidBody2D, IEntity
 
     private async void TakeDamageAnimationAsync()
     {
-        var tex = GetNode<TextureRect>("Texture");
-        if (tex.Material is not ShaderMaterial sm)
+        if (_mainTexture.Material is not ShaderMaterial sm)
         {
             return;
         }
@@ -76,9 +81,8 @@ public partial class Enemy : RigidBody2D, IEntity
 
     private void UpdateHealthBar()
     {
-        var healthBar = GetNode<ProgressBar>("HealthBar");
-        healthBar.MaxValue = MaxHealth;
-        healthBar.SetValueNoSignal(Health);
+        _progressBar.MaxValue = MaxHealth;
+        _progressBar.SetValueNoSignal(Health);
     }
 
 
