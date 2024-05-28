@@ -1,13 +1,14 @@
-[gd_scene load_steps=23 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=24 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
-[ext_resource type="Script" path="res://Common/PlayerController.cs" id="2_1uq3r"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawnSettings.cs" id="3_d53fw"]
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="4_8okuu"]
 [ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) BigTako.tscn" id="4_rd0iv"]
-[ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Equipments/AutoAimPistol.tscn" id="5_isohu"]
+[ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Equipments/(Equipment) AutoAimPistol.tscn" id="5_isohu"]
 [ext_resource type="Script" path="res://Infinity/GameMode/WaveSetting.cs" id="6_34bq1"]
+[ext_resource type="Script" path="res://Common/Inputs/PlayerController.cs" id="6_m3lsh"]
+[ext_resource type="PackedScene" uid="uid://hvaujiufb0ew" path="res://Infinity/Equipments/(Equipment) ForwardKnife.tscn" id="8_3hiby"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawner.cs" id="8_lc8x0"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/ShopHUD.tscn" id="9_a7daw"]
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
@@ -64,11 +65,13 @@ _enemySpawner = NodePath("EnemySpawner")
 [node name="WaveTimer" type="Timer" parent="."]
 
 [node name="PlayerController" type="Node" parent="."]
-script = ExtResource("2_1uq3r")
+script = ExtResource("6_m3lsh")
 
 [node name="MeMe (Player)" parent="." instance=ExtResource("12_e0mmc")]
 
 [node name="AutoAimPistol" parent="MeMe (Player)" instance=ExtResource("5_isohu")]
+
+[node name="ForwardKnife" parent="MeMe (Player)" instance=ExtResource("8_3hiby")]
 
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("_enemySpawnRoot", "_spawnPath")]
 process_mode = 1
