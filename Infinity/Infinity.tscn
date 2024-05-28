@@ -1,10 +1,9 @@
-[gd_scene load_steps=24 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=23 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Common/PlayerController.cs" id="2_1uq3r"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawnSettings.cs" id="3_d53fw"]
-[ext_resource type="Script" path="res://Infinity/Player/PlayerState.cs" id="3_gennh"]
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="4_8okuu"]
 [ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) BigTako.tscn" id="4_rd0iv"]
 [ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Equipments/AutoAimPistol.tscn" id="5_isohu"]
@@ -55,21 +54,17 @@ size = Vector2(100, 1200)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rh687"]
 size = Vector2(1200, 100)
 
-[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_playerState", "_enemySpawner")]
+[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_enemySpawner")]
 script = ExtResource("1_tk8vx")
 _waveSettings = Array[Object]([SubResource("Resource_qt72y"), SubResource("Resource_y2gxo")])
 _playerController = NodePath("PlayerController")
 _playerPawn = NodePath("MeMe (Player)")
-_playerState = NodePath("PlayerState")
 _enemySpawner = NodePath("EnemySpawner")
 
 [node name="WaveTimer" type="Timer" parent="."]
 
 [node name="PlayerController" type="Node" parent="."]
 script = ExtResource("2_1uq3r")
-
-[node name="PlayerState" type="Node" parent="."]
-script = ExtResource("3_gennh")
 
 [node name="MeMe (Player)" parent="." instance=ExtResource("12_e0mmc")]
 

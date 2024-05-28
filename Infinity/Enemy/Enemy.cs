@@ -87,6 +87,19 @@ public partial class Enemy : RigidBody2D
             }
     }
 
+    public void KillByDamage()
+    {
+        QueueFree();
+    }
+
+    /// <summary>
+    ///     Wave 終了時に GameMode から呼ばれる
+    /// </summary>
+    public void KillByWaveEnd()
+    {
+        QueueFree();
+    }
+
 
     public void TakeDamage(float amount)
     {
@@ -96,7 +109,7 @@ public partial class Enemy : RigidBody2D
         if (_state.Health.CurrentValue <= 0)
         {
             // Dead
-            QueueFree();
+            KillByDamage();
         }
         else
         {

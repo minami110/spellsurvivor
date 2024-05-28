@@ -30,14 +30,13 @@ public partial class Main : Node
     private Node2D _playerPawn = null!;
 
     [Export]
-    private PlayerState _playerState = null!;
-
-    [Export]
     private EnemySpawner _enemySpawner = null!;
 
     private static Main? _instance;
     private readonly IDisposable _disposable;
     private readonly List<EnemySpawnTimer> _enemySpawnTimers = new();
+
+    private readonly PlayerState _playerState;
     private readonly ReactiveProperty<float> _remainingWaveSecondRp = new();
     private readonly Subject<Unit> _waveEndedSub = new();
     private readonly ReactiveProperty<int> _waveRp = new();
@@ -123,6 +122,8 @@ public partial class Main : Node
             throw new AggregateException("Main instance already exists");
         }
 
+        // Create PlayerState
+        _playerState = new PlayerState();
         _disposable = Disposable.Combine(_waveRp, _remainingWaveSecondRp, _waveEndedSub, _waveStartedSub);
     }
 
@@ -213,6 +214,10 @@ public partial class Main : Node
     private void ExitBattleWave()
     {
         _waveEndedSub.OnNext(Unit.Default);
+
+        // 湧いた敵をすべてコロス
+        GetTree().CallGroup("Enemy", "KillByWaveEnd");
+
 
         // ToDo: リザルト画面を表示する
         _phase = MainPhase.BATTLE_RESULT;

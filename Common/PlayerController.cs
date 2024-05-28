@@ -4,10 +4,9 @@ namespace fms;
 
 public interface IPawn
 {
+    public void MoveForward(in Vector2 direction);
     public void PrimaryPressed();
     public void PrimaryReleased();
-
-    public void MoveForward(in Vector2 direction);
 }
 
 public partial class PlayerController : Node
@@ -19,23 +18,6 @@ public partial class PlayerController : Node
     private static readonly StringName InputPrimary = "primary";
 
     private IPawn? _posessedPawn;
-
-    /// <summary>
-    /// </summary>
-    /// <param name="pawn"></param>
-    public void Possess(IPawn pawn)
-    {
-        _posessedPawn = pawn;
-        SetProcess(true);
-    }
-
-    /// <summary>
-    /// </summary>
-    public void Unpossess()
-    {
-        _posessedPawn = null;
-        SetProcess(false);
-    }
 
     public override void _EnterTree()
     {
@@ -68,5 +50,22 @@ public partial class PlayerController : Node
         velocity = direction * length;
 
         _posessedPawn.MoveForward(velocity);
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="pawn"></param>
+    public void Possess(IPawn pawn)
+    {
+        _posessedPawn = pawn;
+        SetProcess(true);
+    }
+
+    /// <summary>
+    /// </summary>
+    public void Unpossess()
+    {
+        _posessedPawn = null;
+        SetProcess(false);
     }
 }
