@@ -16,11 +16,17 @@ public partial class PlayerState : Node
     private readonly ReactiveProperty<float> _health = new();
     private readonly ReactiveProperty<float> _maxHealth = new();
     private readonly ReactiveProperty<int> _money = new();
+    private readonly ReactiveProperty<float> _moveSpeed = new();
 
     /// <summary>
     ///     現在の所持金
     /// </summary>
     public ReadOnlyReactiveProperty<int> Money => _money;
+
+    /// <summary>
+    ///     現在の移動速度
+    /// </summary>
+    public ReadOnlyReactiveProperty<float> MoveSpeed => _moveSpeed;
 
     /// <summary>
     ///     最大体力
@@ -46,6 +52,8 @@ public partial class PlayerState : Node
     {
         _health.Value = 0f;
         _maxHealth.Value = 0f;
+        _money.Value = 0;
+        _moveSpeed.Value = 0f;
         _effects.Clear();
     }
 
@@ -56,7 +64,6 @@ public partial class PlayerState : Node
             return;
         }
 
-        var money = _money.Value;
         var maxHealth = _health.Value;
         var health = _maxHealth.Value;
         var damage = 0f;
@@ -66,7 +73,12 @@ public partial class PlayerState : Node
             {
                 case AddMoneyEffect addMoneyEffect:
                 {
-                    money += (int)addMoneyEffect.Value;
+                    _money.Value += (int)addMoneyEffect.Value;
+                    break;
+                }
+                case AddMoveSpeedEffect addMoveSpeedEffect:
+                {
+                    _moveSpeed.Value += addMoveSpeedEffect.Value;
                     break;
                 }
                 case AddHealthEffect addHealthEffect:
@@ -96,7 +108,6 @@ public partial class PlayerState : Node
         health -= damage;
 
         // 最終的な値を計算する
-        _money.Value = money;
         _maxHealth.Value = maxHealth;
         _health.Value = health;
     }

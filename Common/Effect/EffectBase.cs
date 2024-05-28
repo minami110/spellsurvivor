@@ -17,6 +17,10 @@ public class AddMoneyEffect : EffectBase
 {
 }
 
+public class AddMoveSpeedEffect : EffectBase
+{
+}
+
 public class PhysicalDamageEffect : EffectBase
 {
 }

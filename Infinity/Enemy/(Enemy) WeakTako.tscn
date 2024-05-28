@@ -16,7 +16,7 @@ radius = 13.0384
 [sub_resource type="CircleShape2D" id="CircleShape2D_ben2b"]
 radius = 22.3607
 
-[node name="Enemy" type="RigidBody2D"]
+[node name="Enemy" type="RigidBody2D" groups=["Enemy"]]
 collision_layer = 4
 collision_mask = 4
 gravity_scale = 0.0

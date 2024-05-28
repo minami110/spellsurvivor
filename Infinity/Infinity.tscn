@@ -1,11 +1,11 @@
-[gd_scene load_steps=23 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=22 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Common/PlayerController.cs" id="2_1uq3r"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawnSettings.cs" id="3_d53fw"]
 [ext_resource type="Script" path="res://Infinity/Player/PlayerState.cs" id="3_gennh"]
-[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/Enemy.tscn" id="4_8okuu"]
+[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="4_8okuu"]
 [ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Equipments/AutoAimPistol.tscn" id="5_isohu"]
 [ext_resource type="Script" path="res://Infinity/GameMode/WaveSetting.cs" id="6_34bq1"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawner.cs" id="8_lc8x0"]
@@ -18,7 +18,7 @@
 [sub_resource type="Resource" id="Resource_smwgh"]
 script = ExtResource("3_d53fw")
 EnemyScene = ExtResource("4_8okuu")
-SpawnInterval = 1.0
+SpawnInterval = 3.0
 
 [sub_resource type="Resource" id="Resource_qt72y"]
 script = ExtResource("6_34bq1")
@@ -29,7 +29,7 @@ EnemySpawnSettings = Array[Object]([SubResource("Resource_smwgh")])
 [sub_resource type="Resource" id="Resource_pgsa0"]
 script = ExtResource("3_d53fw")
 EnemyScene = ExtResource("4_8okuu")
-SpawnInterval = 0.5
+SpawnInterval = 1.5
 
 [sub_resource type="Resource" id="Resource_y2gxo"]
 script = ExtResource("6_34bq1")
@@ -39,7 +39,7 @@ EnemySpawnSettings = Array[Object]([SubResource("Resource_pgsa0")])
 
 [sub_resource type="Curve2D" id="Curve2D_dcvq1"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 496, -488, 0, 0, 0, 0, 496, 496, 0, 0, 0, 0, -496, 496, 0, 0, 0, 0, -496, -496, 0, 0, 0, 0, 496, -488)
+"points": PackedVector2Array(0, 0, 0, 0, 496, -496, 0, 0, 0, 0, 496, 496, 0, 0, 0, 0, -496, 496, 0, 0, 0, 0, -496, -496, 0, 0, 0, 0, 496, -496)
 }
 point_count = 5
 
@@ -49,18 +49,11 @@ size = Vector2(100, 1200)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rh687"]
 size = Vector2(1200, 100)
 
-[sub_resource type="Environment" id="Environment_23x7m"]
-background_mode = 3
-glow_enabled = true
-glow_strength = 1.5
-glow_hdr_threshold = 2.7
-fog_light_energy = 16.0
-
 [node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_playerState", "_enemySpawner")]
 script = ExtResource("1_tk8vx")
 _waveSettings = Array[Object]([SubResource("Resource_qt72y"), SubResource("Resource_y2gxo")])
 _playerController = NodePath("PlayerController")
-_playerPawn = NodePath("MeMe")
+_playerPawn = NodePath("MeMe (Player)")
 _playerState = NodePath("PlayerState")
 _enemySpawner = NodePath("EnemySpawner")
 
@@ -72,6 +65,10 @@ script = ExtResource("2_1uq3r")
 [node name="PlayerState" type="Node" parent="."]
 script = ExtResource("3_gennh")
 
+[node name="MeMe (Player)" parent="." instance=ExtResource("12_e0mmc")]
+
+[node name="AutoAimPistol" parent="MeMe (Player)" instance=ExtResource("5_isohu")]
+
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("_enemySpawnRoot", "_spawnPath")]
 process_mode = 1
 script = ExtResource("8_lc8x0")
@@ -82,20 +79,18 @@ _spawnPath = NodePath("SpawnPath/SpawnPoint")
 curve = SubResource("Curve2D_dcvq1")
 
 [node name="SpawnPoint" type="PathFollow2D" parent="EnemySpawner/SpawnPath"]
-position = Vector2(496, -488)
+position = Vector2(496, -496)
 rotation = 1.5708
 
 [node name="EnemySpawnRoot" type="Node" parent="EnemySpawner"]
 
-[node name="MeMe" parent="." instance=ExtResource("12_e0mmc")]
+[node name="HUDs" type="Node" parent="."]
 
-[node name="AutoAimPistol" parent="MeMe" instance=ExtResource("5_isohu")]
-
-[node name="BG Static (Layer -100)" type="CanvasLayer" parent="."]
+[node name="BG Static (Layer -100)" type="CanvasLayer" parent="HUDs"]
 layer = -100
 follow_viewport_enabled = true
 
-[node name="TextureRect" type="TextureRect" parent="BG Static (Layer -100)"]
+[node name="TextureRect" type="TextureRect" parent="HUDs/BG Static (Layer -100)"]
 modulate = Color(0.377919, 0.377919, 0.377919, 1)
 offset_left = -500.0
 offset_top = -500.0
@@ -104,38 +99,38 @@ offset_bottom = 500.0
 texture = ExtResource("2_b1ok3")
 stretch_mode = 1
 
-[node name="StaticBody2D" type="StaticBody2D" parent="BG Static (Layer -100)"]
+[node name="StaticBody2D" type="StaticBody2D" parent="HUDs/BG Static (Layer -100)"]
 collision_layer = 16
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BG Static (Layer -100)/StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HUDs/BG Static (Layer -100)/StaticBody2D"]
 visible = false
 position = Vector2(550, 0)
 shape = SubResource("RectangleShape2D_2x8fi")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="BG Static (Layer -100)/StaticBody2D"]
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="HUDs/BG Static (Layer -100)/StaticBody2D"]
 visible = false
 position = Vector2(0, -550)
 shape = SubResource("RectangleShape2D_rh687")
 
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="BG Static (Layer -100)/StaticBody2D"]
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="HUDs/BG Static (Layer -100)/StaticBody2D"]
 visible = false
 position = Vector2(0, 550)
 shape = SubResource("RectangleShape2D_rh687")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="BG Static (Layer -100)/StaticBody2D"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="HUDs/BG Static (Layer -100)/StaticBody2D"]
 visible = false
 position = Vector2(-550, 0)
 shape = SubResource("RectangleShape2D_2x8fi")
 
-[node name="BG Parallax (Layer -100)" type="ParallaxBackground" parent="."]
+[node name="BG Parallax (Layer -100)" type="ParallaxBackground" parent="HUDs"]
 visible = false
 
-[node name="ParallaxLayer" type="ParallaxLayer" parent="BG Parallax (Layer -100)"]
+[node name="ParallaxLayer" type="ParallaxLayer" parent="HUDs/BG Parallax (Layer -100)"]
 visible = false
 motion_mirroring = Vector2(2048, 2048)
 
-[node name="TextureRect" type="TextureRect" parent="BG Parallax (Layer -100)/ParallaxLayer"]
+[node name="TextureRect" type="TextureRect" parent="HUDs/BG Parallax (Layer -100)/ParallaxLayer"]
 visible = false
 modulate = Color(0.377919, 0.377919, 0.377919, 1)
 offset_right = 2048.0
@@ -143,16 +138,13 @@ offset_bottom = 2048.0
 texture = ExtResource("2_b1ok3")
 stretch_mode = 1
 
-[node name="InGameHUD (Layer 2)" parent="." instance=ExtResource("11_3i81h")]
+[node name="InGameHUD (Layer 2)" parent="HUDs" instance=ExtResource("11_3i81h")]
 
-[node name="ShopHUD (Layer 4)" parent="." instance=ExtResource("9_a7daw")]
+[node name="ShopHUD (Layer 4)" parent="HUDs" instance=ExtResource("9_a7daw")]
 layer = 4
 visible = false
 
-[node name="PoseHUD (Layer 10)" parent="." instance=ExtResource("16_ngbfj")]
+[node name="PoseHUD (Layer 10)" parent="HUDs" instance=ExtResource("16_ngbfj")]
 visible = false
 
-[node name="DebugHUD (Layer 20)" parent="." instance=ExtResource("16_qck06")]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_23x7m")
+[node name="DebugHUD (Layer 20)" parent="HUDs" instance=ExtResource("16_qck06")]

@@ -15,6 +15,9 @@ public partial class Main : Node
     [Export]
     private float _startHealth = 100f;
 
+    [Export]
+    private float _startSpeed = 100f;
+
     [ExportGroup("Wave Settings")]
     [Export]
     private WaveSetting[] _waveSettings = null!;
@@ -40,6 +43,8 @@ public partial class Main : Node
     private readonly ReactiveProperty<int> _waveRp = new();
     private readonly Subject<Unit> _waveStartedSub = new();
     private WaveSetting _currentWaveSettings = null!;
+
+    private MainPhase _phase = MainPhase.INIT;
 
     /// <summary>
     ///     Get Main instance
@@ -97,11 +102,18 @@ public partial class Main : Node
         await this.WaitForSecondsAsync(1f);
 
         ResetPlayerState();
+
+        // ToDo: 最初はショップ画面
         EnterBattleWave();
     }
 
     public override void _Process(double delta)
     {
+        if (_phase != MainPhase.BATTLE)
+        {
+            return;
+        }
+
         if (_remainingWaveSecondRp.Value <= 0f)
         {
             ExitBattleWave();
@@ -171,8 +183,11 @@ public partial class Main : Node
                 Timer = enemySpawnSettings.SpawnInterval
             });
 
+        // Wave を一つ進める
         _waveRp.Value++;
         _waveStartedSub.OnNext(Unit.Default);
+
+        _phase = MainPhase.BATTLE;
     }
 
     private void ExitBattleWave()
@@ -180,6 +195,7 @@ public partial class Main : Node
         _waveEndedSub.OnNext(Unit.Default);
 
         // ToDo: リザルト画面を表示する
+        _phase = MainPhase.BATTLE_RESULT;
 
         // Playerに報酬を与える
         _playerState.AddEffect(new AddMoneyEffect { Value = _currentWaveSettings.Money });
@@ -188,10 +204,21 @@ public partial class Main : Node
     private void ResetPlayerState()
     {
         // Plauer を初期化する
+        _playerState.Reset();
+        _playerState.AddEffect(new AddMoveSpeedEffect { Value = _startSpeed });
         _playerState.AddEffect(new AddMoneyEffect { Value = _startMoney });
         _playerState.AddEffect(new AddHealthEffect { Value = _startHealth });
         _playerState.AddEffect(new AddMaxHealthEffect { Value = _startHealth });
         _playerState.SolveEffect();
+    }
+
+    private enum MainPhase
+    {
+        INIT,
+        SHOP,
+        BATTLE,
+        BATTLE_RESULT,
+        DEFEAT
     }
 
     private class EnemySpawnTimer

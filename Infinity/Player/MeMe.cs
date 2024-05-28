@@ -4,13 +4,7 @@ namespace fms;
 
 public partial class MeMe : CharacterBody2D, IPawn
 {
-    [Export(PropertyHint.Range, "0,1000,50")]
-    public float MoveSpeed { get; private set; } = 200;
-
     private Vector2 _nextMoveDirection;
-
-
-    public Race Race => Race.Player;
 
 
     public override void _Process(double delta)
@@ -25,7 +19,9 @@ public partial class MeMe : CharacterBody2D, IPawn
         Rotation = angle;
 
         // Update Position
-        var motion = _nextMoveDirection * (float)delta * MoveSpeed;
+        var speed = Main.GameMode.GetPlayerState().MoveSpeed.CurrentValue;
+
+        var motion = _nextMoveDirection * (float)delta * speed;
         MoveAndCollide(motion);
     }
 

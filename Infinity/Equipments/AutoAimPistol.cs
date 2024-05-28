@@ -52,7 +52,6 @@ public partial class AutoAimPistol : Node2D
         _disposables.Dispose();
     }
 
-
     private void Fire()
     {
         // Search near enemy
@@ -75,17 +74,14 @@ public partial class AutoAimPistol : Node2D
                 }
         }
 
-        Vector2 direction;
-        if (targetEnemy is not null)
+        if (targetEnemy is null)
         {
-            // Fire to targetEnemy
-            direction = (targetEnemy.GlobalPosition - GlobalPosition).Normalized();
+            // 範囲内に敵が居ない場合は打つのに失敗する
+            return;
         }
-        else
-        {
-            // Fire to forward
-            direction = GlobalTransform.X;
-        }
+
+        // Fire to targetEnemy
+        var direction = (targetEnemy.GlobalPosition - GlobalPosition).Normalized();
 
         // Spawn bullet
         var bullet = _bulletPackedScene.Instantiate<Projectile>();
