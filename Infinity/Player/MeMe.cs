@@ -25,16 +25,10 @@ public partial class MeMe : CharacterBody2D, IPawn
         MoveAndCollide(motion);
     }
 
-    public void TakeDamage(float amount, IEntity? instigator)
+    public void TakeDamage(float amount)
     {
-        if (instigator is null)
-        {
-            return;
-        }
-
         var state = Main.PlayerState;
 
-        // ToDo: Create Physical Damage Effect
         var effect = new PhysicalDamageEffect
         {
             Value = amount

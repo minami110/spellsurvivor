@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=24 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Common/PlayerController.cs" id="2_1uq3r"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawnSettings.cs" id="3_d53fw"]
 [ext_resource type="Script" path="res://Infinity/Player/PlayerState.cs" id="3_gennh"]
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="4_8okuu"]
+[ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) BigTako.tscn" id="4_rd0iv"]
 [ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Equipments/AutoAimPistol.tscn" id="5_isohu"]
 [ext_resource type="Script" path="res://Infinity/GameMode/WaveSetting.cs" id="6_34bq1"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawner.cs" id="8_lc8x0"]
@@ -18,13 +19,18 @@
 [sub_resource type="Resource" id="Resource_smwgh"]
 script = ExtResource("3_d53fw")
 EnemyScene = ExtResource("4_8okuu")
-SpawnInterval = 3.0
+SpawnInterval = 2.0
+
+[sub_resource type="Resource" id="Resource_3eo46"]
+script = ExtResource("3_d53fw")
+EnemyScene = ExtResource("4_rd0iv")
+SpawnInterval = 5.0
 
 [sub_resource type="Resource" id="Resource_qt72y"]
 script = ExtResource("6_34bq1")
 Money = 10
 Time = 30.0
-EnemySpawnSettings = Array[Object]([SubResource("Resource_smwgh")])
+EnemySpawnSettings = Array[Object]([SubResource("Resource_smwgh"), SubResource("Resource_3eo46")])
 
 [sub_resource type="Resource" id="Resource_pgsa0"]
 script = ExtResource("3_d53fw")

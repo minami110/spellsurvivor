@@ -8,11 +8,23 @@ public partial class Enemy : RigidBody2D, IEntity
     [Export(PropertyHint.Range, "0,1000,1")]
     public float MoveSpeed { get; set; } = 50f;
 
-    [Export(PropertyHint.Range, "0,100,1")]
+    [Export(PropertyHint.Range, "0,1000,1")]
     public float MaxHealth { get; private set; } = 100f;
 
-    [Export(PropertyHint.Range, "0,100,1")]
+    [Export(PropertyHint.Range, "0,1000,1")]
     public float Health { get; private set; } = 100f;
+
+    /// <summary>
+    ///     プレイヤーに与えるダメージ
+    /// </summary>
+    [Export(PropertyHint.Range, "0,1000,1")]
+    public float Power { get; private set; } = 10f;
+
+    /// <summary>
+    ///     プレイヤーと重なっている時攻撃を発生させるクールダウン
+    /// </summary>
+    [Export]
+    public float AttachCooldown { get; private set; } = 0.333f;
 
     [ExportGroup("Internal References")]
     [Export]
@@ -21,8 +33,11 @@ public partial class Enemy : RigidBody2D, IEntity
     [Export]
     private TextureProgressBar _progressBar = null!;
 
+    [Export]
+    private Area2D _damageArea = null!;
 
     private readonly Subject<DeadReason> _deadSubject = new();
+    private float _attachCooldownTimer;
 
     private bool _isHitStopping;
 
@@ -30,23 +45,39 @@ public partial class Enemy : RigidBody2D, IEntity
     public override void _Ready()
     {
         UpdateHealthBar();
+        _attachCooldownTimer = AttachCooldown;
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         if (_isHitStopping)
         {
             return;
         }
 
-        var playerPosition = Main.PlayerGlobalPosition;
+        MoveToPlayer(delta);
+    }
 
-        // Move to player
-        var direction = playerPosition - GlobalPosition;
-        direction = direction.Normalized();
-        var force = direction * MoveSpeed;
-        LinearVelocity = force;
+    public override void _Process(double delta)
+    {
+        if (_attachCooldownTimer > 0)
+        {
+            _attachCooldownTimer -= (float)delta;
+            return;
+        }
+
+        _attachCooldownTimer = AttachCooldown;
+        var overlappingBodies = _damageArea.GetOverlappingBodies();
+        if (overlappingBodies.Count <= 0)
+        {
+            return;
+        }
+
+        foreach (var node in overlappingBodies)
+            if (node is MeMe player)
+            {
+                player.TakeDamage(Power);
+            }
     }
 
     public override void _ExitTree()
@@ -59,6 +90,15 @@ public partial class Enemy : RigidBody2D, IEntity
     {
         _deadSubject.OnNext(reason);
         QueueFree();
+    }
+
+    private void MoveToPlayer(double delta)
+    {
+        var playerPosition = Main.PlayerGlobalPosition;
+        var direction = playerPosition - GlobalPosition;
+        direction = direction.Normalized();
+        var force = direction * MoveSpeed;
+        LinearVelocity = force;
     }
 
     private async void TakeDamageAnimationAsync()
@@ -84,7 +124,6 @@ public partial class Enemy : RigidBody2D, IEntity
         _progressBar.MaxValue = MaxHealth;
         _progressBar.SetValueNoSignal(Health);
     }
-
 
     public Observable<DeadReason> Dead => _deadSubject;
 

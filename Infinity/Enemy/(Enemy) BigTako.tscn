@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4i1jhq1jsnm5"]
+
+[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="1_phgd3"]
+[ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_8uoah"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i0scs"]
+resource_local_to_scene = true
+shader = ExtResource("2_8uoah")
+shader_parameter/hit = 0.0
+
+[node name="Enemy" instance=ExtResource("1_phgd3")]
+MoveSpeed = 25.0
+MaxHealth = 200.0
+Health = 200.0
+
+[node name="Texture" parent="." index="0"]
+material = SubResource("ShaderMaterial_i0scs")
+offset_left = -38.0
+offset_top = -41.0
+offset_right = -8.0
+offset_bottom = 0.0
+scale = Vector2(2, 2)
+
+[node name="CollisionShape2D" parent="." index="1"]
+scale = Vector2(2, 2)
+
+[node name="HealthBar" parent="." index="2"]
+offset_top = 31.0
+offset_bottom = 39.0
