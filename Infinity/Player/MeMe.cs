@@ -4,28 +4,29 @@ namespace fms;
 
 public partial class MeMe : CharacterBody2D, IPawn
 {
-    private Vector2 _nextMoveDirection;
-
     [Export(PropertyHint.Range, "0,1000,50")]
     public float MoveSpeed { get; private set; } = 200;
+
+    private Vector2 _nextMoveDirection;
 
 
     public Race Race => Race.Player;
 
 
-    void IPawn.PrimaryPressed()
+    public override void _Process(double delta)
     {
-        // Do nothing
-    }
+        if (!(_nextMoveDirection.LengthSquared() > 0f))
+        {
+            return;
+        }
 
-    void IPawn.PrimaryReleased()
-    {
-        // Do nothing
-    }
+        // Update PlayerForward
+        var angle = Mathf.Atan2(_nextMoveDirection.Y, _nextMoveDirection.X);
+        Rotation = angle;
 
-    void IPawn.MoveForward(in Vector2 dir)
-    {
-        _nextMoveDirection = dir;
+        // Update Position
+        var motion = _nextMoveDirection * (float)delta * MoveSpeed;
+        MoveAndCollide(motion);
     }
 
     public void TakeDamage(float amount, IEntity? instigator)
@@ -48,19 +49,18 @@ public partial class MeMe : CharacterBody2D, IPawn
     }
 
 
-    public override void _Process(double delta)
+    void IPawn.PrimaryPressed()
     {
-        if (!(_nextMoveDirection.LengthSquared() > 0f))
-        {
-            return;
-        }
+        // Do nothing
+    }
 
-        // Update PlayerForward
-        var angle = Mathf.Atan2(_nextMoveDirection.Y, _nextMoveDirection.X);
-        Rotation = angle;
+    void IPawn.PrimaryReleased()
+    {
+        // Do nothing
+    }
 
-        // Update Position
-        var motion = _nextMoveDirection * (float)delta * MoveSpeed;
-        MoveAndCollide(motion);
+    void IPawn.MoveForward(in Vector2 dir)
+    {
+        _nextMoveDirection = dir;
     }
 }

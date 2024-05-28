@@ -6,6 +6,15 @@ namespace fms;
 
 public partial class AutoAimPistol : Node2D
 {
+    [Export]
+    private float _damage = 34f;
+
+    [Export]
+    private float _radius = 100f;
+
+    [Export]
+    private float _cooldown = 1f;
+
     [ExportGroup("Internal Reference")]
     [Export]
     private PackedScene _bulletPackedScene = null!;
@@ -17,19 +26,12 @@ public partial class AutoAimPistol : Node2D
     private CollisionShape2D _collisionShape = null!;
 
     [Export]
-    private float _cooldown = 1f;
-
-
-    private IDisposable _disposables = null!;
-
-    [Export]
-    private float _radius = 150f;
-
-    [Export]
     private Area2D _searchArea = null!;
 
     [Export]
     private Timer _timer = null!;
+
+    private IDisposable _disposables = null!;
 
     public override void _Ready()
     {
@@ -43,19 +45,13 @@ public partial class AutoAimPistol : Node2D
         var d3 = _timer.TimeoutAsObservable().Subscribe(_ => Fire());
 
         _disposables = Disposable.Combine(d1, d2, d3);
-
-        GetTree().DebugCollisionsHint = true;
-    }
-
-    private void UpdateRadius()
-    {
-        _collisionShape.Scale = new Vector2(_radius, _radius);
     }
 
     public override void _ExitTree()
     {
         _disposables.Dispose();
     }
+
 
     private void Fire()
     {
@@ -88,16 +84,22 @@ public partial class AutoAimPistol : Node2D
         else
         {
             // Fire to forward
-            direction = new Vector2(1, 0);
+            direction = GlobalTransform.X;
         }
 
         // Spawn bullet
         var bullet = _bulletPackedScene.Instantiate<Projectile>();
         {
+            bullet.Damage = _damage;
             bullet.Direction = direction;
             bullet.GlobalPosition = GlobalPosition;
             bullet.InitialSpeed = 1000f;
         }
         _bulletSpawnNode.AddChild(bullet);
+    }
+
+    private void UpdateRadius()
+    {
+        _collisionShape.Scale = new Vector2(_radius, _radius);
     }
 }

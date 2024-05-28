@@ -6,8 +6,11 @@ namespace fms;
 public partial class WaveSetting : Resource
 {
     [Export]
-    public int EnemyCount;
+    public int Money;
 
     [Export]
-    public float SpawnInterval;
+    public float Time;
+
+    [Export]
+    public EnemySpawnSettings[] EnemySpawnSettings = null!;
 }

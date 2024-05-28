@@ -13,6 +13,10 @@ public class AddMaxHealthEffect : EffectBase
 {
 }
 
+public class AddMoneyEffect : EffectBase
+{
+}
+
 public class PhysicalDamageEffect : EffectBase
 {
 }

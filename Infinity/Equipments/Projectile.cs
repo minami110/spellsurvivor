@@ -6,9 +6,8 @@ namespace fms;
 
 public partial class Projectile : Area2D
 {
-    private IDisposable? _disposable;
-    private float _lifeTimeCounter;
-    private Vector2 _velocity;
+    [Export]
+    public float Damage { get; set; } = 10f;
 
     [Export]
     public Vector2 Direction { get; set; } = Vector2.Right;
@@ -22,11 +21,9 @@ public partial class Projectile : Area2D
     [Export(PropertyHint.Range, "0, 10")]
     public float LifeTime { get; set; } = 1f;
 
-    protected override void Dispose(bool disposing)
-    {
-        _disposable?.Dispose();
-        base.Dispose(disposing);
-    }
+    private IDisposable? _disposable;
+    private float _lifeTimeCounter;
+    private Vector2 _velocity;
 
     public override void _Ready()
     {
@@ -54,9 +51,15 @@ public partial class Projectile : Area2D
         }
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        _disposable?.Dispose();
+        base.Dispose(disposing);
+    }
+
     private void ApplyDamageToEntity(IEntity entity)
     {
-        entity.TakeDamage(50);
+        entity.TakeDamage(Damage);
         KillThis();
     }
 

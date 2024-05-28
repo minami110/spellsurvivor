@@ -15,11 +15,12 @@ public partial class PlayerState : Node
     private readonly List<EffectBase> _effects = new();
     private readonly ReactiveProperty<float> _health = new();
     private readonly ReactiveProperty<float> _maxHealth = new();
+    private readonly ReactiveProperty<int> _money = new();
 
-    public PlayerState()
-    {
-        _disposable = Disposable.Combine(_health, _maxHealth);
-    }
+    /// <summary>
+    ///     現在の所持金
+    /// </summary>
+    public ReadOnlyReactiveProperty<int> Money => _money;
 
     /// <summary>
     ///     最大体力
@@ -27,20 +28,25 @@ public partial class PlayerState : Node
     public ReadOnlyReactiveProperty<float> Health => _health;
 
     /// <summary>
-    /// 現在の体力
+    ///     現在の体力
     /// </summary>
     public ReadOnlyReactiveProperty<float> MaxHealth => _maxHealth;
+
+    public PlayerState()
+    {
+        _disposable = Disposable.Combine(_health, _maxHealth);
+    }
+
+    public void AddEffect(EffectBase effect)
+    {
+        _effects.Add(effect);
+    }
 
     public void Reset()
     {
         _health.Value = 0f;
         _maxHealth.Value = 0f;
         _effects.Clear();
-    }
-
-    public void AddEffect(EffectBase effect)
-    {
-        _effects.Add(effect);
     }
 
     public void SolveEffect()
@@ -50,6 +56,7 @@ public partial class PlayerState : Node
             return;
         }
 
+        var money = _money.Value;
         var maxHealth = _health.Value;
         var health = _maxHealth.Value;
         var damage = 0f;
@@ -57,6 +64,11 @@ public partial class PlayerState : Node
         foreach (var effect in _effects)
             switch (effect)
             {
+                case AddMoneyEffect addMoneyEffect:
+                {
+                    money += (int)addMoneyEffect.Value;
+                    break;
+                }
                 case AddHealthEffect addHealthEffect:
                 {
                     maxHealth += addHealthEffect.Value;
@@ -84,6 +96,7 @@ public partial class PlayerState : Node
         health -= damage;
 
         // 最終的な値を計算する
+        _money.Value = money;
         _maxHealth.Value = maxHealth;
         _health.Value = health;
     }

@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dvwlkv2f4pl2i"]
+[gd_scene load_steps=6 format=3 uid="uid://dvwlkv2f4pl2i"]
 
 [ext_resource type="Script" path="res://Infinity/ShopMenu.cs" id="1_y0fo4"]
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Fonts/Verdana.ttf" id="2_161hv"]
-[ext_resource type="Script" path="res://Infinity/Shop/Spell.cs" id="3_mkeei"]
 [ext_resource type="PackedScene" uid="uid://3i5a02yf3hh" path="res://Common/Control/DraggableArea.tscn" id="4_21j2b"]
 [ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Textures/icon.svg" id="4_83511"]
 
@@ -91,11 +90,6 @@ texture = ExtResource("4_83511")
 layout_mode = 2
 text = "Spell Name"
 horizontal_alignment = 1
-
-[node name="Spell" type="Area2D" parent="Container/HSplitContainer/DraggableArea"]
-position = Vector2(74, 129)
-collision_mask = 0
-script = ExtResource("3_mkeei")
 
 [node name="DraggableArea2" parent="Container/HSplitContainer" instance=ExtResource("4_21j2b")]
 layout_mode = 2
