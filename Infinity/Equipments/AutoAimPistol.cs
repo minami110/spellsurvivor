@@ -1,5 +1,4 @@
-﻿using System;
-using Godot;
+﻿using Godot;
 using R3;
 
 namespace fms;
@@ -31,25 +30,16 @@ public partial class AutoAimPistol : Node2D
     [Export]
     private Timer _timer = null!;
 
-    private IDisposable _disposables = null!;
-
     public override void _Ready()
     {
         UpdateRadius();
 
         _timer.WaitTime = _cooldown;
 
-        //
         var d1 = Main.GameMode.WaveStarted.Subscribe(_ => _timer.Start());
         var d2 = Main.GameMode.WaveEnded.Subscribe(_ => _timer.Stop());
         var d3 = _timer.TimeoutAsObservable().Subscribe(_ => Fire());
-
-        _disposables = Disposable.Combine(d1, d2, d3);
-    }
-
-    public override void _ExitTree()
-    {
-        _disposables.Dispose();
+        Disposable.Combine(d1, d2, d3).AddTo(this);
     }
 
     private void Fire()
