@@ -23,7 +23,7 @@ public partial class InGameEquipment : VBoxContainer
         var real = Main.GameMode.RealEquipmentDict[ItemSettings];
         var d1 = real.CoolDownLeft.Subscribe(x =>
         {
-            _progress.MaxValue = ItemSettings.CoolDown;
+            _progress.MaxValue = real.MaxCoolDown.CurrentValue;
             _progress.Value = x;
         });
         Disposable.Combine(d1).AddTo(this);

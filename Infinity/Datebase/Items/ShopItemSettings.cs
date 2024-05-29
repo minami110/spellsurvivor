@@ -21,9 +21,6 @@ public partial class ShopItemSettings : Resource
     public float BaseAttack;
 
     [Export]
-    public float CoolDown;
-
-    [Export]
     public float Range;
 
     [Export]

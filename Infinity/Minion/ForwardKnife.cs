@@ -11,9 +11,11 @@ public partial class ForwardKnife : MinionBase
     [Export]
     private Node _bulletSpawnNode = null!;
 
+    private protected override int BaseCoolDownFrame => 60;
+
     private protected override void DoAttack()
     {
-        switch (Level)
+        switch (Level.CurrentValue)
         {
             // Level 1
             case 1:

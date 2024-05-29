@@ -17,15 +17,12 @@ public partial class AutoAimPistol : MinionBase
     [Export]
     private Area2D _searchArea = null!;
 
+    private protected override int BaseCoolDownFrame => 90;
+
     public override void _Ready()
     {
         base._Ready();
         UpdateRadius();
-    }
-
-    private void UpdateRadius()
-    {
-        _collisionShape.Scale = new Vector2(ItemSettings.Range, ItemSettings.Range);
     }
 
     private protected override void DoAttack()
@@ -68,5 +65,10 @@ public partial class AutoAimPistol : MinionBase
             bullet.InitialSpeed = 1000f;
         }
         _bulletSpawnNode.AddChild(bullet);
+    }
+
+    private void UpdateRadius()
+    {
+        _collisionShape.Scale = new Vector2(ItemSettings.Range, ItemSettings.Range);
     }
 }

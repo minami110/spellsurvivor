@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+using Godot;
 using R3;
 
 namespace fms;
@@ -6,53 +7,106 @@ namespace fms;
 /// <summary>
 ///     Minion のベースクラス
 /// </summary>
-public partial class MinionBase : Node2D
+public partial class MinionBase : Node2D, IEffectSolver
 {
-    private readonly ReactiveProperty<float> _coolDownLeft = new(0f);
-    private Timer _coolDownTimer = null!;
+    private readonly ReactiveProperty<int> _coolDownLeft = new(1);
+    private readonly List<EffectBase> _effects = new();
+    private readonly ReactiveProperty<int> _levelRp = new(1);
+    private readonly ReactiveProperty<int> _maxCoolDown = new(1);
 
     /// <summary>
-    ///     Gets the level of this minion.
+    ///     Gets the level of this minion. (ReactiveProperty)
     /// </summary>
-    public int Level { get; private set; }
+    public ReadOnlyReactiveProperty<int> Level => _levelRp;
 
     /// <summary>
     ///     Gets the maximum level of this minion.
     /// </summary>
     public virtual int MaxLevel => 5;
 
-    public bool IsMaxLevel => Level >= MaxLevel;
+    /// <summary>
+    /// </summary>
+    private protected virtual int BaseCoolDownFrame => 1;
+
+    /// <summary>
+    /// </summary>
+    public bool IsMaxLevel => _levelRp.Value >= MaxLevel;
 
     /// <summary>
     /// </summary>
     public ShopItemSettings ItemSettings { get; set; } = null!;
 
+
     /// <summary>
-    ///     次の攻撃までの残り時間 (単位: 秒)
     /// </summary>
-    public ReadOnlyReactiveProperty<float> CoolDownLeft => _coolDownLeft;
+    public ReadOnlyReactiveProperty<int> MaxCoolDown => _maxCoolDown;
+
+    /// <summary>
+    ///     次の攻撃までの残りフレーム
+    /// </summary>
+    public ReadOnlyReactiveProperty<int> CoolDownLeft => _coolDownLeft;
 
     public override void _Ready()
     {
-        // Timer の初期化
-        _coolDownTimer = new Timer();
-        AddChild(_coolDownTimer);
-        _coolDownTimer.WaitTime = ItemSettings.CoolDown;
-        var d1 = Main.GameMode.WaveStarted.Subscribe(this, (_, s) => s._coolDownTimer.Start());
-        var d2 = Main.GameMode.WaveEnded.Subscribe(this, (_, s) => s._coolDownTimer.Stop());
-        var d3 = _coolDownTimer.TimeoutAsObservable().Subscribe(this, (_, s) => s.DoAttack());
-        var d4 = _coolDownLeft;
+        var d1 = Main.GameMode.WaveStarted.Subscribe(this, (_, t) => t.StartCoolDownTimer());
+        var d2 = Main.GameMode.WaveEnded.Subscribe(this, (_, t) => t.StopCoolDownTimer());
+
+        // Observable の初期化
+        var d3 = _coolDownLeft;
+        var d4 = _levelRp;
 
         Disposable.Combine(d1, d2, d3, d4).AddTo(this);
-    }
 
-    public override void _Process(double delta)
-    {
-        // TODO: ポーリングしてるのでなんとかする
-        _coolDownLeft.Value = (float)_coolDownTimer.TimeLeft;
+        // ToDo:
+        _maxCoolDown.Value = BaseCoolDownFrame;
     }
 
     private protected virtual void DoAttack()
     {
+    }
+
+    private protected virtual void OnSolveEffect(List<EffectBase> effects)
+    {
+    }
+
+    private async void StartCoolDownTimer()
+    {
+        _coolDownLeft.Value = _maxCoolDown.Value;
+
+        while (true)
+        {
+            await this.BeginOfProcessAsync();
+            _coolDownLeft.Value -= 1;
+            if (_coolDownLeft.Value > 0)
+            {
+                continue;
+            }
+
+            DoAttack();
+            _coolDownLeft.Value = _maxCoolDown.Value;
+        }
+    }
+
+    private void StopCoolDownTimer()
+    {
+    }
+
+    public virtual void AddEffect(EffectBase effect)
+    {
+        _effects.Add(effect);
+    }
+
+    public void SolveEffect()
+    {
+        foreach (var effect in _effects)
+            // レベルが上がるエフェクト
+            if (!IsMaxLevel && effect is AddLevelEffect addLevelEffect)
+            {
+                var newLevel = _levelRp.Value + (int)addLevelEffect.Value;
+                _levelRp.Value = Mathf.Clamp(newLevel, 0, MaxLevel);
+            }
+
+        OnSolveEffect(_effects);
+        _effects.Clear();
     }
 }
