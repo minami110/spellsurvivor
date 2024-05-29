@@ -8,7 +8,7 @@ namespace fms;
 /// <summary>
 ///     Player の体力やバフなどを管理するクラス
 /// </summary>
-public sealed class PlayerState : IDisposable
+public sealed class PlayerState : IEffectSolver, IDisposable
 {
     private readonly IDisposable _disposable;
 
@@ -44,11 +44,6 @@ public sealed class PlayerState : IDisposable
         _disposable = Disposable.Combine(_health, _maxHealth);
     }
 
-    public void AddEffect(EffectBase effect)
-    {
-        _effects.Add(effect);
-    }
-
     public void Reset()
     {
         _health.Value = 0f;
@@ -56,6 +51,16 @@ public sealed class PlayerState : IDisposable
         _money.Value = 0;
         _moveSpeed.Value = 0f;
         _effects.Clear();
+    }
+
+    public void Dispose()
+    {
+        _disposable.Dispose();
+    }
+
+    public void AddEffect(EffectBase effect)
+    {
+        _effects.Add(effect);
     }
 
     public void SolveEffect()
@@ -111,10 +116,5 @@ public sealed class PlayerState : IDisposable
         // 最終的な値を計算する
         _maxHealth.Value = maxHealth;
         _health.Value = health;
-    }
-
-    public void Dispose()
-    {
-        _disposable.Dispose();
     }
 }

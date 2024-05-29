@@ -21,6 +21,8 @@ public partial class MinionBase : Node2D
     /// </summary>
     public virtual int MaxLevel => 5;
 
+    public bool IsMaxLevel => Level >= MaxLevel;
+
     /// <summary>
     /// </summary>
     public ShopItemSettings ItemSettings { get; set; } = null!;

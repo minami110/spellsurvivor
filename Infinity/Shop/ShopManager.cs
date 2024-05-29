@@ -43,18 +43,21 @@ public partial class ShopManager : Node
 
     public void Reroll()
     {
+        // すでに生成している ShopItem を削除 する
         foreach (var node in _shopItemSpawnParent.GetChildren()) node.QueueFree();
 
+        // ShopItem を生成する
         InstantiateShopItems();
     }
 
     private void InstantiateShopItems()
     {
+        // ToDo: すでに MaxLevel に達した アイテムは Pool から取り除く
+
         var arrayLength = _itemPool.Length;
-        var numIndices = Mathf.Min(arrayLength, _slotCount);
         var rand = new Random();
 
-        for (var i = 0; i < numIndices; i++)
+        for (var i = 0; i < _slotCount; i++)
         {
             // Pick random index
             var id = rand.Next(arrayLength);

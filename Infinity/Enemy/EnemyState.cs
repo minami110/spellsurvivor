@@ -5,7 +5,7 @@ using R3;
 
 namespace fms;
 
-public sealed class EnemyState : IDisposable
+public sealed class EnemyState : IEffectSolver, IDisposable
 {
     private readonly List<EffectBase> _effects = new();
     private readonly ReactiveProperty<float> _health = new();
@@ -26,6 +26,13 @@ public sealed class EnemyState : IDisposable
     ///     現在の体力
     /// </summary>
     public ReadOnlyReactiveProperty<float> MaxHealth => _maxHealth;
+
+    public void Dispose()
+    {
+        _health.Dispose();
+        _maxHealth.Dispose();
+        _moveSpeed.Dispose();
+    }
 
     public void AddEffect(EffectBase effect)
     {
@@ -80,12 +87,5 @@ public sealed class EnemyState : IDisposable
         // 最終的な値を計算する
         _maxHealth.Value = maxHealth;
         _health.Value = health;
-    }
-
-    public void Dispose()
-    {
-        _health.Dispose();
-        _maxHealth.Dispose();
-        _moveSpeed.Dispose();
     }
 }
