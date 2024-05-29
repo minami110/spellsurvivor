@@ -11,18 +11,6 @@ public partial class ForwardKnife : MinionBase
     [Export]
     private Node _bulletSpawnNode = null!;
 
-    private void SpawnBullet(float xOffset)
-    {
-        var bullet = _bulletPackedScene.Instantiate<ProjectileBase>();
-        {
-            bullet.Damage = ItemSettings.BaseAttack;
-            bullet.Direction = GlobalTransform.X; // Forward
-            bullet.GlobalPosition = GlobalPosition + GlobalTransform.Y * xOffset; // ちょっと右にずらす
-            bullet.InitialSpeed = 1000f;
-        }
-        _bulletSpawnNode.AddChild(bullet);
-    }
-
     private protected override void DoAttack()
     {
         switch (Level)
@@ -30,22 +18,34 @@ public partial class ForwardKnife : MinionBase
             // Level 1
             case 1:
             {
-                SpawnBullet(0f);
+                SpawnBullet(GlobalPosition);
                 break;
             }
             case 2:
             {
-                SpawnBullet(10f);
-                SpawnBullet(-10f);
+                SpawnBullet(GlobalPosition, 10f);
+                SpawnBullet(GlobalPosition, -10f);
                 break;
             }
             case 3:
             {
-                SpawnBullet(20f);
-                SpawnBullet(0f);
-                SpawnBullet(-20f);
+                SpawnBullet(GlobalPosition, 20f);
+                SpawnBullet(GlobalPosition, 0f, 10f);
+                SpawnBullet(GlobalPosition, -20f);
                 break;
             }
         }
+    }
+
+    private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
+    {
+        var bullet = _bulletPackedScene.Instantiate<ProjectileBase>();
+        {
+            bullet.Damage = ItemSettings.BaseAttack;
+            bullet.Direction = GlobalTransform.X; // Forward
+            bullet.GlobalPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
+            bullet.InitialSpeed = 1000f;
+        }
+        _bulletSpawnNode.AddChild(bullet);
     }
 }

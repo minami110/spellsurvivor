@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cmr1iekscwraj"]
 
 [ext_resource type="Script" path="res://Infinity/Minion/AutoAimPistol.cs" id="1_epjnr"]
-[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Damages/(Projectile) Orb.tscn" id="2_03cjk"]
+[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Projectiles/(Projectile) Orb.tscn" id="2_03cjk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0ojw7"]
 radius = 1.0

@@ -45,7 +45,7 @@ public partial class ProjectileBase : Area2D
         }
     }
 
-    private void ApplyDamageToEnemy(Enemy enemy)
+    private protected virtual void ApplyDamageToEnemy(Enemy enemy)
     {
         enemy.TakeDamage(Damage);
         KillThis();
