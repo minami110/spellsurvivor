@@ -42,6 +42,9 @@ public partial class ShopSellingItem : VBoxContainer
         // GameMode に通知する
         Main.GameMode.BuyItem(ShopItemSettings);
 
-        // ToDo: この Shop Item を無効化する
+        //この Shop Item を無効化する
+        _iconTextureRect.Hide();
+        _nameLabel.Hide();
+        _buyButton.Hide();
     }
 }

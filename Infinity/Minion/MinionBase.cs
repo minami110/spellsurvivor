@@ -9,9 +9,11 @@ namespace fms;
 /// </summary>
 public partial class MinionBase : Node2D, IEffectSolver
 {
+    private const int _MIN_LEVEL = 1;
+
     private readonly ReactiveProperty<int> _coolDownLeft = new(1);
     private readonly List<EffectBase> _effects = new();
-    private readonly ReactiveProperty<int> _levelRp = new(1);
+    private readonly ReactiveProperty<int> _levelRp = new(_MIN_LEVEL);
     private readonly ReactiveProperty<int> _maxCoolDown = new(1);
 
     /// <summary>
@@ -25,6 +27,7 @@ public partial class MinionBase : Node2D, IEffectSolver
     public virtual int MaxLevel => 5;
 
     /// <summary>
+    ///     Minion のベースの攻撃間隔
     /// </summary>
     private protected virtual int BaseCoolDownFrame => 1;
 
@@ -46,7 +49,7 @@ public partial class MinionBase : Node2D, IEffectSolver
     /// </summary>
     public ReadOnlyReactiveProperty<int> CoolDownLeft => _coolDownLeft;
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
         var d1 = Main.GameMode.WaveStarted.Subscribe(this, (_, t) => t.StartCoolDownTimer());
         var d2 = Main.GameMode.WaveEnded.Subscribe(this, (_, t) => t.StopCoolDownTimer());
@@ -57,7 +60,6 @@ public partial class MinionBase : Node2D, IEffectSolver
 
         Disposable.Combine(d1, d2, d3, d4).AddTo(this);
 
-        // ToDo:
         _maxCoolDown.Value = BaseCoolDownFrame;
     }
 
@@ -103,7 +105,7 @@ public partial class MinionBase : Node2D, IEffectSolver
             if (!IsMaxLevel && effect is AddLevelEffect addLevelEffect)
             {
                 var newLevel = _levelRp.Value + (int)addLevelEffect.Value;
-                _levelRp.Value = Mathf.Clamp(newLevel, 0, MaxLevel);
+                _levelRp.Value = Mathf.Clamp(newLevel, _MIN_LEVEL, MaxLevel);
             }
 
         OnSolveEffect(_effects);

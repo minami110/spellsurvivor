@@ -5,6 +5,7 @@ namespace fms;
 
 public sealed partial class ShopHUD : CanvasLayer
 {
+    [ExportGroup("Internal Reference")]
     [Export]
     private ShopManager _shopManager = null!;
 
