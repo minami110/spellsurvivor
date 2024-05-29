@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="ShopItemSettings" load_steps=4 format=3 uid="uid://brkbpmer5vx5k"]
 
-[ext_resource type="PackedScene" uid="uid://hvaujiufb0ew" path="res://Infinity/Minion/(Equipment) ForwardKnife.tscn" id="1_lo58r"]
+[ext_resource type="PackedScene" uid="uid://hvaujiufb0ew" path="res://Infinity/Minion/(Minion) ForwardKnife.tscn" id="1_lo58r"]
 [ext_resource type="Texture2D" uid="uid://bngagbi0xt2mu" path="res://Common/Textures/Emoji/dagger_knife.png" id="2_cd5jy"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Items/ShopItemSettings.cs" id="3_oigos"]
 

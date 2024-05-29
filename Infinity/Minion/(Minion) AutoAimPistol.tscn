@@ -1,18 +1,17 @@
 [gd_scene load_steps=4 format=3 uid="uid://cmr1iekscwraj"]
 
-[ext_resource type="Script" path="res://Infinity/Minion/AutoAimPistol.cs" id="1_cqo88"]
-[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Damages/Projectile.tscn" id="2_7pbav"]
+[ext_resource type="Script" path="res://Infinity/Minion/AutoAimPistol.cs" id="1_epjnr"]
+[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Damages/(Projectile) Orb.tscn" id="2_03cjk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0ojw7"]
 radius = 1.0
 
-[node name="AutoAimPistol" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_collisionShape", "_searchArea", "Timer")]
-script = ExtResource("1_cqo88")
-_bulletPackedScene = ExtResource("2_7pbav")
+[node name="AutoAimPistol" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_collisionShape", "_searchArea")]
+script = ExtResource("1_epjnr")
+_bulletPackedScene = ExtResource("2_03cjk")
 _bulletSpawnNode = NodePath("BulletSpawnRoot")
 _collisionShape = NodePath("Area2D/CollisionShape2D")
 _searchArea = NodePath("Area2D")
-Timer = NodePath("Timer")
 metadata/_edit_group_ = true
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -23,7 +22,5 @@ collision_mask = 4
 scale = Vector2(10, 10)
 shape = SubResource("CircleShape2D_0ojw7")
 debug_color = Color(0.282353, 0.6, 0.294118, 0.027451)
-
-[node name="Timer" type="Timer" parent="."]
 
 [node name="BulletSpawnRoot" type="Node" parent="."]

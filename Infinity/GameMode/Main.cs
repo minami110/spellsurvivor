@@ -20,9 +20,10 @@ public partial class Main : Node
 
     [ExportGroup("Wave Settings")]
     [Export]
-    private WaveSetting[] _waveSettings = null!;
+    private WaveSetting[] _waveSettings = Array.Empty<WaveSetting>();
 
     [ExportGroup("Internal References")]
+    [ExportSubgroup("Core")]
     [Export]
     private PlayerController _playerController = null!;
 
@@ -32,6 +33,7 @@ public partial class Main : Node
     [Export]
     private EnemySpawner _enemySpawner = null!;
 
+    [ExportSubgroup("HUD")]
     [Export]
     private InGameHUD _inGameHud = null!;
 
@@ -50,11 +52,11 @@ public partial class Main : Node
     private readonly PlayerState _playerState;
 
     // 現在 Player が装備しているアイテム (実態 のほう) の辞書
-    private readonly Dictionary<ShopItemSettings, EquipmentBase> _realEquipmentDict = new();
+    private readonly Dictionary<ShopItemSettings, MinionBase> _realEquipmentDict = new();
 
     private readonly ReactiveProperty<float> _remainingWaveSecondRp = new();
     private readonly Subject<Unit> _waveEndedSub = new();
-    private readonly ReactiveProperty<int> _waveRp = new();
+    private readonly ReactiveProperty<int> _waveRp = new(-1);
     private readonly Subject<Unit> _waveStartedSub = new();
 
     private WaveSetting _currentWaveSettings = null!;
@@ -98,7 +100,7 @@ public partial class Main : Node
 
     public IReadOnlyList<ShopItemSettings> Equipments => _equipments;
 
-    public IReadOnlyDictionary<ShopItemSettings, EquipmentBase> RealEquipmentDict => _realEquipmentDict;
+    public IReadOnlyDictionary<ShopItemSettings, MinionBase> RealEquipmentDict => _realEquipmentDict;
 
     /// <summary>
     ///     現在の Player の Global Position を取得
@@ -219,7 +221,7 @@ public partial class Main : Node
         _playerState.SolveEffect();
 
         // Player Pawn に Item を追加で装備させる
-        var equipment = shopItemSettings.EquipmentScene.Instantiate<EquipmentBase>();
+        var equipment = shopItemSettings.EquipmentScene.Instantiate<MinionBase>();
         equipment.ItemSettings = shopItemSettings;
         _playerPawn.AddChild(equipment);
         _realEquipmentDict.Add(shopItemSettings, equipment);
@@ -244,8 +246,16 @@ public partial class Main : Node
             return;
         }
 
+        // Wave を一つ進める
+        // Debug: Settings が足りない場合はループさせる
+        var newWave = _waveRp.Value + 1;
+        if (newWave > _waveSettings.Length)
+        {
+            newWave = 0;
+        }
+
         // Wave Settings を初期化する
-        _currentWaveSettings = _waveSettings[_waveRp.Value];
+        _currentWaveSettings = _waveSettings[newWave];
         _remainingWaveSecondRp.Value = _currentWaveSettings.Time;
         _enemySpawnTimers.Clear();
         foreach (var enemySpawnSettings in _currentWaveSettings.EnemySpawnSettings)
@@ -256,13 +266,16 @@ public partial class Main : Node
                 Timer = enemySpawnSettings.SpawnInterval
             });
 
-        // Wave を一つ進める
-        _waveRp.Value++;
-        _waveStartedSub.OnNext(Unit.Default);
+
+        // Playerの体力を全回復する
+        _playerState.AddEffect(new AddHealthEffect { Value = _playerState.MaxHealth.CurrentValue });
+        _playerState.SolveEffect();
 
         // InGame の HUD を表示する
         _inGameHud.Show();
         _phase = MainPhase.BATTLE;
+        _waveRp.Value = newWave;
+        _waveStartedSub.OnNext(Unit.Default);
     }
 
     private void ExitBattleWave()

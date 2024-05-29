@@ -13,6 +13,7 @@ public sealed class PlayerState : IDisposable
     private readonly IDisposable _disposable;
 
     private readonly List<EffectBase> _effects = new();
+
     private readonly ReactiveProperty<float> _health = new();
     private readonly ReactiveProperty<float> _maxHealth = new();
     private readonly ReactiveProperty<int> _money = new();

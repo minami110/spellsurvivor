@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bagncidt6rgvp"]
 
-[ext_resource type="Script" path="res://Infinity/Damages/Projectile.cs" id="1_2y60i"]
-[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Textures/icon.svg" id="2_cfv80"]
+[ext_resource type="Script" path="res://Infinity/Damages/ProjectileBase.cs" id="1_mnt6s"]
+[ext_resource type="Texture2D" uid="uid://b7qsm3wpjrqd8" path="res://Common/Textures/Noita/Spell_bouncy_orb.webp" id="2_8myrf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gdwp8"]
 radius = 3.0
@@ -9,17 +9,15 @@ radius = 3.0
 [node name="Projectile" type="Area2D"]
 collision_layer = 0
 collision_mask = 4
-script = ExtResource("1_2y60i")
+script = ExtResource("1_mnt6s")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_gdwp8")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="Icon" type="TextureRect" parent="."]
 offset_left = -4.0
 offset_top = -4.0
 offset_right = 4.0
 offset_bottom = 4.0
-texture = ExtResource("2_cfv80")
+texture = ExtResource("2_8myrf")
 expand_mode = 1
-
-[node name="Timer" type="Timer" parent="."]

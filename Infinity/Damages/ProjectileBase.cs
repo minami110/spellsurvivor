@@ -3,25 +3,19 @@ using R3;
 
 namespace fms;
 
-public partial class Projectile : Area2D
+public partial class ProjectileBase : Area2D
 {
-    [Export]
-    public float Damage { get; set; } = 10f;
-
-    [Export]
-    public Vector2 Direction { get; set; } = Vector2.Right;
-
-    [Export]
-    public float InitialSpeed { get; set; } = 50f;
-
-    [Export(PropertyHint.Range, "0, 100")]
-    public float Acceleration { get; set; } = 50f;
-
-    [Export(PropertyHint.Range, "0, 10")]
-    public float LifeTime { get; set; } = 1f;
-
     private float _lifeTimeCounter;
     private Vector2 _velocity;
+    public float Damage { get; set; } = 10f;
+
+    public Vector2 Direction { get; set; } = Vector2.Right;
+
+    public float InitialSpeed { get; set; } = 50f;
+
+    public float Acceleration { get; set; } = 50f;
+
+    public float LifeTime { get; set; } = 1f;
 
     public override void _Ready()
     {
@@ -38,6 +32,9 @@ public partial class Projectile : Area2D
         // Move Projectile
         _velocity += (float)delta * Acceleration * Direction;
         Position += _velocity * (float)delta;
+
+        // Update Rotation
+        Rotation = _velocity.Angle();
 
         // Update LifeTime
         _lifeTimeCounter += (float)delta;

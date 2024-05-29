@@ -1,14 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://hvaujiufb0ew"]
 
-[ext_resource type="Script" path="res://Infinity/Minion/ForwardKnife.cs" id="1_2iw14"]
-[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Damages/Projectile.tscn" id="2_53piy"]
+[ext_resource type="Script" path="res://Infinity/Minion/ForwardKnife.cs" id="1_m1enr"]
+[ext_resource type="PackedScene" uid="uid://dm6yh3hyrwlw0" path="res://Infinity/Damages/(Projectile) Arrow.tscn" id="2_c1ux1"]
 
-[node name="ForwardKnife" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "Timer")]
-script = ExtResource("1_2iw14")
-_bulletPackedScene = ExtResource("2_53piy")
+[node name="ForwardKnife" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode")]
+script = ExtResource("1_m1enr")
+_bulletPackedScene = ExtResource("2_c1ux1")
 _bulletSpawnNode = NodePath("BulletSpawnRoot")
-Timer = NodePath("Timer")
-
-[node name="Timer" type="Timer" parent="."]
 
 [node name="BulletSpawnRoot" type="Node" parent="."]

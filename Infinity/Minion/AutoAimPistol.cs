@@ -1,5 +1,4 @@
 ﻿using Godot;
-using R3;
 
 namespace fms;
 
@@ -21,19 +20,15 @@ public partial class AutoAimPistol : MinionBase
     public override void _Ready()
     {
         base._Ready();
-
         UpdateRadius();
-
-        Timer.WaitTime = ItemSettings.CoolDown;
-
-        var d1 = Main.GameMode.WaveStarted.Subscribe(_ => Timer.Start());
-        var d2 = Main.GameMode.WaveEnded.Subscribe(_ => Timer.Stop());
-        var d3 = Timer.TimeoutAsObservable().Subscribe(_ => Fire());
-
-        Disposable.Combine(d1, d2, d3).AddTo(this);
     }
 
-    private void Fire()
+    private void UpdateRadius()
+    {
+        _collisionShape.Scale = new Vector2(ItemSettings.Range, ItemSettings.Range);
+    }
+
+    private protected override void DoAttack()
     {
         // Search near enemy
         var overlappingBodies = _searchArea.GetOverlappingBodies();
@@ -65,7 +60,7 @@ public partial class AutoAimPistol : MinionBase
         var direction = (targetEnemy.GlobalPosition - GlobalPosition).Normalized();
 
         // Spawn bullet
-        var bullet = _bulletPackedScene.Instantiate<Projectile>();
+        var bullet = _bulletPackedScene.Instantiate<ProjectileBase>();
         {
             bullet.Damage = ItemSettings.BaseAttack;
             bullet.Direction = direction;
@@ -73,10 +68,5 @@ public partial class AutoAimPistol : MinionBase
             bullet.InitialSpeed = 1000f;
         }
         _bulletSpawnNode.AddChild(bullet);
-    }
-
-    private void UpdateRadius()
-    {
-        _collisionShape.Scale = new Vector2(ItemSettings.Range, ItemSettings.Range);
     }
 }

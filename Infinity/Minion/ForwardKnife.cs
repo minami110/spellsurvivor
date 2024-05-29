@@ -1,5 +1,4 @@
 ﻿using Godot;
-using R3;
 
 namespace fms;
 
@@ -12,29 +11,41 @@ public partial class ForwardKnife : MinionBase
     [Export]
     private Node _bulletSpawnNode = null!;
 
-    public override void _Ready()
+    private void SpawnBullet(float xOffset)
     {
-        base._Ready();
-
-        // Set Cooldown
-        Timer.WaitTime = ItemSettings.CoolDown;
-
-        var d1 = Main.GameMode.WaveStarted.Subscribe(_ => Timer.Start());
-        var d2 = Main.GameMode.WaveEnded.Subscribe(_ => Timer.Stop());
-        var d3 = Timer.TimeoutAsObservable().Subscribe(_ => Fire());
-        Disposable.Combine(d1, d2, d3).AddTo(this);
-    }
-
-    private void Fire()
-    {
-        // Spawn bullet
-        var bullet = _bulletPackedScene.Instantiate<Projectile>();
+        var bullet = _bulletPackedScene.Instantiate<ProjectileBase>();
         {
             bullet.Damage = ItemSettings.BaseAttack;
             bullet.Direction = GlobalTransform.X; // Forward
-            bullet.GlobalPosition = GlobalPosition;
+            bullet.GlobalPosition = GlobalPosition + GlobalTransform.Y * xOffset; // ちょっと右にずらす
             bullet.InitialSpeed = 1000f;
         }
         _bulletSpawnNode.AddChild(bullet);
+    }
+
+    private protected override void DoAttack()
+    {
+        switch (Level)
+        {
+            // Level 1
+            case 1:
+            {
+                SpawnBullet(0f);
+                break;
+            }
+            case 2:
+            {
+                SpawnBullet(10f);
+                SpawnBullet(-10f);
+                break;
+            }
+            case 3:
+            {
+                SpawnBullet(20f);
+                SpawnBullet(0f);
+                SpawnBullet(-20f);
+                break;
+            }
+        }
     }
 }

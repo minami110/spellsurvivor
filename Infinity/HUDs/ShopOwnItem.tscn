@@ -6,7 +6,7 @@
 [node name="ShopOwnItem" type="VBoxContainer" node_paths=PackedStringArray("_icon", "_name")]
 script = ExtResource("1_of4gv")
 _icon = NodePath("Control/Icon")
-_name = NodePath("Name")
+_name = NodePath("HBoxContainer/Name")
 
 [node name="Control" type="Control" parent="."]
 custom_minimum_size = Vector2(128, 128)
@@ -28,7 +28,16 @@ offset_right = 128.0
 offset_bottom = 128.0
 expand_mode = 1
 
-[node name="Name" type="Label" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="Name" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "ItemName"
+horizontal_alignment = 1
+
+[node name="Level" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "(+1)"
 horizontal_alignment = 1
