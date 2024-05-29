@@ -3,12 +3,20 @@ using R3;
 
 namespace fms;
 
-public partial class EquipmentBase : Node2D
+/// <summary>
+///     Minion のベースクラス
+/// </summary>
+public partial class MinionBase : Node2D
 {
     [Export]
     private protected Timer Timer = null!;
 
     private readonly ReactiveProperty<float> _remainingCoolDownTime = new(0f);
+
+    /// <summary>
+    ///     Gets the level of this minion.
+    /// </summary>
+    public int Level { get; private set; }
 
     public ShopItemSettings ItemSettings { get; set; } = null!;
 

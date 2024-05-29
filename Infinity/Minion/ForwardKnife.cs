@@ -3,7 +3,7 @@ using R3;
 
 namespace fms;
 
-public partial class ForwardKnife : EquipmentBase
+public partial class ForwardKnife : MinionBase
 {
     [ExportGroup("Internal Reference")]
     [Export]

@@ -3,7 +3,7 @@ using R3;
 
 namespace fms;
 
-public partial class AutoAimPistol : EquipmentBase
+public partial class AutoAimPistol : MinionBase
 {
     [ExportGroup("Internal Reference")]
     [Export]
