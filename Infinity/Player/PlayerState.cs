@@ -75,6 +75,7 @@ public sealed class PlayerState : IEffectSolver, IDisposable
         var damage = 0f;
 
         foreach (var effect in _effects)
+        {
             switch (effect)
             {
                 case AddMoneyEffect addMoneyEffect:
@@ -103,6 +104,7 @@ public sealed class PlayerState : IEffectSolver, IDisposable
                     break;
                 }
             }
+        }
 
         // Clear effects
         _effects.Clear();

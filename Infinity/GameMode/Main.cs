@@ -261,12 +261,14 @@ public partial class Main : Node
         _remainingWaveSecondRp.Value = _currentWaveSettings.Time;
         _enemySpawnTimers.Clear();
         foreach (var enemySpawnSettings in _currentWaveSettings.EnemySpawnSettings)
+        {
             _enemySpawnTimers.Add(new EnemySpawnTimer
             {
                 EnemyScene = enemySpawnSettings.EnemyScene,
                 SpawnInterval = enemySpawnSettings.SpawnInterval,
                 Timer = enemySpawnSettings.SpawnInterval
             });
+        }
 
 
         // Playerの体力を全回復する
@@ -275,6 +277,8 @@ public partial class Main : Node
 
         // InGame の HUD を表示する
         _inGameHud.Show();
+
+        // Battle Phase の開始
         _phase = MainPhase.BATTLE;
         _waveRp.Value = newWave;
         _waveStartedSub.OnNext(Unit.Default);

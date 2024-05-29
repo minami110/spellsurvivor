@@ -16,18 +16,6 @@ public partial class Title : Node
     [Export(PropertyHint.File, "*.tscn")]
     private string _mainGameScene = string.Empty;
 
-
-    public void OnStartButtonPressed()
-    {
-        SceneManager.GoToScene(_mainGameScene);
-    }
-
-    public void OnExitButtonPressed()
-    {
-        // Close Application
-        GetTree().Quit();
-    }
-
     public override void _Ready()
     {
         // Update App Name Label
@@ -47,5 +35,17 @@ public partial class Title : Node
             _godotVersionLabel.Text =
                 $"Powered by Godot ({godotVersionInfo["major"]}.{godotVersionInfo["minor"]}.{godotVersionInfo["patch"]} {godotVersionInfo["status"]})";
         }
+    }
+
+    public void OnExitButtonPressed()
+    {
+        // Close Application
+        GetTree().Quit();
+    }
+
+
+    public void OnStartButtonPressed()
+    {
+        SceneManager.GoToScene(_mainGameScene);
     }
 }

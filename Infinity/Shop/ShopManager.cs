@@ -44,7 +44,10 @@ public partial class ShopManager : Node
     public void Reroll()
     {
         // すでに生成している ShopItem を削除 する
-        foreach (var node in _shopItemSpawnParent.GetChildren()) node.QueueFree();
+        foreach (var node in _shopItemSpawnParent.GetChildren())
+        {
+            node.QueueFree();
+        }
 
         // ShopItem を生成する
         InstantiateShopItems();

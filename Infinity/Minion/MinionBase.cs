@@ -118,11 +118,13 @@ public partial class MinionBase : Node2D, IEffectSolver
     {
         foreach (var effect in _effects)
             // レベルが上がるエフェクト
+        {
             if (!IsMaxLevel && effect is AddLevelEffect addLevelEffect)
             {
                 var newLevel = _levelRp.Value + (int)addLevelEffect.Value;
                 _levelRp.Value = Mathf.Clamp(newLevel, _MIN_LEVEL, MaxLevel);
             }
+        }
 
         OnSolveEffect(_effects);
         _effects.Clear();

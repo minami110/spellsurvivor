@@ -29,6 +29,22 @@ public partial class DebugGUI : CanvasLayer
         _dict["FPS"] = "0";
     }
 
+    public override void _Process(double delta)
+    {
+        // Update FPS
+        var fps = Engine.GetFramesPerSecond();
+        _dict["FPS"] = fps.ToString(CultureInfo.InvariantCulture);
+
+        // Update Label
+        foreach (var (key, value) in _dict)
+        {
+            _sb.Append($"{key}: {value}\n");
+        }
+
+        _label.Text = _sb.ToString();
+        _sb.Clear();
+    }
+
     public override void _ExitTree()
     {
         if (_instance == this)
@@ -58,26 +74,18 @@ public partial class DebugGUI : CanvasLayer
 
         var removeKeys = new List<string>();
         foreach (var (k, _) in _instance._dict)
+        {
             if (k.Contains(key))
             {
                 removeKeys.Add(k);
             }
+        }
 
-        foreach (var k in removeKeys) _instance._dict.Remove(k);
+        foreach (var k in removeKeys)
+        {
+            _instance._dict.Remove(k);
+        }
 
         return true;
-    }
-
-    public override void _Process(double delta)
-    {
-        // Update FPS
-        var fps = Engine.GetFramesPerSecond();
-        _dict["FPS"] = fps.ToString(CultureInfo.InvariantCulture);
-
-        // Update Label
-        foreach (var (key, value) in _dict) _sb.Append($"{key}: {value}\n");
-
-        _label.Text = _sb.ToString();
-        _sb.Clear();
     }
 }

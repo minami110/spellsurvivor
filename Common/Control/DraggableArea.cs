@@ -14,6 +14,14 @@ public partial class DraggableArea : Control
         this.MouseExitedAsObservable().Subscribe(_ => _mouseEntered = false);
     }
 
+    public override void _Process(double delta)
+    {
+        if (_isDragging)
+        {
+            GlobalPosition = GetGlobalMousePosition() + _dragOffset;
+        }
+    }
+
     public override void _GuiInput(InputEvent ev)
     {
         if (!_mouseEntered)
@@ -25,14 +33,6 @@ public partial class DraggableArea : Control
         {
             _dragOffset = GlobalPosition - GetGlobalMousePosition();
             _isDragging = mb.IsPressed();
-        }
-    }
-
-    public override void _Process(double delta)
-    {
-        if (_isDragging)
-        {
-            GlobalPosition = GetGlobalMousePosition() + _dragOffset;
         }
     }
 }

@@ -81,10 +81,12 @@ public partial class Enemy : RigidBody2D
         }
 
         foreach (var node in overlappingBodies)
+        {
             if (node is MeMe player)
             {
                 player.TakeDamage(_power);
             }
+        }
     }
 
     public void KillByDamage()

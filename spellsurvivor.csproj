@@ -1,13 +1,13 @@
 <Project Sdk="Godot.NET.Sdk/4.2.2">
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
-    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
-    <LangVersion>11</LangVersion>
-    <EnableDynamicLoading>true</EnableDynamicLoading>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="R3" Version="1.1.11" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
+        <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
+        <LangVersion>11</LangVersion>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="R3" Version="1.1.11"/>
+    </ItemGroup>
 </Project>

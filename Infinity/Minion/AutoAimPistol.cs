@@ -60,6 +60,7 @@ public partial class AutoAimPistol : MinionBase
         // 最も近い敵を検索する
         var distance = 999f;
         foreach (var body in overlappingBodies)
+        {
             if (body is Enemy e)
             {
                 var d = GlobalPosition.DistanceTo(e.GlobalPosition);
@@ -69,6 +70,7 @@ public partial class AutoAimPistol : MinionBase
                     nearestEnemy = e;
                 }
             }
+        }
 
         return nearestEnemy is not null;
     }

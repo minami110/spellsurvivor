@@ -58,7 +58,10 @@ public sealed partial class InGameHUD : CanvasLayer
 
     private void OnWaveEnded()
     {
-        foreach (var child in _equipmentContainer.GetChildren()) child.QueueFree();
+        foreach (var child in _equipmentContainer.GetChildren())
+        {
+            child.QueueFree();
+        }
     }
 
     private void OnWaveStarted()

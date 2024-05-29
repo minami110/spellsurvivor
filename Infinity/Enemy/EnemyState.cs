@@ -51,6 +51,7 @@ public sealed class EnemyState : IEffectSolver, IDisposable
         var damage = 0f;
 
         foreach (var effect in _effects)
+        {
             switch (effect)
             {
                 case AddMoveSpeedEffect addMoveSpeedEffect:
@@ -74,6 +75,7 @@ public sealed class EnemyState : IEffectSolver, IDisposable
                     break;
                 }
             }
+        }
 
         // Clear effects
         _effects.Clear();

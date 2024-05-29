@@ -7,6 +7,28 @@ public partial class EscapeGUI : CanvasLayer
     [Export(PropertyHint.File, "*.tscn")]
     private string _titleScene = null!;
 
+    public override void _Ready()
+    {
+        Hide();
+    }
+
+    public override void _Input(InputEvent inputEvent)
+    {
+        if (inputEvent.IsActionPressed("open_pose"))
+        {
+            if (Visible)
+            {
+                HideGui();
+            }
+            else
+            {
+                // Pause Game
+                GetTree().Paused = true;
+                Show();
+            }
+        }
+    }
+
     public void OnExitPressed()
     {
         if (!Visible)
@@ -39,28 +61,6 @@ public partial class EscapeGUI : CanvasLayer
         GetTree().Paused = false;
         // タイトル画面に遷移する
         SceneManager.GoToScene(_titleScene);
-    }
-
-    public override void _Ready()
-    {
-        Hide();
-    }
-
-    public override void _Input(InputEvent inputEvent)
-    {
-        if (inputEvent.IsActionPressed("open_pose"))
-        {
-            if (Visible)
-            {
-                HideGui();
-            }
-            else
-            {
-                // Pause Game
-                GetTree().Paused = true;
-                Show();
-            }
-        }
     }
 
     private void HideGui()
