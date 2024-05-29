@@ -49,10 +49,10 @@ public partial class Main : Node
     private readonly List<ShopItemSettings> _equipments = new();
     private readonly Subject<ShopItemSettings> _equippedItemSub = new();
 
-    private readonly PlayerState _playerState;
-
     // 現在 Player が装備しているアイテム (実態 のほう) の辞書
-    private readonly Dictionary<ShopItemSettings, MinionBase> _realEquipmentDict = new();
+    private readonly Dictionary<ShopItemSettings, MinionBase> _minions = new();
+
+    private readonly PlayerState _playerState;
 
     private readonly ReactiveProperty<float> _remainingWaveSecondRp = new();
     private readonly Subject<Unit> _waveEndedSub = new();
@@ -100,7 +100,7 @@ public partial class Main : Node
 
     public IReadOnlyList<ShopItemSettings> Equipments => _equipments;
 
-    public IReadOnlyDictionary<ShopItemSettings, MinionBase> RealEquipmentDict => _realEquipmentDict;
+    public IReadOnlyDictionary<ShopItemSettings, MinionBase> Minions => _minions;
 
     /// <summary>
     ///     現在の Player の Global Position を取得
@@ -220,15 +220,24 @@ public partial class Main : Node
         _playerState.AddEffect(new AddMoneyEffect { Value = -shopItemSettings.Price });
         _playerState.SolveEffect();
 
-        // Player Pawn に Item を追加で装備させる
-        var equipment = shopItemSettings.EquipmentScene.Instantiate<MinionBase>();
-        equipment.ItemSettings = shopItemSettings;
-        _playerPawn.AddChild(equipment);
-        _realEquipmentDict.Add(shopItemSettings, equipment);
-
-        // 通知する
-        _equipments.Add(shopItemSettings);
-        _equippedItemSub.OnNext(shopItemSettings);
+        // すでに装備を持っていた場合
+        if (_minions.TryGetValue(shopItemSettings, out var e))
+        {
+            // 装備をレベルアップさせる
+            e.AddEffect(new AddLevelEffect { Value = 1 });
+            e.SolveEffect();
+        }
+        else
+        {
+            // Player Pawn に Item を追加で装備させる
+            var equipment = shopItemSettings.EquipmentScene.Instantiate<MinionBase>();
+            equipment.ItemSettings = shopItemSettings;
+            _playerPawn.AddChild(equipment);
+            _minions.Add(shopItemSettings, equipment);
+            _equipments.Add(shopItemSettings);
+            // 通知する
+            _equippedItemSub.OnNext(shopItemSettings);
+        }
     }
 
     private void CloseShop()
@@ -239,17 +248,10 @@ public partial class Main : Node
 
     private void EnterBattleWave()
     {
-        // 現在の Wave Settings をもらう
-        if (_waveRp.Value >= _waveSettings.Length)
-        {
-            GD.Print("All waves are cleared");
-            return;
-        }
-
         // Wave を一つ進める
-        // Debug: Settings が足りない場合はループさせる
+        // ToDo: Settings が足りない場合はループさせるので永遠に終わらない
         var newWave = _waveRp.Value + 1;
-        if (newWave > _waveSettings.Length)
+        if (newWave >= _waveSettings.Length)
         {
             newWave = 0;
         }

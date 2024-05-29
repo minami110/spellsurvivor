@@ -3,7 +3,7 @@ using Godot;
 using R3;
 
 /// <summary>
-///     Shop で販売しているアイテム
+///     Shop で販売しているアイテム の HUD, Shop により自動で生成される
 /// </summary>
 public partial class ShopSellingItem : VBoxContainer
 {
@@ -24,17 +24,26 @@ public partial class ShopSellingItem : VBoxContainer
     {
         _iconTextureRect.Texture = ShopItemSettings.Icon;
         _nameLabel.Text = ShopItemSettings.Name;
-        _buyButton.Text = $"Buy ${ShopItemSettings.Price}";
+        _buyButton.Text = $"${ShopItemSettings.Price}";
 
         // Subscribe 
-        var d1 = _buyButton.PressedAsObservable().Subscribe(_ => OnPressedBuyButton());
+        var d1 = _buyButton.PressedAsObservable().Subscribe(this, (_, t) => t.OnPressedBuyButton());
         var d2 = Main.PlayerState.Money.Subscribe(OnChangedPlayerMoney);
         Disposable.Combine(d1, d2).AddTo(this);
     }
 
     private void OnChangedPlayerMoney(int money)
     {
-        _buyButton.Disabled = money < ShopItemSettings.Price;
+        if (money < ShopItemSettings.Price)
+        {
+            _buyButton.Modulate = new Color(1, 0, 0);
+            _buyButton.Disabled = true;
+        }
+        else
+        {
+            _buyButton.Modulate = new Color(0, 1, 0);
+            _buyButton.Disabled = false;
+        }
     }
 
     private void OnPressedBuyButton()

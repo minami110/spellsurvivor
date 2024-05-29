@@ -27,7 +27,7 @@ public partial class AutoAimPistol : MinionBase
 
     private protected override void DoAttack()
     {
-        if (!IsEnemyInSearchArea(out var enemy))
+        if (!TryGetNearestEnemy(out var enemy))
         {
             return;
         }
@@ -46,31 +46,31 @@ public partial class AutoAimPistol : MinionBase
         _bulletSpawnNode.AddChild(bullet);
     }
 
-    private bool IsEnemyInSearchArea(out Enemy? enemy)
+    private bool TryGetNearestEnemy(out Enemy? nearestEnemy)
     {
-        enemy = null;
+        nearestEnemy = null;
 
         // Search near enemy
         var overlappingBodies = _searchArea.GetOverlappingBodies();
-        var distance = 999f;
-
         if (overlappingBodies.Count <= 0)
         {
-            return enemy is null;
+            return false;
         }
 
+        // 最も近い敵を検索する
+        var distance = 999f;
         foreach (var body in overlappingBodies)
             if (body is Enemy e)
             {
-                var d = GlobalPosition.DistanceTo(enemy.GlobalPosition);
+                var d = GlobalPosition.DistanceTo(e.GlobalPosition);
                 if (d < distance)
                 {
                     distance = d;
-                    enemy = e;
+                    nearestEnemy = e;
                 }
             }
 
-        return enemy is null;
+        return nearestEnemy is not null;
     }
 
     private void UpdateRadius()

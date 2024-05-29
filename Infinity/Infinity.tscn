@@ -55,8 +55,7 @@ size = Vector2(1200, 100)
 
 [node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_enemySpawner", "_inGameHud", "_shopHud")]
 script = ExtResource("1_tk8vx")
-_startMoney = 100
-_waveSettings = Array[Object]([SubResource("Resource_qt72y"), SubResource("Resource_y2gxo")])
+_waveSettings = [SubResource("Resource_qt72y"), SubResource("Resource_y2gxo")]
 _playerController = NodePath("PlayerController")
 _playerPawn = NodePath("MeMe (Player)")
 _enemySpawner = NodePath("EnemySpawner")

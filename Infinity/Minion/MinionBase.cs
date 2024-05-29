@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Godot;
 using R3;
 
@@ -15,6 +16,8 @@ public partial class MinionBase : Node2D, IEffectSolver
     private readonly List<EffectBase> _effects = new();
     private readonly ReactiveProperty<int> _levelRp = new(_MIN_LEVEL);
     private readonly ReactiveProperty<int> _maxCoolDown = new(1);
+
+    private CancellationTokenSource? _runningFrameTimerCts;
 
     /// <summary>
     ///     Gets the level of this minion. (ReactiveProperty)
@@ -61,6 +64,9 @@ public partial class MinionBase : Node2D, IEffectSolver
         Disposable.Combine(d1, d2, d3, d4).AddTo(this);
 
         _maxCoolDown.Value = BaseCoolDownFrame;
+
+        // Tree から抜けるときにタイマーを止める
+        TreeExiting += StopCoolDownTimer;
     }
 
     private protected virtual void DoAttack()
@@ -73,9 +79,17 @@ public partial class MinionBase : Node2D, IEffectSolver
 
     private async void StartCoolDownTimer()
     {
+        if (_runningFrameTimerCts is not null)
+        {
+            // Already Running
+            return;
+        }
+
+        _runningFrameTimerCts = new CancellationTokenSource();
+        var token = _runningFrameTimerCts.Token;
         _coolDownLeft.Value = _maxCoolDown.Value;
 
-        while (true)
+        while (!token.IsCancellationRequested)
         {
             await this.BeginOfProcessAsync();
             _coolDownLeft.Value -= 1;
@@ -91,6 +105,8 @@ public partial class MinionBase : Node2D, IEffectSolver
 
     private void StopCoolDownTimer()
     {
+        _runningFrameTimerCts?.Cancel();
+        _runningFrameTimerCts = null;
     }
 
     public virtual void AddEffect(EffectBase effect)

@@ -17,19 +17,21 @@ public partial class ForwardKnife : MinionBase
     {
         switch (Level.CurrentValue)
         {
-            // Level 1
+            // Level 1 は1つの弾をだす
             case 1:
             {
                 SpawnBullet(GlobalPosition);
                 break;
             }
+            // Level 2 は2つの弾をだす
             case 2:
             {
                 SpawnBullet(GlobalPosition, 10f);
                 SpawnBullet(GlobalPosition, -10f);
                 break;
             }
-            case 3:
+            // Level 3 以上は同じ
+            default:
             {
                 SpawnBullet(GlobalPosition, 20f);
                 SpawnBullet(GlobalPosition, 0f, 10f);

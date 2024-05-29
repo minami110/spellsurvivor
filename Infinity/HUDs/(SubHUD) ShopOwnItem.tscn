@@ -1,12 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://j8f0f5mp7g1k"]
 
-[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Textures/white_4x4_srgb.png" id="1_6pxrx"]
-[ext_resource type="Script" path="res://Infinity/Shop/ShopOwnItem.cs" id="1_of4gv"]
+[ext_resource type="Script" path="res://Infinity/Shop/ShopOwnItem.cs" id="1_370he"]
+[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Textures/white_4x4_srgb.png" id="2_t6vta"]
 
-[node name="ShopOwnItem" type="VBoxContainer" node_paths=PackedStringArray("_icon", "_name")]
-script = ExtResource("1_of4gv")
+[node name="ShopOwnItem" type="VBoxContainer" node_paths=PackedStringArray("_icon", "_name", "_level")]
+script = ExtResource("1_370he")
 _icon = NodePath("Control/Icon")
 _name = NodePath("HBoxContainer/Name")
+_level = NodePath("HBoxContainer/Level")
 
 [node name="Control" type="Control" parent="."]
 custom_minimum_size = Vector2(128, 128)
@@ -18,7 +19,7 @@ custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 offset_right = 128.0
 offset_bottom = 128.0
-texture = ExtResource("1_6pxrx")
+texture = ExtResource("2_t6vta")
 expand_mode = 1
 
 [node name="Icon" type="TextureRect" parent="Control"]
@@ -39,5 +40,5 @@ horizontal_alignment = 1
 
 [node name="Level" type="Label" parent="HBoxContainer"]
 layout_mode = 2
-text = "(+1)"
+text = "(Lv.1)"
 horizontal_alignment = 1

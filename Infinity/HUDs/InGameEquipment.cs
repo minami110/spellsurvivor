@@ -20,7 +20,7 @@ public partial class InGameEquipment : VBoxContainer
         _icon.Texture = ItemSettings.Icon;
         _name.Text = ItemSettings.Name;
 
-        var real = Main.GameMode.RealEquipmentDict[ItemSettings];
+        var real = Main.GameMode.Minions[ItemSettings];
         var d1 = real.CoolDownLeft.Subscribe(x =>
         {
             _progress.MaxValue = real.MaxCoolDown.CurrentValue;
