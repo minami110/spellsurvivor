@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="ShopItemSettings" load_steps=4 format=3 uid="uid://dg1a0sshsyi4h"]
 
-[ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Equipments/(Equipment) AutoAimPistol.tscn" id="1_itvs5"]
+[ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Minion/(Equipment) AutoAimPistol.tscn" id="1_itvs5"]
 [ext_resource type="Texture2D" uid="uid://cf8sqsunyrjpl" path="res://Common/Textures/Emoji/gun.png" id="2_4g0so"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Items/ShopItemSettings.cs" id="3_liksq"]
 
