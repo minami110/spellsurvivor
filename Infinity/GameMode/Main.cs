@@ -44,8 +44,8 @@ public partial class Main : Node
 
 
     private static Main? _instance;
+    private readonly Subject<Unit> _changedEquippedMinionSub = new();
 
-    private readonly HashSet<FactionBase> _activeFactions = new();
     private readonly IDisposable _disposable;
     private readonly List<EnemySpawnTimer> _enemySpawnTimers = new();
 
@@ -55,6 +55,9 @@ public partial class Main : Node
 
     // 現在 Player が装備している Minion の辞書
     private readonly Dictionary<ShopItemSettings, MinionBase> _equippedMinions = new();
+
+    // 現在有効な Faction の辞書
+    private readonly Dictionary<Type, FactionBase> _factionMap = new();
 
     private readonly PlayerState _playerState;
 
@@ -66,6 +69,10 @@ public partial class Main : Node
     private WaveSetting _currentWaveSettings = null!;
 
     private MainPhase _phase = MainPhase.INIT;
+
+    /// <summary>
+    /// </summary>
+    public IReadOnlyDictionary<Type, FactionBase> FactionMap => _factionMap;
 
     /// <summary>
     ///     Get Main instance
@@ -91,6 +98,11 @@ public partial class Main : Node
     ///     Battele Wave が終了した時
     /// </summary>
     public Observable<Unit> WaveEnded => _waveEndedSub;
+
+    /// <summary>
+    ///     装備している Minion に変更があった場合に通知
+    /// </summary>
+    public Observable<Unit> ChangedEquippedMinion => _changedEquippedMinionSub;
 
     /// <summary>
     ///     現在の Wave の残り時間
@@ -156,7 +168,7 @@ public partial class Main : Node
         // Create PlayerState
         _playerState = new PlayerState();
         _disposable = Disposable.Combine(_playerState, _waveRp, _remainingWaveSecondRp, _waveEndedSub, _waveStartedSub,
-            _equippedItemSub);
+            _equippedItemSub, _changedEquippedMinionSub);
     }
 
     public override void _Ready()
@@ -248,20 +260,44 @@ public partial class Main : Node
         var equipment = minionData.EquipmentScene.Instantiate<MinionBase>();
         equipment.ItemSettings = minionData;
         _playerPawn.AddChild(equipment);
+
+        // 内部のリストで管理
         _equippedMinions.Add(minionData, equipment);
         _equipments.Add(minionData);
 
-        // Faction を更新する
-        _activeFactions.Clear();
+        // Faction を一度全て Level 0 に戻す
+        foreach (var (_, faction) in _factionMap)
+        {
+            faction.ResetLevel();
+        }
+
+        // 現在しているすべての Minion を照会する
         foreach (var (_, m) in _equippedMinions)
         {
-            foreach (var faction in m.Factions)
+            // 各 Minion が持っている Faction ごとに
+            foreach (var newFaction in m.Factions)
             {
-                _activeFactions.Add(faction);
+                var factionType = newFaction.GetType();
+                if (_factionMap.TryGetValue(factionType, out var exitingFaction))
+                {
+                    exitingFaction.AddLevel();
+                }
+                else
+                {
+                    _factionMap.Add(factionType, newFaction);
+                    newFaction.AddLevel();
+                }
             }
         }
 
+        // レベルを確定する 
+        foreach (var (_, faction) in _factionMap)
+        {
+            faction.ConfirmLevel();
+        }
+
         // 通知する
+        _changedEquippedMinionSub.OnNext(Unit.Default);
         _equippedItemSub.OnNext(minionData);
     }
 
@@ -304,7 +340,7 @@ public partial class Main : Node
         _inGameHud.Show();
 
         // 現在有効な Faction のコールバックを呼ぶ
-        foreach (var faction in _activeFactions)
+        foreach (var (type, faction) in _factionMap)
         {
             faction.OnBattleStarted();
         }

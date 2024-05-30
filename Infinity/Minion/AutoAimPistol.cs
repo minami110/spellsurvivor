@@ -21,6 +21,7 @@ public partial class AutoAimPistol : MinionBase
     // この Minion が所属する Faction の一覧
     private static readonly FactionBase[] _factions =
     {
+        new Duelist(),
         new Bruiser()
     };
 

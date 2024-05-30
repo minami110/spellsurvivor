@@ -5,6 +5,7 @@ namespace fms.Faction;
 
 public abstract class FactionBase
 {
+    public virtual bool IsAnyEffectActive => Level >= 2;
     public int Level { get; private set; }
 
     public void AddLevel(int amount = 1)
@@ -12,38 +13,39 @@ public abstract class FactionBase
         Level += amount;
     }
 
+    // レベルを確定
+    public void ConfirmLevel()
+    {
+        if (Level == 0)
+        {
+            return;
+        }
+
+        OnLevelConfirmed(Level);
+    }
 
     public virtual void OnBattleStarted()
     {
     }
 
-    public virtual void OnEquipped()
+    public void ResetLevel()
+    {
+        if (Level == 0)
+        {
+            return;
+        }
+
+        var oldLevel = Level;
+        Level = 0;
+        OnLevelReset(oldLevel);
+    }
+
+    private protected virtual void OnLevelConfirmed(int level)
     {
     }
-}
 
-/// <summary>
-///     Lv2: Player の最大体力を 50 上げる (100 => 150)
-///     Lv4: Player の最大体力 150 上げる (100 => 250)
-///     Lv6: Player の最大体力 450 上げる (100 => 500)
-/// </summary>
-public sealed class Bruiser : FactionBase
-{
-    public override void OnEquipped()
+    private protected virtual void OnLevelReset(int oldLevel)
     {
-        var playerState = Main.PlayerState;
-        switch (Level)
-        {
-            case >= 6:
-                playerState.AddEffect(new AddMaxHealthEffect { Value = 400 });
-                break;
-            case >= 4:
-                playerState.AddEffect(new AddMaxHealthEffect { Value = 150 });
-                break;
-            case >= 2:
-                playerState.AddEffect(new AddMaxHealthEffect { Value = 50 });
-                break;
-        }
     }
 }
 
