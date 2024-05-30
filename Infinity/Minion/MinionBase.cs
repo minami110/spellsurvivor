@@ -89,9 +89,17 @@ public partial class MinionBase : Node2D, IEffectSolver
         var token = _runningFrameTimerCts.Token;
         _coolDownLeft.Value = _maxCoolDown.Value;
 
+        var tree = GetTree();
+
         while (!token.IsCancellationRequested)
         {
             await this.BeginOfProcessAsync();
+
+            if (tree.Paused)
+            {
+                continue;
+            }
+
             _coolDownLeft.Value -= 1;
             if (_coolDownLeft.Value > 0)
             {
