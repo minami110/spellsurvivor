@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
+using fms.Faction;
 using Godot;
 using R3;
 
-namespace fms;
+namespace fms.Minion;
 
 /// <summary>
 ///     Minion のベースクラス
@@ -13,6 +15,7 @@ public partial class MinionBase : Node2D, IEffectSolver
     private const int _MIN_LEVEL = 1;
 
     private readonly ReactiveProperty<int> _coolDownLeft = new(1);
+
     private readonly List<EffectBase> _effects = new();
     private readonly ReactiveProperty<int> _levelRp = new(_MIN_LEVEL);
     private readonly ReactiveProperty<int> _maxCoolDown = new(1);
@@ -33,6 +36,11 @@ public partial class MinionBase : Node2D, IEffectSolver
     ///     Minion のベースの攻撃間隔
     /// </summary>
     private protected virtual int BaseCoolDownFrame => 1;
+
+    /// <summary>
+    ///     Minion が所属する Faction (シナジー) を取得
+    /// </summary>
+    public virtual FactionBase[] Factions { get; } = Array.Empty<FactionBase>();
 
     /// <summary>
     /// </summary>

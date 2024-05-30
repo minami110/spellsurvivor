@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dvwlkv2f4pl2i"]
+[gd_scene load_steps=9 format=3 uid="uid://dvwlkv2f4pl2i"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/ShopHUD.cs" id="1_0e5mr"]
 [ext_resource type="Script" path="res://Infinity/Shop/ShopManager.cs" id="1_5xunh"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Textures/white_4x4_srgb.png" id="3_nlrg2"]
 [ext_resource type="Resource" uid="uid://brkbpmer5vx5k" path="res://Infinity/Datebase/Items/(ShopItem) ForwardKnife.tres" id="4_y7rr0"]
 [ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/(SubHUD) ShopOwnItem.tscn" id="6_dux5n"]
+[ext_resource type="Script" path="res://Infinity/HUDs/LabelHasToolTip.cs" id="8_qxwon"]
 
 [node name="ShopHUD (Layer 2)" type="CanvasLayer" node_paths=PackedStringArray("_shopManager")]
 layer = 2
@@ -21,7 +22,7 @@ _shopOwnItemPackedScene = ExtResource("6_dux5n")
 _shopItemSpawnParent = NodePath("../Container/HBox Selling Item Parent")
 _equipItemSpawnParent = NodePath("../Container/HBox Equipment Item Parent")
 _rerollButton = NodePath("../Container/HBox Shop Buttons/Button RerollItems")
-_playerMoneyLabel = NodePath("../Container/VBoxContainer/Label Gold")
+_playerMoneyLabel = NodePath("../Container/VBox Player Status/Label Gold")
 
 [node name="Container" type="Control" parent="."]
 layout_mode = 3
@@ -172,7 +173,7 @@ custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 texture = ExtResource("3_nlrg2")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Container"]
+[node name="VBox Player Status" type="VBoxContainer" parent="Container"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -183,17 +184,49 @@ offset_right = -27.0
 offset_bottom = 595.0
 grow_horizontal = 0
 
-[node name="Label" type="Label" parent="Container/VBoxContainer"]
+[node name="Label" type="Label" parent="Container/VBox Player Status"]
 layout_mode = 2
 text = "Player Status"
 
-[node name="Label Gold" type="Label" parent="Container/VBoxContainer"]
+[node name="Label Gold" type="Label" parent="Container/VBox Player Status"]
 layout_mode = 2
 text = "Gold: N/A"
 
-[node name="Label Gold2" type="Label" parent="Container/VBoxContainer"]
+[node name="Label Gold2" type="Label" parent="Container/VBox Player Status"]
 layout_mode = 2
 text = "MaxHealth: 100
 MoveSpeed: 100"
+
+[node name="VBox Active Factions" type="VBoxContainer" parent="Container"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 35.0
+offset_top = -185.0
+offset_right = 238.0
+offset_bottom = 19.0
+grow_vertical = 2
+
+[node name="Label Duelist" type="Label" parent="Container/VBox Active Factions"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Duelist: Lv1"
+script = ExtResource("8_qxwon")
+ToolTipText = "Duelist
+Lv2: Duelist を持つミニオンのクールダウンを 10%減少させる
+Lv4: Duelist を持つミニオンのクールダウンを 20%減少させる
+Lv6: 自分が持っているすべてのミニオンのクールダウンを 20%減少させる"
+
+[node name="Label Trickshot" type="Label" parent="Container/VBox Active Factions"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Trickshot: Lv1"
+script = ExtResource("8_qxwon")
+ToolTipText = "Trickshot
+トリックショットを持つミニオンの通常攻撃が敵に当たった時、範囲内の最も近い敵に向かって反射する
+
+Lv2: 跳ね返り回数 1,  跳ね返った攻撃倍率 40 %
+Lv4: 跳ね返り回数 2, 跳ね返った攻撃倍率 60 %"
 
 [connection signal="pressed" from="Container/Button Buttle" to="." method="OnCloseButtonPressed"]

@@ -7,11 +7,13 @@
 [resource]
 script = ExtResource("3_oigos")
 Name = "ForwardKnife"
-Description = "正面に常にナイフを射出
-属性: Foo / Bar"
+Description = "ナイフ
+プレイヤーの正面に常に攻撃を行う
+
+シナジー: Duelist
+攻撃力: 50"
 Icon = ExtResource("2_cd5jy")
 Price = 3
 BaseAttack = 50.0
-CoolDown = 0.5
 Range = 0.0
 EquipmentScene = ExtResource("1_lo58r")

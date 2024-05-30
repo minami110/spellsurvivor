@@ -7,11 +7,14 @@
 [resource]
 script = ExtResource("3_liksq")
 Name = "AutoAimPistol"
-Description = "範囲内の敵を自動で射撃する銃
-属性: Foo / Bar"
+Description = "魔法の杖
+範囲内にいる一番近い対象に自動で攻撃を行う
+
+シナジー: Duelist
+攻撃力: 34
+範囲: 100"
 Icon = ExtResource("2_4g0so")
 Price = 5
 BaseAttack = 34.0
-CoolDown = 1.0
 Range = 100.0
 EquipmentScene = ExtResource("1_itvs5")

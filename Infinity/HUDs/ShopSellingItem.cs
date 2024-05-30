@@ -20,6 +20,11 @@ public partial class ShopSellingItem : VBoxContainer
     [Export]
     private Button _buyButton = null!;
 
+    [Export]
+    private Control _toolTipControl = null!;
+
+    private bool _isSoldOut;
+
     public override void _Ready()
     {
         _iconTextureRect.Texture = ShopItemSettings.Icon;
@@ -30,6 +35,20 @@ public partial class ShopSellingItem : VBoxContainer
         var d1 = _buyButton.PressedAsObservable().Subscribe(this, (_, t) => t.OnPressedBuyButton());
         var d2 = Main.PlayerState.Money.Subscribe(OnChangedPlayerMoney);
         Disposable.Combine(d1, d2).AddTo(this);
+
+        // Tooltip
+        _toolTipControl.MouseEntered += ShowToolTip;
+        _toolTipControl.MouseExited += HideToolTip;
+    }
+
+    private void HideToolTip()
+    {
+        if (_isSoldOut)
+        {
+            return;
+        }
+
+        ToolTipToast.Hide();
     }
 
     private void OnChangedPlayerMoney(int money)
@@ -38,11 +57,13 @@ public partial class ShopSellingItem : VBoxContainer
         {
             _buyButton.Modulate = new Color(1, 0, 0);
             _buyButton.Disabled = true;
+            _buyButton.MouseDefaultCursorShape = CursorShape.Arrow;
         }
         else
         {
             _buyButton.Modulate = new Color(0, 1, 0);
             _buyButton.Disabled = false;
+            _buyButton.MouseDefaultCursorShape = CursorShape.PointingHand;
         }
     }
 
@@ -52,8 +73,21 @@ public partial class ShopSellingItem : VBoxContainer
         Main.GameMode.BuyItem(ShopItemSettings);
 
         //この Shop Item を無効化する
+        _isSoldOut = true;
         _iconTextureRect.Hide();
         _nameLabel.Hide();
         _buyButton.Hide();
+        HideToolTip();
+    }
+
+    private void ShowToolTip()
+    {
+        if (_isSoldOut)
+        {
+            return;
+        }
+
+        ToolTipToast.Text = ShopItemSettings.Description;
+        ToolTipToast.Show();
     }
 }

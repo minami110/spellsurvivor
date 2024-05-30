@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using fms.Faction;
+using fms.Minion;
 using Godot;
 using R3;
 
@@ -42,6 +44,8 @@ public partial class Main : Node
 
 
     private static Main? _instance;
+
+    private readonly HashSet<FactionBase> _activeFactions = new();
     private readonly IDisposable _disposable;
     private readonly List<EnemySpawnTimer> _enemySpawnTimers = new();
 
@@ -49,8 +53,8 @@ public partial class Main : Node
     private readonly List<ShopItemSettings> _equipments = new();
     private readonly Subject<ShopItemSettings> _equippedItemSub = new();
 
-    // 現在 Player が装備しているアイテム (実態 のほう) の辞書
-    private readonly Dictionary<ShopItemSettings, MinionBase> _minions = new();
+    // 現在 Player が装備している Minion の辞書
+    private readonly Dictionary<ShopItemSettings, MinionBase> _equippedMinions = new();
 
     private readonly PlayerState _playerState;
 
@@ -100,7 +104,7 @@ public partial class Main : Node
 
     public IReadOnlyList<ShopItemSettings> Equipments => _equipments;
 
-    public IReadOnlyDictionary<ShopItemSettings, MinionBase> Minions => _minions;
+    public IReadOnlyDictionary<ShopItemSettings, MinionBase> Minions => _equippedMinions;
 
     /// <summary>
     ///     現在の Player の Global Position を取得
@@ -214,30 +218,51 @@ public partial class Main : Node
         }
     }
 
-    public void BuyItem(ShopItemSettings shopItemSettings)
+    public void BuyItem(ShopItemSettings minionData)
     {
         // プレイヤーのお金を減らす
-        _playerState.AddEffect(new AddMoneyEffect { Value = -shopItemSettings.Price });
+        _playerState.AddEffect(new AddMoneyEffect { Value = -minionData.Price });
         _playerState.SolveEffect();
 
-        // すでに装備を持っていた場合
-        if (_minions.TryGetValue(shopItemSettings, out var e))
+        // すでに Minion を所持している場合
+        if (_equippedMinions.TryGetValue(minionData, out var minion))
         {
-            // 装備をレベルアップさせる
-            e.AddEffect(new AddLevelEffect { Value = 1 });
-            e.SolveEffect();
+            // Minion をレベルアップ
+            minion.AddEffect(new AddLevelEffect { Value = 1 });
+            minion.SolveEffect();
         }
-        else
+
+        // ToDo: 現在デフォで装備にしていますが, 満タンの場合 とか ドラッグで購入とかで色々変わります
+        // 装備する
+        EquipmentMinion(minionData);
+    }
+
+    public void EquipmentMinion(ShopItemSettings minionData)
+    {
+        if (_equippedMinions.TryGetValue(minionData, out var minion))
         {
-            // Player Pawn に Item を追加で装備させる
-            var equipment = shopItemSettings.EquipmentScene.Instantiate<MinionBase>();
-            equipment.ItemSettings = shopItemSettings;
-            _playerPawn.AddChild(equipment);
-            _minions.Add(shopItemSettings, equipment);
-            _equipments.Add(shopItemSettings);
-            // 通知する
-            _equippedItemSub.OnNext(shopItemSettings);
+            return;
         }
+
+        // Player Pawn に Item を追加で装備させる
+        var equipment = minionData.EquipmentScene.Instantiate<MinionBase>();
+        equipment.ItemSettings = minionData;
+        _playerPawn.AddChild(equipment);
+        _equippedMinions.Add(minionData, equipment);
+        _equipments.Add(minionData);
+
+        // Faction を更新する
+        _activeFactions.Clear();
+        foreach (var (_, m) in _equippedMinions)
+        {
+            foreach (var faction in m.Factions)
+            {
+                _activeFactions.Add(faction);
+            }
+        }
+
+        // 通知する
+        _equippedItemSub.OnNext(minionData);
     }
 
     private void CloseShop()
@@ -277,6 +302,12 @@ public partial class Main : Node
 
         // InGame の HUD を表示する
         _inGameHud.Show();
+
+        // 現在有効な Faction のコールバックを呼ぶ
+        foreach (var faction in _activeFactions)
+        {
+            faction.OnBattleStarted();
+        }
 
         // Battle Phase の開始
         _phase = MainPhase.BATTLE;

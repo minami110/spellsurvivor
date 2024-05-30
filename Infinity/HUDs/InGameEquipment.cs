@@ -1,6 +1,7 @@
-using fms;
 using Godot;
 using R3;
+
+namespace fms;
 
 public partial class InGameEquipment : VBoxContainer
 {
@@ -19,12 +20,13 @@ public partial class InGameEquipment : VBoxContainer
     {
         _icon.Texture = ItemSettings.Icon;
         _name.Text = ItemSettings.Name;
-
         var real = Main.GameMode.Minions[ItemSettings];
-        var d1 = real.CoolDownLeft.Subscribe(x =>
+
+        var d1 = real.CoolDownLeft.Subscribe(this, (x, s) =>
         {
-            _progress.MaxValue = real.MaxCoolDown.CurrentValue;
-            _progress.Value = x;
+            var minion = Main.GameMode.Minions[s.ItemSettings];
+            s._progress.MaxValue = minion.MaxCoolDown.CurrentValue;
+            s._progress.Value = x;
         });
         Disposable.Combine(d1).AddTo(this);
     }

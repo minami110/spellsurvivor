@@ -1,6 +1,7 @@
-﻿using Godot;
+﻿using fms.Faction;
+using Godot;
 
-namespace fms;
+namespace fms.Minion;
 
 public partial class AutoAimPistol : MinionBase
 {
@@ -17,7 +18,15 @@ public partial class AutoAimPistol : MinionBase
     [Export]
     private Area2D _searchArea = null!;
 
+    // この Minion が所属する Faction の一覧
+    private static readonly FactionBase[] _factions =
+    {
+        new Bruiser()
+    };
+
     private protected override int BaseCoolDownFrame => 120;
+
+    public override FactionBase[] Factions => _factions;
 
     public override void _Ready()
     {

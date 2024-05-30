@@ -1,6 +1,7 @@
-﻿using Godot;
+﻿using fms.Faction;
+using Godot;
 
-namespace fms;
+namespace fms.Minion;
 
 public partial class ForwardKnife : MinionBase
 {
@@ -11,7 +12,18 @@ public partial class ForwardKnife : MinionBase
     [Export]
     private Node _bulletSpawnNode = null!;
 
+    // この Minion が所属する Faction の一覧
+    private static readonly FactionBase[] _factions =
+    {
+        new Bruiser(),
+        new Duelist(),
+        new Knight(),
+        new Trickshot()
+    };
+
     private protected override int BaseCoolDownFrame => 60;
+
+    public override FactionBase[] Factions => _factions;
 
     private protected override void DoAttack()
     {

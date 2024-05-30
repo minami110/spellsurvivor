@@ -67,11 +67,11 @@ public sealed partial class InGameHUD : CanvasLayer
     private void OnWaveStarted()
     {
         // Spawn equipments
-        foreach (var equipment in Main.GameMode.Equipments)
+        foreach (var (data, minion) in Main.GameMode.Minions)
         {
             var node = _equipmentPackedScene.Instantiate<InGameEquipment>();
             {
-                node.ItemSettings = equipment;
+                node.ItemSettings = data;
             }
             _equipmentContainer.AddChild(node);
         }
