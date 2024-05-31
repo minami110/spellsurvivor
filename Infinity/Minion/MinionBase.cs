@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using fms.Faction;
 using Godot;
@@ -15,10 +16,10 @@ public partial class MinionBase : Node2D, IEffectSolver
     private const int _MIN_LEVEL = 1;
 
     private readonly ReactiveProperty<int> _coolDownLeft = new(1);
+    private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
 
     private readonly List<EffectBase> _effects = new();
     private readonly ReactiveProperty<int> _levelRp = new(_MIN_LEVEL);
-    private readonly ReactiveProperty<int> _maxCoolDown = new(1);
 
     private CancellationTokenSource? _runningFrameTimerCts;
 
@@ -28,9 +29,25 @@ public partial class MinionBase : Node2D, IEffectSolver
     public ReadOnlyReactiveProperty<int> Level => _levelRp;
 
     /// <summary>
+    ///     Gets the cool down reduce rate of this minion. unit is %.
+    /// </summary>
+    public ReadOnlyReactiveProperty<float> CoolDownReduceRate => _coolDownReduceRateRp;
+
+    public int CoolDown
+    {
+        get
+        {
+            var coolDown = BaseCoolDownFrame;
+            var reduceRate = _coolDownReduceRateRp.Value * coolDown;
+            return Mathf.Max(coolDown - (int)reduceRate, 1);
+        }
+    }
+
+    /// <summary>
     ///     Gets the maximum level of this minion.
     /// </summary>
     public virtual int MaxLevel => 5;
+
 
     /// <summary>
     ///     Minion のベースの攻撃間隔
@@ -48,12 +65,8 @@ public partial class MinionBase : Node2D, IEffectSolver
 
     /// <summary>
     /// </summary>
-    public ShopItemSettings ItemSettings { get; set; } = null!;
+    public ShopItemSettings MinionCoreData { get; set; } = null!;
 
-
-    /// <summary>
-    /// </summary>
-    public ReadOnlyReactiveProperty<int> MaxCoolDown => _maxCoolDown;
 
     /// <summary>
     ///     次の攻撃までの残りフレーム
@@ -68,13 +81,17 @@ public partial class MinionBase : Node2D, IEffectSolver
         // Observable の初期化
         var d3 = _coolDownLeft;
         var d4 = _levelRp;
+        var d5 = _coolDownReduceRateRp;
 
-        Disposable.Combine(d1, d2, d3, d4).AddTo(this);
-
-        _maxCoolDown.Value = BaseCoolDownFrame;
+        Disposable.Combine(d1, d2, d3, d4, d5).AddTo(this);
 
         // Tree から抜けるときにタイマーを止める
         TreeExiting += StopCoolDownTimer;
+    }
+
+    public bool IsFaction<T>() where T : FactionBase
+    {
+        return Factions.Any(f => f.GetType() == typeof(T));
     }
 
     private protected virtual void DoAttack()
@@ -95,7 +112,7 @@ public partial class MinionBase : Node2D, IEffectSolver
 
         _runningFrameTimerCts = new CancellationTokenSource();
         var token = _runningFrameTimerCts.Token;
-        _coolDownLeft.Value = _maxCoolDown.Value;
+        _coolDownLeft.Value = CoolDown;
 
         var tree = GetTree();
 
@@ -115,7 +132,7 @@ public partial class MinionBase : Node2D, IEffectSolver
             }
 
             DoAttack();
-            _coolDownLeft.Value = _maxCoolDown.Value;
+            _coolDownLeft.Value = CoolDown;
         }
     }
 
@@ -139,6 +156,11 @@ public partial class MinionBase : Node2D, IEffectSolver
             {
                 var newLevel = _levelRp.Value + (int)addLevelEffect.Value;
                 _levelRp.Value = Mathf.Clamp(newLevel, _MIN_LEVEL, MaxLevel);
+            }
+            else if (effect is ReduceCoolDownRate reduceCoolDownRate)
+            {
+                var newRate = _coolDownReduceRateRp.Value + reduceCoolDownRate.Value;
+                _coolDownReduceRateRp.Value = Mathf.Clamp(newRate, 0f, 1f);
             }
         }
 

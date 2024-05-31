@@ -48,7 +48,7 @@ public partial class AutoAimPistol : MinionBase
         // Spawn bullet
         var bullet = _bulletPackedScene.Instantiate<ProjectileBase>();
         {
-            bullet.Damage = ItemSettings.BaseAttack;
+            bullet.Damage = MinionCoreData.BaseAttack;
             bullet.Direction = direction;
             bullet.GlobalPosition = GlobalPosition;
             bullet.InitialSpeed = 1000f;
@@ -87,6 +87,6 @@ public partial class AutoAimPistol : MinionBase
 
     private void UpdateRadius()
     {
-        _collisionShape.Scale = new Vector2(ItemSettings.Range, ItemSettings.Range);
+        _collisionShape.Scale = new Vector2(MinionCoreData.Range, MinionCoreData.Range);
     }
 }

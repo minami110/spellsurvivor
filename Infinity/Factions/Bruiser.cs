@@ -14,12 +14,15 @@ public sealed class Bruiser : FactionBase
         {
             case >= 6:
                 playerState.AddEffect(new AddMaxHealthEffect { Value = 450 });
+                playerState.SolveEffect();
                 break;
             case >= 4:
                 playerState.AddEffect(new AddMaxHealthEffect { Value = 150 });
+                playerState.SolveEffect();
                 break;
             case >= 2:
                 playerState.AddEffect(new AddMaxHealthEffect { Value = 50 });
+                playerState.SolveEffect();
                 break;
         }
     }
@@ -31,12 +34,15 @@ public sealed class Bruiser : FactionBase
         {
             case >= 6:
                 playerState.AddEffect(new AddMaxHealthEffect { Value = -450 });
+                playerState.SolveEffect();
                 break;
             case >= 4:
                 playerState.AddEffect(new AddMaxHealthEffect { Value = -150 });
+                playerState.SolveEffect();
                 break;
             case >= 2:
                 playerState.AddEffect(new AddMaxHealthEffect { Value = -50 });
+                playerState.SolveEffect();
                 break;
         }
     }

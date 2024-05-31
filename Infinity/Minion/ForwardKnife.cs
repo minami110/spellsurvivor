@@ -57,7 +57,7 @@ public partial class ForwardKnife : MinionBase
     {
         var bullet = _bulletPackedScene.Instantiate<ProjectileBase>();
         {
-            bullet.Damage = ItemSettings.BaseAttack;
+            bullet.Damage = MinionCoreData.BaseAttack;
             bullet.Direction = GlobalTransform.X; // Forward
             bullet.GlobalPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
             bullet.InitialSpeed = 1000f;

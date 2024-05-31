@@ -1,9 +1,8 @@
 ﻿using System;
-using fms.Effects;
 
 namespace fms.Faction;
 
-public abstract class FactionBase
+public abstract class FactionBase : IEffectSolver
 {
     public virtual bool IsAnyEffectActive => Level >= 2;
     public int Level { get; private set; }
@@ -47,24 +46,13 @@ public abstract class FactionBase
     private protected virtual void OnLevelReset(int oldLevel)
     {
     }
-}
 
-/// <summary>
-///     Lv2: デュエリスト を持つミニオンのクールダウンを 10%減少させる
-///     Lv4: デュエリスト を持つミニオンのクールダウンを 20%減少させる
-///     Lv6: 自分が持っているすべてのミニオンのクールダウンを 20%減少させる
-/// </summary>
-public sealed class Duelist : FactionBase
-{
-    public EffectBase[] GetEffects()
+    public void AddEffect(EffectBase effect)
     {
-        return Level switch
-        {
-            >= 6 => new EffectBase[] { new DuelistOnlyMinionCoolDownReduce { Value = 10 } },
-            >= 4 => new EffectBase[] { new DuelistOnlyMinionCoolDownReduce { Value = 20 } },
-            >= 2 => new EffectBase[] { new AllMinionCoolDownReduce { Value = 20 } },
-            _ => Array.Empty<EffectBase>()
-        };
+    }
+
+    public void SolveEffect()
+    {
     }
 }
 

@@ -258,7 +258,7 @@ public partial class Main : Node
 
         // Player Pawn に Item を追加で装備させる
         var equipment = minionData.EquipmentScene.Instantiate<MinionBase>();
-        equipment.ItemSettings = minionData;
+        equipment.MinionCoreData = minionData;
         _playerPawn.AddChild(equipment);
 
         // 内部のリストで管理

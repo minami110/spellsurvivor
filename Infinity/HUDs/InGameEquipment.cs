@@ -25,7 +25,7 @@ public partial class InGameEquipment : VBoxContainer
         var d1 = real.CoolDownLeft.Subscribe(this, (x, s) =>
         {
             var minion = Main.GameMode.Minions[s.ItemSettings];
-            s._progress.MaxValue = minion.MaxCoolDown.CurrentValue;
+            s._progress.MaxValue = minion.CoolDown;
             s._progress.Value = x;
         });
         Disposable.Combine(d1).AddTo(this);
