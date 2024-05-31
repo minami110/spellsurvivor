@@ -3,7 +3,7 @@ using R3;
 
 namespace fms.Projectile;
 
-public partial class TrickshotArrow : Node
+public partial class TrickshotArrow : ProjectileBase
 {
     [Export]
     private RigidBody2D _rigidBody = null!;
@@ -22,16 +22,15 @@ public partial class TrickshotArrow : Node
 
     private int _bounceCounter;
 
-    private int _lifeTimeCounter;
     private Enemy? _previousEnemy;
 
     public float BaseSpeed { get; set; }
-    public int BounceCount { get; set; }
-    public float BaseDamage { get; set; }
-    public float BounceDamageMultiplier { get; set; }
-    public float SearchRadius { get; set; }
     public Vector2 InitialVelocity { get; set; }
-    public Vector2 InitialPosition { get; set; }
+
+    public int BounceCount { get; set; }
+    public float BounceDamageMultiplier { get; set; }
+    public float BounceSearchRadius { get; set; }
+
 
     public override void _Ready()
     {
@@ -44,7 +43,7 @@ public partial class TrickshotArrow : Node
         {
             // Set collision shape
             _enemySearchCollisionShape.Disabled = false;
-            _enemySearchCollisionShape.GlobalScale = new Vector2(SearchRadius, SearchRadius);
+            _enemySearchCollisionShape.GlobalScale = new Vector2(BounceSearchRadius, BounceSearchRadius);
         }
 
         // Connect
@@ -54,19 +53,6 @@ public partial class TrickshotArrow : Node
             .AddTo(this);
     }
 
-    public override void _Process(double delta)
-    {
-        _lifeTimeCounter++;
-        if (_lifeTimeCounter > 120)
-        {
-            KillThis();
-        }
-    }
-
-    private void KillThis()
-    {
-        QueueFree();
-    }
 
     private void OnEnemyBodyEntered(Enemy enemy)
     {
@@ -91,7 +77,7 @@ public partial class TrickshotArrow : Node
         }
 
         // Bounce!
-        _lifeTimeCounter = 0;
+        ResetLifeFrameCounter();
         _texture.Modulate = new Color(0, 1, 0);
         _bounceCounter++;
 
@@ -106,10 +92,6 @@ public partial class TrickshotArrow : Node
         {
             KillThis();
         }
-    }
-
-    private void TakeDamageToEnemy(Enemy enemy, float damage)
-    {
     }
 
     private bool TryGetNearestEnemy(Enemy? ignore, out Enemy? nearestEnemy)

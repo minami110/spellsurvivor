@@ -18,11 +18,5 @@ public partial class ShopItemSettings : Resource
     public int Price;
 
     [Export]
-    public float BaseAttack;
-
-    [Export]
-    public float Range;
-
-    [Export]
     public PackedScene EquipmentScene = null!;
 }

@@ -59,7 +59,6 @@ public partial class ForwardKnife : MinionBase
         }
     }
 
-
     private protected override void OnSolveEffect(IReadOnlyList<EffectBase> effects)
     {
         foreach (var effect in effects)
@@ -81,12 +80,12 @@ public partial class ForwardKnife : MinionBase
         var bullet = _bulletPackedScene.Instantiate<TrickshotArrow>();
         {
             bullet.BaseSpeed = 1000f;
-            bullet.BaseDamage = MinionCoreData.BaseAttack;
+            bullet.BaseDamage = 50;
             bullet.InitialVelocity = GlobalTransform.X; // Forward
             bullet.InitialPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
             bullet.BounceCount = _trickshotBounceCount;
             bullet.BounceDamageMultiplier = _trickshotBounceDamageMultiplier;
-            bullet.SearchRadius = 400f;
+            bullet.BounceSearchRadius = 400f;
         }
 
         _bulletSpawnNode.AddChild(bullet);

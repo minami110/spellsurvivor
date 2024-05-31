@@ -33,7 +33,9 @@ public partial class AutoAimPistol : MinionBase
     public override void _Ready()
     {
         base._Ready();
-        UpdateRadius();
+
+        // 範囲 100 px
+        _collisionShape.Scale = new Vector2(100, 100);
     }
 
     private protected override void DoAttack()
@@ -47,9 +49,9 @@ public partial class AutoAimPistol : MinionBase
         var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
 
         // Spawn bullet
-        var bullet = _bulletPackedScene.Instantiate<ProjectileBase>();
+        var bullet = _bulletPackedScene.Instantiate<SimpleBullet>();
         {
-            bullet.Damage = MinionCoreData.BaseAttack;
+            bullet.Damage = 34;
             bullet.Direction = direction;
             bullet.GlobalPosition = GlobalPosition;
             bullet.InitialSpeed = 1000f;
@@ -84,10 +86,5 @@ public partial class AutoAimPistol : MinionBase
         }
 
         return nearestEnemy is not null;
-    }
-
-    private void UpdateRadius()
-    {
-        _collisionShape.Scale = new Vector2(MinionCoreData.Range, MinionCoreData.Range);
     }
 }
