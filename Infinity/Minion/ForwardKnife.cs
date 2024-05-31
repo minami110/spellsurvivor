@@ -25,6 +25,7 @@ public partial class ForwardKnife : MinionBase
     };
 
     private int _trickshotBounceCount;
+    private float _trickshotBounceDamageMultiplier;
 
     private protected override int BaseCoolDownFrame => 60;
 
@@ -67,7 +68,8 @@ public partial class ForwardKnife : MinionBase
             {
                 case TrickshotBounceCount trickshotBounceCount:
                 {
-                    _trickshotBounceCount += (int)trickshotBounceCount.Value;
+                    _trickshotBounceCount += trickshotBounceCount.BounceCount;
+                    _trickshotBounceDamageMultiplier += trickshotBounceCount.BounceDamageMultiplier;
                     break;
                 }
             }
@@ -82,8 +84,8 @@ public partial class ForwardKnife : MinionBase
             bullet.BaseDamage = MinionCoreData.BaseAttack;
             bullet.InitialVelocity = GlobalTransform.X; // Forward
             bullet.InitialPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
-            bullet.BounceCount = _trickshotBounceCount + 2;
-            bullet.BounceDamageMultiplier = 0.4f; // ToDo:
+            bullet.BounceCount = _trickshotBounceCount;
+            bullet.BounceDamageMultiplier = _trickshotBounceDamageMultiplier;
             bullet.SearchRadius = 400f;
         }
 

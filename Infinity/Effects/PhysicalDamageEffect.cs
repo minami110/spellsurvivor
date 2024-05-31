@@ -5,4 +5,5 @@
 /// </summary>
 public class PhysicalDamageEffect : EffectBase
 {
+    public required float Value { get; init; }
 }

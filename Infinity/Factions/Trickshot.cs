@@ -23,7 +23,7 @@ public sealed class Trickshot : FactionBase
                         continue;
                     }
 
-                    minion.AddEffect(new TrickshotBounceCount { Value = 2 });
+                    minion.AddEffect(new TrickshotBounceCount { BounceCount = 2, BounceDamageMultiplier = 0.6f });
                     minion.SolveEffect();
                 }
 
@@ -38,7 +38,7 @@ public sealed class Trickshot : FactionBase
                         continue;
                     }
 
-                    minion.AddEffect(new TrickshotBounceCount { Value = 1 });
+                    minion.AddEffect(new TrickshotBounceCount { BounceCount = 1, BounceDamageMultiplier = 0.4f });
                     minion.SolveEffect();
                 }
 
