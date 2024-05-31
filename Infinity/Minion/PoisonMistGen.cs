@@ -4,6 +4,9 @@ using Godot;
 
 namespace fms.Minion;
 
+/// <summary>
+///     ポイズンミストを生成する
+/// </summary>
 public partial class PoisonMistGen : MinionBase
 {
     [ExportGroup("Internal Reference")]

@@ -65,7 +65,7 @@ public partial class ForwardKnife : MinionBase
         {
             switch (effect)
             {
-                case TrickshotBounceCount trickshotBounceCount:
+                case TrickshotBounce trickshotBounceCount:
                 {
                     _trickshotBounceCount += trickshotBounceCount.BounceCount;
                     _trickshotBounceDamageMultiplier += trickshotBounceCount.BounceDamageMultiplier;

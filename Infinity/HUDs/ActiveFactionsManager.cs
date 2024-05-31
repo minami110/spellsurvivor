@@ -23,6 +23,7 @@ public partial class ActiveFactionsManager : Node
 
     private void OnChangedEquippedMinion()
     {
+        _bruiser.Hide();
         _duelist.Hide();
         _trickshot.Hide();
 

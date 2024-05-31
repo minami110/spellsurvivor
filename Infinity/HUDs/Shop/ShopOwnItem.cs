@@ -16,6 +16,12 @@ public partial class ShopOwnItem : VBoxContainer
     [Export]
     private Label _level = null!;
 
+    [Export]
+    private Button _sellButton = null!;
+
+    [Export]
+    private Control _toolTipControl = null!;
+
     private MinionBase _minion = null!;
 
     public MinionCoreData ItemSettings { get; set; } = null!;
@@ -38,5 +44,26 @@ public partial class ShopOwnItem : VBoxContainer
                 t._level.Text = $"(Lv.{x})";
             }
         });
+
+        // ToDo: とりあえず買値と同じに..
+        _sellButton.Text = $"Sell ${ItemSettings.Price}";
+        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.GameMode.SellItem(ItemSettings); });
+
+        // Tooltip
+        _toolTipControl.MouseEntered += ShowToolTip;
+        _toolTipControl.MouseExited += HideToolTip;
+
+        Disposable.Combine(d1, d2).AddTo(this);
+    }
+
+    private void HideToolTip()
+    {
+        ToolTipToast.Hide();
+    }
+
+    private void ShowToolTip()
+    {
+        ToolTipToast.Text = ItemSettings.Description;
+        ToolTipToast.Show();
     }
 }

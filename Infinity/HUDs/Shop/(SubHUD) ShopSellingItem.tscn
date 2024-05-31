@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://drwbgsefq8p33"]
 
-[ext_resource type="Script" path="res://Infinity/HUDs/ShopSellingItem.cs" id="1_vjcx1"]
-[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Textures/white_4x4_srgb.png" id="2_cfl5e"]
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopSellingItem.cs" id="1_alr32"]
+[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Textures/white_4x4_srgb.png" id="2_8il58"]
 
 [node name="ShopSellingItem" type="VBoxContainer" node_paths=PackedStringArray("_iconTextureRect", "_nameLabel", "_buyButton", "_toolTipControl")]
-script = ExtResource("1_vjcx1")
+script = ExtResource("1_alr32")
 _iconTextureRect = NodePath("Control/ItemImage")
 _nameLabel = NodePath("ItemName")
 _buyButton = NodePath("Button")
@@ -20,7 +20,7 @@ layout_mode = 0
 offset_right = 128.0
 offset_bottom = 128.0
 mouse_filter = 2
-texture = ExtResource("2_cfl5e")
+texture = ExtResource("2_8il58")
 expand_mode = 1
 
 [node name="ItemImage" type="TextureRect" parent="Control"]

@@ -1,111 +1,37 @@
-using System;
 using Godot;
 using R3;
 
-namespace fms;
+namespace fms.Projectile;
 
-public partial class SimpleBullet : Area2D
+public partial class SimpleBullet : ProjectileBase
 {
-    public enum KillType
-    {
-        Hit,
-        TimeOut
-    }
+    [Export]
+    private RigidBody2D _rigidBody = null!;
 
-    private readonly Subject<KillReason> _killedSubject = new();
+    [Export]
+    private Area2D _enemyDamageArea = null!;
 
-    private IDisposable? _bodyEnteredDisposable;
+    public float InitialSpeed { get; set; }
+    public Vector2 InitialVelocity { get; set; }
 
-    private bool _isDead;
-    private float _lifeTimeCounter;
-    private Vector2 _velocity;
-    public float Damage { get; set; } = 10f;
-
-    public Vector2 Direction { get; set; } = Vector2.Right;
-
-    public float InitialSpeed { get; set; } = 50f;
-
-    public float Acceleration { get; set; } = 50f;
-
-    public float LifeTime { get; set; } = 1f;
-
-    public Observable<KillReason> Killed => _killedSubject;
 
     public override void _Ready()
     {
-        _bodyEnteredDisposable = this.BodyEnteredAsObservable()
+        // Set rigidbody parameter
+        _rigidBody.GlobalPosition = InitialPosition;
+        _rigidBody.LinearVelocity = InitialVelocity * InitialSpeed;
+        _rigidBody.Rotation = _rigidBody.LinearVelocity.Angle();
+
+        // Connect
+        _enemyDamageArea.BodyEnteredAsObservable()
             .Cast<Node2D, Enemy>()
-            .Subscribe(this, (entity, state) => { state.OnEnemyBodyEntered(entity); });
-
-        _velocity = InitialSpeed * Direction;
+            .Subscribe(this, (x, state) => { state.OnEnemyBodyEntered(x); })
+            .AddTo(this);
     }
 
-    public override void _Process(double delta)
+    private void OnEnemyBodyEntered(Enemy enemy)
     {
-        if (_isDead)
-        {
-            return;
-        }
-
-        // Move Projectile
-        _velocity += (float)delta * Acceleration * Direction;
-        Position += _velocity * (float)delta;
-
-        // Update Rotation
-        Rotation = _velocity.Angle();
-
-        // Update LifeTime
-        _lifeTimeCounter += (float)delta;
-
-        if (_lifeTimeCounter >= LifeTime)
-        {
-            KillThis(KillType.TimeOut);
-        }
-    }
-
-    public override void _ExitTree()
-    {
-        _killedSubject.Dispose();
-        _bodyEnteredDisposable?.Dispose();
-        _bodyEnteredDisposable = null;
-    }
-
-    private protected virtual void ApplyDamageToEnemy(Enemy enemy)
-    {
-        if (_isDead)
-        {
-            return;
-        }
-
-        _bodyEnteredDisposable?.Dispose();
-        _bodyEnteredDisposable = null;
-
-        enemy.TakeDamage(Damage);
-        KillThis(KillType.Hit);
-    }
-
-    private protected virtual void OnEnemyBodyEntered(Enemy enemy)
-    {
-        ApplyDamageToEnemy(enemy);
-    }
-
-    private void KillThis(KillType type)
-    {
-        if (_isDead)
-        {
-            return;
-        }
-
-        _isDead = true;
-        _killedSubject.OnNext(new KillReason { Why = type, Position = GlobalPosition });
-        _killedSubject.OnCompleted();
-
-        CallDeferred(Node.MethodName.QueueFree);
-    }
-
-    public readonly struct KillReason
-    {
-        public required KillType Why { get; init; }
-        public required Vector2 Position { get; init; }
+        enemy.TakeDamage(BaseDamage);
+        KillThis();
     }
 }

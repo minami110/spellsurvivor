@@ -49,10 +49,6 @@ public partial class Main : Node
     private readonly IDisposable _disposable;
     private readonly List<EnemySpawnTimer> _enemySpawnTimers = new();
 
-    // 現在 Player が装備しているアイテム
-    private readonly List<MinionCoreData> _equipments = new();
-    private readonly Subject<MinionCoreData> _equippedItemSub = new();
-
     // 現在 Player が装備している Minion の辞書
     private readonly Dictionary<MinionCoreData, MinionBase> _equippedMinions = new();
 
@@ -109,13 +105,6 @@ public partial class Main : Node
     /// </summary>
     public ReadOnlyReactiveProperty<float> RemainingWaveSecond => _remainingWaveSecondRp;
 
-    /// <summary>
-    ///     プレイヤーがアイテムを新しく装備したときに呼ばれる
-    /// </summary>
-    public Observable<MinionCoreData> EquippedItem => _equippedItemSub;
-
-    public IReadOnlyList<MinionCoreData> Equipments => _equipments;
-
     public IReadOnlyDictionary<MinionCoreData, MinionBase> Minions => _equippedMinions;
 
     /// <summary>
@@ -167,8 +156,10 @@ public partial class Main : Node
 
         // Create PlayerState
         _playerState = new PlayerState();
+
+        // Disposable registration
         _disposable = Disposable.Combine(_playerState, _waveRp, _remainingWaveSecondRp, _waveEndedSub, _waveStartedSub,
-            _equippedItemSub, _changedEquippedMinionSub);
+            _changedEquippedMinionSub);
     }
 
     public override void _Ready()
@@ -230,6 +221,10 @@ public partial class Main : Node
         }
     }
 
+    /// <summary>
+    ///     Minion をショップから購入
+    /// </summary>
+    /// <param name="minionData"></param>
     public void BuyItem(MinionCoreData minionData)
     {
         // プレイヤーのお金を減らす
@@ -242,63 +237,38 @@ public partial class Main : Node
             // Minion をレベルアップ
             minion.AddEffect(new AddLevelEffect { Value = 1 });
             minion.SolveEffect();
+            return;
         }
 
         // ToDo: 現在デフォで装備にしていますが, 満タンの場合 とか ドラッグで購入とかで色々変わります
         // 装備する
         EquipmentMinion(minionData);
+        OnChangedEquippedMinion();
     }
 
-    public void EquipmentMinion(MinionCoreData minionData)
+
+    /// <summary>
+    ///     Minion をショップに売却
+    /// </summary>
+    /// <param name="minionData"></param>
+    public void SellItem(MinionCoreData minionData)
     {
-        if (_equippedMinions.TryGetValue(minionData, out var minion))
+        // すでに Minion を所持している場合
+        if (!_equippedMinions.TryGetValue(minionData, out var minion))
         {
             return;
         }
 
-        // Player Pawn に Item を追加で装備させる
-        var equipment = minionData.EquipmentScene.Instantiate<MinionBase>();
-        equipment.MinionCoreData = minionData;
-        _playerPawn.AddChild(equipment);
+        // プレイヤーのお金を増やす
+        // TODO: 売却価格を売値と同じにしています
+        _playerState.AddEffect(new AddMoneyEffect { Value = minionData.Price });
+        _playerState.SolveEffect();
 
-        // 内部のリストで管理
-        _equippedMinions.Add(minionData, equipment);
-        _equipments.Add(minionData);
+        // Minion を削除
+        minion.QueueFree();
+        _equippedMinions.Remove(minionData);
 
-        // Faction を一度全て Level 0 に戻す
-        foreach (var (_, faction) in _factionMap)
-        {
-            faction.ResetLevel();
-        }
-
-        // 現在しているすべての Minion を照会する
-        foreach (var (_, m) in _equippedMinions)
-        {
-            // 各 Minion が持っている Faction ごとに
-            foreach (var newFaction in m.Factions)
-            {
-                var factionType = newFaction.GetType();
-                if (_factionMap.TryGetValue(factionType, out var exitingFaction))
-                {
-                    exitingFaction.AddLevel();
-                }
-                else
-                {
-                    _factionMap.Add(factionType, newFaction);
-                    newFaction.AddLevel();
-                }
-            }
-        }
-
-        // レベルを確定する 
-        foreach (var (_, faction) in _factionMap)
-        {
-            faction.ConfirmLevel();
-        }
-
-        // 通知する
-        _changedEquippedMinionSub.OnNext(Unit.Default);
-        _equippedItemSub.OnNext(minionData);
+        OnChangedEquippedMinion();
     }
 
     private void CloseShop()
@@ -339,16 +309,27 @@ public partial class Main : Node
         // InGame の HUD を表示する
         _inGameHud.Show();
 
-        // 現在有効な Faction のコールバックを呼ぶ
-        foreach (var (type, faction) in _factionMap)
-        {
-            faction.OnBattleStarted();
-        }
-
         // Battle Phase の開始
         _phase = MainPhase.BATTLE;
         _waveRp.Value = newWave;
         _waveStartedSub.OnNext(Unit.Default);
+    }
+
+    private void EquipmentMinion(MinionCoreData minionData)
+    {
+        // すでに装備している場合 は何もしない
+        if (_equippedMinions.TryGetValue(minionData, out var minion))
+        {
+            return;
+        }
+
+        // Player Pawn に Item を追加で装備させる
+        var equipment = minionData.EquipmentScene.Instantiate<MinionBase>();
+        equipment.MinionCoreData = minionData;
+        _playerPawn.AddChild(equipment);
+
+        // 内部のリストで管理
+        _equippedMinions.Add(minionData, equipment);
     }
 
     private void ExitBattleWave()
@@ -370,6 +351,43 @@ public partial class Main : Node
 
         // Shop を開く
         OpenShop();
+    }
+
+    private void OnChangedEquippedMinion()
+    {
+        // Faction を一度全て Level 0 に戻す
+        foreach (var (_, faction) in _factionMap)
+        {
+            faction.ResetLevel();
+        }
+
+        // 現在しているすべての Minion を照会する
+        foreach (var (_, m) in _equippedMinions)
+        {
+            // 各 Minion が持っている Faction ごとに
+            foreach (var newFaction in m.Factions)
+            {
+                var factionType = newFaction.GetType();
+                if (_factionMap.TryGetValue(factionType, out var exitingFaction))
+                {
+                    exitingFaction.AddLevel();
+                }
+                else
+                {
+                    _factionMap.Add(factionType, newFaction);
+                    newFaction.AddLevel();
+                }
+            }
+        }
+
+        // レベルを確定する 
+        foreach (var (_, faction) in _factionMap)
+        {
+            faction.ConfirmLevel();
+        }
+
+        // 通知する
+        _changedEquippedMinionSub.OnNext(Unit.Default);
     }
 
     private void OpenShop()

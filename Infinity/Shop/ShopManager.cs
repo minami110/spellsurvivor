@@ -36,7 +36,7 @@ public partial class ShopManager : Node
     {
         var d1 = _rerollButton.PressedAsObservable().Subscribe(_ => OnPressedReRollButton());
         var d2 = Main.PlayerState.Money.Subscribe(x => _playerMoneyLabel.Text = $"$ {x}");
-        var d3 = Main.GameMode.EquippedItem.Subscribe(OnPlayerEquippedItem);
+        var d3 = Main.GameMode.ChangedEquippedMinion.Subscribe(OnPlayerEquippedItem);
 
         Disposable.Combine(d1, d2, d3).AddTo(this);
     }
@@ -75,13 +75,23 @@ public partial class ShopManager : Node
         }
     }
 
-    private void OnPlayerEquippedItem(MinionCoreData itemSetting)
+    private void OnPlayerEquippedItem(Unit _)
     {
-        var node = _shopOwnItemPackedScene.Instantiate<ShopOwnItem>();
+        // すでに生成している ShopOwnItem を削除 する
+        foreach (var old in _equipItemSpawnParent.GetChildren())
         {
-            node.ItemSettings = itemSetting;
+            old.QueueFree();
         }
-        _equipItemSpawnParent.AddChild(node);
+
+        var equippedItems = Main.GameMode.Minions;
+        foreach (var (data, minion) in equippedItems)
+        {
+            var node = _shopOwnItemPackedScene.Instantiate<ShopOwnItem>();
+            {
+                node.ItemSettings = data;
+            }
+            _equipItemSpawnParent.AddChild(node);
+        }
     }
 
     private void OnPressedReRollButton()

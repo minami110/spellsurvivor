@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://Infinity/GameMode/WaveSetting.cs" id="6_34bq1"]
 [ext_resource type="Script" path="res://Common/Inputs/PlayerController.cs" id="6_m3lsh"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawner.cs" id="8_lc8x0"]
-[ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/ShopHUD.tscn" id="9_a7daw"]
+[ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/Shop/ShopHUD.tscn" id="9_a7daw"]
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="12_42duw"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]

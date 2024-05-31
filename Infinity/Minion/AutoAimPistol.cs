@@ -1,4 +1,5 @@
 ﻿using fms.Faction;
+using fms.Projectile;
 using Godot;
 
 namespace fms.Minion;
@@ -51,9 +52,9 @@ public partial class AutoAimPistol : MinionBase
         // Spawn bullet
         var bullet = _bulletPackedScene.Instantiate<SimpleBullet>();
         {
-            bullet.Damage = 34;
-            bullet.Direction = direction;
-            bullet.GlobalPosition = GlobalPosition;
+            bullet.BaseDamage = 34;
+            bullet.InitialVelocity = direction;
+            bullet.InitialPosition = GlobalPosition;
             bullet.InitialSpeed = 1000f;
         }
         _bulletSpawnNode.AddChild(bullet);

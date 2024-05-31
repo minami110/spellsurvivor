@@ -1,6 +1,9 @@
 ﻿namespace fms.Effect;
 
-public class TrickshotBounceCount : EffectBase
+/// <summary>
+///     Faction: Trickshot により生成される Effect
+/// </summary>
+public class TrickshotBounce : EffectBase
 {
     public required int BounceCount { get; init; }
     public required float BounceDamageMultiplier { get; init; }
