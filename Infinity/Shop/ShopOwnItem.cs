@@ -18,7 +18,7 @@ public partial class ShopOwnItem : VBoxContainer
 
     private MinionBase _minion = null!;
 
-    public ShopItemSettings ItemSettings { get; set; } = null!;
+    public MinionCoreData ItemSettings { get; set; } = null!;
 
     public override void _Ready()
     {

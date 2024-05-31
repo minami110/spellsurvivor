@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Minion/(Minion) AutoAimPistol.tscn" id="1_itvs5"]
 [ext_resource type="Texture2D" uid="uid://cf8sqsunyrjpl" path="res://Common/Textures/Emoji/gun.png" id="2_4g0so"]
-[ext_resource type="Script" path="res://Infinity/Datebase/Items/ShopItemSettings.cs" id="3_liksq"]
+[ext_resource type="Script" path="res://Infinity/Datebase/Items/MinionCoreData.cs" id="3_liksq"]
 
 [resource]
 script = ExtResource("3_liksq")

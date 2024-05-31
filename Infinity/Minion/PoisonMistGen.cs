@@ -42,7 +42,7 @@ public partial class PoisonMistGen : MinionBase
             {
                 bullet.InitialPosition = Main.PlayerGlobalPosition;
                 bullet.CoolDown = 10; // 10 フレームに一回敵にダメージ
-                bullet.BaseDamage = 1; // 10 フレームに1ダメージ
+                bullet.BaseDamage = 2; // 10 フレームに1ダメージ
                 bullet.Radius = 100; // 100 ピクセル以内の敵にダメージ
                 bullet.LifeFrame = 300; // 300 フレーム後に消滅
             }
@@ -54,7 +54,7 @@ public partial class PoisonMistGen : MinionBase
             {
                 bullet.InitialPosition = Main.PlayerGlobalPosition;
                 bullet.CoolDown = 10; // 10 フレームに一回敵にダメージ
-                bullet.BaseDamage = 1; // 10 フレームに1ダメージ
+                bullet.BaseDamage = 2; // 10 フレームに1ダメージ
                 bullet.Radius = 200; // 200 ピクセル以内の敵にダメージ
                 bullet.LifeFrame = 300; // 300 フレーム後に消滅
             }
@@ -66,7 +66,7 @@ public partial class PoisonMistGen : MinionBase
             {
                 bullet.InitialPosition = Main.PlayerGlobalPosition;
                 bullet.CoolDown = 10; // 10 フレームに一回敵にダメージ
-                bullet.BaseDamage = 1; // 10 フレームに1ダメージ
+                bullet.BaseDamage = 2; // 10 フレームに1ダメージ
                 bullet.Radius = 300; // 200 ピクセル以内の敵にダメージ
                 bullet.LifeFrame = 400; // 400 フレーム後に消滅
             }

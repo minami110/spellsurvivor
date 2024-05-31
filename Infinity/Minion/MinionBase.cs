@@ -17,10 +17,8 @@ public partial class MinionBase : Node2D, IEffectSolver
 
     private readonly ReactiveProperty<int> _coolDownLeft = new(1);
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
-
     private readonly List<EffectBase> _effects = new();
     private readonly ReactiveProperty<int> _levelRp = new(_MIN_LEVEL);
-
     private CancellationTokenSource? _runningFrameTimerCts;
 
     /// <summary>
@@ -64,8 +62,7 @@ public partial class MinionBase : Node2D, IEffectSolver
 
     /// <summary>
     /// </summary>
-    public ShopItemSettings MinionCoreData { get; set; } = null!;
-
+    public MinionCoreData MinionCoreData { get; set; } = null!;
 
     /// <summary>
     ///     次の攻撃までの残りフレーム

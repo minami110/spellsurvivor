@@ -14,7 +14,7 @@ public partial class InGameEquipment : VBoxContainer
     [Export]
     private ProgressBar _progress = null!;
 
-    public ShopItemSettings ItemSettings { get; set; } = null!;
+    public MinionCoreData ItemSettings { get; set; } = null!;
 
     public override void _Ready()
     {

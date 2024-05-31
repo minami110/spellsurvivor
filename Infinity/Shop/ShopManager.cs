@@ -12,7 +12,7 @@ public partial class ShopManager : Node
     private int _rerollPrice = 1;
 
     [Export]
-    private ShopItemSettings[] _itemPool = Array.Empty<ShopItemSettings>();
+    private MinionCoreData[] _itemPool = Array.Empty<MinionCoreData>();
 
     [Export]
     private PackedScene _shopItemPackedScene = null!;
@@ -75,7 +75,7 @@ public partial class ShopManager : Node
         }
     }
 
-    private void OnPlayerEquippedItem(ShopItemSettings itemSetting)
+    private void OnPlayerEquippedItem(MinionCoreData itemSetting)
     {
         var node = _shopOwnItemPackedScene.Instantiate<ShopOwnItem>();
         {

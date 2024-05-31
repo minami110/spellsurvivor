@@ -8,7 +8,7 @@ using R3;
 public partial class ShopSellingItem : VBoxContainer
 {
     [Export]
-    public ShopItemSettings ShopItemSettings { get; set; } = null!;
+    public MinionCoreData ShopItemSettings { get; set; } = null!;
 
     [ExportGroup("Internal Reference")]
     [Export]

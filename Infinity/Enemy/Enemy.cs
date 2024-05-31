@@ -103,7 +103,7 @@ public partial class Enemy : RigidBody2D
     }
 
 
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, bool isHitStop = true)
     {
         _state.AddEffect(new PhysicalDamageEffect { Value = amount });
         _state.SolveEffect();
@@ -115,7 +115,7 @@ public partial class Enemy : RigidBody2D
         }
         else
         {
-            TakeDamageAnimationAsync();
+            TakeDamageAnimationAsync(isHitStop);
             UpdateHealthBar();
         }
     }
@@ -129,7 +129,7 @@ public partial class Enemy : RigidBody2D
         LinearVelocity = force;
     }
 
-    private async void TakeDamageAnimationAsync()
+    private async void TakeDamageAnimationAsync(bool isHitStop)
     {
         if (_mainTexture.Material is not ShaderMaterial sm)
         {
@@ -138,12 +138,20 @@ public partial class Enemy : RigidBody2D
 
         // Hitstop and blink shader
         sm.SetShaderParameter("hit", 1.0f);
-        _isHitStopping = true;
-        LinearVelocity = Vector2.Zero;
+
+        if (isHitStop)
+        {
+            _isHitStopping = true;
+            LinearVelocity = Vector2.Zero;
+        }
 
         await this.WaitForSecondsAsync(0.1f);
 
-        _isHitStopping = false;
+        if (isHitStop)
+        {
+            _isHitStopping = false;
+        }
+
         sm.SetShaderParameter("hit", 0.0f);
     }
 

@@ -3,7 +3,7 @@ using Godot;
 namespace fms;
 
 [GlobalClass]
-public partial class ShopItemSettings : Resource
+public partial class MinionCoreData : Resource
 {
     [Export]
     public string Name = string.Empty;

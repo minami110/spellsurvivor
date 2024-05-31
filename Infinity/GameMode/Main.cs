@@ -50,11 +50,11 @@ public partial class Main : Node
     private readonly List<EnemySpawnTimer> _enemySpawnTimers = new();
 
     // 現在 Player が装備しているアイテム
-    private readonly List<ShopItemSettings> _equipments = new();
-    private readonly Subject<ShopItemSettings> _equippedItemSub = new();
+    private readonly List<MinionCoreData> _equipments = new();
+    private readonly Subject<MinionCoreData> _equippedItemSub = new();
 
     // 現在 Player が装備している Minion の辞書
-    private readonly Dictionary<ShopItemSettings, MinionBase> _equippedMinions = new();
+    private readonly Dictionary<MinionCoreData, MinionBase> _equippedMinions = new();
 
     // 現在有効な Faction の辞書
     private readonly Dictionary<Type, FactionBase> _factionMap = new();
@@ -112,11 +112,11 @@ public partial class Main : Node
     /// <summary>
     ///     プレイヤーがアイテムを新しく装備したときに呼ばれる
     /// </summary>
-    public Observable<ShopItemSettings> EquippedItem => _equippedItemSub;
+    public Observable<MinionCoreData> EquippedItem => _equippedItemSub;
 
-    public IReadOnlyList<ShopItemSettings> Equipments => _equipments;
+    public IReadOnlyList<MinionCoreData> Equipments => _equipments;
 
-    public IReadOnlyDictionary<ShopItemSettings, MinionBase> Minions => _equippedMinions;
+    public IReadOnlyDictionary<MinionCoreData, MinionBase> Minions => _equippedMinions;
 
     /// <summary>
     ///     現在の Player の Global Position を取得
@@ -230,7 +230,7 @@ public partial class Main : Node
         }
     }
 
-    public void BuyItem(ShopItemSettings minionData)
+    public void BuyItem(MinionCoreData minionData)
     {
         // プレイヤーのお金を減らす
         _playerState.AddEffect(new AddMoneyEffect { Value = -minionData.Price });
@@ -249,7 +249,7 @@ public partial class Main : Node
         EquipmentMinion(minionData);
     }
 
-    public void EquipmentMinion(ShopItemSettings minionData)
+    public void EquipmentMinion(MinionCoreData minionData)
     {
         if (_equippedMinions.TryGetValue(minionData, out var minion))
         {
