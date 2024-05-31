@@ -22,7 +22,8 @@ public partial class AutoAimPistol : MinionBase
     private static readonly FactionBase[] _factions =
     {
         new Duelist(),
-        new Bruiser()
+        new Bruiser(),
+        new Trickshot()
     };
 
     private protected override int BaseCoolDownFrame => 120;

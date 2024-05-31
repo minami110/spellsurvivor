@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace fms.Faction;
+﻿namespace fms.Faction;
 
 public abstract class FactionBase : IEffectSolver
 {
@@ -62,24 +60,5 @@ public abstract class FactionBase : IEffectSolver
 ///     Lv6: 10秒毎 に一時的なシールド "25 + Player" の最大体力の 2% を得る
 /// </summary>
 public sealed class Knight : FactionBase
-{
-    public EffectBase[] GetEffects()
-    {
-        return Level switch
-        {
-            >= 6 => new EffectBase[] { new AddMaxHealthEffect { Value = 400 } },
-            >= 4 => new EffectBase[] { new AddMaxHealthEffect { Value = 150 } },
-            >= 2 => new EffectBase[] { new AddMaxHealthEffect { Value = 50 } },
-            _ => Array.Empty<EffectBase>()
-        };
-    }
-}
-
-/// <summary>
-///     トリックショットを持つミニオンの通常攻撃が敵にあたった時、範囲内の最も近い敵に向かって反射する
-///     Lv2: 跳ね返り回数 1、 跳ね返った攻撃倍率 40 %
-///     Lv4: 跳ね返り回数 2、 跳ね返った攻撃倍率 60 %
-/// </summary>
-public sealed class Trickshot : FactionBase
 {
 }

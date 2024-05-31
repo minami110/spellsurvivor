@@ -28,7 +28,7 @@ SpawnInterval = 5.0
 [sub_resource type="Resource" id="Resource_qt72y"]
 script = ExtResource("6_34bq1")
 Money = 10
-Time = 10.0
+Time = 50.0
 EnemySpawnSettings = Array[Object]([SubResource("Resource_smwgh"), SubResource("Resource_3eo46")])
 
 [sub_resource type="Resource" id="Resource_pgsa0"]
@@ -56,6 +56,7 @@ size = Vector2(1200, 100)
 
 [node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_enemySpawner", "_inGameHud", "_shopHud")]
 script = ExtResource("1_tk8vx")
+_startMoney = 100
 _waveSettings = [SubResource("Resource_qt72y"), SubResource("Resource_y2gxo")]
 _playerController = NodePath("PlayerController")
 _playerPawn = NodePath("MeMe (Player)")

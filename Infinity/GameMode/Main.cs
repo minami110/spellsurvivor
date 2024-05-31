@@ -357,6 +357,7 @@ public partial class Main : Node
 
         // 湧いた敵をすべてコロス
         GetTree().CallGroup("Enemy", "KillByWaveEnd");
+        GetTree().CallGroup("Projectile", "QueueFree");
 
         // ToDo: リザルト画面を表示する
 

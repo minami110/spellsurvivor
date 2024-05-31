@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using R3;
 
@@ -5,6 +6,17 @@ namespace fms;
 
 public partial class ProjectileBase : Area2D
 {
+    public enum KillType
+    {
+        Hit,
+        TimeOut
+    }
+
+    private readonly Subject<KillReason> _killedSubject = new();
+
+    private IDisposable? _bodyEnteredDisposable;
+
+    private bool _isDead;
     private float _lifeTimeCounter;
     private Vector2 _velocity;
     public float Damage { get; set; } = 10f;
@@ -17,18 +29,24 @@ public partial class ProjectileBase : Area2D
 
     public float LifeTime { get; set; } = 1f;
 
+    public Observable<KillReason> Killed => _killedSubject;
+
     public override void _Ready()
     {
-        var d1 = this.BodyEnteredAsObservable()
+        _bodyEnteredDisposable = this.BodyEnteredAsObservable()
             .Cast<Node2D, Enemy>()
-            .Subscribe(this, (entity, state) => { state.ApplyDamageToEnemy(entity); });
+            .Subscribe(this, (entity, state) => { state.OnEnemyBodyEntered(entity); });
 
-        Disposable.Combine(d1).AddTo(this);
         _velocity = InitialSpeed * Direction;
     }
 
     public override void _Process(double delta)
     {
+        if (_isDead)
+        {
+            return;
+        }
+
         // Move Projectile
         _velocity += (float)delta * Acceleration * Direction;
         Position += _velocity * (float)delta;
@@ -41,18 +59,53 @@ public partial class ProjectileBase : Area2D
 
         if (_lifeTimeCounter >= LifeTime)
         {
-            KillThis();
+            KillThis(KillType.TimeOut);
         }
+    }
+
+    public override void _ExitTree()
+    {
+        _killedSubject.Dispose();
+        _bodyEnteredDisposable?.Dispose();
+        _bodyEnteredDisposable = null;
     }
 
     private protected virtual void ApplyDamageToEnemy(Enemy enemy)
     {
+        if (_isDead)
+        {
+            return;
+        }
+
+        _bodyEnteredDisposable?.Dispose();
+        _bodyEnteredDisposable = null;
+
         enemy.TakeDamage(Damage);
-        KillThis();
+        KillThis(KillType.Hit);
     }
 
-    private void KillThis()
+    private protected virtual void OnEnemyBodyEntered(Enemy enemy)
     {
-        QueueFree();
+        ApplyDamageToEnemy(enemy);
+    }
+
+    private void KillThis(KillType type)
+    {
+        if (_isDead)
+        {
+            return;
+        }
+
+        _isDead = true;
+        _killedSubject.OnNext(new KillReason { Why = type, Position = GlobalPosition });
+        _killedSubject.OnCompleted();
+
+        CallDeferred(Node.MethodName.QueueFree);
+    }
+
+    public readonly struct KillReason
+    {
+        public required KillType Why { get; init; }
+        public required Vector2 Position { get; init; }
     }
 }

@@ -48,7 +48,6 @@ public partial class MinionBase : Node2D, IEffectSolver
     /// </summary>
     public virtual int MaxLevel => 5;
 
-
     /// <summary>
     ///     Minion のベースの攻撃間隔
     /// </summary>
@@ -98,7 +97,7 @@ public partial class MinionBase : Node2D, IEffectSolver
     {
     }
 
-    private protected virtual void OnSolveEffect(List<EffectBase> effects)
+    private protected virtual void OnSolveEffect(IReadOnlyList<EffectBase> effects)
     {
     }
 
@@ -150,7 +149,6 @@ public partial class MinionBase : Node2D, IEffectSolver
     public void SolveEffect()
     {
         foreach (var effect in _effects)
-            // レベルが上がるエフェクト
         {
             if (!IsMaxLevel && effect is AddLevelEffect addLevelEffect)
             {

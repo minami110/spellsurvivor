@@ -1,4 +1,7 @@
-﻿using fms.Faction;
+﻿using System.Collections.Generic;
+using fms.Effect;
+using fms.Faction;
+using fms.Projectile;
 using Godot;
 
 namespace fms.Minion;
@@ -20,6 +23,8 @@ public partial class ForwardKnife : MinionBase
         new Knight(),
         new Trickshot()
     };
+
+    private int _trickshotBounceCount;
 
     private protected override int BaseCoolDownFrame => 60;
 
@@ -53,15 +58,35 @@ public partial class ForwardKnife : MinionBase
         }
     }
 
+
+    private protected override void OnSolveEffect(IReadOnlyList<EffectBase> effects)
+    {
+        foreach (var effect in effects)
+        {
+            switch (effect)
+            {
+                case TrickshotBounceCount trickshotBounceCount:
+                {
+                    _trickshotBounceCount += (int)trickshotBounceCount.Value;
+                    break;
+                }
+            }
+        }
+    }
+
     private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
     {
-        var bullet = _bulletPackedScene.Instantiate<ProjectileBase>();
+        var bullet = _bulletPackedScene.Instantiate<TrickshotArrow>();
         {
-            bullet.Damage = MinionCoreData.BaseAttack;
-            bullet.Direction = GlobalTransform.X; // Forward
-            bullet.GlobalPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
-            bullet.InitialSpeed = 1000f;
+            bullet.BaseSpeed = 1000f;
+            bullet.BaseDamage = MinionCoreData.BaseAttack;
+            bullet.InitialVelocity = GlobalTransform.X; // Forward
+            bullet.InitialPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
+            bullet.BounceCount = _trickshotBounceCount + 2;
+            bullet.BounceDamageMultiplier = 0.4f; // ToDo:
+            bullet.SearchRadius = 400f;
         }
+
         _bulletSpawnNode.AddChild(bullet);
     }
 }
