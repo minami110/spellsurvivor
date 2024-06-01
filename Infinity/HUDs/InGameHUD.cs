@@ -26,7 +26,7 @@ public sealed partial class InGameHUD : CanvasLayer
 
     public override void _Ready()
     {
-        var gm = Main.GameMode;
+        var gm = Main.Instance;
         var ps = Main.PlayerState;
 
         // Subscribe player health
@@ -67,7 +67,7 @@ public sealed partial class InGameHUD : CanvasLayer
     private void OnWaveStarted()
     {
         // Spawn equipments
-        foreach (var (data, minion) in Main.GameMode.Minions)
+        foreach (var (data, minion) in Main.Instance.Minions)
         {
             var node = _equipmentPackedScene.Instantiate<InGameEquipment>();
             {

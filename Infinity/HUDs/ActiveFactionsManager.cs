@@ -17,7 +17,7 @@ public partial class ActiveFactionsManager : Node
 
     public override void _Ready()
     {
-        var d1 = Main.GameMode.ChangedEquippedMinion.Subscribe(_ => OnChangedEquippedMinion());
+        var d1 = Main.Instance.ChangedEquippedMinion.Subscribe(_ => OnChangedEquippedMinion());
         Disposable.Combine(d1).AddTo(this);
     }
 
@@ -27,7 +27,7 @@ public partial class ActiveFactionsManager : Node
         _duelist.Hide();
         _trickshot.Hide();
 
-        var factions = Main.GameMode.FactionMap;
+        var factions = Main.Instance.FactionMap;
         foreach (var (type, faction) in factions)
         {
             if (faction.Level == 0)

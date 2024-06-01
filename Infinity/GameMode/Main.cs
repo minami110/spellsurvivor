@@ -74,7 +74,7 @@ public partial class Main : Node
     ///     Get Main instance
     /// </summary>
     /// <exception cref="ApplicationException"></exception>
-    public static Main GameMode
+    public static Main Instance
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => _instance ?? throw new ApplicationException("Main instance is null");

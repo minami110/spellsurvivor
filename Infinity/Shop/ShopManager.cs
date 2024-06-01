@@ -36,7 +36,7 @@ public partial class ShopManager : Node
     {
         var d1 = _rerollButton.PressedAsObservable().Subscribe(_ => OnPressedReRollButton());
         var d2 = Main.PlayerState.Money.Subscribe(x => _playerMoneyLabel.Text = $"$ {x}");
-        var d3 = Main.GameMode.ChangedEquippedMinion.Subscribe(OnPlayerEquippedItem);
+        var d3 = Main.Instance.ChangedEquippedMinion.Subscribe(OnPlayerEquippedItem);
 
         Disposable.Combine(d1, d2, d3).AddTo(this);
     }
@@ -83,7 +83,7 @@ public partial class ShopManager : Node
             old.QueueFree();
         }
 
-        var equippedItems = Main.GameMode.Minions;
+        var equippedItems = Main.Instance.Minions;
         foreach (var (data, minion) in equippedItems)
         {
             var node = _shopOwnItemPackedScene.Instantiate<ShopOwnItem>();

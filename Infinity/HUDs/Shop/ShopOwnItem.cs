@@ -32,7 +32,7 @@ public partial class ShopOwnItem : VBoxContainer
         _name.Text = ItemSettings.Name;
 
         // Subscribe level
-        _minion = Main.GameMode.Minions[ItemSettings];
+        _minion = Main.Instance.Minions[ItemSettings];
         var d1 = _minion.Level.Subscribe(this, (x, t) =>
         {
             if (t._minion.MaxLevel == x)
@@ -47,7 +47,7 @@ public partial class ShopOwnItem : VBoxContainer
 
         // ToDo: とりあえず買値と同じに..
         _sellButton.Text = $"Sell ${ItemSettings.Price}";
-        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.GameMode.SellItem(ItemSettings); });
+        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.Instance.SellItem(ItemSettings); });
 
         // Tooltip
         _toolTipControl.MouseEntered += ShowToolTip;

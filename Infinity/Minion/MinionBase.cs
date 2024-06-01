@@ -71,8 +71,8 @@ public partial class MinionBase : Node2D, IEffectSolver
 
     public override void _EnterTree()
     {
-        var d1 = Main.GameMode.WaveStarted.Subscribe(this, (_, t) => t.StartCoolDownTimer());
-        var d2 = Main.GameMode.WaveEnded.Subscribe(this, (_, t) => t.StopCoolDownTimer());
+        var d1 = Main.Instance.WaveStarted.Subscribe(this, (_, t) => t.StartCoolDownTimer());
+        var d2 = Main.Instance.WaveEnded.Subscribe(this, (_, t) => t.StopCoolDownTimer());
 
         // Observable の初期化
         var d3 = _coolDownLeft;

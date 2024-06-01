@@ -11,7 +11,7 @@ public sealed class Trickshot : FactionBase
 {
     private protected override void OnLevelConfirmed(int level)
     {
-        var minions = Main.GameMode.Minions;
+        var minions = Main.Instance.Minions;
         switch (level)
         {
             case >= 4:
