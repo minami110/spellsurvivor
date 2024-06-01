@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bagncidt6rgvp"]
 
 [ext_resource type="Script" path="res://Infinity/Projectiles/SimpleBullet.cs" id="1_njoha"]
-[ext_resource type="Texture2D" uid="uid://b7qsm3wpjrqd8" path="res://Common/Textures/Noita/Spell_bouncy_orb.webp" id="2_8myrf"]
+[ext_resource type="Texture2D" uid="uid://b7qsm3wpjrqd8" path="res://Common/Resources/Textures/Noita/Spell_bouncy_orb.webp" id="2_8myrf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gdwp8"]
 radius = 3.0

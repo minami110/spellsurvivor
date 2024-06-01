@@ -34,13 +34,55 @@ public sealed partial class InGameHUD : CanvasLayer
         var d2 = ps.MaxHealth.Subscribe(OnHealthChanged);
 
         // Subscribe wave info
-        var d3 = gm.Wave.Subscribe(x => _currentWaveLabel.Text = $"Wave {x}");
-        var d4 = gm.RemainingWaveSecond.Subscribe(x => _waveTimerLabel.Text = $"{x:000}");
-        var d5 = gm.WaveStarted.Subscribe(_ => OnWaveStarted());
-        var d6 = gm.WaveEnded.Subscribe(_ => OnWaveEnded());
+        var ws = Main.WaveState;
+        var d3 = ws.Wave.Subscribe(x => _currentWaveLabel.Text = $"Wave {x}");
+        var d4 = ws.BattlePhaseTimeLeft.Subscribe(x => _waveTimerLabel.Text = $"{x:000}");
+        var d5 = ws.Phase.Subscribe(p =>
+        {
+            if (p == WavePhase.BATTLE)
+            {
+                OnBattleWaveStarted();
+            }
+            else
+            {
+                OnBattleWaveEnded();
+            }
+        });
 
         // Add disposables when this node is exited tree
-        Disposable.Combine(d1, d2, d3, d4, d5, d6).AddTo(this);
+        Disposable.Combine(d1, d2, d3, d4, d5).AddTo(this);
+    }
+
+    private void OnBattleWaveEnded()
+    {
+        // Hide 
+        Hide();
+
+        if (_equipmentContainer.GetChildCount() == 0)
+        {
+            return;
+        }
+
+        foreach (var child in _equipmentContainer.GetChildren())
+        {
+            child.QueueFree();
+        }
+    }
+
+    private void OnBattleWaveStarted()
+    {
+        // Spawn equipments
+        foreach (var (data, minion) in Main.Instance.Minions)
+        {
+            var node = _equipmentPackedScene.Instantiate<InGameEquipment>();
+            {
+                node.ItemSettings = data;
+            }
+            _equipmentContainer.AddChild(node);
+        }
+
+        // Show
+        Show();
     }
 
     private void OnHealthChanged(float _)
@@ -54,26 +96,5 @@ public sealed partial class InGameHUD : CanvasLayer
 
         // Update health text
         _healthText.Text = $"{playerState.Health.CurrentValue} / {playerState.MaxHealth.CurrentValue}";
-    }
-
-    private void OnWaveEnded()
-    {
-        foreach (var child in _equipmentContainer.GetChildren())
-        {
-            child.QueueFree();
-        }
-    }
-
-    private void OnWaveStarted()
-    {
-        // Spawn equipments
-        foreach (var (data, minion) in Main.Instance.Minions)
-        {
-            var node = _equipmentPackedScene.Instantiate<InGameEquipment>();
-            {
-                node.ItemSettings = data;
-            }
-            _equipmentContainer.AddChild(node);
-        }
     }
 }

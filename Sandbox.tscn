@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bvmoyxn00t1mu"]
-
-[ext_resource type="Script" path="res://Sandbox.cs" id="1_gddv5"]
-
-[node name="Sandbox" type="Node"]
-
-[node name="A1" type="Node" parent="."]
-script = ExtResource("1_gddv5")
-_scenePath = "res://Infinity/Infinity.tscn"

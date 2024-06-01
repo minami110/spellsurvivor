@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Infinity/Shop/ShopManager.cs" id="1_5xunh"]
 [ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/(SubHUD) ShopSellingItem.tscn" id="2_7j4ye"]
 [ext_resource type="Resource" uid="uid://dg1a0sshsyi4h" path="res://Infinity/Datebase/Items/(ShopItem) AutoAimPistol.tres" id="3_f2gna"]
-[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Textures/white_4x4_srgb.png" id="3_nlrg2"]
+[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="3_nlrg2"]
 [ext_resource type="Resource" uid="uid://brkbpmer5vx5k" path="res://Infinity/Datebase/Items/(ShopItem) ForwardKnife.tres" id="4_y7rr0"]
 [ext_resource type="Resource" uid="uid://bwrvuumsylvne" path="res://Infinity/Datebase/Items/(ShopItem) PoisonMistGen.tres" id="5_t0n3i"]
 [ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/(SubHUD) ShopOwnItem.tscn" id="6_dux5n"]

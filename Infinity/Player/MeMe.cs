@@ -6,8 +6,7 @@ public partial class MeMe : CharacterBody2D, IPawn
 {
     private Vector2 _nextMoveDirection;
 
-
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         if (!(_nextMoveDirection.LengthSquared() > 0f))
         {

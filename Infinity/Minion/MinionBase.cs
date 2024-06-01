@@ -71,15 +71,24 @@ public partial class MinionBase : Node2D, IEffectSolver
 
     public override void _EnterTree()
     {
-        var d1 = Main.Instance.WaveStarted.Subscribe(this, (_, t) => t.StartCoolDownTimer());
-        var d2 = Main.Instance.WaveEnded.Subscribe(this, (_, t) => t.StopCoolDownTimer());
+        var d1 = Main.WaveState.Phase.Subscribe(this, (phase, state) =>
+        {
+            if (phase == WavePhase.BATTLE)
+            {
+                state.StartCoolDownTimer();
+            }
+            else
+            {
+                state.StopCoolDownTimer();
+            }
+        });
 
         // Observable の初期化
         var d3 = _coolDownLeft;
         var d4 = _levelRp;
         var d5 = _coolDownReduceRateRp;
 
-        Disposable.Combine(d1, d2, d3, d4, d5).AddTo(this);
+        Disposable.Combine(d1, d3, d4, d5).AddTo(this);
 
         // Tree から抜けるときにタイマーを止める
         TreeExiting += StopCoolDownTimer;

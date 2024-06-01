@@ -14,7 +14,7 @@ config/name="fms"
 config/version="0.1.0"
 run/main_scene="res://Title/Title.tscn"
 config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
-config/icon="res://Common/Textures/icon.svg"
+config/icon="res://Common/Resources/Textures/icon.svg"
 
 [autoload]
 

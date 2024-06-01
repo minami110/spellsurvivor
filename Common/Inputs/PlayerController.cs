@@ -48,9 +48,9 @@ public partial class PlayerController : Node
 
         // Normalize the velocity vector.
         var direction = velocity.Normalized();
-        var length = Mathf.Min(1.0f, velocity.Length());
+        var length = Mathf.Min(1.0f, velocity.Length()); // Clamp the length to 1.0f.
 
-        _posessedPawn.MoveForward(direction * velocity);
+        _posessedPawn.MoveForward(direction * length);
     }
 
     /// <summary>

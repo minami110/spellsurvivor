@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://bali3cj5bhs2q"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/InGameHUD.cs" id="1_6o03e"]
-[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Textures/white_4x4_srgb.png" id="2_l31n5"]
+[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="2_l31n5"]
 [ext_resource type="PackedScene" uid="uid://bycglxvkrnadg" path="res://Infinity/HUDs/InGameEquipment.tscn" id="4_1mss2"]
-[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Fonts/Verdana.ttf" id="4_hsb5i"]
+[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Resources/Fonts/Verdana.ttf" id="4_hsb5i"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ntlvd"]
 font = ExtResource("4_hsb5i")

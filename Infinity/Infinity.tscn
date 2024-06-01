@@ -1,46 +1,17 @@
-[gd_scene load_steps=23 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=16 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
-[ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
-[ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawnSettings.cs" id="3_d53fw"]
-[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="4_8okuu"]
-[ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) BigTako.tscn" id="4_rd0iv"]
-[ext_resource type="Script" path="res://Infinity/GameMode/WaveSetting.cs" id="6_34bq1"]
+[ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
+[ext_resource type="Resource" uid="uid://cueueisolmo88" path="res://Infinity/Datebase/BattleWaveData/(InfinityGameSettings) Minami.tres" id="2_k5gik"]
 [ext_resource type="Script" path="res://Common/Inputs/PlayerController.cs" id="6_m3lsh"]
+[ext_resource type="PackedScene" uid="uid://cn70mo64dy7mh" path="res://Infinity/HUDs/BattleResult/BattleResultHUD.tscn" id="8_gtxqj"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawner.cs" id="8_lc8x0"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/Shop/ShopHUD.tscn" id="9_a7daw"]
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="12_42duw"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
-[ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://Common/PoseMenu/PoseMenu.tscn" id="16_ngbfj"]
+[ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://PoseMenu/PoseMenu.tscn" id="16_ngbfj"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
-
-[sub_resource type="Resource" id="Resource_smwgh"]
-script = ExtResource("3_d53fw")
-EnemyScene = ExtResource("4_8okuu")
-SpawnInterval = 2.0
-
-[sub_resource type="Resource" id="Resource_3eo46"]
-script = ExtResource("3_d53fw")
-EnemyScene = ExtResource("4_rd0iv")
-SpawnInterval = 5.0
-
-[sub_resource type="Resource" id="Resource_qt72y"]
-script = ExtResource("6_34bq1")
-Money = 10
-Time = 50.0
-EnemySpawnSettings = Array[Object]([SubResource("Resource_smwgh"), SubResource("Resource_3eo46")])
-
-[sub_resource type="Resource" id="Resource_pgsa0"]
-script = ExtResource("3_d53fw")
-EnemyScene = ExtResource("4_8okuu")
-SpawnInterval = 1.5
-
-[sub_resource type="Resource" id="Resource_y2gxo"]
-script = ExtResource("6_34bq1")
-Money = 20
-Time = 4.0
-EnemySpawnSettings = Array[Object]([SubResource("Resource_pgsa0")])
 
 [sub_resource type="Curve2D" id="Curve2D_dcvq1"]
 _data = {
@@ -54,19 +25,15 @@ size = Vector2(100, 1200)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rh687"]
 size = Vector2(1200, 100)
 
-[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_enemySpawner", "_inGameHud", "_shopHud")]
+[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_enemySpawner")]
 script = ExtResource("1_tk8vx")
-_startMoney = 100
-_waveSettings = [SubResource("Resource_qt72y"), SubResource("Resource_y2gxo")]
+_gameSettings = ExtResource("2_k5gik")
 _playerController = NodePath("PlayerController")
 _playerPawn = NodePath("MeMe (Player)")
 _enemySpawner = NodePath("EnemySpawner")
-_inGameHud = NodePath("HUDs/InGameHUD (Layer 2)")
-_shopHud = NodePath("HUDs/ShopHUD (Layer 4)")
-
-[node name="WaveTimer" type="Timer" parent="."]
 
 [node name="PlayerController" type="Node" parent="."]
+process_mode = 1
 script = ExtResource("6_m3lsh")
 
 [node name="MeMe (Player)" parent="." instance=ExtResource("12_e0mmc")]
@@ -127,6 +94,8 @@ shape = SubResource("RectangleShape2D_2x8fi")
 
 [node name="InGameHUD (Layer 2)" parent="HUDs" instance=ExtResource("11_3i81h")]
 visible = false
+
+[node name="BattleResult HUD (Layer 2)" parent="HUDs" instance=ExtResource("8_gtxqj")]
 
 [node name="ShopHUD (Layer 4)" parent="HUDs" instance=ExtResource("9_a7daw")]
 layer = 4

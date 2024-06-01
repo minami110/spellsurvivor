@@ -9,21 +9,25 @@ public sealed partial class ShopHUD : CanvasLayer
     [Export]
     private ShopManager _shopManager = null!;
 
-    private readonly Subject<Unit> _closed = new();
-    public Observable<Unit> Closed => _closed;
-
     public override void _Ready()
     {
-        _closed.AddTo(this);
-    }
-
-    public void InitialRerollItems()
-    {
-        _shopManager.Reroll();
+        var ws = Main.WaveState;
+        var d5 = ws.Phase.Subscribe(p =>
+        {
+            if (p == WavePhase.SHOP)
+            {
+                Show();
+                _shopManager.Reroll();
+            }
+            else
+            {
+                Hide();
+            }
+        });
     }
 
     public void OnCloseButtonPressed()
     {
-        _closed.OnNext(Unit.Default);
+        Main.WaveState.SendSignal(WaveState.Signal.PLAYER_ACCEPTED_SHOP);
     }
 }
