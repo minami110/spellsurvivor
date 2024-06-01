@@ -149,7 +149,7 @@ public partial class MinionBase : Node2D, IEffectSolver
         {
             if (!IsMaxLevel && effect is AddLevelEffect addLevelEffect)
             {
-                var newLevel = _levelRp.Value + (int)addLevelEffect.Value;
+                var newLevel = _levelRp.Value + addLevelEffect.Value;
                 _levelRp.Value = Mathf.Clamp(newLevel, _MIN_LEVEL, MaxLevel);
             }
             else if (effect is ReduceCoolDownRate reduceCoolDownRate)

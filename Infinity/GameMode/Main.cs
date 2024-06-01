@@ -67,10 +67,6 @@ public partial class Main : Node
     private MainPhase _phase = MainPhase.INIT;
 
     /// <summary>
-    /// </summary>
-    public IReadOnlyDictionary<Type, FactionBase> FactionMap => _factionMap;
-
-    /// <summary>
     ///     Get Main instance
     /// </summary>
     /// <exception cref="ApplicationException"></exception>
@@ -79,33 +75,6 @@ public partial class Main : Node
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => _instance ?? throw new ApplicationException("Main instance is null");
     }
-
-    /// <summary>
-    ///     現在の Wave
-    /// </summary>
-    public ReadOnlyReactiveProperty<int> Wave => _waveRp;
-
-    /// <summary>
-    ///     Battale Wave が開始したとき
-    /// </summary>
-    public Observable<Unit> WaveStarted => _waveStartedSub;
-
-    /// <summary>
-    ///     Battele Wave が終了した時
-    /// </summary>
-    public Observable<Unit> WaveEnded => _waveEndedSub;
-
-    /// <summary>
-    ///     装備している Minion に変更があった場合に通知
-    /// </summary>
-    public Observable<Unit> ChangedEquippedMinion => _changedEquippedMinionSub;
-
-    /// <summary>
-    ///     現在の Wave の残り時間
-    /// </summary>
-    public ReadOnlyReactiveProperty<float> RemainingWaveSecond => _remainingWaveSecondRp;
-
-    public IReadOnlyDictionary<MinionCoreData, MinionBase> Minions => _equippedMinions;
 
     /// <summary>
     ///     現在の Player の Global Position を取得
@@ -142,6 +111,37 @@ public partial class Main : Node
             throw new AggregateException("Main instance is null");
         }
     }
+
+    /// <summary>
+    /// </summary>
+    public IReadOnlyDictionary<Type, FactionBase> FactionMap => _factionMap;
+
+    /// <summary>
+    ///     現在の Wave
+    /// </summary>
+    public ReadOnlyReactiveProperty<int> Wave => _waveRp;
+
+    /// <summary>
+    ///     Battale Wave が開始したとき
+    /// </summary>
+    public Observable<Unit> WaveStarted => _waveStartedSub;
+
+    /// <summary>
+    ///     Battele Wave が終了した時
+    /// </summary>
+    public Observable<Unit> WaveEnded => _waveEndedSub;
+
+    /// <summary>
+    ///     装備している Minion に変更があった場合に通知
+    /// </summary>
+    public Observable<Unit> ChangedEquippedMinion => _changedEquippedMinionSub;
+
+    /// <summary>
+    ///     現在の Wave の残り時間
+    /// </summary>
+    public ReadOnlyReactiveProperty<float> RemainingWaveSecond => _remainingWaveSecondRp;
+
+    public IReadOnlyDictionary<MinionCoreData, MinionBase> Minions => _equippedMinions;
 
     public Main()
     {

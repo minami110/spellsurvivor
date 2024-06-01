@@ -80,7 +80,7 @@ public sealed class PlayerState : IEffectSolver, IDisposable
             {
                 case AddMoneyEffect addMoneyEffect:
                 {
-                    _money.Value += (int)addMoneyEffect.Value;
+                    _money.Value += addMoneyEffect.Value;
                     break;
                 }
                 case AddMoveSpeedEffect addMoveSpeedEffect:
