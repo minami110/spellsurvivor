@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gmh4ja31pvql"
-path="res://.godot/imported/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png-dffe8f246d2bd1181a0fb37496e81684.ctex"
+uid="uid://cg4pdl81tg8pq"
+path="res://.godot/imported/snake.png-2d71aa6a39d16bddee1f8f02e3e70e7b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png"
-dest_files=["res://.godot/imported/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png-dffe8f246d2bd1181a0fb37496e81684.ctex"]
+source_file="res://Common/Resources/Textures/Emoji/snake.png"
+dest_files=["res://.godot/imported/snake.png-2d71aa6a39d16bddee1f8f02e3e70e7b.ctex"]
 
 [params]
 

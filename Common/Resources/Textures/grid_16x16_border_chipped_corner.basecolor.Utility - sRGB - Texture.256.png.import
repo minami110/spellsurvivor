@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cf8sqsunyrjpl"
-path="res://.godot/imported/gun.png-fce76ba16192fd8d201249671b92f5ac.ctex"
+uid="uid://gmh4ja31pvql"
+path="res://.godot/imported/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png-0b7cf702445fff6c239c7885ecb63ae8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Textures/Emoji/gun.png"
-dest_files=["res://.godot/imported/gun.png-fce76ba16192fd8d201249671b92f5ac.ctex"]
+source_file="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png"
+dest_files=["res://.godot/imported/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png-0b7cf702445fff6c239c7885ecb63ae8.ctex"]
 
 [params]
 

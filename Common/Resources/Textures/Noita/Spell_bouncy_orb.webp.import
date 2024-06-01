@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cg4pdl81tg8pq"
-path="res://.godot/imported/snake.png-8d184283946dc4cf04fbadc15bd8eed1.ctex"
+uid="uid://b7qsm3wpjrqd8"
+path="res://.godot/imported/Spell_bouncy_orb.webp-0d3a20b9a138f7a0c15296ea5bc6e860.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Textures/Emoji/snake.png"
-dest_files=["res://.godot/imported/snake.png-8d184283946dc4cf04fbadc15bd8eed1.ctex"]
+source_file="res://Common/Resources/Textures/Noita/Spell_bouncy_orb.webp"
+dest_files=["res://.godot/imported/Spell_bouncy_orb.webp-0d3a20b9a138f7a0c15296ea5bc6e860.ctex"]
 
 [params]
 

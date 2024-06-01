@@ -43,16 +43,16 @@ public partial class SceneManager : Node
         var tree = GetTree();
 
         // 現在のシーンを削除する
-        var currentScene = tree.CurrentScene;
-        if (!IsInstanceValid(currentScene))
+        var prevScene = tree.CurrentScene;
+        if (!IsInstanceValid(prevScene))
         {
             GD.PushError("Failed to get valid current scene");
             _isSceneChanging = false;
             return;
         }
 
-        this.DebugLog($"Free current scene: {currentScene.GetPath()}");
-        currentScene.Free();
+        this.DebugLog($"Free current scene: {prevScene.GetPath()}");
+        tree.Root.RemoveChild(prevScene);
 
         // ToDo: ロード画面を用意する
 
@@ -96,6 +96,8 @@ public partial class SceneManager : Node
         // シーンを追加する
         tree.Root.AddChild(scene);
         tree.CurrentScene = scene;
+        prevScene.Free();
+
         GD.Print($"[{nameof(Title)}] Updated current scene: {tree.CurrentScene.GetPath()}");
         _isSceneChanging = false;
     }
@@ -103,13 +105,8 @@ public partial class SceneManager : Node
     private async ValueTask<bool> WaitLoadThreadedRequestAsync(string resourcePath, CancellationToken token = default)
     {
         _loadingProgress.Clear();
-        while (true)
+        while (!token.IsCancellationRequested)
         {
-            if (token.IsCancellationRequested)
-            {
-                return false;
-            }
-
             // ロード中
             await this.BeginOfProcessAsync();
 
@@ -128,5 +125,7 @@ public partial class SceneManager : Node
                     return false;
             }
         }
+
+        return false; // Cancelled
     }
 }

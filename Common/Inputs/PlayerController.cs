@@ -17,6 +17,23 @@ public partial class PlayerController : Node
         SetProcess(false);
     }
 
+    public override void _Input(InputEvent inputEvent)
+    {
+        if (_posessedPawn is null)
+        {
+            return;
+        }
+
+        if (inputEvent.IsActionPressed(InputPrimary))
+        {
+            _posessedPawn.PrimaryPressed();
+        }
+        else if (inputEvent.IsActionReleased(InputPrimary))
+        {
+            _posessedPawn.PrimaryReleased();
+        }
+    }
+
     public override void _Process(double delta)
     {
         if (_posessedPawn is null)
@@ -24,25 +41,16 @@ public partial class PlayerController : Node
             return;
         }
 
-        // Bool Inputs
-        if (Input.IsActionJustPressed(InputPrimary))
-        {
-            _posessedPawn.PrimaryPressed();
-        }
-        else if (Input.IsActionJustReleased(InputPrimary))
-        {
-            _posessedPawn.PrimaryReleased();
-        }
-
-        // Float Inputs
+        // Polling the input axes.
         var velocity = Vector2.Zero; // The player's movement vector.
         velocity.X = Input.GetAxis(InputMoveLeft, InputMoveRight);
         velocity.Y = Input.GetAxis(InputMoveUp, InputMoveDown);
+
+        // Normalize the velocity vector.
         var direction = velocity.Normalized();
         var length = Mathf.Min(1.0f, velocity.Length());
-        velocity = direction * length;
 
-        _posessedPawn.MoveForward(velocity);
+        _posessedPawn.MoveForward(direction * velocity);
     }
 
     /// <summary>

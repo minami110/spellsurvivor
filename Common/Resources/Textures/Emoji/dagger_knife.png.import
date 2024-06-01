@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxvitewt46k05"
-path="res://.godot/imported/white_4x4_srgb.png-52e6f30c22ffa91adebec1384dfb67e6.ctex"
+uid="uid://bngagbi0xt2mu"
+path="res://.godot/imported/dagger_knife.png-d432599884c8ece35db714ad7a6b1c48.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Textures/white_4x4_srgb.png"
-dest_files=["res://.godot/imported/white_4x4_srgb.png-52e6f30c22ffa91adebec1384dfb67e6.ctex"]
+source_file="res://Common/Resources/Textures/Emoji/dagger_knife.png"
+dest_files=["res://.godot/imported/dagger_knife.png-d432599884c8ece35db714ad7a6b1c48.ctex"]
 
 [params]
 

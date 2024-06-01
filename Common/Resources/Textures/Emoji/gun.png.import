@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdn2i4gg7kqjg"
-path="res://.godot/imported/Spell_arrow.webp-e759f7e5b6aa5f56e0ed29bc93285a1a.ctex"
+uid="uid://cf8sqsunyrjpl"
+path="res://.godot/imported/gun.png-2093cd382fe9614370cccfb36ce16429.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Textures/Noita/Spell_arrow.webp"
-dest_files=["res://.godot/imported/Spell_arrow.webp-e759f7e5b6aa5f56e0ed29bc93285a1a.ctex"]
+source_file="res://Common/Resources/Textures/Emoji/gun.png"
+dest_files=["res://.godot/imported/gun.png-2093cd382fe9614370cccfb36ce16429.ctex"]
 
 [params]
 

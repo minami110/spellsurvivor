@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7qsm3wpjrqd8"
-path="res://.godot/imported/Spell_bouncy_orb.webp-3bfb4e7cc08b19818f3ae7ca516eaa1f.ctex"
+uid="uid://cdn2i4gg7kqjg"
+path="res://.godot/imported/Spell_arrow.webp-159e7fd7025e5bafb695dadaa1426fe7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Textures/Noita/Spell_bouncy_orb.webp"
-dest_files=["res://.godot/imported/Spell_bouncy_orb.webp-3bfb4e7cc08b19818f3ae7ca516eaa1f.ctex"]
+source_file="res://Common/Resources/Textures/Noita/Spell_arrow.webp"
+dest_files=["res://.godot/imported/Spell_arrow.webp-159e7fd7025e5bafb695dadaa1426fe7.ctex"]
 
 [params]
 
