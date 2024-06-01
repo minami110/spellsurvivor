@@ -9,7 +9,7 @@ public sealed class Duelist : FactionBase
 {
     private protected override void OnLevelConfirmed(int level)
     {
-        var minions = Main.Instance.Minions;
+        var minions = Main.PlayerInventory.EquippedMinions;
         switch (level)
         {
             case >= 6:
@@ -57,7 +57,7 @@ public sealed class Duelist : FactionBase
 
     private protected override void OnLevelReset(int oldLevel)
     {
-        var minions = Main.Instance.Minions;
+        var minions = Main.PlayerInventory.EquippedMinions;
         switch (oldLevel)
         {
             case >= 6:

@@ -70,7 +70,7 @@ public partial class ShopSellingItem : VBoxContainer
     private void OnPressedBuyButton()
     {
         // GameMode に通知する
-        Main.Instance.BuyItem(ShopItemSettings);
+        Main.ShopState.BuyItem(ShopItemSettings);
 
         //この Shop Item を無効化する
         _isSoldOut = true;

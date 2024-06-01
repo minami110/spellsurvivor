@@ -12,20 +12,25 @@ public partial class InGameEquipment : VBoxContainer
     private Label _name = null!;
 
     [Export]
+    private Label _levelLabel = null!;
+
+    [Export]
     private ProgressBar _progress = null!;
 
-    public MinionCoreData ItemSettings { get; set; } = null!;
+    public MinionCoreData MinionCoreData { get; set; } = null!;
 
     public override void _Ready()
     {
-        _icon.Texture = ItemSettings.Icon;
-        _name.Text = ItemSettings.Name;
-        var real = Main.Instance.Minions[ItemSettings];
+        _icon.Texture = MinionCoreData.Icon;
+        _name.Text = MinionCoreData.Name;
+        var minion = Main.PlayerInventory.EquippedMinions[MinionCoreData];
 
-        var d1 = real.CoolDownLeft.Subscribe(this, (x, s) =>
+        _levelLabel.Text = $"Lv.{minion.Level}";
+
+        var d1 = minion.CoolDownLeft.Subscribe(this, (x, s) =>
         {
-            var minion = Main.Instance.Minions[s.ItemSettings];
-            s._progress.MaxValue = minion.CoolDown;
+            var m = Main.PlayerInventory.EquippedMinions[s.MinionCoreData];
+            s._progress.MaxValue = m.CoolDown;
             s._progress.Value = x;
         });
         Disposable.Combine(d1).AddTo(this);

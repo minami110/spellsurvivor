@@ -122,7 +122,7 @@ public partial class Enemy : RigidBody2D
 
     private void MoveToPlayer(double delta)
     {
-        var playerPosition = Main.PlayerGlobalPosition;
+        var playerPosition = Main.PlayerNode.GlobalPosition;
         var direction = playerPosition - GlobalPosition;
         direction = direction.Normalized();
         var force = direction * _state.MoveSpeed.CurrentValue;

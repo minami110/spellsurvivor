@@ -11,7 +11,7 @@ public sealed class Trickshot : FactionBase
 {
     private protected override void OnLevelConfirmed(int level)
     {
-        var minions = Main.Instance.Minions;
+        var minions = Main.PlayerInventory.EquippedMinions;
         switch (level)
         {
             case >= 4:
@@ -39,6 +39,44 @@ public sealed class Trickshot : FactionBase
                     }
 
                     minion.AddEffect(new TrickshotBounce { BounceCount = 1, BounceDamageMultiplier = 0.4f });
+                    minion.SolveEffect();
+                }
+
+                break;
+            }
+        }
+    }
+
+    private protected override void OnLevelReset(int oldLevel)
+    {
+        var minions = Main.PlayerInventory.EquippedMinions;
+        switch (oldLevel)
+        {
+            case >= 4:
+            {
+                foreach (var (_, minion) in minions)
+                {
+                    if (!minion.IsFaction<Trickshot>())
+                    {
+                        continue;
+                    }
+
+                    minion.AddEffect(new TrickshotBounce { BounceCount = -2, BounceDamageMultiplier = -0.6f });
+                    minion.SolveEffect();
+                }
+
+                break;
+            }
+            case >= 2:
+            {
+                foreach (var (_, minion) in minions)
+                {
+                    if (!minion.IsFaction<Trickshot>())
+                    {
+                        continue;
+                    }
+
+                    minion.AddEffect(new TrickshotBounce { BounceCount = -1, BounceDamageMultiplier = -0.4f });
                     minion.SolveEffect();
                 }
 

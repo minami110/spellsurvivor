@@ -5,7 +5,7 @@ namespace fms;
 [GlobalClass]
 public partial class InfinityGameSettings : FmsResource
 {
-    [ExportGroup("Default Player Settings")]
+    [ExportCategory("Default Player Settings")]
     [Export(PropertyHint.Range, "0,1000,1")]
     public int DefaultMoney { get; private set; } = 10;
 
@@ -16,7 +16,10 @@ public partial class InfinityGameSettings : FmsResource
     public float DefaultMoveSpeed { get; private set; } = 100f;
 
 
-    [ExportGroup("Wave Settings")]
+    [ExportCategory("Wave Settings")]
+    [Export]
+    public ShopConfig ShopConfig { get; private set; } = null!;
+
     [Export]
     public BattleWaveConfig WaveConfig { get; private set; } = null!;
 }

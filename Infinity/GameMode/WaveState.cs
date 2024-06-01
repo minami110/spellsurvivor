@@ -10,7 +10,7 @@ public enum WavePhase
     BATTLERESULT
 }
 
-public class WaveState : IDisposable
+public sealed class WaveState : IDisposable
 {
     public enum Signal
     {

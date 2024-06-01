@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using fms.Faction;
-using fms.Minion;
 using Godot;
 using R3;
 
@@ -26,25 +23,33 @@ public partial class Main : Node
 
     private static Main? _instance;
 
-    private readonly Subject<Unit> _changedEquippedMinionSub = new();
-
-    // 現在 Player が装備している Minion の辞書
-    private readonly Dictionary<MinionCoreData, MinionBase> _equippedMinions = new();
-
     // 現在有効な Faction の辞書
-    private readonly Dictionary<Type, FactionBase> _factionMap = new();
-
     private readonly PlayerState _playerState;
+    private PlayerInventory _playerInventory = null!;
+    private ShopState _shopState = null!;
     private WaveState _waveState = null!;
 
-    /// <summary>
-    ///     Get Main instance
-    /// </summary>
-    /// <exception cref="ApplicationException"></exception>
-    public static Main Instance
+    public static PlayerInventory PlayerInventory
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _instance ?? throw new ApplicationException("Main instance is null");
+        get => Instance._playerInventory;
+    }
+
+    public static Node2D PlayerNode => Instance._playerPawn;
+
+    /// <summary>
+    ///     Get the PlayerState
+    /// </summary>
+    public static PlayerState PlayerState
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Instance._playerState;
+    }
+
+    public static ShopState ShopState
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Instance._shopState;
     }
 
     /// <summary>
@@ -57,35 +62,14 @@ public partial class Main : Node
     }
 
     /// <summary>
-    ///     現在の Player の Global Position を取得
+    ///     Get Main instance
     /// </summary>
-    public static Vector2 PlayerGlobalPosition
+    /// <exception cref="ApplicationException"></exception>
+    private static Main Instance
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Instance._playerPawn.GlobalPosition;
+        get => _instance ?? throw new ApplicationException("Main instance is null");
     }
-
-    /// <summary>
-    ///     Get the PlayerState
-    /// </summary>
-    public static PlayerState PlayerState
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Instance._playerState;
-    }
-
-    /// <summary>
-    /// </summary>
-    public IReadOnlyDictionary<Type, FactionBase> FactionMap => _factionMap;
-
-
-    /// <summary>
-    ///     装備している Minion に変更があった場合に通知
-    /// </summary>
-    public Observable<Unit> ChangedEquippedMinion => _changedEquippedMinionSub;
-
-
-    public IReadOnlyDictionary<MinionCoreData, MinionBase> Minions => _equippedMinions;
 
     public Main()
     {
@@ -106,8 +90,10 @@ public partial class Main : Node
     {
         // Note: Main スクリプトは Root 直下に置かれるため, 必ず最初に EnterTree します
 
-        // Create WaveState
+        // Initialize States
         _waveState = new WaveState { Config = _gameSettings.WaveConfig };
+        _shopState = new ShopState { Config = _gameSettings.ShopConfig };
+        _playerInventory = new PlayerInventory();
 
         // デバッグ用の Collision を表示
         GetTree().DebugCollisionsHint = true;
@@ -119,7 +105,7 @@ public partial class Main : Node
         _playerController.Possess((IPawn)_playerPawn);
         ResetPlayerState();
 
-        // Battle Wave の開始時に Player の体力を全回復する
+        // Battle Wave の開始時
         var d1 = _waveState.Phase.Where(x => x == WavePhase.BATTLE).Subscribe(this, (_, state) =>
         {
             // Playerの体力を全回復する
@@ -128,8 +114,27 @@ public partial class Main : Node
             state._playerState.SolveEffect();
         });
 
+        // Battle Result 進入時
+        var d2 = _waveState.Phase.Where(x => x == WavePhase.BATTLERESULT).Subscribe(this, (_, state) =>
+        {
+            var tree = state.GetTree();
+            // 残った Enemy をすべてコロス
+            tree.CallGroup("Enemy", "KillByWaveEnd");
+            // 残った Projectile をすべてコロス
+            tree.CallGroup("Projectile", "QueueFree");
+        });
+
+        // Shop 進入時
+        var d3 = _waveState.Phase.Where(x => x == WavePhase.SHOP).Subscribe(this, (_, state) =>
+        {
+            // Playerに報酬を与える
+            var reward = state._waveState.CurrentWaveConfig.Reward;
+            state._playerState.AddEffect(new AddMoneyEffect { Value = reward });
+            state._playerState.SolveEffect();
+        });
+
         // Disposable registration
-        Disposable.Combine(_playerState, _waveState, _changedEquippedMinionSub, d1).AddTo(this);
+        Disposable.Combine(_playerState, _waveState, _shopState, _playerInventory, d1, d2, d3).AddTo(this);
     }
 
     public override void _Process(double delta)
@@ -143,122 +148,6 @@ public partial class Main : Node
         {
             _instance = null;
         }
-    }
-
-    /// <summary>
-    ///     Minion をショップから購入
-    /// </summary>
-    /// <param name="minionData"></param>
-    public void BuyItem(MinionCoreData minionData)
-    {
-        // プレイヤーのお金を減らす
-        _playerState.AddEffect(new AddMoneyEffect { Value = -minionData.Price });
-        _playerState.SolveEffect();
-
-        // すでに Minion を所持している場合
-        if (_equippedMinions.TryGetValue(minionData, out var minion))
-        {
-            // Minion をレベルアップ
-            minion.AddEffect(new AddLevelEffect { Value = 1 });
-            minion.SolveEffect();
-            return;
-        }
-
-        // ToDo: 現在デフォで装備にしていますが, 満タンの場合 とか ドラッグで購入とかで色々変わります
-        // 装備する
-        EquipmentMinion(minionData);
-        OnChangedEquippedMinion();
-    }
-
-
-    /// <summary>
-    ///     Minion をショップに売却
-    /// </summary>
-    /// <param name="minionData"></param>
-    public void SellItem(MinionCoreData minionData)
-    {
-        // すでに Minion を所持している場合
-        if (!_equippedMinions.TryGetValue(minionData, out var minion))
-        {
-            return;
-        }
-
-        // プレイヤーのお金を増やす
-        // TODO: 売却価格を売値と同じにしています
-        _playerState.AddEffect(new AddMoneyEffect { Value = minionData.Price });
-        _playerState.SolveEffect();
-
-        // Minion を削除
-        minion.QueueFree();
-        _equippedMinions.Remove(minionData);
-
-        OnChangedEquippedMinion();
-    }
-
-    private void EquipmentMinion(MinionCoreData minionData)
-    {
-        // すでに装備している場合 は何もしない
-        if (_equippedMinions.TryGetValue(minionData, out var minion))
-        {
-            return;
-        }
-
-        // Player Pawn に Item を追加で装備させる
-        var equipment = minionData.EquipmentScene.Instantiate<MinionBase>();
-        equipment.MinionCoreData = minionData;
-        _playerPawn.AddChild(equipment);
-
-        // 内部のリストで管理
-        _equippedMinions.Add(minionData, equipment);
-    }
-
-    private void OnBattleWaveEnded()
-    {
-        // 湧いた敵をすべてコロス
-        GetTree().CallGroup("Enemy", "KillByWaveEnd");
-        GetTree().CallGroup("Projectile", "QueueFree");
-
-        // Playerに報酬を与える
-        // var reward = _waveSettings[_waveState.Wave.CurrentValue].Money;
-        // _playerState.AddEffect(new AddMoneyEffect { Value = reward });
-        // _playerState.SolveEffect();
-    }
-
-    private void OnChangedEquippedMinion()
-    {
-        // Faction を一度全て Level 0 に戻す
-        foreach (var (_, faction) in _factionMap)
-        {
-            faction.ResetLevel();
-        }
-
-        // 現在しているすべての Minion を照会する
-        foreach (var (_, m) in _equippedMinions)
-        {
-            // 各 Minion が持っている Faction ごとに
-            foreach (var newFaction in m.Factions)
-            {
-                var factionType = newFaction.GetType();
-                if (_factionMap.TryGetValue(factionType, out var exitingFaction))
-                {
-                    exitingFaction.AddLevel();
-                }
-                else
-                {
-                    _factionMap.Add(factionType, newFaction);
-                    newFaction.AddLevel();
-                }
-            }
-        }
-
-        // レベルを確定する 
-        foreach (var (_, faction) in _factionMap)
-        {
-            faction.ConfirmLevel();
-        }
-
-        // 通知する
-        _changedEquippedMinionSub.OnNext(Unit.Default);
     }
 
     private void ResetPlayerState()

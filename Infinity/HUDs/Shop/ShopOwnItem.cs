@@ -24,15 +24,15 @@ public partial class ShopOwnItem : VBoxContainer
 
     private MinionBase _minion = null!;
 
-    public MinionCoreData ItemSettings { get; set; } = null!;
+    public MinionCoreData MinionCoreData { get; set; } = null!;
 
     public override void _Ready()
     {
-        _icon.Texture = ItemSettings.Icon;
-        _name.Text = ItemSettings.Name;
+        _icon.Texture = MinionCoreData.Icon;
+        _name.Text = MinionCoreData.Name;
 
         // Subscribe level
-        _minion = Main.Instance.Minions[ItemSettings];
+        _minion = Main.PlayerInventory.EquippedMinions[MinionCoreData];
         var d1 = _minion.Level.Subscribe(this, (x, t) =>
         {
             if (t._minion.MaxLevel == x)
@@ -46,8 +46,8 @@ public partial class ShopOwnItem : VBoxContainer
         });
 
         // ToDo: とりあえず買値と同じに..
-        _sellButton.Text = $"Sell ${ItemSettings.Price}";
-        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.Instance.SellItem(ItemSettings); });
+        _sellButton.Text = $"Sell ${MinionCoreData.Price}";
+        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.SellItem(MinionCoreData); });
 
         // Tooltip
         _toolTipControl.MouseEntered += ShowToolTip;
@@ -63,7 +63,7 @@ public partial class ShopOwnItem : VBoxContainer
 
     private void ShowToolTip()
     {
-        ToolTipToast.Text = ItemSettings.Description;
+        ToolTipToast.Text = MinionCoreData.Description;
         ToolTipToast.Show();
     }
 }
