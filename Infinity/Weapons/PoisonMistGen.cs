@@ -2,12 +2,12 @@
 using fms.Projectile;
 using Godot;
 
-namespace fms.Minion;
+namespace fms.Weapon;
 
 /// <summary>
 ///     ポイズンミストを生成する
 /// </summary>
-public partial class PoisonMistGen : MinionBase
+public partial class PoisonMistGen : WeaponBase
 {
     [ExportGroup("Internal Reference")]
     [Export]
@@ -34,7 +34,7 @@ public partial class PoisonMistGen : MinionBase
 
     private protected override void DoAttack()
     {
-        SpawnBullet(CurrentLevel);
+        SpawnBullet(MinionLevel);
     }
 
     private void SpawnBullet(int level)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using fms.Faction;
-using fms.Minion;
+using fms.Weapon;
 using R3;
 
 namespace fms;
@@ -13,7 +13,7 @@ public sealed class PlayerInventory : IDisposable
     private readonly Dictionary<Type, FactionBase> _factions = new();
     private readonly Subject<Unit> _inHandMinionChangedSubject = new();
     private readonly List<MinionInRuntime> _minions = new();
-    private readonly List<MinionBase> _weapons = new();
+    private readonly List<WeaponBase> _weapons = new();
 
     /// <summary>
     ///     現在有効な Faction の Map (Key: FacionType, Value: Faction)
@@ -28,7 +28,7 @@ public sealed class PlayerInventory : IDisposable
     /// <summary>
     ///     現在 Player が装備している 武器 のリスト
     /// </summary>
-    public IReadOnlyList<MinionBase> Weapons => _weapons;
+    public IReadOnlyList<WeaponBase> Weapons => _weapons;
 
     /// <summary>
     /// </summary>
@@ -64,7 +64,7 @@ public sealed class PlayerInventory : IDisposable
 
         // Player Pawn に Item を追加で装備させる
         minion.Place = MinionPlace.InHand;
-        var weapon = minion.WeaponPackedScene.Instantiate<MinionBase>();
+        var weapon = minion.WeaponPackedScene.Instantiate<WeaponBase>();
         {
             weapon.CoreData = minion;
         }

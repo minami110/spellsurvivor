@@ -2,9 +2,9 @@
 using fms.Projectile;
 using Godot;
 
-namespace fms.Minion;
+namespace fms.Weapon;
 
-public partial class AutoAimPistol : MinionBase
+public partial class AutoAimPistol : WeaponBase
 {
     [ExportGroup("Internal Reference")]
     [Export]

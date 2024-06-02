@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using fms.Minion;
+using fms.Weapon;
 using Godot;
 using R3;
 
@@ -20,7 +20,7 @@ public partial class InGameEquipment : VBoxContainer
     [Export]
     private ProgressBar _progress = null!;
 
-    public MinionBase Weapon { get; set; } = null!;
+    public WeaponBase Weapon { get; set; } = null!;
 
     public override void _Ready()
     {
@@ -33,7 +33,7 @@ public partial class InGameEquipment : VBoxContainer
         _icon.Texture = inventoryData.Sprite;
         _name.Text = inventoryData.Name;
 
-        _levelLabel.Text = $"Lv.{Weapon.CurrentLevel}";
+        _levelLabel.Text = $"Lv.{Weapon.MinionLevel}";
 
         var d1 = Weapon.CoolDownLeft.Subscribe(this, (x, s) =>
         {

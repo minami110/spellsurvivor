@@ -4,9 +4,9 @@ using fms.Faction;
 using fms.Projectile;
 using Godot;
 
-namespace fms.Minion;
+namespace fms.Weapon;
 
-public partial class ForwardKnife : MinionBase
+public partial class ForwardKnife : WeaponBase
 {
     [ExportGroup("Internal Reference")]
     [Export]
@@ -33,7 +33,7 @@ public partial class ForwardKnife : MinionBase
 
     private protected override void DoAttack()
     {
-        switch (CurrentLevel)
+        switch (MinionLevel)
         {
             // Level 1 は1つの弾をだす
             case 1:

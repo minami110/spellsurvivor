@@ -6,26 +6,17 @@ using fms.Faction;
 using Godot;
 using R3;
 
-namespace fms.Minion;
+namespace fms.Weapon;
 
 /// <summary>
-///     Minion のベースクラス
+///     Weapon のベースクラス
 /// </summary>
-public partial class MinionBase : Node2D, IEffectSolver
+public partial class WeaponBase : Node2D, IEffectSolver
 {
-    private const int _MIN_LEVEL = 1;
-
     private readonly ReactiveProperty<int> _coolDownLeft = new(1);
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
     private readonly List<EffectBase> _effects = new();
-    private readonly ReactiveProperty<int> _levelRp = new(_MIN_LEVEL);
     private CancellationTokenSource? _runningFrameTimerCts;
-
-
-    /// <summary>
-    ///     Gets the cool down reduce rate of this minion. unit is %.
-    /// </summary>
-    public ReadOnlyReactiveProperty<float> CoolDownReduceRate => _coolDownReduceRateRp;
 
     public string Id => CoreData.Id;
 
@@ -40,7 +31,7 @@ public partial class MinionBase : Node2D, IEffectSolver
     }
 
     /// <summary>
-    ///     Minion のベースの攻撃間隔
+    ///     ベースの攻撃間隔 (単位: Frame)
     /// </summary>
     private protected virtual int BaseCoolDownFrame => 1;
 
@@ -58,7 +49,10 @@ public partial class MinionBase : Node2D, IEffectSolver
     /// </summary>
     public ReadOnlyReactiveProperty<int> CoolDownLeft => _coolDownLeft;
 
-    public int CurrentLevel => CoreData.Level.CurrentValue;
+    /// <summary>
+    ///     この武器を所有している Minion のレベル
+    /// </summary>
+    public int MinionLevel => CoreData.Level.CurrentValue;
 
     public override void _EnterTree()
     {
@@ -76,15 +70,19 @@ public partial class MinionBase : Node2D, IEffectSolver
 
         // Observable の初期化
         var d3 = _coolDownLeft;
-        var d4 = _levelRp;
         var d5 = _coolDownReduceRateRp;
 
-        Disposable.Combine(d1, d3, d4, d5).AddTo(this);
+        Disposable.Combine(d1, d3, d5).AddTo(this);
 
         // Tree から抜けるときにタイマーを止める
         TreeExiting += StopCoolDownTimer;
     }
 
+    /// <summary>
+    ///     指定された Type の Faction に所属しているかどうか
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public bool IsFaction<T>() where T : FactionBase
     {
         return Factions.Any(f => f.GetType() == typeof(T));
