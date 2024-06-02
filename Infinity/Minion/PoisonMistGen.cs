@@ -34,7 +34,7 @@ public partial class PoisonMistGen : MinionBase
 
     private protected override void DoAttack()
     {
-        SpawnBullet(Level.CurrentValue);
+        SpawnBullet(CurrentLevel);
     }
 
     private void SpawnBullet(int level)

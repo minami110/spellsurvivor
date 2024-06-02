@@ -1,18 +1,19 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://dg1a0sshsyi4h"]
+[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://dg1a0sshsyi4h"]
 
-[ext_resource type="PackedScene" uid="uid://cmr1iekscwraj" path="res://Infinity/Minion/(Minion) AutoAimPistol.tscn" id="1_itvs5"]
 [ext_resource type="Texture2D" uid="uid://cf8sqsunyrjpl" path="res://Common/Resources/Textures/Emoji/gun.png" id="2_4g0so"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Items/MinionCoreData.cs" id="3_liksq"]
 
 [resource]
 script = ExtResource("3_liksq")
-Name = "AutoAimPistol"
+Id = "AutoAimPistol"
+Name = "魔法の杖"
 Description = "魔法の杖
 範囲内にいる一番近い対象に自動で攻撃を行う
 
+Tier: 1
 シナジー: Duelist
 攻撃力: 34
 範囲: 100"
-Icon = ExtResource("2_4g0so")
-Price = 5
-EquipmentScene = ExtResource("1_itvs5")
+Sprite = ExtResource("2_4g0so")
+Tier = 1
+Price = 10

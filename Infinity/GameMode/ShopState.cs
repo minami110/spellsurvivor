@@ -1,56 +1,179 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Godot;
 using R3;
 
 namespace fms;
 
 public sealed class ShopState : IDisposable
 {
-    private const int _MAX_TIER = 3;
-    private readonly ReactiveProperty<int> _tierRp = new(1);
+    private const int _MAX_SHOP_LEVEL = 8;
+    private const int _MAX_SHOP_ITEM_SLOT = 8;
 
-    public ReadOnlyReactiveProperty<int> Tier => _tierRp;
+    private readonly List<MinionInInventory> _inStoreMinions = new();
+    private readonly Subject<Unit> _inStoreMinionsUpdatedSubject = new();
 
-    public required ShopConfig Config { get; init; }
+    private readonly ReactiveProperty<int> _levelRp = new(1);
 
-    public void AddTier()
+    private readonly Dictionary<int, List<MinionInInventory>> _runtimeMinionPool = new();
+
+    private int _itemSlotCount;
+
+    /// <summary>
+    /// </summary>
+    public ReadOnlyReactiveProperty<int> Level => _levelRp;
+
+    /// <summary>
+    /// </summary>
+    public Observable<Unit> InStoreMinionsUpdated => _inStoreMinionsUpdatedSubject;
+
+    /// <summary>
+    /// </summary>
+    public IReadOnlyList<MinionInInventory> InStoreMinions => _inStoreMinions;
+
+    public ShopConfig Config { get; }
+
+    public ShopState(ShopConfig config)
     {
-        if (_tierRp.Value < _MAX_TIER)
+        Config = config;
+
+        // Construct Runtime Minion Pool
+        _runtimeMinionPool.Clear();
+        foreach (var minionCoreData in Config.DefaultMinionPool)
         {
-            _tierRp.Value++;
+            if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
+            {
+                list = new List<MinionInInventory>();
+                _runtimeMinionPool[minionCoreData.Tier] = list;
+            }
+
+            list.Add(new MinionInInventory(minionCoreData));
+        }
+
+        // Default 
+        _levelRp.Value = 1;
+        _itemSlotCount = 3;
+    }
+
+    public void AddItemSlot()
+    {
+        if (_itemSlotCount < _MAX_SHOP_ITEM_SLOT)
+        {
+            _itemSlotCount++;
         }
     }
 
     /// <summary>
     ///     Minion をショップから購入
     /// </summary>
-    /// <param name="minionData"></param>
-    public void BuyItem(MinionCoreData minionData)
+    /// <param name="minion"></param>
+    public void BuyItem(MinionInInventory minion)
     {
-        // プレイヤーのお金を減らす
-        Main.PlayerState.AddEffect(new AddMoneyEffect { Value = -minionData.Price });
-        Main.PlayerState.SolveEffect();
-
-        // すでに Minion を所持している場合
-        if (Main.PlayerInventory.TryGetEquippedMinion(minionData, out var minion))
+        if (!_inStoreMinions.Contains(minion))
         {
-            // Minion をレベルアップ
-            minion!.AddEffect(new AddLevelEffect { Value = 1 });
-            minion.SolveEffect();
             return;
         }
 
-        Main.PlayerInventory.AddMinion(minionData);
+        // ショップから排除する
+        _inStoreMinions.Remove(minion);
+        _inStoreMinionsUpdatedSubject.OnNext(Unit.Default);
 
-        // Note: 現在購入後デフォで装備にしています
+        // ToDo: 外部化していいかも
+        // プレイヤーのお金を減らす
+        Main.PlayerState.AddEffect(new AddMoneyEffect { Value = -minion.Price });
+        Main.PlayerState.SolveEffect();
+
+        // インベントリ
+        if (Main.PlayerInventory.HasMinion(minion))
+        {
+            Main.PlayerInventory.UpgradeMinion(minion);
+        }
+        else
+        {
+            Main.PlayerInventory.AddMinion(minion);
+        }
+
+        // ToDo: 現在購入後デフォで装備にしています
         // 満タンの場合 とか ドラッグで購入とかで色々変わります
-        Main.PlayerInventory.EquipMinion(minionData);
+        Main.PlayerInventory.EquipMinion(minion.Id);
+    }
+
+    public void RefreshInStoreMinions()
+    {
+        // Lock がかかっていない Minion を全て解除
+        for (var i = _inStoreMinions.Count - 1; i >= 0; i--)
+        {
+            var minion = _inStoreMinions[i];
+            if (!minion.IsLocked)
+            {
+                _inStoreMinions.Remove(minion);
+            }
+        }
+
+        // スロットカウントの数だけ Pool から Minion を取り出す
+        var tryCount = _itemSlotCount - _inStoreMinions.Count;
+        if (tryCount <= 0)
+        {
+            return;
+        }
+
+        GD.Print($"[ShopState] RefreshInStoreMinions: {tryCount}");
+
+        for (var i = 0; i < tryCount; i++)
+        {
+            // ティアを決定する
+            const int _MAX_TIER = 5;
+            var targetTier = 1;
+            for (; targetTier <= _MAX_TIER; targetTier++)
+            {
+                var odds = Config.Odds[(Level.CurrentValue - 1) * _MAX_TIER + targetTier - 1];
+                if (odds < GD.Randf())
+                {
+                    continue;
+                }
+
+                break;
+            }
+
+            GD.Print($"[ShopState] Tier: {targetTier}");
+
+            // ティアが決定したので Minion を選択する
+            MinionInInventory? minion = null;
+            if (_runtimeMinionPool.TryGetValue(targetTier, out var minions))
+            {
+                // List から ランダムに Minion を取り出す, 最大レベルの場合はスキップする
+                var indexes = RangeShuffled(new Random(), minions.Count);
+                foreach (var index in indexes)
+                {
+                    var m = minions[index];
+                    if (m.IsMaxLevel)
+                    {
+                        continue;
+                    }
+
+                    minion = m;
+                    break;
+                }
+            }
+
+            if (minion == null)
+            {
+                throw new NotImplementedException("有効な Minion が見つかりませんでした");
+            }
+
+            GD.Print($"[ShopState] Choise: {minion}");
+            _inStoreMinions.Add(minion);
+        }
+
+        _inStoreMinionsUpdatedSubject.OnNext(Unit.Default);
     }
 
     /// <summary>
     ///     Minion をショップに売却
     /// </summary>
     /// <param name="minionData"></param>
-    public void SellItem(MinionCoreData minionData)
+    public void SellItem(MinionInInventory minionData)
     {
         if (Main.PlayerInventory.RemoveMinion(minionData))
         {
@@ -61,8 +184,29 @@ public sealed class ShopState : IDisposable
         }
     }
 
+    public void UpgradeShopLevel()
+    {
+        // ToDo: Level Up の値段を設定していない
+        if (_levelRp.Value < _MAX_SHOP_LEVEL)
+        {
+            _levelRp.Value++;
+        }
+    }
+
+    private static int[] RangeShuffled(Random rng, int count)
+    {
+        var indexes = Enumerable.Range(0, count).ToArray();
+        for (var j = indexes.Length - 1; j > 0; j--)
+        {
+            var k = rng.Next(j + 1);
+            (indexes[j], indexes[k]) = (indexes[k], indexes[j]);
+        }
+
+        return indexes;
+    }
+
     void IDisposable.Dispose()
     {
-        _tierRp.Dispose();
+        _levelRp.Dispose();
     }
 }

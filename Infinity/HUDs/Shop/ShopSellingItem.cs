@@ -7,9 +7,6 @@ using R3;
 /// </summary>
 public partial class ShopSellingItem : VBoxContainer
 {
-    [Export]
-    public MinionCoreData ShopItemSettings { get; set; } = null!;
-
     [ExportGroup("Internal Reference")]
     [Export]
     private TextureRect _iconTextureRect = null!;
@@ -24,10 +21,11 @@ public partial class ShopSellingItem : VBoxContainer
     private Control _toolTipControl = null!;
 
     private bool _isSoldOut;
+    public MinionInInventory ShopItemSettings { get; set; } = null!;
 
     public override void _Ready()
     {
-        _iconTextureRect.Texture = ShopItemSettings.Icon;
+        _iconTextureRect.Texture = ShopItemSettings.Sprite;
         _nameLabel.Text = ShopItemSettings.Name;
         _buyButton.Text = $"${ShopItemSettings.Price}";
 

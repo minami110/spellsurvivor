@@ -1,17 +1,18 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://brkbpmer5vx5k"]
+[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://brkbpmer5vx5k"]
 
-[ext_resource type="PackedScene" uid="uid://hvaujiufb0ew" path="res://Infinity/Minion/(Minion) ForwardKnife.tscn" id="1_lo58r"]
 [ext_resource type="Texture2D" uid="uid://bngagbi0xt2mu" path="res://Common/Resources/Textures/Emoji/dagger_knife.png" id="2_cd5jy"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Items/MinionCoreData.cs" id="3_oigos"]
 
 [resource]
 script = ExtResource("3_oigos")
-Name = "ForwardKnife"
-Description = "ナイフ
+Id = "ForwardKnife"
+Name = "ダガー"
+Description = "ダガー
 プレイヤーの正面に常に攻撃を行う
 
+Tier: 1
 シナジー: Duelist
 攻撃力: 50"
-Icon = ExtResource("2_cd5jy")
+Sprite = ExtResource("2_cd5jy")
+Tier = 1
 Price = 3
-EquipmentScene = ExtResource("1_lo58r")

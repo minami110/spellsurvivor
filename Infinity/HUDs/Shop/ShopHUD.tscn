@@ -1,30 +1,28 @@
-[gd_scene load_steps=11 format=3 uid="uid://dvwlkv2f4pl2i"]
+[gd_scene load_steps=7 format=3 uid="uid://dvwlkv2f4pl2i"]
 
-[ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopHUD.cs" id="1_0e5mr"]
-[ext_resource type="Script" path="res://Infinity/Shop/ShopManager.cs" id="1_5xunh"]
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopHudController.cs" id="1_5xunh"]
 [ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/(SubHUD) ShopSellingItem.tscn" id="2_7j4ye"]
-[ext_resource type="Resource" uid="uid://dg1a0sshsyi4h" path="res://Infinity/Datebase/Items/(ShopItem) AutoAimPistol.tres" id="3_f2gna"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="3_nlrg2"]
-[ext_resource type="Resource" uid="uid://brkbpmer5vx5k" path="res://Infinity/Datebase/Items/(ShopItem) ForwardKnife.tres" id="4_y7rr0"]
-[ext_resource type="Resource" uid="uid://bwrvuumsylvne" path="res://Infinity/Datebase/Items/(ShopItem) PoisonMistGen.tres" id="5_t0n3i"]
 [ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/(SubHUD) ShopOwnItem.tscn" id="6_dux5n"]
 [ext_resource type="Script" path="res://Infinity/HUDs/ActiveFactionsManager.cs" id="8_6u4gn"]
 [ext_resource type="Script" path="res://Infinity/HUDs/LabelHasToolTip.cs" id="8_qxwon"]
 
-[node name="ShopHUD (Layer 2)" type="CanvasLayer" node_paths=PackedStringArray("_shopManager")]
+[node name="ShopHUD (Layer 2)" type="CanvasLayer"]
 layer = 2
-script = ExtResource("1_0e5mr")
-_shopManager = NodePath("ShopManager")
 
-[node name="ShopManager" type="Node" parent="." node_paths=PackedStringArray("_shopItemSpawnParent", "_equipItemSpawnParent", "_rerollButton", "_playerMoneyLabel")]
+[node name="ShopHudController" type="Node" parent="." node_paths=PackedStringArray("_container", "_shopItemSpawnParent", "_equipItemSpawnParent", "_upgradeButton", "_rerollButton", "_lockButton", "_quitShopButton", "_playerMoneyLabel", "_shopLevelLabel")]
 script = ExtResource("1_5xunh")
-_itemPool = [ExtResource("3_f2gna"), ExtResource("4_y7rr0"), ExtResource("5_t0n3i")]
+_container = NodePath("../Container")
 _shopItemPackedScene = ExtResource("2_7j4ye")
 _shopOwnItemPackedScene = ExtResource("6_dux5n")
 _shopItemSpawnParent = NodePath("../Container/HBox Selling Item Parent")
 _equipItemSpawnParent = NodePath("../Container/HBox Equipment Item Parent")
+_upgradeButton = NodePath("../Container/HBox Shop Buttons/Button UpgradeShop")
 _rerollButton = NodePath("../Container/HBox Shop Buttons/Button RerollItems")
+_lockButton = NodePath("../Container/HBox Shop Buttons/Button LockItems")
+_quitShopButton = NodePath("../Container/Button Buttle")
 _playerMoneyLabel = NodePath("../Container/VBox Player Status/Label Gold")
+_shopLevelLabel = NodePath("../Container/HBox Shop Buttons/Label ShopLevel")
 
 [node name="Container" type="Control" parent="."]
 layout_mode = 3
@@ -78,12 +76,11 @@ grow_vertical = 2
 
 [node name="Label ShopLevel" type="Label" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
-text = "Shop Level: 1"
+text = "Lv.N/A"
 
 [node name="Button UpgradeShop" type="Button" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
-disabled = true
-text = "Upgrade (NotImpl)"
+text = "Upgrade ($N/A)"
 
 [node name="Button RerollItems" type="Button" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
@@ -92,7 +89,7 @@ text = "Reroll ($1)"
 [node name="Button LockItems" type="Button" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
 disabled = true
-text = "Lock (NotImpl)"
+text = "Lock"
 
 [node name="HBox Selling Item Parent" type="HBoxContainer" parent="Container"]
 layout_mode = 1

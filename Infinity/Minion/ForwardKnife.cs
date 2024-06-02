@@ -33,7 +33,7 @@ public partial class ForwardKnife : MinionBase
 
     private protected override void DoAttack()
     {
-        switch (Level.CurrentValue)
+        switch (CurrentLevel)
         {
             // Level 1 は1つの弾をだす
             case 1:

@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+using fms.Minion;
 using Godot;
 using R3;
 
@@ -17,22 +20,27 @@ public partial class InGameEquipment : VBoxContainer
     [Export]
     private ProgressBar _progress = null!;
 
-    public MinionCoreData MinionCoreData { get; set; } = null!;
+    public MinionBase Weapon { get; set; } = null!;
 
     public override void _Ready()
     {
-        _icon.Texture = MinionCoreData.Icon;
-        _name.Text = MinionCoreData.Name;
-        var minion = Main.PlayerInventory.EquippedMinions[MinionCoreData];
-
-        _levelLabel.Text = $"Lv.{minion.Level}";
-
-        var d1 = minion.CoolDownLeft.Subscribe(this, (x, s) =>
+        var inventoryData = Main.PlayerInventory.Minions.FirstOrDefault(m => m.Id == Weapon.Id);
+        if (inventoryData == null)
         {
-            var m = Main.PlayerInventory.EquippedMinions[s.MinionCoreData];
-            s._progress.MaxValue = m.CoolDown;
+            throw new NotImplementedException("Minion が見つかりませんでした");
+        }
+
+        _icon.Texture = inventoryData.Sprite;
+        _name.Text = inventoryData.Name;
+
+        _levelLabel.Text = $"Lv.{Weapon.CurrentLevel}";
+
+        var d1 = Weapon.CoolDownLeft.Subscribe(this, (x, s) =>
+        {
+            s._progress.MaxValue = Weapon.CoolDown;
             s._progress.Value = x;
         });
+
         Disposable.Combine(d1).AddTo(this);
     }
 }

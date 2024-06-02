@@ -11,35 +11,35 @@ public sealed class Trickshot : FactionBase
 {
     private protected override void OnLevelConfirmed(int level)
     {
-        var minions = Main.PlayerInventory.EquippedMinions;
+        var weapons = Main.PlayerInventory.Weapons;
         switch (level)
         {
             case >= 4:
             {
-                foreach (var (_, minion) in minions)
+                foreach (var weapon in weapons)
                 {
-                    if (!minion.IsFaction<Trickshot>())
+                    if (!weapon.IsFaction<Trickshot>())
                     {
                         continue;
                     }
 
-                    minion.AddEffect(new TrickshotBounce { BounceCount = 2, BounceDamageMultiplier = 0.6f });
-                    minion.SolveEffect();
+                    weapon.AddEffect(new TrickshotBounce { BounceCount = 2, BounceDamageMultiplier = 0.6f });
+                    weapon.SolveEffect();
                 }
 
                 break;
             }
             case >= 2:
             {
-                foreach (var (_, minion) in minions)
+                foreach (var weapon in weapons)
                 {
-                    if (!minion.IsFaction<Trickshot>())
+                    if (!weapon.IsFaction<Trickshot>())
                     {
                         continue;
                     }
 
-                    minion.AddEffect(new TrickshotBounce { BounceCount = 1, BounceDamageMultiplier = 0.4f });
-                    minion.SolveEffect();
+                    weapon.AddEffect(new TrickshotBounce { BounceCount = 1, BounceDamageMultiplier = 0.4f });
+                    weapon.SolveEffect();
                 }
 
                 break;
@@ -49,35 +49,35 @@ public sealed class Trickshot : FactionBase
 
     private protected override void OnLevelReset(int oldLevel)
     {
-        var minions = Main.PlayerInventory.EquippedMinions;
+        var weapons = Main.PlayerInventory.Weapons;
         switch (oldLevel)
         {
             case >= 4:
             {
-                foreach (var (_, minion) in minions)
+                foreach (var weapon in weapons)
                 {
-                    if (!minion.IsFaction<Trickshot>())
+                    if (!weapon.IsFaction<Trickshot>())
                     {
                         continue;
                     }
 
-                    minion.AddEffect(new TrickshotBounce { BounceCount = -2, BounceDamageMultiplier = -0.6f });
-                    minion.SolveEffect();
+                    weapon.AddEffect(new TrickshotBounce { BounceCount = -2, BounceDamageMultiplier = -0.6f });
+                    weapon.SolveEffect();
                 }
 
                 break;
             }
             case >= 2:
             {
-                foreach (var (_, minion) in minions)
+                foreach (var weapon in weapons)
                 {
-                    if (!minion.IsFaction<Trickshot>())
+                    if (!weapon.IsFaction<Trickshot>())
                     {
                         continue;
                     }
 
-                    minion.AddEffect(new TrickshotBounce { BounceCount = -1, BounceDamageMultiplier = -0.4f });
-                    minion.SolveEffect();
+                    weapon.AddEffect(new TrickshotBounce { BounceCount = -1, BounceDamageMultiplier = -0.4f });
+                    weapon.SolveEffect();
                 }
 
                 break;

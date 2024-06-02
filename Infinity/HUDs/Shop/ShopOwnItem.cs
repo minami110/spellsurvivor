@@ -1,4 +1,3 @@
-using fms.Minion;
 using Godot;
 using R3;
 
@@ -22,28 +21,15 @@ public partial class ShopOwnItem : VBoxContainer
     [Export]
     private Control _toolTipControl = null!;
 
-    private MinionBase _minion = null!;
-
-    public MinionCoreData MinionCoreData { get; set; } = null!;
+    public MinionInInventory MinionCoreData { get; set; } = null!;
 
     public override void _Ready()
     {
-        _icon.Texture = MinionCoreData.Icon;
+        _icon.Texture = MinionCoreData.Sprite;
         _name.Text = MinionCoreData.Name;
 
         // Subscribe level
-        _minion = Main.PlayerInventory.EquippedMinions[MinionCoreData];
-        var d1 = _minion.Level.Subscribe(this, (x, t) =>
-        {
-            if (t._minion.MaxLevel == x)
-            {
-                t._level.Text = "(Max)";
-            }
-            else
-            {
-                t._level.Text = $"(Lv.{x})";
-            }
-        });
+        var d1 = MinionCoreData.Level.Subscribe(this, (x, t) => { t._level.Text = $"(Lv.{x})"; });
 
         // ToDo: とりあえず買値と同じに..
         _sellButton.Text = $"Sell ${MinionCoreData.Price}";

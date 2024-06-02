@@ -9,93 +9,45 @@ public sealed class Duelist : FactionBase
 {
     private protected override void OnLevelConfirmed(int level)
     {
-        var minions = Main.PlayerInventory.EquippedMinions;
+        var weapons = Main.PlayerInventory.Weapons;
         switch (level)
         {
             case >= 6:
             {
-                foreach (var (_, minion) in minions)
+                foreach (var weapon in weapons)
                 {
-                    minion.AddEffect(new ReduceCoolDownRate { Value = 0.2f });
-                    minion.SolveEffect();
+                    weapon.AddEffect(new ReduceCoolDownRate { Value = 0.2f });
+                    weapon.SolveEffect();
                 }
 
                 break;
             }
             case >= 4:
             {
-                foreach (var (_, minion) in minions)
+                foreach (var weapon in weapons)
                 {
-                    if (!minion.IsFaction<Duelist>())
+                    if (!weapon.IsFaction<Duelist>())
                     {
                         continue;
                     }
 
-                    minion.AddEffect(new ReduceCoolDownRate { Value = 0.2f });
-                    minion.SolveEffect();
+                    weapon.AddEffect(new ReduceCoolDownRate { Value = 0.2f });
+                    weapon.SolveEffect();
                 }
 
                 break;
             }
             case >= 2:
             {
-                foreach (var (_, minion) in minions)
+                foreach (var weapon in weapons)
                 {
-                    if (!minion.IsFaction<Duelist>())
+                    if (!weapon.IsFaction<Duelist>())
                     {
                         continue;
                     }
 
-                    minion.AddEffect(new ReduceCoolDownRate { Value = 0.1f });
-                    minion.SolveEffect();
-                }
-
-                break;
-            }
-        }
-    }
-
-    private protected override void OnLevelReset(int oldLevel)
-    {
-        var minions = Main.PlayerInventory.EquippedMinions;
-        switch (oldLevel)
-        {
-            case >= 6:
-            {
-                foreach (var (_, minion) in minions)
-                {
-                    minion.AddEffect(new ReduceCoolDownRate { Value = -0.2f });
-                    minion.SolveEffect();
-                }
-
-                break;
-            }
-            case >= 4:
-            {
-                foreach (var (_, minion) in minions)
-                {
-                    if (!minion.IsFaction<Duelist>())
-                    {
-                        continue;
-                    }
-
-                    minion.AddEffect(new ReduceCoolDownRate { Value = -0.2f });
-                    minion.SolveEffect();
-                }
-
-                break;
-            }
-            case >= 2:
-            {
-                foreach (var (_, minion) in minions)
-                {
-                    if (!minion.IsFaction<Duelist>())
-                    {
-                        continue;
-                    }
-
-                    minion.AddEffect(new ReduceCoolDownRate { Value = -0.1f });
-                    minion.SolveEffect();
+                    weapon.AddEffect(new ReduceCoolDownRate { Value = 0.1f });
+                    weapon.SolveEffect();
                 }
 
                 break;

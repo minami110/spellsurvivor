@@ -21,15 +21,13 @@ public partial class MinionBase : Node2D, IEffectSolver
     private readonly ReactiveProperty<int> _levelRp = new(_MIN_LEVEL);
     private CancellationTokenSource? _runningFrameTimerCts;
 
-    /// <summary>
-    ///     Gets the level of this minion. (ReactiveProperty)
-    /// </summary>
-    public ReadOnlyReactiveProperty<int> Level => _levelRp;
 
     /// <summary>
     ///     Gets the cool down reduce rate of this minion. unit is %.
     /// </summary>
     public ReadOnlyReactiveProperty<float> CoolDownReduceRate => _coolDownReduceRateRp;
+
+    public string Id => CoreData.Id;
 
     public int CoolDown
     {
@@ -40,11 +38,6 @@ public partial class MinionBase : Node2D, IEffectSolver
             return Mathf.Max(coolDown - (int)reduceRate, 1);
         }
     }
-
-    /// <summary>
-    ///     Gets the maximum level of this minion.
-    /// </summary>
-    public virtual int MaxLevel => 5;
 
     /// <summary>
     ///     Minion のベースの攻撃間隔
@@ -58,16 +51,14 @@ public partial class MinionBase : Node2D, IEffectSolver
 
     /// <summary>
     /// </summary>
-    public bool IsMaxLevel => _levelRp.Value >= MaxLevel;
-
-    /// <summary>
-    /// </summary>
-    public MinionCoreData MinionCoreData { get; set; } = null!;
+    public MinionInInventory CoreData { get; set; } = null!;
 
     /// <summary>
     ///     次の攻撃までの残りフレーム
     /// </summary>
     public ReadOnlyReactiveProperty<int> CoolDownLeft => _coolDownLeft;
+
+    public int CurrentLevel => CoreData.Level.CurrentValue;
 
     public override void _EnterTree()
     {
@@ -156,12 +147,7 @@ public partial class MinionBase : Node2D, IEffectSolver
     {
         foreach (var effect in _effects)
         {
-            if (!IsMaxLevel && effect is AddLevelEffect addLevelEffect)
-            {
-                var newLevel = _levelRp.Value + addLevelEffect.Value;
-                _levelRp.Value = Mathf.Clamp(newLevel, _MIN_LEVEL, MaxLevel);
-            }
-            else if (effect is ReduceCoolDownRate reduceCoolDownRate)
+            if (effect is ReduceCoolDownRate reduceCoolDownRate)
             {
                 var newRate = _coolDownReduceRateRp.Value + reduceCoolDownRate.Value;
                 _coolDownReduceRateRp.Value = Mathf.Clamp(newRate, 0f, 1f);

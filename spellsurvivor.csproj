@@ -10,4 +10,7 @@
     <ItemGroup>
         <PackageReference Include="R3" Version="1.1.11"/>
     </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Infinity\Shop\"/>
+    </ItemGroup>
 </Project>

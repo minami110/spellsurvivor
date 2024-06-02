@@ -1,8 +1,14 @@
-[gd_scene load_steps=16 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=27 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
+[ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="2_2pohd"]
+[ext_resource type="Resource" uid="uid://dg1a0sshsyi4h" path="res://Infinity/Datebase/Items/(ShopItem) AutoAimPistol.tres" id="2_6p6xg"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
-[ext_resource type="Resource" uid="uid://cueueisolmo88" path="res://Infinity/Datebase/BattleWaveData/(InfinityGameSettings) Minami.tres" id="2_k5gik"]
+[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/Scripts/BattleWaveConfigRaw.cs" id="3_rspfj"]
+[ext_resource type="Resource" uid="uid://brkbpmer5vx5k" path="res://Infinity/Datebase/Items/(ShopItem) ForwardKnife.tres" id="3_uxbtr"]
+[ext_resource type="Resource" uid="uid://bwrvuumsylvne" path="res://Infinity/Datebase/Items/(ShopItem) PoisonMistGen.tres" id="4_1r4lc"]
+[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/Scripts/BattleWaveConfig.cs" id="4_p7g23"]
+[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/Scripts/InfinityGameSettings.cs" id="5_g1fii"]
 [ext_resource type="Script" path="res://Common/Inputs/PlayerController.cs" id="6_m3lsh"]
 [ext_resource type="PackedScene" uid="uid://cn70mo64dy7mh" path="res://Infinity/HUDs/BattleResult/BattleResultHUD.tscn" id="8_gtxqj"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawner.cs" id="8_lc8x0"]
@@ -12,6 +18,37 @@
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
 [ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://PoseMenu/PoseMenu.tscn" id="16_ngbfj"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
+
+[sub_resource type="Resource" id="Resource_0ct4c"]
+script = ExtResource("2_2pohd")
+RerollCost = 1
+UpgradeCost = 1
+AddSlotCost = 1
+DefaultMinionPool = [ExtResource("2_6p6xg"), ExtResource("3_uxbtr"), ExtResource("4_1r4lc")]
+
+[sub_resource type="Resource" id="Resource_72qcm"]
+script = ExtResource("3_rspfj")
+Mode = 0
+WaveTimeSeconds = 5.0
+Reward = 10
+
+[sub_resource type="Resource" id="Resource_vs0s4"]
+script = ExtResource("3_rspfj")
+Mode = 0
+WaveTimeSeconds = 20.0
+Reward = 10
+
+[sub_resource type="Resource" id="Resource_t4uxh"]
+script = ExtResource("4_p7g23")
+Waves = [SubResource("Resource_72qcm"), SubResource("Resource_vs0s4")]
+
+[sub_resource type="Resource" id="Resource_pdcir"]
+script = ExtResource("5_g1fii")
+DefaultMoney = 10
+DefaultHealth = 100.0
+DefaultMoveSpeed = 100.0
+ShopConfig = SubResource("Resource_0ct4c")
+WaveConfig = SubResource("Resource_t4uxh")
 
 [sub_resource type="Curve2D" id="Curve2D_dcvq1"]
 _data = {
@@ -27,7 +64,7 @@ size = Vector2(1200, 100)
 
 [node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_enemySpawner")]
 script = ExtResource("1_tk8vx")
-_gameSettings = ExtResource("2_k5gik")
+_gameSettings = SubResource("Resource_pdcir")
 _playerController = NodePath("PlayerController")
 _playerPawn = NodePath("MeMe (Player)")
 _enemySpawner = NodePath("EnemySpawner")
@@ -99,7 +136,6 @@ visible = false
 
 [node name="ShopHUD (Layer 4)" parent="HUDs" instance=ExtResource("9_a7daw")]
 layer = 4
-visible = false
 
 [node name="Tooltip Toast (Layer 8)" type="CanvasLayer" parent="HUDs"]
 layer = 8

@@ -92,7 +92,7 @@ public partial class Main : Node
 
         // Initialize States
         _waveState = new WaveState { Config = _gameSettings.WaveConfig };
-        _shopState = new ShopState { Config = _gameSettings.ShopConfig };
+        _shopState = new ShopState(_gameSettings.ShopConfig);
         _playerInventory = new PlayerInventory();
 
         // デバッグ用の Collision を表示
@@ -131,6 +131,9 @@ public partial class Main : Node
             var reward = state._waveState.CurrentWaveConfig.Reward;
             state._playerState.AddEffect(new AddMoneyEffect { Value = reward });
             state._playerState.SolveEffect();
+
+            // Shop のリロール
+            state._shopState.RefreshInStoreMinions();
         });
 
         // Disposable registration
