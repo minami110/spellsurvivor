@@ -45,11 +45,30 @@ public partial class ShopHudController : Node
         _rerollButton.Text = $"Reroll (${Main.ShopState.Config.RerollCost})";
 
         // ボタンのバインドを更新
-        var d1 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.RefreshInStoreMinions(); });
-        var d2 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.UpgradeShopLevel(); });
-        var d3 = _quitShopButton.PressedAsObservable().Subscribe(_ =>
+        var d01 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.RefreshInStoreMinions(); });
+        var d02 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.UpgradeShopLevel(); });
+        var d03 = _quitShopButton.PressedAsObservable().Subscribe(_ =>
         {
             Main.WaveState.SendSignal(WaveState.Signal.PLAYER_ACCEPTED_SHOP);
+        });
+        var d04 = _lockButton.PressedAsObservable().Subscribe(_ =>
+        {
+            if (_lockButton.Text == "Lock")
+            {
+                _lockButton.Text = "Unlock";
+                foreach (var m in Main.ShopState.InStoreMinions)
+                {
+                    m.Lock();
+                }
+            }
+            else
+            {
+                _lockButton.Text = "Lock";
+                foreach (var m in Main.ShopState.InStoreMinions)
+                {
+                    m.Unlock();
+                }
+            }
         });
 
         // Player Money の変更を監視
@@ -72,7 +91,7 @@ public partial class ShopHudController : Node
             }
         });
 
-        Disposable.Combine(d1, d2, d3, d4, d5, d6, d7).AddTo(this);
+        Disposable.Combine(d01, d02, d03, d04, d4, d5, d6, d7).AddTo(this);
     }
 
     private void OnInStoreMinionsUpdated(Unit _)

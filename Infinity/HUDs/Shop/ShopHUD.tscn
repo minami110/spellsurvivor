@@ -88,7 +88,6 @@ text = "Reroll ($1)"
 
 [node name="Button LockItems" type="Button" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
-disabled = true
 text = "Lock"
 
 [node name="HBox Selling Item Parent" type="HBoxContainer" parent="Container"]
