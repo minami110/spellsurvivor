@@ -10,11 +10,10 @@ namespace fms;
 
 public sealed class PlayerInventory : IDisposable
 {
-    private readonly Subject<Unit> _equippedMinionChangedSubject = new();
     private readonly Dictionary<Type, FactionBase> _factions = new();
-    private readonly List<MinionInInventory> _minions = new();
+    private readonly Subject<Unit> _inHandMinionChangedSubject = new();
+    private readonly List<MinionInRuntime> _minions = new();
     private readonly List<MinionBase> _weapons = new();
-
 
     /// <summary>
     ///     現在有効な Faction の Map (Key: FacionType, Value: Faction)
@@ -24,7 +23,7 @@ public sealed class PlayerInventory : IDisposable
     /// <summary>
     ///     現在 Player が所有している Minion のリスト
     /// </summary>
-    public IReadOnlyList<MinionInInventory> Minions => _minions;
+    public IReadOnlyList<MinionInRuntime> Minions => _minions;
 
     /// <summary>
     ///     現在 Player が装備している 武器 のリスト
@@ -33,76 +32,95 @@ public sealed class PlayerInventory : IDisposable
 
     /// <summary>
     /// </summary>
-    public Observable<Unit> EquippedMinionChanged => _equippedMinionChangedSubject;
+    public Observable<Unit> InHandMinionChanged => _inHandMinionChangedSubject;
 
-    public bool AddMinion(MinionInInventory minionData)
+    public bool AddMinion(MinionInRuntime minion)
     {
-        if (HasMinion(minionData))
+        if (HasMinion(minion))
         {
             return false;
         }
 
-        _minions.Add(minionData);
+        _minions.Add(minion);
+        minion.Place = MinionPlace.InStorage;
+
         return true;
     }
-
 
     public void EquipMinion(string minionId)
     {
         // 所持している Minion から該当する Minion を取得する
-        var minionData = _minions.FirstOrDefault(m => m.Id == minionId);
-        if (minionData == null)
+        var minion = _minions.FirstOrDefault(m => m.Id == minionId);
+        if (minion == null)
         {
-            return;
+            throw new ApplicationException($"Does not have minion: {minionId}");
+        }
+
+        // すでに装備されている
+        if (minion.Place == MinionPlace.InHand)
+        {
+            throw new ApplicationException($"Minion already has been in-hand : {minionId}");
         }
 
         // Player Pawn に Item を追加で装備させる
-        var weapon = minionData.WeaponPackedScene.Instantiate<MinionBase>();
+        minion.Place = MinionPlace.InHand;
+        var weapon = minion.WeaponPackedScene.Instantiate<MinionBase>();
+        {
+            weapon.CoreData = minion;
+        }
         Main.PlayerNode.AddChild(weapon);
-
-        // 内部のリストで管理
         _weapons.Add(weapon);
+
         OnChangedWeapons();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool HasMinion(MinionInInventory minionData)
+    public bool HasMinion(MinionInRuntime minionData)
     {
         return _minions.Any(m => m.Id == minionData.Id);
     }
 
-    public bool RemoveMinion(MinionInInventory minionData)
+    public bool RemoveMinion(MinionInRuntime minion)
     {
-        if (!HasMinion(minionData))
+        if (!HasMinion(minion))
         {
             return false;
         }
 
-        UnequipMinion(minionData.Id);
-        _minions.Remove(minionData);
+        UnequipMinion(minion.Id);
+        _minions.Remove(minion);
+        minion.Place = MinionPlace.InShop;
         return true;
     }
 
     public void UnequipMinion(string minionId)
     {
         // 所持している Minion から該当する Minion を取得する
-        var minionData = _minions.FirstOrDefault(m => m.Id == minionId);
-        if (minionData == null)
+        var minion = _minions.FirstOrDefault(m => m.Id == minionId);
+        if (minion == null)
         {
             return;
         }
+
+        if (minion.Place != MinionPlace.InHand)
+        {
+            return;
+        }
+
+        minion.Place = MinionPlace.InStorage;
 
         // Player Pawn から Minion を削除する
         foreach (var weapon in _weapons.Where(weapon => weapon.Id == minionId))
         {
             weapon.QueueFree();
             _weapons.Remove(weapon);
+
             OnChangedWeapons();
             return;
         }
     }
 
-    public bool UpgradeMinion(MinionInInventory minionData)
+    public bool UpgradeMinion(MinionInRuntime minionData)
     {
         var minion = _minions.FirstOrDefault(m => m.Id == minionData.Id);
         if (minion == null)
@@ -148,11 +166,11 @@ public sealed class PlayerInventory : IDisposable
         }
 
         // 通知する
-        _equippedMinionChangedSubject.OnNext(Unit.Default);
+        _inHandMinionChangedSubject.OnNext(Unit.Default);
     }
 
     void IDisposable.Dispose()
     {
-        _equippedMinionChangedSubject.Dispose();
+        _inHandMinionChangedSubject.Dispose();
     }
 }

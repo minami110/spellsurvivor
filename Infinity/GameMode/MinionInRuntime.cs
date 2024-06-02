@@ -4,10 +4,17 @@ using R3;
 
 namespace fms;
 
+public enum MinionPlace
+{
+    InShop,
+    InHand,
+    InStorage
+}
+
 /// <summary>
 ///     Player が所有済みの Minion の情報
 /// </summary>
-public sealed class MinionInInventory : IDisposable
+public sealed class MinionInRuntime : IDisposable
 {
     private const int _MIN_LEVEL = 1;
     private const int _MAX_LEVEL = 5;
@@ -36,7 +43,9 @@ public sealed class MinionInInventory : IDisposable
 
     public PackedScene WeaponPackedScene { get; }
 
-    public MinionInInventory(MinionCoreData minionCoreData)
+    public MinionPlace Place { get; set; }
+
+    public MinionInRuntime(MinionCoreData minionCoreData)
     {
         Id = minionCoreData.Id;
         Price = minionCoreData.Price;

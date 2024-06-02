@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://bwrvuumsylvne"]
+[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://bwrvuumsylvne"]
 
+[ext_resource type="PackedScene" uid="uid://bplb3ghk4ycic" path="res://Infinity/Minion/(Minion) PoisonMistGen.tscn" id="1_xkfvm"]
 [ext_resource type="Texture2D" uid="uid://cg4pdl81tg8pq" path="res://Common/Resources/Textures/Emoji/snake.png" id="2_mr1ib"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Items/MinionCoreData.cs" id="3_7flxl"]
 
@@ -14,3 +15,4 @@ Tier: 2"
 Sprite = ExtResource("2_mr1ib")
 Tier = 2
 Price = 3
+WeaponPackedScene = ExtResource("1_xkfvm")

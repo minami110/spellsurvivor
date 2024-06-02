@@ -21,19 +21,19 @@ public partial class ShopOwnItem : VBoxContainer
     [Export]
     private Control _toolTipControl = null!;
 
-    public MinionInInventory MinionCoreData { get; set; } = null!;
+    public MinionInRuntime Minion { get; set; } = null!;
 
     public override void _Ready()
     {
-        _icon.Texture = MinionCoreData.Sprite;
-        _name.Text = MinionCoreData.Name;
+        _icon.Texture = Minion.Sprite;
+        _name.Text = Minion.Name;
 
         // Subscribe level
-        var d1 = MinionCoreData.Level.Subscribe(this, (x, t) => { t._level.Text = $"(Lv.{x})"; });
+        var d1 = Minion.Level.Subscribe(this, (x, t) => { t._level.Text = $"(Lv.{x})"; });
 
         // ToDo: とりあえず買値と同じに..
-        _sellButton.Text = $"Sell ${MinionCoreData.Price}";
-        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.SellItem(MinionCoreData); });
+        _sellButton.Text = $"Sell ${Minion.Price}";
+        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.SellItem(Minion); });
 
         // Tooltip
         _toolTipControl.MouseEntered += ShowToolTip;
@@ -49,7 +49,7 @@ public partial class ShopOwnItem : VBoxContainer
 
     private void ShowToolTip()
     {
-        ToolTipToast.Text = MinionCoreData.Description;
+        ToolTipToast.Text = Minion.Description;
         ToolTipToast.Show();
     }
 }

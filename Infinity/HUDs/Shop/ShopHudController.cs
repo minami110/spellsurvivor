@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using R3;
 
@@ -9,7 +10,7 @@ public partial class ShopHudController : Node
     private Control _container = null!;
 
     [Export]
-    private PackedScene _shopItemPackedScene = null!;
+    private PackedScene _instoreItemPackedScene = null!;
 
     [Export]
     private PackedScene _shopOwnItemPackedScene = null!;
@@ -45,13 +46,13 @@ public partial class ShopHudController : Node
         _rerollButton.Text = $"Reroll (${Main.ShopState.Config.RerollCost})";
 
         // ボタンのバインドを更新
-        var d01 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.RefreshInStoreMinions(); });
-        var d02 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.UpgradeShopLevel(); });
-        var d03 = _quitShopButton.PressedAsObservable().Subscribe(_ =>
+        var d00 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.RefreshInStoreMinions(); });
+        var d01 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.UpgradeShopLevel(); });
+        var d02 = _quitShopButton.PressedAsObservable().Subscribe(_ =>
         {
             Main.WaveState.SendSignal(WaveState.Signal.PLAYER_ACCEPTED_SHOP);
         });
-        var d04 = _lockButton.PressedAsObservable().Subscribe(_ =>
+        var d03 = _lockButton.PressedAsObservable().Subscribe(_ =>
         {
             if (_lockButton.Text == "Lock")
             {
@@ -72,14 +73,17 @@ public partial class ShopHudController : Node
         });
 
         // Player Money の変更を監視
-        var d4 = Main.PlayerState.Money.Subscribe(this, (x, state) => state._playerMoneyLabel.Text = $"$ {x}");
+        var d10 = Main.PlayerState.Money.Subscribe(this, (x, state) => state._playerMoneyLabel.Text = $"$ {x}");
+
+        // Player Inventory
+        var d20 = Main.PlayerInventory.InHandMinionChanged.Subscribe(OnEquippedMinionChanged);
 
         // ShopState
-        var d5 = Main.ShopState.Level.Subscribe(x => { _shopLevelLabel.Text = $"Lv.{Main.ShopState.Level}"; });
-        var d6 = Main.ShopState.InStoreMinionsUpdated.Subscribe(OnInStoreMinionsUpdated);
+        var d30 = Main.ShopState.Level.Subscribe(x => { _shopLevelLabel.Text = $"Lv.{Main.ShopState.Level}"; });
+        var d31 = Main.ShopState.InStoreMinionsUpdated.Subscribe(OnInStoreMinionsUpdated);
 
         // WaveState
-        var d7 = Main.WaveState.Phase.Subscribe(this, (x, state) =>
+        var d40 = Main.WaveState.Phase.Subscribe(this, (x, state) =>
         {
             if (x == WavePhase.SHOP)
             {
@@ -91,7 +95,25 @@ public partial class ShopHudController : Node
             }
         });
 
-        Disposable.Combine(d01, d02, d03, d04, d4, d5, d6, d7).AddTo(this);
+        Disposable.Combine(d00, d01, d02, d03, d10, d20, d30, d31, d40).AddTo(this);
+    }
+
+    private void OnEquippedMinionChanged(Unit _)
+    {
+        // すでに生成している ShopOwnItem を削除 する
+        foreach (var old in _equipItemSpawnParent.GetChildren())
+        {
+            old.QueueFree();
+        }
+
+        foreach (var minion in Main.PlayerInventory.Minions.Where(x => x.Place == MinionPlace.InHand))
+        {
+            var node = _shopOwnItemPackedScene.Instantiate<ShopOwnItem>();
+            {
+                node.Minion = minion;
+            }
+            _equipItemSpawnParent.AddChild(node);
+        }
     }
 
     private void OnInStoreMinionsUpdated(Unit _)
@@ -104,9 +126,9 @@ public partial class ShopHudController : Node
 
         foreach (var item in Main.ShopState.InStoreMinions)
         {
-            var node = _shopItemPackedScene.Instantiate<ShopSellingItem>();
+            var node = _instoreItemPackedScene.Instantiate<ShopSellingItem>();
             {
-                node.ShopItemSettings = item;
+                node.Minion = item;
             }
             _shopItemSpawnParent.AddChild(node);
         }

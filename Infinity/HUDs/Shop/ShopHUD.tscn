@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://dvwlkv2f4pl2i"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopHudController.cs" id="1_5xunh"]
-[ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/(SubHUD) ShopSellingItem.tscn" id="2_7j4ye"]
+[ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/InstoreMinionPanel.tscn" id="2_7j4ye"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="3_nlrg2"]
-[ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/(SubHUD) ShopOwnItem.tscn" id="6_dux5n"]
+[ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/OwnedMinionPanel.tscn" id="6_dux5n"]
 [ext_resource type="Script" path="res://Infinity/HUDs/ActiveFactionsManager.cs" id="8_6u4gn"]
 [ext_resource type="Script" path="res://Infinity/HUDs/LabelHasToolTip.cs" id="8_qxwon"]
 
@@ -13,7 +13,7 @@ layer = 2
 [node name="ShopHudController" type="Node" parent="." node_paths=PackedStringArray("_container", "_shopItemSpawnParent", "_equipItemSpawnParent", "_upgradeButton", "_rerollButton", "_lockButton", "_quitShopButton", "_playerMoneyLabel", "_shopLevelLabel")]
 script = ExtResource("1_5xunh")
 _container = NodePath("../Container")
-_shopItemPackedScene = ExtResource("2_7j4ye")
+_instoreItemPackedScene = ExtResource("2_7j4ye")
 _shopOwnItemPackedScene = ExtResource("6_dux5n")
 _shopItemSpawnParent = NodePath("../Container/HBox Selling Item Parent")
 _equipItemSpawnParent = NodePath("../Container/HBox Equipment Item Parent")

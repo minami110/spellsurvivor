@@ -11,12 +11,12 @@ public sealed class ShopState : IDisposable
     private const int _MAX_SHOP_LEVEL = 8;
     private const int _MAX_SHOP_ITEM_SLOT = 8;
 
-    private readonly List<MinionInInventory> _inStoreMinions = new();
+    private readonly List<MinionInRuntime> _inStoreMinions = new();
     private readonly Subject<Unit> _inStoreMinionsUpdatedSubject = new();
 
     private readonly ReactiveProperty<int> _levelRp = new(1);
 
-    private readonly Dictionary<int, List<MinionInInventory>> _runtimeMinionPool = new();
+    private readonly Dictionary<int, List<MinionInRuntime>> _runtimeMinionPool = new();
 
     private int _itemSlotCount;
 
@@ -30,7 +30,7 @@ public sealed class ShopState : IDisposable
 
     /// <summary>
     /// </summary>
-    public IReadOnlyList<MinionInInventory> InStoreMinions => _inStoreMinions;
+    public IReadOnlyList<MinionInRuntime> InStoreMinions => _inStoreMinions;
 
     public ShopConfig Config { get; }
 
@@ -44,11 +44,11 @@ public sealed class ShopState : IDisposable
         {
             if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
             {
-                list = new List<MinionInInventory>();
+                list = new List<MinionInRuntime>();
                 _runtimeMinionPool[minionCoreData.Tier] = list;
             }
 
-            list.Add(new MinionInInventory(minionCoreData));
+            list.Add(new MinionInRuntime(minionCoreData));
         }
 
         // Default 
@@ -68,11 +68,11 @@ public sealed class ShopState : IDisposable
     ///     Minion をショップから購入
     /// </summary>
     /// <param name="minion"></param>
-    public void BuyItem(MinionInInventory minion)
+    public void BuyItem(MinionInRuntime minion)
     {
         if (!_inStoreMinions.Contains(minion))
         {
-            return;
+            throw new InvalidProgramException("購入対象の Minion が現在販売されていません");
         }
 
         // ショップから排除する
@@ -84,7 +84,7 @@ public sealed class ShopState : IDisposable
         Main.PlayerState.AddEffect(new AddMoneyEffect { Value = -minion.Price });
         Main.PlayerState.SolveEffect();
 
-        // インベントリ
+        // インベントリに追加 あるいはアップグレード する
         if (Main.PlayerInventory.HasMinion(minion))
         {
             Main.PlayerInventory.UpgradeMinion(minion);
@@ -139,7 +139,7 @@ public sealed class ShopState : IDisposable
             GD.Print($"[ShopState] Tier: {targetTier}");
 
             // ティアが決定したので Minion を選択する
-            MinionInInventory? minion = null;
+            MinionInRuntime? minion = null;
             if (_runtimeMinionPool.TryGetValue(targetTier, out var minions))
             {
                 // List から ランダムに Minion を取り出す, 最大レベルの場合はスキップする
@@ -173,7 +173,7 @@ public sealed class ShopState : IDisposable
     ///     Minion をショップに売却
     /// </summary>
     /// <param name="minionData"></param>
-    public void SellItem(MinionInInventory minionData)
+    public void SellItem(MinionInRuntime minionData)
     {
         if (Main.PlayerInventory.RemoveMinion(minionData))
         {

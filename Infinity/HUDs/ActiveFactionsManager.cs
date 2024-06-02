@@ -17,7 +17,7 @@ public partial class ActiveFactionsManager : Node
 
     public override void _Ready()
     {
-        var d1 = Main.PlayerInventory.EquippedMinionChanged.Subscribe(_ => OnChangedEquippedMinion());
+        var d1 = Main.PlayerInventory.InHandMinionChanged.Subscribe(_ => OnChangedEquippedMinion());
         Disposable.Combine(d1).AddTo(this);
     }
 

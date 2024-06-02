@@ -51,7 +51,7 @@ public partial class MinionBase : Node2D, IEffectSolver
 
     /// <summary>
     /// </summary>
-    public MinionInInventory CoreData { get; set; } = null!;
+    public MinionInRuntime CoreData { get; set; } = null!;
 
     /// <summary>
     ///     次の攻撃までの残りフレーム

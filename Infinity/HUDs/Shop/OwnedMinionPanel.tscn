@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopOwnItem.cs" id="1_uogvr"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="2_e7h2k"]
 
-[node name="ShopOwnItem" type="VBoxContainer" node_paths=PackedStringArray("_icon", "_name", "_level", "_sellButton", "_toolTipControl")]
+[node name="OwnedMinionPanel" type="VBoxContainer" node_paths=PackedStringArray("_icon", "_name", "_level", "_sellButton", "_toolTipControl")]
 offset_right = 128.0
 offset_bottom = 191.0
 script = ExtResource("1_uogvr")

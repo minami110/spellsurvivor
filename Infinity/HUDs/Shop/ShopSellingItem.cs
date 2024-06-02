@@ -21,13 +21,14 @@ public partial class ShopSellingItem : VBoxContainer
     private Control _toolTipControl = null!;
 
     private bool _isSoldOut;
-    public MinionInInventory ShopItemSettings { get; set; } = null!;
+
+    public MinionInRuntime Minion { get; internal set; } = null!;
 
     public override void _Ready()
     {
-        _iconTextureRect.Texture = ShopItemSettings.Sprite;
-        _nameLabel.Text = ShopItemSettings.Name;
-        _buyButton.Text = $"${ShopItemSettings.Price}";
+        _iconTextureRect.Texture = Minion.Sprite;
+        _nameLabel.Text = Minion.Name;
+        _buyButton.Text = $"${Minion.Price}";
 
         // Subscribe 
         var d1 = _buyButton.PressedAsObservable().Subscribe(this, (_, t) => t.OnPressedBuyButton());
@@ -51,7 +52,7 @@ public partial class ShopSellingItem : VBoxContainer
 
     private void OnChangedPlayerMoney(int money)
     {
-        if (money < ShopItemSettings.Price)
+        if (money < Minion.Price)
         {
             _buyButton.Modulate = new Color(1, 0, 0);
             _buyButton.Disabled = true;
@@ -68,14 +69,7 @@ public partial class ShopSellingItem : VBoxContainer
     private void OnPressedBuyButton()
     {
         // GameMode に通知する
-        Main.ShopState.BuyItem(ShopItemSettings);
-
-        //この Shop Item を無効化する
-        _isSoldOut = true;
-        _iconTextureRect.Hide();
-        _nameLabel.Hide();
-        _buyButton.Hide();
-        HideToolTip();
+        Main.ShopState.BuyItem(Minion);
     }
 
     private void ShowToolTip()
@@ -85,7 +79,7 @@ public partial class ShopSellingItem : VBoxContainer
             return;
         }
 
-        ToolTipToast.Text = ShopItemSettings.Description;
+        ToolTipToast.Text = Minion.Description;
         ToolTipToast.Show();
     }
 }
