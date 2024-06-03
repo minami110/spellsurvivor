@@ -59,14 +59,12 @@ public partial class FrameTimer : Node
 
     public void Start()
     {
-        GD.Print("Timer Start");
         _frameLeft.Value = _waitFrame;
         SetProcess(true);
     }
 
     public void Stop()
     {
-        GD.Print("Timer Stop");
         SetProcess(false);
         _frameLeft.Value = -1;
     }
