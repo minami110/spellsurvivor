@@ -1,3 +1,4 @@
+using fms.Faction;
 using Godot;
 
 namespace fms;
@@ -8,26 +9,33 @@ namespace fms;
 [GlobalClass]
 public partial class MinionCoreData : Resource
 {
-    [ExportGroup("Basic Information")]
     [Export]
-    public string Id = string.Empty;
-
-    [Export]
-    public string Name = string.Empty;
-
-    [Export(PropertyHint.MultilineText)]
-    public string Description = string.Empty;
-
-    [Export]
-    public Texture2D Sprite = null!;
+    public string Id { get; private set; } = string.Empty;
 
     [Export(PropertyHint.Range, "1,8,1")]
-    public int Tier = 1;
+    public int Tier { get; private set; } = 1;
+
+    /// <summary>
+    ///     Minion が所有する Faction のリスト (Flag)
+    ///     Note: FactionType を増やしたら PropertyHint の選択項目も増やしてあげてください
+    /// </summary>
+    [Export(PropertyHint.Flags, "Bruiser,Duelist,Trickshot")]
+    public FactionType Faction { get; private set; } = FactionType.None;
 
     [Export(PropertyHint.Range, "1,100,1")]
-    public int Price = 10;
+    public int Price { get; private set; } = 10;
 
-    [ExportGroup("Packed Scene References")]
+    [ExportGroup("For User Information")]
     [Export]
-    public PackedScene WeaponPackedScene = null!;
+    public string Name { get; private set; } = string.Empty;
+
+    [Export(PropertyHint.MultilineText)]
+    public string Description { get; private set; } = string.Empty;
+
+    [ExportGroup("Resouce References")]
+    [Export]
+    public Texture2D Sprite { get; private set; } = null!;
+
+    [Export]
+    public PackedScene WeaponPackedScene { get; private set; } = null!;
 }

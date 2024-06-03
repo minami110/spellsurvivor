@@ -1,3 +1,4 @@
+using System;
 using fms.Faction;
 using Godot;
 using R3;
@@ -35,18 +36,19 @@ public partial class ActiveFactionsManager : Node
                 continue;
             }
 
-            if (type == typeof(Bruiser))
+            switch (type)
             {
-                UpdateLabel(_bruiser, nameof(Bruiser), faction);
-            }
-
-            if (type == typeof(Duelist))
-            {
-                UpdateLabel(_duelist, nameof(Duelist), faction);
-            }
-            else if (type == typeof(Trickshot))
-            {
-                UpdateLabel(_trickshot, nameof(Trickshot), faction);
+                case FactionType.Bruiser:
+                    UpdateLabel(_bruiser, nameof(Bruiser), faction);
+                    break;
+                case FactionType.Duelist:
+                    UpdateLabel(_duelist, nameof(Duelist), faction);
+                    break;
+                case FactionType.Trickshot:
+                    UpdateLabel(_trickshot, nameof(Trickshot), faction);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using fms.Effect;
+using fms.Weapon;
 
 namespace fms.Faction;
 
@@ -11,77 +12,47 @@ public sealed class Trickshot : FactionBase
 {
     private protected override void OnLevelConfirmed(int level)
     {
-        var weapons = Main.PlayerInventory.Weapons;
-        switch (level)
+        if (level < 2)
         {
-            case >= 4:
+            return;
+        }
+
+        var minions = Main.PlayerInventory.Minions;
+        foreach (var minion in minions)
+        {
+            // Weapon を所持していない (手札にない)
+            var weapon = minion.Weapon;
+            if (weapon == null)
             {
-                foreach (var weapon in weapons)
-                {
-                    if (!weapon.IsFaction<Trickshot>())
-                    {
-                        continue;
-                    }
-
-                    weapon.AddEffect(new TrickshotBounce { BounceCount = 2, BounceDamageMultiplier = 0.6f });
-                    weapon.SolveEffect();
-                }
-
-                break;
+                continue;
             }
-            case >= 2:
+
+            // トリックショットを持っていない
+            if (!minion.Faction.HasFlag(FactionType.Trickshot))
             {
-                foreach (var weapon in weapons)
+                continue;
+            }
+
+            switch (level)
+            {
+                case >= 4:
                 {
-                    if (!weapon.IsFaction<Trickshot>())
-                    {
-                        continue;
-                    }
-
-                    weapon.AddEffect(new TrickshotBounce { BounceCount = 1, BounceDamageMultiplier = 0.4f });
-                    weapon.SolveEffect();
+                    AddTrickshotEffect(weapon, 2, 0.6f);
+                    break;
                 }
-
-                break;
+                case >= 2:
+                {
+                    AddTrickshotEffect(weapon, 1, 0.4f);
+                    break;
+                }
             }
         }
     }
 
-    private protected override void OnLevelReset(int oldLevel)
+    private void AddTrickshotEffect(WeaponBase weapon, int bounceCount, float bounceDamageMultiplier)
     {
-        var weapons = Main.PlayerInventory.Weapons;
-        switch (oldLevel)
-        {
-            case >= 4:
-            {
-                foreach (var weapon in weapons)
-                {
-                    if (!weapon.IsFaction<Trickshot>())
-                    {
-                        continue;
-                    }
-
-                    weapon.AddEffect(new TrickshotBounce { BounceCount = -2, BounceDamageMultiplier = -0.6f });
-                    weapon.SolveEffect();
-                }
-
-                break;
-            }
-            case >= 2:
-            {
-                foreach (var weapon in weapons)
-                {
-                    if (!weapon.IsFaction<Trickshot>())
-                    {
-                        continue;
-                    }
-
-                    weapon.AddEffect(new TrickshotBounce { BounceCount = -1, BounceDamageMultiplier = -0.4f });
-                    weapon.SolveEffect();
-                }
-
-                break;
-            }
-        }
+        weapon.AddEffect(new TrickshotBounce
+            { BounceCount = bounceCount, BounceDamageMultiplier = bounceDamageMultiplier });
+        weapon.SolveEffect();
     }
 }

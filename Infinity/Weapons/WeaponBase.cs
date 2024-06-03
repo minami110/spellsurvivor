@@ -12,7 +12,6 @@ public partial class WeaponBase : Node2D, IEffectSolver
     [Export]
     private FrameTimer _frameTimer = null!;
 
-    private readonly ReactiveProperty<int> _coolDownLeft = new(1);
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
     private readonly List<EffectBase> _effects = new();
 
@@ -40,7 +39,7 @@ public partial class WeaponBase : Node2D, IEffectSolver
     /// <summary>
     ///     次の攻撃までの残りフレーム
     /// </summary>
-    public ReadOnlyReactiveProperty<int> CoolDownLeft => _coolDownLeft;
+    public ReadOnlyReactiveProperty<int> CoolDownLeft => _frameTimer.FrameLeft;
 
     /// <summary>
     ///     この武器を所有している Minion のレベル
@@ -65,10 +64,9 @@ public partial class WeaponBase : Node2D, IEffectSolver
         var d2 = _frameTimer.TimeOut.Subscribe(this, (_, state) => { state.DoAttack(); });
 
         // Observable の初期化
-        var d3 = _coolDownLeft;
-        var d5 = _coolDownReduceRateRp;
+        var d3 = _coolDownReduceRateRp;
 
-        Disposable.Combine(d1, d2, d3, d5).AddTo(this);
+        Disposable.Combine(d1, d2, d3).AddTo(this);
     }
 
     private protected virtual void DoAttack()

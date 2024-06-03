@@ -1,4 +1,6 @@
 ﻿using System;
+using fms.Faction;
+using fms.Weapon;
 using Godot;
 using R3;
 
@@ -43,15 +45,29 @@ public sealed class MinionInRuntime : IDisposable
 
     public PackedScene WeaponPackedScene { get; }
 
+    /// <summary>
+    ///     この Minion が装備している Weapon, InHand にない場合は所有していない
+    /// </summary>
+    public WeaponBase? Weapon { get; set; }
+
+    /// <summary>
+    ///     この Minion の所属する Faction (Flag)
+    /// </summary>
+    public FactionType Faction { get; }
+
+    /// <summary>
+    ///     現在の Minion の場所
+    /// </summary>
     public MinionPlace Place { get; set; }
 
     public MinionInRuntime(MinionCoreData minionCoreData)
     {
         Id = minionCoreData.Id;
         Price = minionCoreData.Price;
-        Sprite = minionCoreData.Sprite;
+        Faction = minionCoreData.Faction;
         Name = minionCoreData.Name;
         Description = minionCoreData.Description;
+        Sprite = minionCoreData.Sprite;
         WeaponPackedScene = minionCoreData.WeaponPackedScene;
     }
 

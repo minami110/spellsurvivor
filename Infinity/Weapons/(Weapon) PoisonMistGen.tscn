@@ -1,11 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://bplb3ghk4ycic"]
+[gd_scene load_steps=4 format=3 uid="uid://bplb3ghk4ycic"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/PoisonMistGen.cs" id="1_jge7x"]
 [ext_resource type="PackedScene" uid="uid://cmtcv07pgp3jh" path="res://Infinity/Projectiles/(Projectile) PoisonMist.tscn" id="2_8l6rs"]
+[ext_resource type="Script" path="res://Common/FrameTimer.cs" id="3_aw6w7"]
 
-[node name="PoisonMistGen" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode")]
+[node name="PoisonMistGen" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_frameTimer")]
 script = ExtResource("1_jge7x")
 _bulletPackedScene = ExtResource("2_8l6rs")
 _bulletSpawnNode = NodePath("BulletSpawnRoot")
+_frameTimer = NodePath("FrameTimer")
 
 [node name="BulletSpawnRoot" type="Node" parent="."]
+
+[node name="FrameTimer" type="Node" parent="."]
+script = ExtResource("3_aw6w7")

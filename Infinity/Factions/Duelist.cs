@@ -9,48 +9,49 @@ public sealed class Duelist : FactionBase
 {
     private protected override void OnLevelConfirmed(int level)
     {
-        var weapons = Main.PlayerInventory.Weapons;
-        switch (level)
+        if (level < 2)
         {
-            case >= 6:
+            return;
+        }
+
+        var minions = Main.PlayerInventory.Minions;
+        foreach (var minion in minions)
+        {
+            // Weapon を所持していない (手札にない)
+            var weapon = minion.Weapon;
+            if (weapon == null)
             {
-                foreach (var weapon in weapons)
+                continue;
+            }
+
+            switch (level)
+            {
+                case >= 6:
                 {
                     weapon.AddEffect(new ReduceCoolDownRate { Value = 0.2f });
                     weapon.SolveEffect();
+                    break;
                 }
-
-                break;
-            }
-            case >= 4:
-            {
-                foreach (var weapon in weapons)
+                case >= 4:
                 {
-                    if (!weapon.IsFaction<Duelist>())
+                    if (minion.Faction.HasFlag(FactionType.Duelist))
                     {
-                        continue;
+                        weapon.AddEffect(new ReduceCoolDownRate { Value = 0.2f });
+                        weapon.SolveEffect();
                     }
 
-                    weapon.AddEffect(new ReduceCoolDownRate { Value = 0.2f });
-                    weapon.SolveEffect();
+                    break;
                 }
-
-                break;
-            }
-            case >= 2:
-            {
-                foreach (var weapon in weapons)
+                case >= 2:
                 {
-                    if (!weapon.IsFaction<Duelist>())
+                    if (minion.Faction.HasFlag(FactionType.Duelist))
                     {
-                        continue;
+                        weapon.AddEffect(new ReduceCoolDownRate { Value = 0.1f });
+                        weapon.SolveEffect();
                     }
 
-                    weapon.AddEffect(new ReduceCoolDownRate { Value = 0.1f });
-                    weapon.SolveEffect();
+                    break;
                 }
-
-                break;
             }
         }
     }

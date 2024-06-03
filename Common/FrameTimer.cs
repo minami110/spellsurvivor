@@ -7,13 +7,16 @@ namespace fms;
 [GlobalClass]
 public partial class FrameTimer : Node
 {
-    [Export(PropertyHint.Range, "1,9999")]
+    [Export(PropertyHint.Range, "1,99999")]
     private int _waitFrame = 20;
 
+    private readonly ReactiveProperty<int> _frameLeft = new(-1);
+
     private readonly Subject<Unit> _timeOut = new();
-    private int _frameLeft = -1;
 
     public Observable<Unit> TimeOut => _timeOut;
+
+    public ReadOnlyReactiveProperty<int> FrameLeft => _frameLeft;
 
     public int WaitFrame
     {
@@ -29,40 +32,42 @@ public partial class FrameTimer : Node
         }
     }
 
-    public int FrameLeft => _frameLeft > 0 ? _frameLeft : 0;
+    public bool IsStopped => _frameLeft.Value <= 0;
 
-    public bool IsStopped => _frameLeft <= 0;
-
-    public override void _EnterTree()
+    public override void _Notification(int what)
     {
-        Stop();
-    }
-
-    public override void _Process(double delta)
-    {
-        _frameLeft--;
-
-        if (_frameLeft < 0)
+        if (what == NotificationReady)
         {
-            _timeOut.OnNext(Unit.Default);
-            _frameLeft += _waitFrame;
+            Stop();
+            Disposable.Combine(_timeOut, _frameLeft).AddTo(this);
         }
-    }
+        else if (what == NotificationProcess)
+        {
+            var nextFrameLeft = _frameLeft.Value - 1;
 
-    public override void _ExitTree()
-    {
-        _timeOut.Dispose();
+            if (nextFrameLeft < 0)
+            {
+                _timeOut.OnNext(Unit.Default);
+                _frameLeft.Value = _waitFrame;
+            }
+            else
+            {
+                _frameLeft.Value = nextFrameLeft;
+            }
+        }
     }
 
     public void Start()
     {
-        _frameLeft = _waitFrame;
+        GD.Print("Timer Start");
+        _frameLeft.Value = _waitFrame;
         SetProcess(true);
     }
 
     public void Stop()
     {
-        _frameLeft = -1;
+        GD.Print("Timer Stop");
         SetProcess(false);
+        _frameLeft.Value = -1;
     }
 }

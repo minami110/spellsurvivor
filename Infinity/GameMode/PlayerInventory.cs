@@ -10,25 +10,19 @@ namespace fms;
 
 public sealed class PlayerInventory : IDisposable
 {
-    private readonly Dictionary<Type, FactionBase> _factions = new();
+    private readonly Dictionary<FactionType, FactionBase> _factions = new();
     private readonly Subject<Unit> _inHandMinionChangedSubject = new();
     private readonly List<MinionInRuntime> _minions = new();
-    private readonly List<WeaponBase> _weapons = new();
 
     /// <summary>
     ///     現在有効な Faction の Map (Key: FacionType, Value: Faction)
     /// </summary>
-    public IReadOnlyDictionary<Type, FactionBase> Factions => _factions;
+    public IReadOnlyDictionary<FactionType, FactionBase> Factions => _factions;
 
     /// <summary>
     ///     現在 Player が所有している Minion のリスト
     /// </summary>
     public IReadOnlyList<MinionInRuntime> Minions => _minions;
-
-    /// <summary>
-    ///     現在 Player が装備している 武器 のリスト
-    /// </summary>
-    public IReadOnlyList<WeaponBase> Weapons => _weapons;
 
     /// <summary>
     /// </summary>
@@ -69,7 +63,7 @@ public sealed class PlayerInventory : IDisposable
             weapon.CoreData = minion;
         }
         Main.PlayerNode.AddChild(weapon);
-        _weapons.Add(weapon);
+        minion.Weapon = weapon;
 
         OnChangedWeapons();
     }
@@ -109,15 +103,15 @@ public sealed class PlayerInventory : IDisposable
 
         minion.Place = MinionPlace.InStorage;
 
-        // Player Pawn から Minion を削除する
-        foreach (var weapon in _weapons.Where(weapon => weapon.Id == minionId))
+        var weapon = minion.Weapon;
+        if (weapon == null)
         {
-            weapon.QueueFree();
-            _weapons.Remove(weapon);
-
-            OnChangedWeapons();
-            return;
+            throw new ApplicationException("Minion does not have weapon");
         }
+
+        minion.Weapon = null;
+        weapon.QueueFree();
+        OnChangedWeapons();
     }
 
     public bool UpgradeMinion(MinionInRuntime minionData)
@@ -141,20 +135,33 @@ public sealed class PlayerInventory : IDisposable
         }
 
         // 現在しているすべての Minion を照会する
-        foreach (var weapon in _weapons)
+        foreach (var faction in from minion in _minions where minion.Place == MinionPlace.InHand select minion.Faction)
         {
-            // 各 Minion が持っている Faction ごとに
-            foreach (var newFaction in weapon.Factions)
+            if (faction.HasFlag(FactionType.Bruiser))
             {
-                var factionType = newFaction.GetType();
-                if (_factions.TryGetValue(factionType, out var exitingFaction))
+                if (_factions.TryGetValue(FactionType.Bruiser, out var exitingFaction))
                 {
-                    exitingFaction.AddLevel();
+                    exitingFaction.UpgradeLevel();
                 }
                 else
                 {
-                    _factions.Add(factionType, newFaction);
-                    newFaction.AddLevel();
+                    var newFaction = new Bruiser();
+                    newFaction.UpgradeLevel();
+                    _factions.Add(FactionType.Bruiser, newFaction);
+                }
+            }
+
+            if (faction.HasFlag(FactionType.Duelist))
+            {
+                if (_factions.TryGetValue(FactionType.Duelist, out var exitingFaction))
+                {
+                    exitingFaction.UpgradeLevel();
+                }
+                else
+                {
+                    var newFaction = new Duelist();
+                    newFaction.UpgradeLevel();
+                    _factions.Add(FactionType.Duelist, newFaction);
                 }
             }
         }
