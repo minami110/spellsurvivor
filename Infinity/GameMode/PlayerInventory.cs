@@ -65,7 +65,7 @@ public sealed class PlayerInventory : IDisposable
         Main.PlayerNode.AddChild(weapon);
         minion.Weapon = weapon;
 
-        OnChangedWeapons();
+        OnEquipedMinionChanged();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -111,7 +111,7 @@ public sealed class PlayerInventory : IDisposable
 
         minion.Weapon = null;
         weapon.QueueFree();
-        OnChangedWeapons();
+        OnEquipedMinionChanged();
     }
 
     public bool UpgradeMinion(MinionInRuntime minionData)
@@ -126,7 +126,28 @@ public sealed class PlayerInventory : IDisposable
         return true;
     }
 
-    private void OnChangedWeapons()
+    private void CreateOrUpgradeFaction(FactionType factionType)
+    {
+        if (_factions.TryGetValue(factionType, out var existingFaction))
+        {
+            existingFaction.UpgradeLevel();
+        }
+        else
+        {
+            FactionBase newFaction = factionType switch
+            {
+                FactionType.Bruiser => new Bruiser(),
+                FactionType.Duelist => new Duelist(),
+                FactionType.Trickshot => new Trickshot(),
+                _ => throw new ArgumentException($"Unsupported faction type: {factionType}", nameof(factionType))
+            };
+
+            newFaction.UpgradeLevel();
+            _factions.Add(factionType, newFaction);
+        }
+    }
+
+    private void OnEquipedMinionChanged()
     {
         // Faction を一度全て Level 0 に戻す
         foreach (var (_, faction) in _factions)
@@ -139,30 +160,17 @@ public sealed class PlayerInventory : IDisposable
         {
             if (faction.HasFlag(FactionType.Bruiser))
             {
-                if (_factions.TryGetValue(FactionType.Bruiser, out var exitingFaction))
-                {
-                    exitingFaction.UpgradeLevel();
-                }
-                else
-                {
-                    var newFaction = new Bruiser();
-                    newFaction.UpgradeLevel();
-                    _factions.Add(FactionType.Bruiser, newFaction);
-                }
+                CreateOrUpgradeFaction(FactionType.Bruiser);
             }
 
             if (faction.HasFlag(FactionType.Duelist))
             {
-                if (_factions.TryGetValue(FactionType.Duelist, out var exitingFaction))
-                {
-                    exitingFaction.UpgradeLevel();
-                }
-                else
-                {
-                    var newFaction = new Duelist();
-                    newFaction.UpgradeLevel();
-                    _factions.Add(FactionType.Duelist, newFaction);
-                }
+                CreateOrUpgradeFaction(FactionType.Duelist);
+            }
+
+            if (faction.HasFlag(FactionType.Trickshot))
+            {
+                CreateOrUpgradeFaction(FactionType.Trickshot);
             }
         }
 

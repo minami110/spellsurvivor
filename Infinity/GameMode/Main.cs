@@ -108,14 +108,16 @@ public partial class Main : Node
             state._playerState.SolveEffect(); // Pending wo kaiketu
             state._playerState.AddEffect(new AddHealthEffect { Value = state._playerState.MaxHealth.CurrentValue });
             state._playerState.SolveEffect();
+
+            // Spawner に設定を渡す
+            _enemySpawner.Config = state._waveState.CurrentWaveConfig.EnemySpawnConfig;
         });
 
         // Battle Result 進入時
         var d2 = _waveState.Phase.Where(x => x == WavePhase.BATTLERESULT).Subscribe(this, (_, state) =>
         {
             var tree = state.GetTree();
-            // 残った Enemy をすべてコロス
-            tree.CallGroup("Enemy", "KillByWaveEnd");
+
             // 残った Projectile をすべてコロス
             tree.CallGroup("Projectile", "QueueFree");
         });

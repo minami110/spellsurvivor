@@ -9,6 +9,11 @@ public sealed class Bruiser : FactionBase
 {
     private protected override void OnLevelConfirmed(int level)
     {
+        if (level < 2)
+        {
+            return;
+        }
+
         var playerState = Main.PlayerState;
         switch (level)
         {
@@ -29,6 +34,11 @@ public sealed class Bruiser : FactionBase
 
     private protected override void OnLevelReset(int oldLevel)
     {
+        if (oldLevel < 2)
+        {
+            return;
+        }
+
         var playerState = Main.PlayerState;
         switch (oldLevel)
         {

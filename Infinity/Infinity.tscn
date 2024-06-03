@@ -1,18 +1,22 @@
-[gd_scene load_steps=27 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=36 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="2_2pohd"]
 [ext_resource type="Resource" uid="uid://dg1a0sshsyi4h" path="res://Infinity/Datebase/Items/(ShopItem) AutoAimPistol.tres" id="2_6p6xg"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
-[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/Scripts/BattleWaveConfigRaw.cs" id="3_rspfj"]
+[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfigRaw.cs" id="3_rspfj"]
 [ext_resource type="Resource" uid="uid://brkbpmer5vx5k" path="res://Infinity/Datebase/Items/(ShopItem) ForwardKnife.tres" id="3_uxbtr"]
 [ext_resource type="Resource" uid="uid://bwrvuumsylvne" path="res://Infinity/Datebase/Items/(ShopItem) PoisonMistGen.tres" id="4_1r4lc"]
-[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/Scripts/BattleWaveConfig.cs" id="4_p7g23"]
-[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/Scripts/InfinityGameSettings.cs" id="5_g1fii"]
+[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfig.cs" id="4_p7g23"]
+[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/InfinityGameSettings.cs" id="5_g1fii"]
+[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="6_fcw3t"]
 [ext_resource type="Script" path="res://Common/Inputs/PlayerController.cs" id="6_m3lsh"]
+[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfigRaw.cs" id="7_pnyu1"]
 [ext_resource type="PackedScene" uid="uid://cn70mo64dy7mh" path="res://Infinity/HUDs/BattleResult/BattleResultHUD.tscn" id="8_gtxqj"]
+[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfig.cs" id="8_joqf5"]
 [ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawner.cs" id="8_lc8x0"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/Shop/ShopHUD.tscn" id="9_a7daw"]
+[ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) BigTako.tscn" id="10_t3ivl"]
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="12_42duw"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
@@ -26,17 +30,42 @@ UpgradeCost = 1
 AddSlotCost = 1
 DefaultMinionPool = [ExtResource("2_6p6xg"), ExtResource("3_uxbtr"), ExtResource("4_1r4lc")]
 
+[sub_resource type="Resource" id="Resource_6njts"]
+script = ExtResource("7_pnyu1")
+EnemyPackedScene = ExtResource("6_fcw3t")
+SpawnIntervalFrame = 60
+
+[sub_resource type="Resource" id="Resource_e6gld"]
+script = ExtResource("8_joqf5")
+EnemySpawnConfigRaws = [SubResource("Resource_6njts")]
+
 [sub_resource type="Resource" id="Resource_72qcm"]
 script = ExtResource("3_rspfj")
 Mode = 0
-WaveTimeSeconds = 5.0
+WaveTimeSeconds = 20.0
 Reward = 10
+EnemySpawnConfig = SubResource("Resource_e6gld")
+
+[sub_resource type="Resource" id="Resource_id1hb"]
+script = ExtResource("7_pnyu1")
+EnemyPackedScene = ExtResource("6_fcw3t")
+SpawnIntervalFrame = 60
+
+[sub_resource type="Resource" id="Resource_ygrwl"]
+script = ExtResource("7_pnyu1")
+EnemyPackedScene = ExtResource("10_t3ivl")
+SpawnIntervalFrame = 600
+
+[sub_resource type="Resource" id="Resource_ftsoj"]
+script = ExtResource("8_joqf5")
+EnemySpawnConfigRaws = [SubResource("Resource_id1hb"), SubResource("Resource_ygrwl")]
 
 [sub_resource type="Resource" id="Resource_vs0s4"]
 script = ExtResource("3_rspfj")
 Mode = 0
 WaveTimeSeconds = 20.0
 Reward = 10
+EnemySpawnConfig = SubResource("Resource_ftsoj")
 
 [sub_resource type="Resource" id="Resource_t4uxh"]
 script = ExtResource("4_p7g23")

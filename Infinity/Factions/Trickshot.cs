@@ -49,7 +49,46 @@ public sealed class Trickshot : FactionBase
         }
     }
 
-    private void AddTrickshotEffect(WeaponBase weapon, int bounceCount, float bounceDamageMultiplier)
+    private protected override void OnLevelReset(int oldLevel)
+    {
+        if (oldLevel < 2)
+        {
+            return;
+        }
+
+        var minions = Main.PlayerInventory.Minions;
+        foreach (var minion in minions)
+        {
+            // Weapon を所持していない (手札にない)
+            var weapon = minion.Weapon;
+            if (weapon == null)
+            {
+                continue;
+            }
+
+            // トリックショットを持っていない
+            if (!minion.Faction.HasFlag(FactionType.Trickshot))
+            {
+                continue;
+            }
+
+            switch (oldLevel)
+            {
+                case >= 4:
+                {
+                    AddTrickshotEffect(weapon, -2, -0.6f);
+                    break;
+                }
+                case >= 2:
+                {
+                    AddTrickshotEffect(weapon, -1, -0.4f);
+                    break;
+                }
+            }
+        }
+    }
+
+    private static void AddTrickshotEffect(WeaponBase weapon, int bounceCount, float bounceDamageMultiplier)
     {
         weapon.AddEffect(new TrickshotBounce
             { BounceCount = bounceCount, BounceDamageMultiplier = bounceDamageMultiplier });

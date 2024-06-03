@@ -1,4 +1,6 @@
-﻿namespace fms.Faction;
+﻿using fms.Weapon;
+
+namespace fms.Faction;
 
 /// <summary>
 ///     Lv2: デュエリスト を持つミニオンのクールダウンを 10%減少させる
@@ -24,35 +26,68 @@ public sealed class Duelist : FactionBase
                 continue;
             }
 
-            switch (level)
+            if (level >= 6)
             {
-                case >= 6:
-                {
-                    weapon.AddEffect(new ReduceCoolDownRate { Value = 0.2f });
-                    weapon.SolveEffect();
-                    break;
-                }
-                case >= 4:
-                {
-                    if (minion.Faction.HasFlag(FactionType.Duelist))
-                    {
-                        weapon.AddEffect(new ReduceCoolDownRate { Value = 0.2f });
-                        weapon.SolveEffect();
-                    }
+                AddReduceCoolDownEffect(weapon, 0.2f);
+                continue;
+            }
 
-                    break;
-                }
-                case >= 2:
+            if (minion.Faction.HasFlag(FactionType.Duelist))
+            {
+                switch (level)
                 {
-                    if (minion.Faction.HasFlag(FactionType.Duelist))
-                    {
-                        weapon.AddEffect(new ReduceCoolDownRate { Value = 0.1f });
-                        weapon.SolveEffect();
-                    }
-
-                    break;
+                    case >= 4:
+                        AddReduceCoolDownEffect(weapon, 0.2f);
+                        break;
+                    case >= 2:
+                        AddReduceCoolDownEffect(weapon, 0.1f);
+                        break;
                 }
             }
         }
+    }
+
+    private protected override void OnLevelReset(int oldLevel)
+    {
+        if (oldLevel < 2)
+        {
+            return;
+        }
+
+        var minions = Main.PlayerInventory.Minions;
+        foreach (var minion in minions)
+        {
+            // Weapon を所持していない (手札にない)
+            var weapon = minion.Weapon;
+            if (weapon == null)
+            {
+                continue;
+            }
+
+            if (oldLevel >= 6)
+            {
+                AddReduceCoolDownEffect(weapon, -0.2f);
+                continue;
+            }
+
+            if (minion.Faction.HasFlag(FactionType.Duelist))
+            {
+                switch (oldLevel)
+                {
+                    case >= 4:
+                        AddReduceCoolDownEffect(weapon, -0.2f);
+                        break;
+                    case >= 2:
+                        AddReduceCoolDownEffect(weapon, -0.1f);
+                        break;
+                }
+            }
+        }
+    }
+
+    private static void AddReduceCoolDownEffect(WeaponBase weapon, float value)
+    {
+        weapon.AddEffect(new ReduceCoolDownRate { Value = value });
+        weapon.SolveEffect();
     }
 }
