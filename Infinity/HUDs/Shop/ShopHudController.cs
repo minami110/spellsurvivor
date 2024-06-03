@@ -31,6 +31,9 @@ public partial class ShopHudController : Node
     private Button _lockButton = null!;
 
     [Export]
+    private Button _addSlotButton = null!;
+
+    [Export]
     private Button _quitShopButton = null!;
 
     [Export]
@@ -44,6 +47,8 @@ public partial class ShopHudController : Node
         // ボタンの名前を更新
         _upgradeButton.Text = $"Upgrade (${Main.ShopState.Config.UpgradeCost})";
         _rerollButton.Text = $"Reroll (${Main.ShopState.Config.RerollCost})";
+        _addSlotButton.Text = $"AddSlot (${Main.ShopState.Config.AddSlotCost})";
+        _lockButton.Text = Main.ShopState.IsLocked ? "Unlock" : "Lock";
 
         // ボタンのバインドを更新
         var d00 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.RefreshInStoreMinions(); });
@@ -54,23 +59,19 @@ public partial class ShopHudController : Node
         });
         var d03 = _lockButton.PressedAsObservable().Subscribe(_ =>
         {
-            if (_lockButton.Text == "Lock")
+            if (Main.ShopState.IsLocked)
             {
-                _lockButton.Text = "Unlock";
-                foreach (var m in Main.ShopState.InStoreMinions)
-                {
-                    m.Lock();
-                }
+                _lockButton.Text = "Lock";
+                Main.ShopState.IsLocked = false;
             }
             else
             {
-                _lockButton.Text = "Lock";
-                foreach (var m in Main.ShopState.InStoreMinions)
-                {
-                    m.Unlock();
-                }
+                _lockButton.Text = "Unlock";
+                Main.ShopState.IsLocked = true;
             }
         });
+        var d04 = _addSlotButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.AddItemSlot(); });
+
 
         // Player Money の変更を監視
         var d10 = Main.PlayerState.Money.Subscribe(this, (x, state) => state._playerMoneyLabel.Text = $"$ {x}");
@@ -95,7 +96,7 @@ public partial class ShopHudController : Node
             }
         });
 
-        Disposable.Combine(d00, d01, d02, d03, d10, d20, d30, d31, d40).AddTo(this);
+        Disposable.Combine(d00, d01, d02, d03, d04, d10, d20, d30, d31, d40).AddTo(this);
     }
 
     private void OnEquippedMinionChanged(Unit _)

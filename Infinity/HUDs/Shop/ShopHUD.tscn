@@ -10,7 +10,7 @@
 [node name="ShopHUD (Layer 2)" type="CanvasLayer"]
 layer = 2
 
-[node name="ShopHudController" type="Node" parent="." node_paths=PackedStringArray("_container", "_shopItemSpawnParent", "_equipItemSpawnParent", "_upgradeButton", "_rerollButton", "_lockButton", "_quitShopButton", "_playerMoneyLabel", "_shopLevelLabel")]
+[node name="ShopHudController" type="Node" parent="." node_paths=PackedStringArray("_container", "_shopItemSpawnParent", "_equipItemSpawnParent", "_upgradeButton", "_rerollButton", "_lockButton", "_addSlotButton", "_quitShopButton", "_playerMoneyLabel", "_shopLevelLabel")]
 script = ExtResource("1_5xunh")
 _container = NodePath("../Container")
 _instoreItemPackedScene = ExtResource("2_7j4ye")
@@ -20,6 +20,7 @@ _equipItemSpawnParent = NodePath("../Container/HBox Equipment Item Parent")
 _upgradeButton = NodePath("../Container/HBox Shop Buttons/Button UpgradeShop")
 _rerollButton = NodePath("../Container/HBox Shop Buttons/Button RerollItems")
 _lockButton = NodePath("../Container/HBox Shop Buttons/Button LockItems")
+_addSlotButton = NodePath("../Container/HBox Shop Buttons/AddSlotButton")
 _quitShopButton = NodePath("../Container/Button Buttle")
 _playerMoneyLabel = NodePath("../Container/VBox Player Status/Label Gold")
 _shopLevelLabel = NodePath("../Container/HBox Shop Buttons/Label ShopLevel")
@@ -81,6 +82,10 @@ text = "Lv.N/A"
 [node name="Button UpgradeShop" type="Button" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
 text = "Upgrade ($N/A)"
+
+[node name="AddSlotButton" type="Button" parent="Container/HBox Shop Buttons"]
+layout_mode = 2
+text = "AddSlot($1)"
 
 [node name="Button RerollItems" type="Button" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
@@ -245,5 +250,3 @@ ToolTipText = "Trickshot
 
 Lv2: 跳ね返り回数 1,  跳ね返った攻撃倍率 40 %
 Lv4: 跳ね返り回数 2, 跳ね返った攻撃倍率 60 %"
-
-[connection signal="pressed" from="Container/Button Buttle" to="." method="OnCloseButtonPressed"]

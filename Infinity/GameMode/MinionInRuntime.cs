@@ -33,8 +33,6 @@ public sealed class MinionInRuntime : IDisposable
 
     public bool IsMaxLevel => _levelRp.Value >= _MAX_LEVEL;
 
-    public bool IsLocked { get; private set; }
-
     public int Tier { get; }
 
     public int Price { get; }
@@ -74,20 +72,19 @@ public sealed class MinionInRuntime : IDisposable
         WeaponPackedScene = minionCoreData.WeaponPackedScene;
     }
 
-    public void Lock()
+    public void ResetRuntimeStatus()
     {
-        IsLocked = true;
+        Place = MinionPlace.InShop;
+        Weapon = null;
+        SetLevel(1);
     }
+
 
     public void SetLevel(int level)
     {
         _levelRp.Value = Math.Clamp(level, _MIN_LEVEL, _MAX_LEVEL);
     }
 
-    public void Unlock()
-    {
-        IsLocked = false;
-    }
 
     public void Dispose()
     {

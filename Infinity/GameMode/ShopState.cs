@@ -34,6 +34,8 @@ public sealed class ShopState : IDisposable
 
     public ShopConfig Config { get; }
 
+    public bool IsLocked { get; set; }
+
     public ShopState(ShopConfig config)
     {
         Config = config;
@@ -101,22 +103,20 @@ public sealed class ShopState : IDisposable
 
     public void RefreshInStoreMinions()
     {
-        GD.Print("[ShopState] RefreshInStoreMinions");
-
-        // Lock がかかっていない Minion を全て解除
-        for (var i = _inStoreMinions.Count - 1; i >= 0; i--)
+        // ショップがロックされているときは Refresh しない
+        if (IsLocked)
         {
-            var minion = _inStoreMinions[i];
-            if (!minion.IsLocked)
-            {
-                _inStoreMinions.Remove(minion);
-            }
+            GD.Print("[ShopState] Shop is locked. Refresh skipped.");
+            return;
         }
+
+        _inStoreMinions.Clear();
 
         // スロットカウントの数だけ Pool から Minion を取り出す
         var tryCount = _itemSlotCount - _inStoreMinions.Count;
         if (tryCount <= 0)
         {
+            GD.Print("[ShopState] No need to refresh. Refresh skipped.");
             return;
         }
 

@@ -83,7 +83,9 @@ public sealed class PlayerInventory : IDisposable
 
         UnequipMinion(minion.Id);
         _minions.Remove(minion);
-        minion.Place = MinionPlace.InShop;
+
+        // Reset Minion Status
+        minion.ResetRuntimeStatus();
         return true;
     }
 
