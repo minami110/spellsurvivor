@@ -79,7 +79,12 @@ public partial class ShopSellingItem : VBoxContainer
             return;
         }
 
-        ToolTipToast.Text = Minion.Description;
+        var text = $"{Minion.Name}\n";
+        text += $"Tier: {Minion.Tier}\n";
+        text += $"Faction: ${Minion.Faction}\n";
+        text += $"{Minion.Description}\n";
+
+        ToolTipToast.Text = text;
         ToolTipToast.Show();
     }
 }

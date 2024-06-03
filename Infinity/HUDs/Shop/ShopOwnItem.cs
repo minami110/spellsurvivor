@@ -49,7 +49,12 @@ public partial class ShopOwnItem : VBoxContainer
 
     private void ShowToolTip()
     {
-        ToolTipToast.Text = Minion.Description;
+        var text = $"{Minion.Name} Lv.{Minion.Level.CurrentValue}\n";
+        text += $"Tier: {Minion.Tier}\n";
+        text += $"Faction: ${Minion.Faction}\n";
+        text += $"{Minion.Description}\n";
+
+        ToolTipToast.Text = text;
         ToolTipToast.Show();
     }
 }

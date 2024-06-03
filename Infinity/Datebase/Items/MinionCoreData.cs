@@ -17,10 +17,9 @@ public partial class MinionCoreData : Resource
 
     /// <summary>
     ///     Minion が所有する Faction のリスト (Flag)
-    ///     Note: FactionType を増やしたら PropertyHint の選択項目も増やしてあげてください
     /// </summary>
-    [Export(PropertyHint.Flags, "Bruiser,Duelist,Trickshot")]
-    public FactionType Faction { get; private set; } = FactionType.None;
+    [Export(PropertyHint.Flags)]
+    public FactionType Faction { get; private set; }
 
     [Export(PropertyHint.Range, "1,100,1")]
     public int Price { get; private set; } = 10;

@@ -35,6 +35,8 @@ public sealed class MinionInRuntime : IDisposable
 
     public bool IsLocked { get; private set; }
 
+    public int Tier { get; }
+
     public int Price { get; }
 
     public Texture2D Sprite { get; }
@@ -65,6 +67,7 @@ public sealed class MinionInRuntime : IDisposable
         Id = minionCoreData.Id;
         Price = minionCoreData.Price;
         Faction = minionCoreData.Faction;
+        Tier = minionCoreData.Tier;
         Name = minionCoreData.Name;
         Description = minionCoreData.Description;
         Sprite = minionCoreData.Sprite;

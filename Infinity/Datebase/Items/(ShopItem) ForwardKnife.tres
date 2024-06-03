@@ -7,14 +7,11 @@
 [resource]
 script = ExtResource("3_oigos")
 Id = "ForwardKnife"
+Tier = 1
+Faction = 7
+Price = 3
 Name = "ダガー"
-Description = "ダガー
-プレイヤーの正面に常に攻撃を行う
-
-Tier: 1
-シナジー: Duelist
+Description = "プレイヤーの正面に常に攻撃を行う
 攻撃力: 50"
 Sprite = ExtResource("2_cd5jy")
-Tier = 1
-Price = 3
 WeaponPackedScene = ExtResource("1_lo58r")

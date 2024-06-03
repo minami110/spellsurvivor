@@ -7,12 +7,10 @@
 [resource]
 script = ExtResource("3_7flxl")
 Id = "PoisonMistGen"
-Name = "毒沼"
-Description = "毒沼
-一定間隔で毒沼を生成
-
-Tier: 2"
-Sprite = ExtResource("2_mr1ib")
 Tier = 2
+Faction = 7
 Price = 3
+Name = "毒沼"
+Description = "一定間隔で毒沼を生成"
+Sprite = ExtResource("2_mr1ib")
 WeaponPackedScene = ExtResource("1_xkfvm")

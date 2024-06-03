@@ -5,6 +5,7 @@ namespace fms;
 
 public enum WavePhase
 {
+    Init,
     SHOP,
     BATTLE,
     BATTLERESULT
@@ -14,13 +15,14 @@ public sealed class WaveState : IDisposable
 {
     public enum Signal
     {
+        GAMEMODE_START,
         PLAYER_ACCEPTED_BATTLE_RESULT,
         PLAYER_ACCEPTED_SHOP
     }
 
     private readonly ReactiveProperty<double> _battlePhaseTimeLeft = new();
 
-    private readonly ReactiveProperty<WavePhase> _phaseRp = new(WavePhase.SHOP);
+    private readonly ReactiveProperty<WavePhase> _phaseRp = new(WavePhase.Init);
     private readonly ReactiveProperty<int> _waveRp = new(-1);
     public required BattleWaveConfig Config { get; init; }
 
@@ -55,7 +57,14 @@ public sealed class WaveState : IDisposable
 
     public void SendSignal(Signal signal)
     {
-        if (signal == Signal.PLAYER_ACCEPTED_BATTLE_RESULT)
+        if (signal == Signal.GAMEMODE_START)
+        {
+            if (_phaseRp.Value == WavePhase.Init)
+            {
+                _phaseRp.Value = WavePhase.SHOP;
+            }
+        }
+        else if (signal == Signal.PLAYER_ACCEPTED_BATTLE_RESULT)
         {
             if (_phaseRp.Value == WavePhase.BATTLERESULT)
             {

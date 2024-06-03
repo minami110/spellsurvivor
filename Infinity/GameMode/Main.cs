@@ -101,10 +101,6 @@ public partial class Main : Node
 
     public override void _Ready()
     {
-        // PlayerController の初期化
-        _playerController.Possess((IPawn)_playerPawn);
-        ResetPlayerState();
-
         // Battle Wave の開始時
         var d1 = _waveState.Phase.Where(x => x == WavePhase.BATTLE).Subscribe(this, (_, state) =>
         {
@@ -127,10 +123,19 @@ public partial class Main : Node
         // Shop 進入時
         var d3 = _waveState.Phase.Where(x => x == WavePhase.SHOP).Subscribe(this, (_, state) =>
         {
-            // Playerに報酬を与える
-            var reward = state._waveState.CurrentWaveConfig.Reward;
-            state._playerState.AddEffect(new AddMoneyEffect { Value = reward });
-            state._playerState.SolveEffect();
+            if (state._waveState.Wave.CurrentValue >= 0)
+            {
+                // Playerに報酬を与える
+                var reward = state._waveState.CurrentWaveConfig.Reward;
+                state._playerState.AddEffect(new AddMoneyEffect { Value = reward });
+                state._playerState.SolveEffect();
+            }
+            else
+            {
+                // PlayerController の初期化
+                _playerController.Possess((IPawn)_playerPawn);
+                ResetPlayerState();
+            }
 
             // Shop のリロール
             state._shopState.RefreshInStoreMinions();
@@ -138,6 +143,9 @@ public partial class Main : Node
 
         // Disposable registration
         Disposable.Combine(_playerState, _waveState, _shopState, _playerInventory, d1, d2, d3).AddTo(this);
+
+        // Start Game
+        _waveState.SendSignal(WaveState.Signal.GAMEMODE_START);
     }
 
     public override void _Process(double delta)

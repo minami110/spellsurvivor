@@ -101,6 +101,8 @@ public sealed class ShopState : IDisposable
 
     public void RefreshInStoreMinions()
     {
+        GD.Print("[ShopState] RefreshInStoreMinions");
+
         // Lock がかかっていない Minion を全て解除
         for (var i = _inStoreMinions.Count - 1; i >= 0; i--)
         {
@@ -118,8 +120,6 @@ public sealed class ShopState : IDisposable
             return;
         }
 
-        GD.Print($"[ShopState] RefreshInStoreMinions: {tryCount}");
-
         for (var i = 0; i < tryCount; i++)
         {
             // ティアを決定する
@@ -135,8 +135,6 @@ public sealed class ShopState : IDisposable
 
                 break;
             }
-
-            GD.Print($"[ShopState] Tier: {targetTier}");
 
             // ティアが決定したので Minion を選択する
             MinionInRuntime? minion = null;
@@ -162,7 +160,6 @@ public sealed class ShopState : IDisposable
                 throw new NotImplementedException("有効な Minion が見つかりませんでした");
             }
 
-            GD.Print($"[ShopState] Choise: {minion}");
             _inStoreMinions.Add(minion);
         }
 
