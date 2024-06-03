@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using fms.Effect;
-using fms.Faction;
 using fms.Projectile;
 using Godot;
 
@@ -15,21 +14,10 @@ public partial class ForwardKnife : WeaponBase
     [Export]
     private Node _bulletSpawnNode = null!;
 
-    // この Minion が所属する Faction の一覧
-    private static readonly FactionBase[] _factions =
-    {
-        new Bruiser(),
-        new Duelist(),
-        new Knight(),
-        new Trickshot()
-    };
-
     private int _trickshotBounceCount;
     private float _trickshotBounceDamageMultiplier;
 
     private protected override int BaseCoolDownFrame => 60;
-
-    public override FactionBase[] Factions => _factions;
 
     private protected override void DoAttack()
     {

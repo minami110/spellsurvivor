@@ -1,5 +1,4 @@
-﻿using fms.Faction;
-using fms.Projectile;
+﻿using fms.Projectile;
 using Godot;
 
 namespace fms.Weapon;
@@ -19,17 +18,7 @@ public partial class AutoAimPistol : WeaponBase
     [Export]
     private Area2D _searchArea = null!;
 
-    // この Minion が所属する Faction の一覧
-    private static readonly FactionBase[] _factions =
-    {
-        new Duelist(),
-        new Bruiser(),
-        new Trickshot()
-    };
-
     private protected override int BaseCoolDownFrame => 120;
-
-    public override FactionBase[] Factions => _factions;
 
     public override void _Ready()
     {

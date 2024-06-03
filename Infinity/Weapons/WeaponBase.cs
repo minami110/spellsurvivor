@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using fms.Faction;
+﻿using System.Collections.Generic;
 using Godot;
 using R3;
 
@@ -13,10 +9,12 @@ namespace fms.Weapon;
 /// </summary>
 public partial class WeaponBase : Node2D, IEffectSolver
 {
+    [Export]
+    private FrameTimer _frameTimer = null!;
+
     private readonly ReactiveProperty<int> _coolDownLeft = new(1);
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
     private readonly List<EffectBase> _effects = new();
-    private CancellationTokenSource? _runningFrameTimerCts;
 
     public string Id => CoreData.Id;
 
@@ -34,11 +32,6 @@ public partial class WeaponBase : Node2D, IEffectSolver
     ///     ベースの攻撃間隔 (単位: Frame)
     /// </summary>
     private protected virtual int BaseCoolDownFrame => 1;
-
-    /// <summary>
-    ///     Minion が所属する Faction (シナジー) を取得
-    /// </summary>
-    public virtual FactionBase[] Factions { get; } = Array.Empty<FactionBase>();
 
     /// <summary>
     /// </summary>
@@ -60,32 +53,22 @@ public partial class WeaponBase : Node2D, IEffectSolver
         {
             if (phase == WavePhase.BATTLE)
             {
-                state.StartCoolDownTimer();
+                state._frameTimer.WaitFrame = state.CoolDown;
+                state._frameTimer.Start();
             }
             else
             {
-                state.StopCoolDownTimer();
+                state._frameTimer.Stop();
             }
         });
+
+        var d2 = _frameTimer.TimeOut.Subscribe(this, (_, state) => { state.DoAttack(); });
 
         // Observable の初期化
         var d3 = _coolDownLeft;
         var d5 = _coolDownReduceRateRp;
 
-        Disposable.Combine(d1, d3, d5).AddTo(this);
-
-        // Tree から抜けるときにタイマーを止める
-        TreeExiting += StopCoolDownTimer;
-    }
-
-    /// <summary>
-    ///     指定された Type の Faction に所属しているかどうか
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public bool IsFaction<T>() where T : FactionBase
-    {
-        return Factions.Any(f => f.GetType() == typeof(T));
+        Disposable.Combine(d1, d2, d3, d5).AddTo(this);
     }
 
     private protected virtual void DoAttack()
@@ -96,45 +79,6 @@ public partial class WeaponBase : Node2D, IEffectSolver
     {
     }
 
-    private async void StartCoolDownTimer()
-    {
-        if (_runningFrameTimerCts is not null)
-        {
-            // Already Running
-            return;
-        }
-
-        _runningFrameTimerCts = new CancellationTokenSource();
-        var token = _runningFrameTimerCts.Token;
-        _coolDownLeft.Value = CoolDown;
-
-        var tree = GetTree();
-
-        while (!token.IsCancellationRequested)
-        {
-            await this.BeginOfProcessAsync();
-
-            if (tree.Paused)
-            {
-                continue;
-            }
-
-            _coolDownLeft.Value -= 1;
-            if (_coolDownLeft.Value > 0)
-            {
-                continue;
-            }
-
-            DoAttack();
-            _coolDownLeft.Value = CoolDown;
-        }
-    }
-
-    private void StopCoolDownTimer()
-    {
-        _runningFrameTimerCts?.Cancel();
-        _runningFrameTimerCts = null;
-    }
 
     public virtual void AddEffect(EffectBase effect)
     {

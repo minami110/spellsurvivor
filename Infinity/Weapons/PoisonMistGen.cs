@@ -1,5 +1,4 @@
-﻿using fms.Faction;
-using fms.Projectile;
+﻿using fms.Projectile;
 using Godot;
 
 namespace fms.Weapon;
@@ -16,21 +15,10 @@ public partial class PoisonMistGen : WeaponBase
     [Export]
     private Node _bulletSpawnNode = null!;
 
-    // この Minion が所属する Faction の一覧
-    private static readonly FactionBase[] _factions =
-    {
-        new Bruiser(),
-        new Duelist(),
-        new Knight(),
-        new Trickshot()
-    };
-
     private int _trickshotBounceCount;
     private float _trickshotBounceDamageMultiplier;
 
     private protected override int BaseCoolDownFrame => 300;
-
-    public override FactionBase[] Factions => _factions;
 
     private protected override void DoAttack()
     {
