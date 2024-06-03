@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://cc0rh5i501pkg"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/Book.cs" id="1_vqguh"]
+[ext_resource type="PackedScene" uid="uid://5s5irgscu2xo" path="res://Infinity/Projectiles/(Projectile) RotateBook.tscn" id="2_icmed"]
+[ext_resource type="Script" path="res://Common/FrameTimer.cs" id="3_ys5ju"]
+
+[node name="Book" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_frameTimer")]
+script = ExtResource("1_vqguh")
+_bulletPackedScene = ExtResource("2_icmed")
+_bulletSpawnNode = NodePath("BulletSpawnRoot")
+_frameTimer = NodePath("FrameTimer")
+
+[node name="BulletSpawnRoot" type="Node" parent="."]
+
+[node name="FrameTimer" type="Node" parent="."]
+script = ExtResource("3_ys5ju")
