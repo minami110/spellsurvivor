@@ -14,20 +14,17 @@ public partial class EscapeGUI : CanvasLayer
     [Export]
     private Control _settingsRoot = null!;
 
-    private bool _isOpenSettings;
-
     public override void _Ready()
     {
         _settingsRoot.Hide();
 
         _settingsbutton.PressedAsObservable().Subscribe(_ =>
         {
-            if (_isOpenSettings)
+            if (_settingsRoot.Visible)
             {
                 return;
             }
 
-            _isOpenSettings = true;
             _settingsRoot.Show();
         }).AddTo(this);
         Hide();
@@ -37,10 +34,9 @@ public partial class EscapeGUI : CanvasLayer
     {
         if (inputEvent.IsActionPressed("open_pose"))
         {
-            if (_isOpenSettings)
+            if (_settingsRoot.Visible)
             {
                 _settingsRoot.Hide();
-                _isOpenSettings = false;
                 return;
             }
 
