@@ -5,13 +5,42 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf86h"]
 bg_color = Color(0.20871, 0.20871, 0.20871, 1)
 
-[node name="SettingsTab" type="TabContainer" node_paths=PackedStringArray("_masterVolumeSlider")]
+[node name="SettingsTab" type="TabContainer" node_paths=PackedStringArray("_masterVolumeSlider", "_languageMenuButton")]
 process_mode = 3
 custom_minimum_size = Vector2(600, 600)
 script = ExtResource("1_i1xjl")
 _masterVolumeSlider = NodePath("Audio/MarginContainer/VBox/HBoxContainer/MasterVolumeSlider")
+_languageMenuButton = NodePath("General/MarginContainer/VBox/HBoxContainer/MenuButton")
+
+[node name="General" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yf86h")
+
+[node name="MarginContainer" type="MarginContainer" parent="General"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="VBox" type="VBoxContainer" parent="General/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="General/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="General/MarginContainer/VBox/HBoxContainer"]
+layout_mode = 2
+text = "Language"
+
+[node name="MenuButton" type="MenuButton" parent="General/MarginContainer/VBox/HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "N/A"
 
 [node name="Audio" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_yf86h")
 

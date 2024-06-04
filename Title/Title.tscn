@@ -45,15 +45,15 @@ grow_vertical = 2
 
 [node name="InfinityButton" type="Button" parent="VBox Button Menu"]
 layout_mode = 2
-text = "Start Infinity"
+text = "TITLE_START_INFINITY"
 
 [node name="SettingsButton" type="Button" parent="VBox Button Menu"]
 layout_mode = 2
-text = "Settings"
+text = "UI_SETTINGS"
 
 [node name="ExitButton" type="Button" parent="VBox Button Menu"]
 layout_mode = 2
-text = "Exit"
+text = "UI_QUIT"
 
 [node name="powerdbygodot" type="Label" parent="."]
 anchors_preset = 3

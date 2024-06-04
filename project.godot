@@ -79,6 +79,10 @@ open_pose={
 ]
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://Common/Resources/Translation/infinity.en.en.translation", "res://Common/Resources/Translation/infinity.ja.ja.translation")
+
 [layer_names]
 
 2d_physics/layer_1="Player"

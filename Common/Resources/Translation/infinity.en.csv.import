@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://d0e6pkbrw21lx"
+
+[deps]
+
+files=["res://Common/Resources/Translation/infinity.en.en.translation"]
+
+source_file="res://Common/Resources/Translation/infinity.en.csv"
+dest_files=["res://Common/Resources/Translation/infinity.en.en.translation"]
+
+[params]
+
+compress=true
+delimiter=0
