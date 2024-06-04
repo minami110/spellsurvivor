@@ -1,7 +1,8 @@
 using System.Linq;
-using fms;
 using Godot;
 using R3;
+
+namespace fms;
 
 public partial class SoundManager : Node
 {
@@ -16,6 +17,13 @@ public partial class SoundManager : Node
 
     [Export]
     private AudioStream _buttonClickSound = null!;
+
+    private static SoundManager? _instance;
+
+    public SoundManager()
+    {
+        _instance = this;
+    }
 
     public override void _Ready()
     {
@@ -43,6 +51,27 @@ public partial class SoundManager : Node
                 EffectBgmBattleToShop();
             }
         });
+    }
+
+    public override void _ExitTree()
+    {
+        _instance = null;
+    }
+
+    public static async void PlaySoundEffect(AudioStream stream)
+    {
+        if (_instance is not null)
+        {
+            if (_instance._effectPlayer.Playing)
+            {
+                return;
+            }
+
+            _instance._effectPlayer.Stream = stream;
+            _instance._effectPlayer.Play();
+            await _instance.ToSignal(_instance._effectPlayer, AudioStreamPlayer.SignalName.Finished);
+            _instance._effectPlayer.Stop();
+        }
     }
 
     private async void EffectBgmBattleToShop()
