@@ -13,6 +13,12 @@ public partial class SoundManager : Node
     private AudioStreamPlayer _bgmBPlayer = null!;
 
     [Export]
+    private AudioStreamPlayer _bgmCPlayer = null!;
+
+    [Export]
+    private AudioStreamOggVorbis _seFanfale = null!;
+
+    [Export]
     private AudioStreamPlayer _effectPlayer = null!;
 
     [Export]
@@ -50,6 +56,10 @@ public partial class SoundManager : Node
             {
                 EffectBgmBattleToShop();
             }
+            else if (x == WavePhase.BATTLERESULT)
+            {
+                EnterBattleResult();
+            }
         });
     }
 
@@ -85,12 +95,6 @@ public partial class SoundManager : Node
         var tween = CreateTween();
         tween.TweenProperty(lowPass, p, 140f, 0.5f);
         tween.Play();
-
-        // Remove BGM
-        var nextStartTimeLeft = 2d - GetPlaybackTime(_bgmBPlayer);
-        var delay = AudioServer.GetTimeToNextMix() + AudioServer.GetOutputLatency();
-        await this.WaitForSecondsAsync(nextStartTimeLeft - delay);
-        _bgmAPlayer.Stop();
     }
 
     private async void EffectBgmShopToBattle()
@@ -110,6 +114,20 @@ public partial class SoundManager : Node
         var delay = AudioServer.GetTimeToNextMix() + AudioServer.GetOutputLatency();
         await this.WaitForSecondsAsync(nextStartTimeLeft - delay);
         _bgmAPlayer.Play();
+    }
+
+    private async void EnterBattleResult()
+    {
+        // Add BGM
+        var nextStartTimeLeft = (2f - GetPlaybackTime(_bgmBPlayer)) % 0.5f;
+        var delay = AudioServer.GetTimeToNextMix() + AudioServer.GetOutputLatency();
+        await this.WaitForSecondsAsync(nextStartTimeLeft - delay);
+
+        _bgmAPlayer.Stop();
+        _bgmCPlayer.Stream = _seFanfale;
+        _bgmCPlayer.Play();
+        await ToSignal(_bgmCPlayer, AudioStreamPlayer.SignalName.Finished);
+        _bgmCPlayer.Stop();
     }
 
     private static double GetPlaybackTime(AudioStreamPlayer player)
