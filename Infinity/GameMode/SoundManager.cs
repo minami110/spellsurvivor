@@ -61,6 +61,12 @@ public partial class SoundManager : Node
                 EnterBattleResult();
             }
         });
+
+        GameConfig.Singleton.AudioMasterVolume.Subscribe(x =>
+        {
+            var busIndex = AudioServer.GetBusIndex("Master");
+            AudioServer.SetBusVolumeDb(busIndex, VolumeToDb(x));
+        });
     }
 
     public override void _ExitTree()
@@ -147,5 +153,19 @@ public partial class SoundManager : Node
         _effectPlayer.Play();
         await ToSignal(_effectPlayer, AudioStreamPlayer.SignalName.Finished);
         _effectPlayer.Stop();
+    }
+
+    private static float VolumeToDb(float volume)
+    {
+        // Clamp the volume to the 0-1 range
+        volume = Mathf.Clamp(volume, 0f, 1f);
+
+        // Convert the volume to a dB scale
+        var db = 20f * Mathf.Log(volume);
+
+        // Clamp the dB value to the -80 to 0 range
+        db = Mathf.Max(-80f, Mathf.Min(0f, db));
+
+        return db;
     }
 }

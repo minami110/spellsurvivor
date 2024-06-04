@@ -1,4 +1,5 @@
 using Godot;
+using R3;
 
 namespace fms;
 
@@ -7,8 +8,28 @@ public partial class EscapeGUI : CanvasLayer
     [Export(PropertyHint.File, "*.tscn")]
     private string _titleScene = null!;
 
+    [Export]
+    private Button _settingsbutton = null!;
+
+    [Export]
+    private Control _settingsRoot = null!;
+
+    private bool _isOpenSettings;
+
     public override void _Ready()
     {
+        _settingsRoot.Hide();
+
+        _settingsbutton.PressedAsObservable().Subscribe(_ =>
+        {
+            if (_isOpenSettings)
+            {
+                return;
+            }
+
+            _isOpenSettings = true;
+            _settingsRoot.Show();
+        }).AddTo(this);
         Hide();
     }
 
@@ -16,6 +37,13 @@ public partial class EscapeGUI : CanvasLayer
     {
         if (inputEvent.IsActionPressed("open_pose"))
         {
+            if (_isOpenSettings)
+            {
+                _settingsRoot.Hide();
+                _isOpenSettings = false;
+                return;
+            }
+
             if (Visible)
             {
                 HideGui();

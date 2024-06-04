@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdohpbfaybfst"]
+
+[ext_resource type="Script" path="res://Title/SettingTab.cs" id="1_i1xjl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf86h"]
+bg_color = Color(0.20871, 0.20871, 0.20871, 1)
+
+[node name="SettingsTab" type="TabContainer" node_paths=PackedStringArray("_masterVolumeSlider")]
+process_mode = 3
+custom_minimum_size = Vector2(600, 600)
+script = ExtResource("1_i1xjl")
+_masterVolumeSlider = NodePath("Audio/MarginContainer/VBox/HBoxContainer/MasterVolumeSlider")
+
+[node name="Audio" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yf86h")
+
+[node name="MarginContainer" type="MarginContainer" parent="Audio"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="VBox" type="VBoxContainer" parent="Audio/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Audio/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Audio/MarginContainer/VBox/HBoxContainer"]
+layout_mode = 2
+text = "Master Volume"
+
+[node name="MasterVolumeSlider" type="HSlider" parent="Audio/MarginContainer/VBox/HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+step = 0.1
+scrollable = false

@@ -1,55 +1,59 @@
-[gd_scene load_steps=2 format=3 uid="uid://cfoh2vs087f48"]
+[gd_scene load_steps=4 format=3 uid="uid://cfoh2vs087f48"]
 
 [ext_resource type="Script" path="res://PoseMenu/EscapeGUI.cs" id="1_4hbvv"]
+[ext_resource type="PackedScene" uid="uid://bdohpbfaybfst" path="res://Title/SettingTab.tscn" id="2_gtihs"]
 
-[node name="PoseMenu" type="CanvasLayer"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ysej8"]
+bg_color = Color(0, 0, 0, 0.615686)
+
+[node name="PoseMenu" type="CanvasLayer" node_paths=PackedStringArray("_settingsbutton", "_settingsRoot")]
 process_mode = 3
 layer = 10
 script = ExtResource("1_4hbvv")
 _titleScene = "res://Title/Title.tscn"
+_settingsbutton = NodePath("PanelContainer/CenterContainer/Escape/SettingsButton")
+_settingsRoot = NodePath("PanelContainer/CenterContainer/Settings Tab")
 
-[node name="AspectRatioContainer" type="Panel" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
 process_mode = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ysej8")
 
-[node name="ColorRect" type="ColorRect" parent="AspectRatioContainer"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_stretch_ratio = 3.6
-color = Color(0, 0, 0, 0.843137)
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer"]
+layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer"]
-layout_mode = 1
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -62.5
-offset_right = 62.5
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Escape" type="VBoxContainer" parent="PanelContainer/CenterContainer"]
+layout_mode = 2
 alignment = 1
 
-[node name="Resume" type="Button" parent="AspectRatioContainer/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
 layout_mode = 2
+tooltip_text = "ゲームに戻ります"
 text = "Resume"
 
-[node name="Title" type="Button" parent="AspectRatioContainer/VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
 layout_mode = 2
+tooltip_text = "設定を開きます"
+text = "Setting
+"
+
+[node name="TitleButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
+layout_mode = 2
+tooltip_text = "タイトルに戻ります"
 text = "Title"
 
-[node name="ExitToDesktop" type="Button" parent="AspectRatioContainer/VBoxContainer"]
+[node name="ExitButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
 layout_mode = 2
+tooltip_text = "ゲームを終了します"
 text = "Exit to Desktop"
 
-[connection signal="pressed" from="AspectRatioContainer/VBoxContainer/Resume" to="." method="OnResumePressed"]
-[connection signal="pressed" from="AspectRatioContainer/VBoxContainer/Title" to="." method="OnTitlePressed"]
-[connection signal="pressed" from="AspectRatioContainer/VBoxContainer/ExitToDesktop" to="." method="OnExitPressed"]
+[node name="Settings Tab" parent="PanelContainer/CenterContainer" instance=ExtResource("2_gtihs")]
+layout_mode = 2
+
+[connection signal="pressed" from="PanelContainer/CenterContainer/Escape/ResumeButton" to="." method="OnResumePressed"]
+[connection signal="pressed" from="PanelContainer/CenterContainer/Escape/TitleButton" to="." method="OnTitlePressed"]
+[connection signal="pressed" from="PanelContainer/CenterContainer/Escape/ExitButton" to="." method="OnExitPressed"]
