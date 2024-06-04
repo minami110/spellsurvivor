@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://btwg0ccbd6qst"]
+[gd_scene load_steps=6 format=3 uid="uid://btwg0ccbd6qst"]
 
 [ext_resource type="Script" path="res://Title/Title.cs" id="1_1tswy"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="1_eylnh"]
+[ext_resource type="PackedScene" uid="uid://bdohpbfaybfst" path="res://Title/SettingTab.tscn" id="3_oidxe"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8xkta"]
 font_size = 12
@@ -9,12 +10,14 @@ font_size = 12
 [sub_resource type="LabelSettings" id="LabelSettings_55c07"]
 font_size = 50
 
-[node name="Title" type="Node" node_paths=PackedStringArray("_appNameLabel", "_appVersionLabel", "_godotVersionLabel")]
+[node name="Title" type="Node" node_paths=PackedStringArray("_appNameLabel", "_appVersionLabel", "_godotVersionLabel", "_settingsButton", "_settingsControl")]
 script = ExtResource("1_1tswy")
 _appNameLabel = NodePath("Title Group/appTitle")
 _appVersionLabel = NodePath("Title Group/appVersion")
 _godotVersionLabel = NodePath("powerdbygodot")
 _mainGameScene = "res://Infinity/Infinity.tscn"
+_settingsButton = NodePath("VBox Button Menu/SettingsButton")
+_settingsControl = NodePath("SettingsTab")
 
 [node name="Background Texture" type="TextureRect" parent="."]
 modulate = Color(0.219501, 0.219501, 0.219501, 1)
@@ -40,11 +43,15 @@ offset_bottom = 192.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Button Start" type="Button" parent="VBox Button Menu"]
+[node name="InfinityButton" type="Button" parent="VBox Button Menu"]
 layout_mode = 2
-text = "Start"
+text = "Start Infinity"
 
-[node name="Button Exit" type="Button" parent="VBox Button Menu"]
+[node name="SettingsButton" type="Button" parent="VBox Button Menu"]
+layout_mode = 2
+text = "Settings"
+
+[node name="ExitButton" type="Button" parent="VBox Button Menu"]
 layout_mode = 2
 text = "Exit"
 
@@ -102,5 +109,21 @@ text = "0.0.0"
 label_settings = SubResource("LabelSettings_8xkta")
 horizontal_alignment = 2
 
-[connection signal="pressed" from="VBox Button Menu/Button Start" to="." method="OnStartButtonPressed"]
-[connection signal="pressed" from="VBox Button Menu/Button Exit" to="." method="OnExitButtonPressed"]
+[node name="SettingsTab" parent="." instance=ExtResource("3_oidxe")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[connection signal="pressed" from="VBox Button Menu/InfinityButton" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="VBox Button Menu/ExitButton" to="." method="OnExitButtonPressed"]

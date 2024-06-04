@@ -1,4 +1,5 @@
 using Godot;
+using R3;
 
 namespace fms;
 
@@ -15,6 +16,12 @@ public partial class Title : Node
 
     [Export(PropertyHint.File, "*.tscn")]
     private string _mainGameScene = string.Empty;
+
+    [Export]
+    private Button _settingsButton = null!;
+
+    [Export]
+    private Control _settingsControl = null!;
 
     public override void _Ready()
     {
@@ -35,6 +42,21 @@ public partial class Title : Node
             _godotVersionLabel.Text =
                 $"Powered by Godot ({godotVersionInfo["major"]}.{godotVersionInfo["minor"]}.{godotVersionInfo["patch"]} {godotVersionInfo["status"]})";
         }
+
+        // Settings
+        _settingsControl.Hide();
+        _settingsButton.PressedAsObservable().Subscribe(_ => { _settingsControl.Show(); }).AddTo(this);
+    }
+
+    public override void _Input(InputEvent inputEvent)
+    {
+        if (inputEvent.IsActionPressed("open_pose"))
+        {
+            if (_settingsControl.Visible)
+            {
+                _settingsControl.Hide();
+            }
+        }
     }
 
     public void OnExitButtonPressed()
@@ -42,7 +64,6 @@ public partial class Title : Node
         // Close Application
         GetTree().Quit();
     }
-
 
     public void OnStartButtonPressed()
     {
