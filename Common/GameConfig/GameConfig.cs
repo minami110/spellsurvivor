@@ -10,6 +10,7 @@ public sealed class GameConfig
 
     public static readonly GameConfig Singleton;
     public readonly ReactiveProperty<float> AudioMasterVolume = new(0.8f);
+    public readonly ReactiveProperty<string> Locale = new();
 
     static GameConfig()
     {
@@ -24,6 +25,7 @@ public sealed class GameConfig
 
         // Globals
         config.SetValue(_SECTION_GLOBAL, "AudioMasterVolume", AudioMasterVolume.Value);
+        config.SetValue(_SECTION_GLOBAL, "Locale", Locale.Value);
         config.Save(_CONFIG_PATH);
     }
 
@@ -35,8 +37,10 @@ public sealed class GameConfig
         if (error == Error.Ok)
         {
             GD.Print("[GameConfig] Loaded config file");
+
             // Globals
             AudioMasterVolume.Value = (float)config.GetValue(_SECTION_GLOBAL, "AudioMasterVolume", 0.8f);
+            Locale.Value = (string)config.GetValue(_SECTION_GLOBAL, "Locale", string.Empty);
         }
         else
         {
