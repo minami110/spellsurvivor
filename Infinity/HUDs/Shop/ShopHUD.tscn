@@ -17,11 +17,11 @@ _instoreItemPackedScene = ExtResource("2_7j4ye")
 _shopOwnItemPackedScene = ExtResource("6_dux5n")
 _shopItemSpawnParent = NodePath("../Container/HBox Selling Item Parent")
 _equipItemSpawnParent = NodePath("../Container/HBox Equipment Item Parent")
-_upgradeButton = NodePath("../Container/HBox Shop Buttons/Button UpgradeShop")
-_rerollButton = NodePath("../Container/HBox Shop Buttons/Button RerollItems")
-_lockButton = NodePath("../Container/HBox Shop Buttons/Button LockItems")
+_upgradeButton = NodePath("../Container/HBox Shop Buttons/UpgradeButton")
+_rerollButton = NodePath("../Container/HBox Shop Buttons/RerollButton")
+_lockButton = NodePath("../Container/HBox Shop Buttons/LockButton")
 _addSlotButton = NodePath("../Container/HBox Shop Buttons/AddSlotButton")
-_quitShopButton = NodePath("../Container/Button Buttle")
+_quitShopButton = NodePath("../Container/BattleButton")
 _playerMoneyLabel = NodePath("../Container/VBox Player Status/Label Gold")
 _shopLevelLabel = NodePath("../Container/HBox Shop Buttons/Label ShopLevel")
 
@@ -45,7 +45,7 @@ size_flags_vertical = 4
 color = Color(0, 0, 0, 0.529412)
 metadata/_edit_lock_ = true
 
-[node name="Button Buttle" type="Button" parent="Container"]
+[node name="BattleButton" type="Button" parent="Container"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -79,7 +79,7 @@ grow_vertical = 2
 layout_mode = 2
 text = "Lv.N/A"
 
-[node name="Button UpgradeShop" type="Button" parent="Container/HBox Shop Buttons"]
+[node name="UpgradeButton" type="Button" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
 text = "Upgrade ($N/A)"
 
@@ -87,11 +87,11 @@ text = "Upgrade ($N/A)"
 layout_mode = 2
 text = "AddSlot($1)"
 
-[node name="Button RerollItems" type="Button" parent="Container/HBox Shop Buttons"]
+[node name="RerollButton" type="Button" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
 text = "Reroll ($1)"
 
-[node name="Button LockItems" type="Button" parent="Container/HBox Shop Buttons"]
+[node name="LockButton" type="Button" parent="Container/HBox Shop Buttons"]
 layout_mode = 2
 text = "Lock"
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=40 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="2_2pohd"]
@@ -22,6 +22,10 @@
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
 [ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://PoseMenu/PoseMenu.tscn" id="16_ngbfj"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
+[ext_resource type="Script" path="res://Infinity/GameMode/SoundManager.cs" id="23_nx00x"]
+[ext_resource type="AudioStream" uid="uid://cvxs4i276wwyw" path="res://Common/Resources/Sounds/ui-click-a.ogg" id="24_behmy"]
+[ext_resource type="AudioStream" uid="uid://b87r0jey48csu" path="res://Common/Resources/Sounds/bgm-loop-a-bpm120.ogg" id="24_x6bpv"]
+[ext_resource type="AudioStream" uid="uid://cdeinssa3sobx" path="res://Common/Resources/Sounds/bgm-loop-b-bpm120.ogg" id="26_dbtdb"]
 
 [sub_resource type="Resource" id="Resource_0ct4c"]
 script = ExtResource("2_2pohd")
@@ -176,3 +180,24 @@ visible = false
 visible = false
 
 [node name="DebugHUD (Layer 20)" parent="HUDs" instance=ExtResource("16_qck06")]
+
+[node name="SoundManager" type="Node" parent="." node_paths=PackedStringArray("_bgmAPlayer", "_bgmBPlayer", "_effectPlayer")]
+script = ExtResource("23_nx00x")
+_bgmAPlayer = NodePath("BGM A Player")
+_bgmBPlayer = NodePath("BGM B Player")
+_effectPlayer = NodePath("SE Player")
+_buttonClickSound = ExtResource("24_behmy")
+
+[node name="BGM A Player" type="AudioStreamPlayer" parent="SoundManager"]
+process_mode = 3
+stream = ExtResource("24_x6bpv")
+bus = &"BGM"
+
+[node name="BGM B Player" type="AudioStreamPlayer" parent="SoundManager"]
+process_mode = 3
+stream = ExtResource("26_dbtdb")
+bus = &"BGM"
+
+[node name="SE Player" type="AudioStreamPlayer" parent="SoundManager"]
+process_mode = 3
+bus = &"Effect"
