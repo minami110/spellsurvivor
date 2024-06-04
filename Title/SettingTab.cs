@@ -49,7 +49,6 @@ public partial class SettingTab : TabContainer
         };
     }
 
-
     public override void _ExitTree()
     {
         // Save config
