@@ -13,9 +13,6 @@ public partial class Main : Node
 
     [ExportGroup("Internal References")]
     [Export]
-    private PlayerController _playerController = null!;
-
-    [Export]
     private Node2D _playerPawn = null!;
 
     [Export]
@@ -135,7 +132,6 @@ public partial class Main : Node
             else
             {
                 // PlayerController の初期化
-                _playerController.Possess((IPawn)_playerPawn);
                 ResetPlayerState();
             }
 

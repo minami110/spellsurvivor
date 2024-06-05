@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bfke7q0b0owyb"]
 
 [ext_resource type="Script" path="res://Infinity/Player/MeMe.cs" id="1_xi18f"]
-[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="2_8bqg8"]
+[ext_resource type="Texture2D" uid="uid://bv2i2oqp72cwk" path="res://Common/Resources/Textures/LM7/chara-a.png" id="2_jbxe7"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
 radius = 20.0
@@ -14,21 +14,22 @@ script = ExtResource("1_xi18f")
 [node name="MainCamera" type="Camera2D" parent="."]
 zoom = Vector2(1.5, 1.5)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_awajj")
-
 [node name="TextureRect" type="TextureRect" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 20.0
-offset_top = -20.0
-offset_right = 60.0
-offset_bottom = 20.0
+offset_left = 33.0
+offset_top = -26.0
+offset_right = 84.0
+offset_bottom = 25.0
 grow_horizontal = 2
 grow_vertical = 2
 rotation = 1.5708
-texture = ExtResource("2_8bqg8")
+texture = ExtResource("2_jbxe7")
 expand_mode = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_awajj")
+debug_color = Color(0, 0.364706, 0.701961, 0.243137)
