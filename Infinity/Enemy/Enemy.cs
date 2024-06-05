@@ -8,7 +8,7 @@ public partial class Enemy : RigidBody2D
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _defaultMoveSpeed = 50f;
 
-    [Export(PropertyHint.Range, "0,1000,1")]
+    [Export(PropertyHint.Range, "0,10000,1")]
     private float _defaultHealth = 100f;
 
     /// <summary>
@@ -20,8 +20,8 @@ public partial class Enemy : RigidBody2D
     /// <summary>
     ///     プレイヤーと重なっている時攻撃を発生させるクールダウン
     /// </summary>
-    [Export]
-    private float _coolDown = 0.333f;
+    [Export(PropertyHint.Range, "1,9999,1")]
+    private uint _coolDownFrame = 20;
 
     [ExportGroup("Internal References")]
     [Export]
@@ -33,27 +33,16 @@ public partial class Enemy : RigidBody2D
     [Export]
     private Area2D _damageArea = null!;
 
-    private readonly EnemyState _state = new();
+    [Export]
+    private FrameTimer _attackTimer = null!;
 
-    private float _coolDownTimer;
+    private readonly EnemyState _state = new();
 
     private Node2D? _targetNode;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        _coolDownTimer = _coolDown;
-        _state.AddTo(this);
-
-        // Init state
-        _state.AddEffect(new AddMaxHealthEffect { Value = _defaultHealth });
-        _state.AddEffect(new AddHealthEffect { Value = _defaultHealth });
-        _state.AddEffect(new AddMoveSpeedEffect { Value = _defaultMoveSpeed });
-        _state.SolveEffect();
-
-        // Refresh HUD
-        UpdateHealthBar();
-
         // Gets the player's position
         if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
         {
@@ -64,39 +53,39 @@ public partial class Enemy : RigidBody2D
             GD.PrintErr($"[{nameof(Enemy)}] Player node is not found");
             SetProcess(false);
             SetPhysicsProcess(false);
+            return;
         }
+
+        // Init state
+        _state.AddEffect(new AddMaxHealthEffect { Value = _defaultHealth });
+        _state.AddEffect(new AddHealthEffect { Value = _defaultHealth });
+        _state.AddEffect(new AddMoveSpeedEffect { Value = _defaultMoveSpeed });
+        _state.SolveEffect();
+
+        // Refresh HUD
+        UpdateHealthBar();
+
+        // Subscribe and start FrameTimer
+        var d1 = _attackTimer.TimeOut.Subscribe(_ => Attack()).AddTo(this);
+        _attackTimer.WaitFrame = _coolDownFrame;
+        _attackTimer.Start();
+
+        Disposable.Combine(_state, d1).AddTo(this);
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override void _PhysicsProcess(double _)
     {
-        var direction = _targetNode!.GlobalPosition - GlobalPosition;
-        direction = direction.Normalized();
+        var delta = _targetNode!.GlobalPosition - GlobalPosition;
+        // 2opx 以内に近づいたら移動を停止する
+        if (delta.LengthSquared() < 400)
+        {
+            LinearVelocity = Vector2.Zero;
+            return;
+        }
+
+        var direction = delta.Normalized();
         var force = direction * _state.MoveSpeed.CurrentValue;
         LinearVelocity = force;
-    }
-
-    public override void _Process(double delta)
-    {
-        if (_coolDownTimer > 0)
-        {
-            _coolDownTimer -= (float)delta;
-            return;
-        }
-
-        _coolDownTimer = _coolDown;
-        var overlappingBodies = _damageArea.GetOverlappingBodies();
-        if (overlappingBodies.Count <= 0)
-        {
-            return;
-        }
-
-        foreach (var node in overlappingBodies)
-        {
-            if (node is MeMe player)
-            {
-                player.TakeDamage(_power);
-            }
-        }
     }
 
     public void TakeDamage(float amount)
@@ -117,14 +106,28 @@ public partial class Enemy : RigidBody2D
         }
     }
 
+    private void Attack()
+    {
+        var overlappingBodies = _damageArea.GetOverlappingBodies();
+        if (overlappingBodies.Count <= 0)
+        {
+            return;
+        }
+
+        foreach (var node in overlappingBodies)
+        {
+            if (node is MeMe player)
+            {
+                player.TakeDamage(_power);
+            }
+        }
+    }
+
     private void KillByDamage()
     {
         QueueFree();
     }
 
-    /// <summary>
-    ///     Wave 終了時に GameMode から呼ばれる
-    /// </summary>
     private void KillByWaveEnd()
     {
         QueueFree();

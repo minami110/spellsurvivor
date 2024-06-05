@@ -82,7 +82,7 @@ public partial class WeaponBase : Node2D, IEffectSolver
 
     public void StartAttack()
     {
-        _frameTimer.WaitFrame = (int)SolvedCoolDownFrame;
+        _frameTimer.WaitFrame = SolvedCoolDownFrame;
         _frameTimer.Start();
     }
 
