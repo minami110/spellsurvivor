@@ -33,7 +33,7 @@ public partial class RotateBook : ProjectileBase
         _rigidBody.Hide();
         
         // Set rigidbody parameter
-        _rigidBody.GlobalPosition = new Vector2(0f, 0f);
+        _rigidBody.GlobalPosition = CalculatePosition(_timer, _angularVelocity, Radius);
         _rigidBody.RotationDegrees = Angle;
         
         // Connect
@@ -58,16 +58,21 @@ public partial class RotateBook : ProjectileBase
         
         _timer += delta;
 
-        var positionX = (float)Mathf.Cos(_timer * _angularVelocity);
-        var positionY = (float)Mathf.Sin(_timer * _angularVelocity);
-        
-        var unitVec = new Vector2(positionX, positionY);
-        
-        _rigidBody.GlobalPosition = (unitVec * Radius) + Main.PlayerNode.GlobalPosition;
+        _rigidBody.GlobalPosition = CalculatePosition(_timer, _angularVelocity, Radius);
     }
     
     private void OnEnemyBodyEntered(Enemy enemy)
     {
         enemy.TakeDamage(BaseDamage);
+    }
+    
+    private Vector2 CalculatePosition(double time, float angularVelocity, float radius)
+    {
+        var positionX = (float)Mathf.Cos(time * angularVelocity);
+        var positionY = (float)Mathf.Sin(time * angularVelocity);
+        
+        var unitVec = new Vector2(positionX, positionY);
+        
+        return (unitVec * radius) + Main.PlayerNode.GlobalPosition;
     }
 }
