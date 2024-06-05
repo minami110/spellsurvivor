@@ -1,10 +1,21 @@
 using Godot;
+using R3;
 
 namespace fms;
 
 public partial class MeMe : CharacterBody2D, IPawn
 {
+    [Export]
+    private float _moveSpeed = 100f;
+
     private Vector2 _nextMoveDirection;
+
+    private PlayerState? _playerState;
+
+    public override void _EnterTree()
+    {
+        _playerState?.MoveSpeed.Subscribe(x => _moveSpeed = x).AddTo(this);
+    }
 
     public override void _PhysicsProcess(double delta)
     {
@@ -17,24 +28,29 @@ public partial class MeMe : CharacterBody2D, IPawn
         var angle = Mathf.Atan2(_nextMoveDirection.Y, _nextMoveDirection.X);
         Rotation = angle;
 
-        // Update Position
-        var speed = Main.PlayerState.MoveSpeed.CurrentValue;
-
-        var motion = _nextMoveDirection * (float)delta * speed;
+        var motion = _nextMoveDirection * (float)delta * _moveSpeed;
         MoveAndCollide(motion);
+    }
+
+    public void SetPlayerState(PlayerState state)
+    {
+        _playerState = state;
     }
 
     public void TakeDamage(float amount)
     {
-        var state = Main.PlayerState;
-
         var effect = new PhysicalDamageEffect
         {
             Value = amount
         };
 
-        state.AddEffect(effect);
-        state.SolveEffect();
+        if (_playerState is null)
+        {
+            return;
+        }
+
+        _playerState.AddEffect(effect);
+        _playerState.SolveEffect();
 
         NotificationManager.CommitDamage(NotificationManager.DamageTakeOwner.Player, amount, GlobalPosition);
     }

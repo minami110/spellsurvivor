@@ -4,6 +4,9 @@ namespace fms;
 
 public partial class PlayerController : Node
 {
+    [Export]
+    private Node2D? _defaultPawn;
+
     private static readonly StringName InputMoveRight = "move_right";
     private static readonly StringName InputMoveLeft = "move_left";
     private static readonly StringName InputMoveUp = "move_up";
@@ -15,6 +18,23 @@ public partial class PlayerController : Node
     public override void _EnterTree()
     {
         SetProcess(false);
+    }
+
+    public override void _Ready()
+    {
+        if (_defaultPawn is null)
+        {
+            var n = GetNodeOrNull<Node2D>("%Player");
+            if (n is not null)
+            {
+                _defaultPawn = n;
+            }
+        }
+
+        if (_defaultPawn is IPawn pawn)
+        {
+            Possess(pawn);
+        }
     }
 
     public override void _Input(InputEvent inputEvent)

@@ -120,7 +120,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="TitleBGMPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_lpogd")
 autoplay = true
 
