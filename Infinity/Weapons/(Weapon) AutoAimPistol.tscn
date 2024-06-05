@@ -13,6 +13,7 @@ _bulletPackedScene = ExtResource("2_gcrb3")
 _bulletSpawnNode = NodePath("BulletSpawnRoot")
 _collisionShape = NodePath("Area2D/CollisionShape2D")
 _searchArea = NodePath("Area2D")
+BaseCoolDownFrame = 30
 _frameTimer = NodePath("FrameTimer")
 metadata/_edit_group_ = true
 

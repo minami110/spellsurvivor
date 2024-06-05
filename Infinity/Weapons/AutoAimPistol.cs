@@ -18,8 +18,6 @@ public partial class AutoAimPistol : WeaponBase
     [Export]
     private Area2D _searchArea = null!;
 
-    private protected override int BaseCoolDownFrame => 120;
-
     public override void _Ready()
     {
         base._Ready();
@@ -28,7 +26,7 @@ public partial class AutoAimPistol : WeaponBase
         _collisionShape.Scale = new Vector2(100, 100);
     }
 
-    private protected override void DoAttack()
+    private protected override void DoAttack(uint level)
     {
         if (!TryGetNearestEnemy(out var enemy))
         {

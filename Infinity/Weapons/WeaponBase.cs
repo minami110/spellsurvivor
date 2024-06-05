@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Godot;
 using R3;
 
@@ -9,67 +10,88 @@ namespace fms.Weapon;
 /// </summary>
 public partial class WeaponBase : Node2D, IEffectSolver
 {
+    /// <summary>
+    ///     武器の Id
+    ///     Note: Minion から勝手に代入されます
+    /// </summary>
+    [Export]
+    public string Id { get; set; } = string.Empty;
+
+    /// <summary>
+    ///     現在の武器の Level
+    ///     Note: Minion から勝手に代入されます
+    /// </summary>
+    [Export(PropertyHint.Range, "1,5")]
+    public uint Level { get; set; } = 1;
+
+    /// <summary>
+    ///     武器の Cooldown にかかるフレーム数 (ベース値)
+    /// </summary>
+    [Export(PropertyHint.Range, "1,9999,1")]
+    public uint BaseCoolDownFrame { get; private set; } = 10;
+
+    /// <summary>
+    ///     Tree に入った時に自動で Start するかどうか
+    /// </summary>
+    [Export]
+    private bool _autostart;
+
+    [ExportGroup("Internal Reference")]
     [Export]
     private FrameTimer _frameTimer = null!;
 
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
     private readonly List<EffectBase> _effects = new();
 
-    public string Id => CoreData.Id;
-
-    public int CoolDown
+    /// <summary>
+    ///     Effect の解決後の Cooldown のフレーム数
+    /// </summary>
+    public uint SolvedCoolDownFrame
     {
         get
         {
-            var coolDown = BaseCoolDownFrame;
-            var reduceRate = _coolDownReduceRateRp.Value * coolDown;
-            return Mathf.Max(coolDown - (int)reduceRate, 1);
+            var coolDown = (uint)Mathf.Floor(BaseCoolDownFrame * (1f - _coolDownReduceRateRp.Value));
+            return Math.Max(coolDown, 1u);
         }
     }
-
-    /// <summary>
-    ///     ベースの攻撃間隔 (単位: Frame)
-    /// </summary>
-    private protected virtual int BaseCoolDownFrame => 1;
-
-    /// <summary>
-    /// </summary>
-    public MinionInRuntime CoreData { get; set; } = null!;
 
     /// <summary>
     ///     次の攻撃までの残りフレーム
     /// </summary>
     public ReadOnlyReactiveProperty<int> CoolDownLeft => _frameTimer.FrameLeft;
 
-    /// <summary>
-    ///     この武器を所有している Minion のレベル
-    /// </summary>
-    public int MinionLevel => CoreData.Level.CurrentValue;
-
-    public override void _EnterTree()
+    public override void _Notification(int what)
     {
-        var d1 = Main.WaveState.Phase.Subscribe(this, (phase, state) =>
+        if (what == NotificationEnterTree)
         {
-            if (phase == WavePhase.BATTLE)
+            var d1 = _frameTimer.TimeOut.Subscribe(this, (_, state) => { state.DoAttack(state.Level); });
+            Disposable.Combine(d1, _coolDownReduceRateRp).AddTo(this);
+        }
+        else if (what == NotificationReady)
+        {
+            if (_autostart)
             {
-                state._frameTimer.WaitFrame = state.CoolDown;
-                state._frameTimer.Start();
+                StartAttack();
             }
             else
             {
-                state._frameTimer.Stop();
+                StopAttack();
             }
-        });
-
-        var d2 = _frameTimer.TimeOut.Subscribe(this, (_, state) => { state.DoAttack(); });
-
-        // Observable の初期化
-        var d3 = _coolDownReduceRateRp;
-
-        Disposable.Combine(d1, d2, d3).AddTo(this);
+        }
     }
 
-    private protected virtual void DoAttack()
+    public void StartAttack()
+    {
+        _frameTimer.WaitFrame = (int)SolvedCoolDownFrame;
+        _frameTimer.Start();
+    }
+
+    public void StopAttack()
+    {
+        _frameTimer.Stop();
+    }
+
+    private protected virtual void DoAttack(uint level)
     {
     }
 

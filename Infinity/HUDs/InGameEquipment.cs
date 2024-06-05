@@ -33,11 +33,11 @@ public partial class InGameEquipment : VBoxContainer
         _icon.Texture = inventoryData.Sprite;
         _name.Text = inventoryData.Name;
 
-        _levelLabel.Text = $"Lv.{Weapon.MinionLevel}";
+        _levelLabel.Text = $"Lv.{Weapon.Level}";
 
         var d1 = Weapon.CoolDownLeft.Subscribe(this, (x, s) =>
         {
-            s._progress.MaxValue = Weapon.CoolDown;
+            s._progress.MaxValue = Weapon.SolvedCoolDownFrame;
             s._progress.Value = x;
         });
 
