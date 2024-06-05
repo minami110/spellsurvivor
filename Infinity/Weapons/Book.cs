@@ -19,7 +19,7 @@ public partial class Book : WeaponBase
     private float _radius = 100f;
     
     [Export]
-    private Node2D _shaft = null!;
+    private Node2D _root = null!;
     
     private protected override int BaseCoolDownFrame => 180;
 
@@ -30,46 +30,62 @@ public partial class Book : WeaponBase
             // Level 1 は1つの弾をだす
             case 1:
             {
-                SpawnBullet(GlobalPosition, _radius, 0f);
+                SpawnBullet(_radius, 1 , 0f);
                 break;
             }
             // Level 2 は2つの弾をだす
             case 2:
             {
-                SpawnBullet(GlobalPosition, _radius, 0f);
-                SpawnBullet(GlobalPosition, _radius, 180f);
+                SpawnBullet(_radius, 2, 0f);
                 break;
             }
             // Level 3 以上は同じ
             default:
             {
-                SpawnBullet(GlobalPosition, _radius, 0f);
-                SpawnBullet(GlobalPosition, _radius, 120f);
-                SpawnBullet(GlobalPosition, _radius, 240f);
+                SpawnBullet(_radius, 3, 0f);
                 break;
             }
         }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <param name="radius"></param>
-    /// <param name="degree">中心から時計回りに何度の位置に出るか</param>
-    private void SpawnBullet(Vector2 centerPos ,float radius = 100f, float degree = 0f)
+/// <summary>
+/// 
+/// </summary>
+/// <param name="radius"></param>
+/// <param name="num">たまの数</param>
+/// <param name="degree"></param>
+    private void SpawnBullet(float radius = 100f, int num = 1, float degree = 0f)
     {
-        var bullet = _bulletPackedScene.Instantiate<RotateDisk>();
+        for (int i = 0; i < num; i++)
         {
-            bullet.BaseDamage = 50;
-            bullet.Radius = radius;
-            bullet.Angle = degree;
-            bullet.SecondPerRound = 3;
-        }
+            var bullet = _bulletPackedScene.Instantiate<RotateBook>();
+            {
+                bullet.BaseDamage = 50;
+                bullet.Radius = radius;
+                bullet.Angle = degree;
+                bullet.SecondPerRound = 3;
+                bullet.LifeFrame = BaseCoolDownFrame;
+                bullet.InitTimeForRelativePos = CalculateRelativePositon(num, i, BaseCoolDownFrame / 60);
+            }
 
-        _shaft.AddChild(bullet);
+            _root.AddChild(bullet);
+        }
     }
     
-    public override void _Process(double delta)
+
+    /// <summary>
+    ///     複数の弾を同時に発射するときの初期位置のずれを設定するために利用する時間を計算する
+    /// </summary>
+    /// <param name="bulletTotalNum">同時に出す弾の数</param>
+    /// <param name="bulletNum">何番目の弾か</param>
+    /// <param name="coolDown"></param>
+    /// <returns></returns>
+    private float CalculateRelativePositon(int bulletTotalNum , int bulletNum, float coolDown)
     {
-        _shaft.GlobalPosition = Main.PlayerNode.GlobalPosition;
+        if (bulletNum == 0)
+            return 0f;
+        
+        return (coolDown / bulletTotalNum) * bulletNum;
     }
+
 }
