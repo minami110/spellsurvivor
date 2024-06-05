@@ -21,7 +21,7 @@ public partial class Enemy : RigidBody2D
     ///     プレイヤーと重なっている時攻撃を発生させるクールダウン
     /// </summary>
     [Export]
-    private float _attackCoolDown = 0.333f;
+    private float _coolDown = 0.333f;
 
     [ExportGroup("Internal References")]
     [Export]
@@ -35,12 +35,14 @@ public partial class Enemy : RigidBody2D
 
     private readonly EnemyState _state = new();
 
-    private float _attachCooldownTimer;
+    private float _coolDownTimer;
+
+    private Vector2? _targetPosition;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        _attachCooldownTimer = _attackCoolDown;
+        _coolDownTimer = _coolDown;
         _state.AddTo(this);
 
         // Init state
@@ -51,22 +53,39 @@ public partial class Enemy : RigidBody2D
 
         // Refresh HUD
         UpdateHealthBar();
+
+        // Gets the player's position
+        var player = GetNodeOrNull<Node2D>("%Player");
+        if (player != null)
+        {
+            _targetPosition = player.GlobalPosition;
+            SetProcess(true);
+            SetPhysicsProcess(true);
+        }
+        else
+        {
+            SetProcess(false);
+            SetPhysicsProcess(false);
+        }
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        MoveToPlayer(delta);
+        var direction = _targetPosition!.Value - GlobalPosition;
+        direction = direction.Normalized();
+        var force = direction * _state.MoveSpeed.CurrentValue;
+        LinearVelocity = force;
     }
 
     public override void _Process(double delta)
     {
-        if (_attachCooldownTimer > 0)
+        if (_coolDownTimer > 0)
         {
-            _attachCooldownTimer -= (float)delta;
+            _coolDownTimer -= (float)delta;
             return;
         }
 
-        _attachCooldownTimer = _attackCoolDown;
+        _coolDownTimer = _coolDown;
         var overlappingBodies = _damageArea.GetOverlappingBodies();
         if (overlappingBodies.Count <= 0)
         {
@@ -80,19 +99,6 @@ public partial class Enemy : RigidBody2D
                 player.TakeDamage(_power);
             }
         }
-    }
-
-    public void KillByDamage()
-    {
-        QueueFree();
-    }
-
-    /// <summary>
-    ///     Wave 終了時に GameMode から呼ばれる
-    /// </summary>
-    public void KillByWaveEnd()
-    {
-        QueueFree();
     }
 
     public void TakeDamage(float amount)
@@ -113,22 +119,21 @@ public partial class Enemy : RigidBody2D
         }
     }
 
-    private void MoveToPlayer(double delta)
+    private void KillByDamage()
     {
-        var playerPosition = Main.PlayerNode.GlobalPosition;
-        var direction = playerPosition - GlobalPosition;
-        direction = direction.Normalized();
-        var force = direction * _state.MoveSpeed.CurrentValue;
-        LinearVelocity = force;
+        QueueFree();
+    }
+
+    /// <summary>
+    ///     Wave 終了時に GameMode から呼ばれる
+    /// </summary>
+    private void KillByWaveEnd()
+    {
+        QueueFree();
     }
 
     private void TakeDamageAnimationAsync()
     {
-        if (_mainTexture.Material is not ShaderMaterial sm)
-        {
-            return;
-        }
-
         // Hitstop and blink shader
         var tween = CreateTween();
         tween.TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 0f, 1f, 0.05f);
