@@ -9,16 +9,10 @@ radius = 3.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_s8feo"]
 radius = 7.07107
 
-[node name="Book" type="Node" groups=["Projectile"]]
+[node name="Book" type="Node" node_paths=PackedStringArray("_rigidBody", "_enemyDamageArea") groups=["Projectile"]]
 script = ExtResource("1_vspyn")
-
-[node name="Icon" type="TextureRect" parent="."]
-offset_left = -4.0
-offset_top = -4.0
-offset_right = 4.0
-offset_bottom = 4.0
-texture = ExtResource("2_1nwfs")
-expand_mode = 1
+_rigidBody = NodePath("RigidBody2D")
+_enemyDamageArea = NodePath("RigidBody2D/Area2D")
 
 [node name="RigidBody2D" type="RigidBody2D" parent="."]
 collision_layer = 0
@@ -37,3 +31,11 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D/Area2D"]
 shape = SubResource("CircleShape2D_s8feo")
 debug_color = Color(0.955606, 9.62615e-08, 0.544884, 0)
+
+[node name="Icon" type="TextureRect" parent="RigidBody2D"]
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+texture = ExtResource("2_1nwfs")
+expand_mode = 1

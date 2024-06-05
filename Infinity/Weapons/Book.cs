@@ -14,10 +14,14 @@ public partial class Book : WeaponBase
     [Export]
     private Node _bulletSpawnNode = null!;
 
-    private int _trickshotBounceCount;
-    private float _trickshotBounceDamageMultiplier;
-
-    private protected override int BaseCoolDownFrame => 60;
+    [Export]
+    // Pixel
+    private float _radius = 100f;
+    
+    [Export]
+    private Node2D _shaft = null!;
+    
+    private protected override int BaseCoolDownFrame => 180;
 
     private protected override void DoAttack()
     {
@@ -26,57 +30,46 @@ public partial class Book : WeaponBase
             // Level 1 は1つの弾をだす
             case 1:
             {
-                SpawnBullet(GlobalPosition);
+                SpawnBullet(GlobalPosition, _radius, 0f);
                 break;
             }
             // Level 2 は2つの弾をだす
             case 2:
             {
-                SpawnBullet(GlobalPosition, 10f);
-                SpawnBullet(GlobalPosition, -10f);
+                SpawnBullet(GlobalPosition, _radius, 0f);
+                SpawnBullet(GlobalPosition, _radius, 180f);
                 break;
             }
             // Level 3 以上は同じ
             default:
             {
-                SpawnBullet(GlobalPosition, 20f);
-                SpawnBullet(GlobalPosition, 0f, 10f);
-                SpawnBullet(GlobalPosition, -20f);
+                SpawnBullet(GlobalPosition, _radius, 0f);
+                SpawnBullet(GlobalPosition, _radius, 120f);
+                SpawnBullet(GlobalPosition, _radius, 240f);
                 break;
             }
         }
     }
 
-    private protected override void OnSolveEffect(IReadOnlyList<EffectBase> effects)
-    {
-        foreach (var effect in effects)
-        {
-            switch (effect)
-            {
-                case TrickshotBounce trickshotBounceCount:
-                {
-                    _trickshotBounceCount += trickshotBounceCount.BounceCount;
-                    _trickshotBounceDamageMultiplier += trickshotBounceCount.BounceDamageMultiplier;
-                    break;
-                }
-            }
-        }
-    }
-
-    private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
+    /// <summary>
+    /// </summary>
+    /// <param name="radius"></param>
+    /// <param name="degree">中心から時計回りに何度の位置に出るか</param>
+    private void SpawnBullet(Vector2 centerPos ,float radius = 100f, float degree = 0f)
     {
         var bullet = _bulletPackedScene.Instantiate<RotateDisk>();
         {
-            //bullet.BaseSpeed = 1000f;
             bullet.BaseDamage = 50;
-            bullet.InitialVelocity = GlobalTransform.X; // Forward
-            bullet.InitialPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
-            bullet.InitialSpeed = 4000f;
-            //bullet.BounceCount = _trickshotBounceCount;
-            //bullet.BounceDamageMultiplier = _trickshotBounceDamageMultiplier;
-            //bullet.BounceSearchRadius = 400f;
+            bullet.Radius = radius;
+            bullet.Angle = degree;
+            bullet.SecondPerRound = 3;
         }
 
-        _bulletSpawnNode.AddChild(bullet);
+        _shaft.AddChild(bullet);
+    }
+    
+    public override void _Process(double delta)
+    {
+        _shaft.GlobalPosition = Main.PlayerNode.GlobalPosition;
     }
 }
