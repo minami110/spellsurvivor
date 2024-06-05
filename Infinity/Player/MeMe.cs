@@ -12,11 +12,6 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     private PlayerState? _playerState;
 
-    public override void _EnterTree()
-    {
-        _playerState?.MoveSpeed.Subscribe(x => _moveSpeed = x).AddTo(this);
-    }
-
     public override void _PhysicsProcess(double delta)
     {
         if (!(_nextMoveDirection.LengthSquared() > 0f))
@@ -35,26 +30,27 @@ public partial class MeMe : CharacterBody2D, IPawn
     public void SetPlayerState(PlayerState state)
     {
         _playerState = state;
+        _playerState.MoveSpeed.Subscribe(this, (x, state) => state._moveSpeed = x).AddTo(this);
     }
 
     public void TakeDamage(float amount)
     {
-        var effect = new PhysicalDamageEffect
-        {
-            Value = amount
-        };
-
         if (_playerState is null)
         {
             return;
         }
 
+        var effect = new PhysicalDamageEffect
+        {
+            Value = amount
+        };
+
         _playerState.AddEffect(effect);
         _playerState.SolveEffect();
 
-        NotificationManager.CommitDamage(NotificationManager.DamageTakeOwner.Player, amount, GlobalPosition);
+        // 統計をおくる
+        StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Player, amount, GlobalPosition);
     }
-
 
     void IPawn.PrimaryPressed()
     {

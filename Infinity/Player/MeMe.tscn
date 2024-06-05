@@ -6,10 +6,9 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
 radius = 20.0
 
-[node name="MeMe" type="CharacterBody2D"]
+[node name="MeMe" type="CharacterBody2D" groups=["Player"]]
 process_mode = 1
 collision_mask = 16
-platform_floor_layers = 4278190080
 script = ExtResource("1_xi18f")
 
 [node name="MainCamera" type="Camera2D" parent="."]

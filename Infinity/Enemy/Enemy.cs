@@ -55,9 +55,13 @@ public partial class Enemy : RigidBody2D
         UpdateHealthBar();
 
         // Gets the player's position
-        _targetNode = GetNodeOrNull<Node2D>("%Player");
-        if (_targetNode is null)
+        if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
         {
+            _targetNode = player;
+        }
+        else
+        {
+            GD.PrintErr($"[{nameof(Enemy)}] Player node is not found");
             SetProcess(false);
             SetPhysicsProcess(false);
         }
@@ -99,7 +103,7 @@ public partial class Enemy : RigidBody2D
     {
         _state.AddEffect(new PhysicalDamageEffect { Value = amount });
         _state.SolveEffect();
-        NotificationManager.CommitDamage(NotificationManager.DamageTakeOwner.Enemy, amount, GlobalPosition);
+        StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Enemy, amount, GlobalPosition);
 
         if (_state.Health.CurrentValue <= 0)
         {

@@ -24,10 +24,10 @@ public partial class PlayerController : Node
     {
         if (_defaultPawn is null)
         {
-            var n = GetNodeOrNull<Node2D>("%Player");
-            if (n is not null)
+            // Pawn が指定されていない場合, ツリー内に存在する "Player" グループに所属する最初のノードを取得する
+            if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
             {
-                _defaultPawn = n;
+                _defaultPawn = player;
             }
         }
 
