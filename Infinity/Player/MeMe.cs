@@ -35,6 +35,8 @@ public partial class MeMe : CharacterBody2D, IPawn
 
         state.AddEffect(effect);
         state.SolveEffect();
+
+        NotificationManager.CommitDamage(NotificationManager.DamageTakeOwner.Player, amount, GlobalPosition);
     }
 
 

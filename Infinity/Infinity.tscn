@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=43 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="2_2pohd"]
@@ -20,6 +20,8 @@
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="12_42duw"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
+[ext_resource type="Script" path="res://Infinity/GameMode/Notification/NotificationManager.cs" id="13_mqafi"]
+[ext_resource type="PackedScene" uid="uid://5ck4fqkx4pvq" path="res://Infinity/GameMode/Notification/DamageNumberHud.tscn" id="14_mtewq"]
 [ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://PoseMenu/PoseMenu.tscn" id="16_ngbfj"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
 [ext_resource type="Script" path="res://Infinity/GameMode/SoundManager.cs" id="23_nx00x"]
@@ -103,6 +105,11 @@ _playerController = NodePath("PlayerController")
 _playerPawn = NodePath("MeMe (Player)")
 _enemySpawner = NodePath("EnemySpawner")
 
+[node name="NotificationManager" type="Node" parent="." node_paths=PackedStringArray("_damageNumberContainer")]
+script = ExtResource("13_mqafi")
+_damageNumberScene = ExtResource("14_mtewq")
+_damageNumberContainer = NodePath("../HUDs/DamageHud (Layer 3)")
+
 [node name="PlayerController" type="Node" parent="."]
 process_mode = 1
 script = ExtResource("6_m3lsh")
@@ -165,6 +172,13 @@ shape = SubResource("RectangleShape2D_2x8fi")
 
 [node name="InGameHUD (Layer 2)" parent="HUDs" instance=ExtResource("11_3i81h")]
 visible = false
+
+[node name="DamageHud (Layer 3)" type="CanvasLayer" parent="HUDs"]
+layer = 3
+follow_viewport_enabled = true
+
+[node name="DamageNumberHud" parent="HUDs/DamageHud (Layer 3)" instance=ExtResource("14_mtewq")]
+position = Vector2(314, 181)
 
 [node name="BattleResult HUD (Layer 2)" parent="HUDs" instance=ExtResource("8_gtxqj")]
 

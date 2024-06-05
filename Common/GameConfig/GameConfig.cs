@@ -9,8 +9,15 @@ public sealed class GameConfig
     private const string _CONFIG_PATH = "user://config.cfg";
 
     public static readonly GameConfig Singleton;
+
+    // Audio
     public readonly ReactiveProperty<float> AudioMasterVolume = new(0.8f);
+
+    // General
     public readonly ReactiveProperty<string> Locale = new();
+
+    // Graphics
+    public readonly ReactiveProperty<bool> ShowDamageNumbers = new(true);
 
     static GameConfig()
     {
@@ -24,8 +31,9 @@ public sealed class GameConfig
         var config = new ConfigFile();
 
         // Globals
-        config.SetValue(_SECTION_GLOBAL, "AudioMasterVolume", AudioMasterVolume.Value);
-        config.SetValue(_SECTION_GLOBAL, "Locale", Locale.Value);
+        config.SetValue(_SECTION_GLOBAL, nameof(AudioMasterVolume), AudioMasterVolume.Value);
+        config.SetValue(_SECTION_GLOBAL, nameof(Locale), Locale.Value);
+        config.SetValue(_SECTION_GLOBAL, nameof(ShowDamageNumbers), ShowDamageNumbers.Value);
         config.Save(_CONFIG_PATH);
     }
 
@@ -38,9 +46,14 @@ public sealed class GameConfig
         {
             GD.Print("[GameConfig] Loaded config file");
 
-            // Globals
-            AudioMasterVolume.Value = (float)config.GetValue(_SECTION_GLOBAL, "AudioMasterVolume", 0.8f);
-            Locale.Value = (string)config.GetValue(_SECTION_GLOBAL, "Locale", string.Empty);
+            // General
+            AudioMasterVolume.Value = (float)config.GetValue(_SECTION_GLOBAL, nameof(AudioMasterVolume), 0.8f);
+
+            // Audio
+            Locale.Value = (string)config.GetValue(_SECTION_GLOBAL, nameof(Locale), string.Empty);
+
+            // Graphics
+            ShowDamageNumbers.Value = (bool)config.GetValue(_SECTION_GLOBAL, nameof(ShowDamageNumbers), true);
         }
         else
         {
