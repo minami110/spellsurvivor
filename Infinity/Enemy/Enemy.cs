@@ -107,6 +107,7 @@ public partial class Enemy : RigidBody2D
     {
         _state.AddEffect(new PhysicalDamageEffect { Value = amount });
         _state.SolveEffect();
+        NotificationManager.CommitDamage(NotificationManager.DamageTakeOwner.Enemy, amount, GlobalPosition);
 
         if (_state.Health.CurrentValue <= 0)
         {
