@@ -37,8 +37,6 @@ public partial class Enemy : RigidBody2D
 
     private float _attachCooldownTimer;
 
-    private bool _isHitStopping;
-
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -57,11 +55,6 @@ public partial class Enemy : RigidBody2D
 
     public override void _PhysicsProcess(double delta)
     {
-        if (_isHitStopping)
-        {
-            return;
-        }
-
         MoveToPlayer(delta);
     }
 
@@ -102,8 +95,7 @@ public partial class Enemy : RigidBody2D
         QueueFree();
     }
 
-
-    public void TakeDamage(float amount, bool isHitStop = true)
+    public void TakeDamage(float amount)
     {
         _state.AddEffect(new PhysicalDamageEffect { Value = amount });
         _state.SolveEffect();
@@ -116,7 +108,7 @@ public partial class Enemy : RigidBody2D
         }
         else
         {
-            TakeDamageAnimationAsync(isHitStop);
+            TakeDamageAnimationAsync();
             UpdateHealthBar();
         }
     }
@@ -130,28 +122,18 @@ public partial class Enemy : RigidBody2D
         LinearVelocity = force;
     }
 
-    private async void TakeDamageAnimationAsync(bool isHitStop)
+    private async void TakeDamageAnimationAsync()
     {
         if (_mainTexture.Material is not ShaderMaterial sm)
         {
             return;
         }
 
+        // ToDo: Tween にする
         // Hitstop and blink shader
         sm.SetShaderParameter("hit", 1.0f);
 
-        if (isHitStop)
-        {
-            _isHitStopping = true;
-            LinearVelocity = Vector2.Zero;
-        }
-
         await this.WaitForSecondsAsync(0.1f);
-
-        if (isHitStop)
-        {
-            _isHitStopping = false;
-        }
 
         sm.SetShaderParameter("hit", 0.0f);
     }
