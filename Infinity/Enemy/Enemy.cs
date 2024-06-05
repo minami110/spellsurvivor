@@ -37,7 +37,7 @@ public partial class Enemy : RigidBody2D
 
     private float _coolDownTimer;
 
-    private Vector2? _targetPosition;
+    private Node2D? _targetNode;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -55,14 +55,8 @@ public partial class Enemy : RigidBody2D
         UpdateHealthBar();
 
         // Gets the player's position
-        var player = GetNodeOrNull<Node2D>("%Player");
-        if (player != null)
-        {
-            _targetPosition = player.GlobalPosition;
-            SetProcess(true);
-            SetPhysicsProcess(true);
-        }
-        else
+        _targetNode = GetNodeOrNull<Node2D>("%Player");
+        if (_targetNode is null)
         {
             SetProcess(false);
             SetPhysicsProcess(false);
@@ -71,7 +65,7 @@ public partial class Enemy : RigidBody2D
 
     public override void _PhysicsProcess(double delta)
     {
-        var direction = _targetPosition!.Value - GlobalPosition;
+        var direction = _targetNode!.GlobalPosition - GlobalPosition;
         direction = direction.Normalized();
         var force = direction * _state.MoveSpeed.CurrentValue;
         LinearVelocity = force;
