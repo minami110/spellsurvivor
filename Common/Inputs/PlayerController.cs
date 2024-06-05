@@ -5,7 +5,7 @@ namespace fms;
 public partial class PlayerController : Node
 {
     [Export]
-    private Node2D? _defaultPawn;
+    private Node2D? _customPawn;
 
     private static readonly StringName InputMoveRight = "move_right";
     private static readonly StringName InputMoveLeft = "move_left";
@@ -22,16 +22,16 @@ public partial class PlayerController : Node
 
     public override void _Ready()
     {
-        if (_defaultPawn is null)
+        if (_customPawn is null)
         {
             // Pawn が指定されていない場合, ツリー内に存在する "Player" グループに所属する最初のノードを取得する
             if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
             {
-                _defaultPawn = player;
+                _customPawn = player;
             }
         }
 
-        if (_defaultPawn is IPawn pawn)
+        if (_customPawn is IPawn pawn)
         {
             Possess(pawn);
         }
