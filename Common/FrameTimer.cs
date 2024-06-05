@@ -10,6 +10,9 @@ public partial class FrameTimer : Node
     [Export(PropertyHint.Range, "1,99999")]
     private int _waitFrame = 20;
 
+    [Export]
+    private bool _autostart;
+
     private readonly ReactiveProperty<int> _frameLeft = new(-1);
 
     private readonly Subject<Unit> _timeOut = new();
@@ -38,8 +41,15 @@ public partial class FrameTimer : Node
     {
         if (what == NotificationReady)
         {
-            Stop();
             Disposable.Combine(_timeOut, _frameLeft).AddTo(this);
+            if (_autostart)
+            {
+                Start();
+            }
+            else
+            {
+                Stop();
+            }
         }
         else if (what == NotificationProcess)
         {
