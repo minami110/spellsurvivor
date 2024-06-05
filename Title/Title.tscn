@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://btwg0ccbd6qst"]
+[gd_scene load_steps=8 format=3 uid="uid://btwg0ccbd6qst"]
 
 [ext_resource type="Script" path="res://Title/Title.cs" id="1_1tswy"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="1_eylnh"]
 [ext_resource type="PackedScene" uid="uid://bdohpbfaybfst" path="res://Title/SettingTab.tscn" id="3_oidxe"]
+[ext_resource type="AudioStream" uid="uid://c3renef04l1i5" path="res://Common/Resources/Sounds/bgm-title.ogg" id="4_lpogd"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uvp5f"]
 texture = ExtResource("1_eylnh")
@@ -118,6 +119,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_lpogd")
+autoplay = true
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBox Button Menu/InfinityButton" to="." method="OnStartButtonPressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBox Button Menu/ExitButton" to="." method="OnExitButtonPressed"]
