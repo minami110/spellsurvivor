@@ -122,25 +122,33 @@ public partial class Enemy : RigidBody2D
         LinearVelocity = force;
     }
 
-    private async void TakeDamageAnimationAsync()
+    private void TakeDamageAnimationAsync()
     {
         if (_mainTexture.Material is not ShaderMaterial sm)
         {
             return;
         }
 
-        // ToDo: Tween にする
         // Hitstop and blink shader
-        sm.SetShaderParameter("hit", 1.0f);
-
-        await this.WaitForSecondsAsync(0.1f);
-
-        sm.SetShaderParameter("hit", 0.0f);
+        var tween = CreateTween();
+        tween.TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 0f, 1f, 0.05f);
+        tween.Chain().TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 1f, 0f, 0.05f);
+        tween.Play();
     }
 
     private void UpdateHealthBar()
     {
         _progressBar.MaxValue = _state.MaxHealth.CurrentValue;
         _progressBar.SetValueNoSignal(_state.Health.CurrentValue);
+    }
+
+    private void UpdateShaderParameter(float value)
+    {
+        if (_mainTexture.Material is not ShaderMaterial sm)
+        {
+            return;
+        }
+
+        sm.SetShaderParameter("hit", value);
     }
 }
