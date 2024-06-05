@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dfjwy1udqlp80"]
+[gd_scene load_steps=12 format=3 uid="uid://dfjwy1udqlp80"]
 
 [ext_resource type="Texture2D" uid="uid://ca0vli65s8g1m" path="res://Infinity/Enemy/enemyFlyingAlt_1.png" id="1_26unp"]
 [ext_resource type="Script" path="res://Infinity/Enemy/Enemy.cs" id="1_cjt84"]
@@ -17,7 +17,24 @@ radius = 13.0384
 [sub_resource type="CircleShape2D" id="CircleShape2D_ben2b"]
 radius = 22.3607
 
-[node name="Enemy" type="RigidBody2D" node_paths=PackedStringArray("_mainTexture", "_progressBar", "_damageArea", "_attackTimer") groups=["Enemy"]]
+[sub_resource type="Curve" id="Curve_rd166"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_4sd1q"]
+curve = SubResource("Curve_rd166")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_j8kcn"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 151.52
+initial_velocity_max = 527.26
+gravity = Vector3(0, 0, 0)
+scale_max = 6.0
+scale_curve = SubResource("CurveTexture_4sd1q")
+color = Color(0.901961, 0.027451, 0.141176, 1)
+
+[node name="Enemy" type="RigidBody2D" node_paths=PackedStringArray("_mainTexture", "_progressBar", "_damageArea", "_attackTimer", "_emitter") groups=["Enemy"]]
 collision_layer = 4
 collision_mask = 4
 gravity_scale = 0.0
@@ -28,6 +45,7 @@ _mainTexture = NodePath("Texture")
 _progressBar = NodePath("HealthBar")
 _damageArea = NodePath("DamageArea")
 _attackTimer = NodePath("FrameTimer")
+_emitter = NodePath("BloodParticles")
 
 [node name="FrameTimer" type="Node" parent="."]
 script = ExtResource("5_31l7r")
@@ -78,3 +96,11 @@ collision_layer = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
 shape = SubResource("CircleShape2D_ben2b")
 debug_color = Color(1, 0, 0, 0)
+
+[node name="BloodParticles" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 11
+process_material = SubResource("ParticleProcessMaterial_j8kcn")
+lifetime = 0.3
+one_shot = true
+explosiveness = 1.0

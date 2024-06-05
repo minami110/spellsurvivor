@@ -36,7 +36,12 @@ public partial class Enemy : RigidBody2D
     [Export]
     private FrameTimer _attackTimer = null!;
 
+    [Export]
+    private GpuParticles2D _emitter = null!;
+
     private readonly EnemyState _state = new();
+
+    private bool _isDead;
 
     private Node2D? _targetNode;
 
@@ -75,6 +80,11 @@ public partial class Enemy : RigidBody2D
 
     public override void _PhysicsProcess(double _)
     {
+        if (_isDead)
+        {
+            return;
+        }
+
         var delta = _targetNode!.GlobalPosition - GlobalPosition;
         // 2opx 以内に近づいたら移動を停止する
         if (delta.LengthSquared() < 400)
@@ -90,6 +100,11 @@ public partial class Enemy : RigidBody2D
 
     public void TakeDamage(float amount)
     {
+        if (_isDead)
+        {
+            return;
+        }
+
         _state.AddEffect(new PhysicalDamageEffect { Value = amount });
         _state.SolveEffect();
         StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Enemy, amount, GlobalPosition);
@@ -123,8 +138,25 @@ public partial class Enemy : RigidBody2D
         }
     }
 
-    private void KillByDamage()
+    private async void KillByDamage()
     {
+        if (_isDead)
+        {
+            return;
+        }
+
+        _isDead = true;
+
+        // Hide components
+        _mainTexture.Hide();
+        _progressBar.Hide();
+        _damageArea.Hide();
+
+        // Emit Partivle
+        _emitter.Restart();
+
+        await this.WaitForSecondsAsync(1f);
+
         QueueFree();
     }
 
