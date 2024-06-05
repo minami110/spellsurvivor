@@ -5,66 +5,86 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf86h"]
 bg_color = Color(0.20871, 0.20871, 0.20871, 1)
 
-[node name="SettingsTab" type="TabContainer" node_paths=PackedStringArray("_masterVolumeSlider", "_languageMenuButton")]
+[node name="SettingsTab" type="TabContainer" node_paths=PackedStringArray("_masterVolumeSlider", "_languageMenuButton", "_showDamageNumbersCheckButton")]
 process_mode = 3
 custom_minimum_size = Vector2(600, 600)
 script = ExtResource("1_i1xjl")
-_masterVolumeSlider = NodePath("Audio/MarginContainer/VBox/HBoxContainer/MasterVolumeSlider")
-_languageMenuButton = NodePath("General/MarginContainer/VBox/HBoxContainer/MenuButton")
+_masterVolumeSlider = NodePath("UI_AUDIO/MarginContainer/VBox/HBoxContainer/MasterVolumeSlider")
+_languageMenuButton = NodePath("UI_GENERAL/MarginContainer/VBox/HBoxContainer/MenuButton")
+_showDamageNumbersCheckButton = NodePath("UI_GRAPHICS/MarginContainer/VBox/CheckButton")
 
-[node name="General" type="PanelContainer" parent="."]
+[node name="UI_GENERAL" type="PanelContainer" parent="."]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_yf86h")
 
-[node name="MarginContainer" type="MarginContainer" parent="General"]
+[node name="MarginContainer" type="MarginContainer" parent="UI_GENERAL"]
 layout_mode = 2
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="VBox" type="VBoxContainer" parent="General/MarginContainer"]
+[node name="VBox" type="VBoxContainer" parent="UI_GENERAL/MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="General/MarginContainer/VBox"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI_GENERAL/MarginContainer/VBox"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="General/MarginContainer/VBox/HBoxContainer"]
+[node name="Label" type="Label" parent="UI_GENERAL/MarginContainer/VBox/HBoxContainer"]
 layout_mode = 2
 text = "Language"
 
-[node name="MenuButton" type="MenuButton" parent="General/MarginContainer/VBox/HBoxContainer"]
+[node name="MenuButton" type="MenuButton" parent="UI_GENERAL/MarginContainer/VBox/HBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "N/A"
 
-[node name="Audio" type="PanelContainer" parent="."]
+[node name="UI_AUDIO" type="PanelContainer" parent="."]
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_yf86h")
 
-[node name="MarginContainer" type="MarginContainer" parent="Audio"]
+[node name="MarginContainer" type="MarginContainer" parent="UI_AUDIO"]
 layout_mode = 2
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="VBox" type="VBoxContainer" parent="Audio/MarginContainer"]
+[node name="VBox" type="VBoxContainer" parent="UI_AUDIO/MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Audio/MarginContainer/VBox"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI_AUDIO/MarginContainer/VBox"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Audio/MarginContainer/VBox/HBoxContainer"]
+[node name="Label" type="Label" parent="UI_AUDIO/MarginContainer/VBox/HBoxContainer"]
 layout_mode = 2
 text = "Master Volume"
 
-[node name="MasterVolumeSlider" type="HSlider" parent="Audio/MarginContainer/VBox/HBoxContainer"]
+[node name="MasterVolumeSlider" type="HSlider" parent="UI_AUDIO/MarginContainer/VBox/HBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
 step = 0.1
 scrollable = false
+
+[node name="UI_GRAPHICS" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yf86h")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI_GRAPHICS"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="VBox" type="VBoxContainer" parent="UI_GRAPHICS/MarginContainer"]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="UI_GRAPHICS/MarginContainer/VBox"]
+layout_mode = 2
+text = "UI_SHOW_DAMAGE"

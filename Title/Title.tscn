@@ -1,8 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://btwg0ccbd6qst"]
+[gd_scene load_steps=7 format=3 uid="uid://btwg0ccbd6qst"]
 
 [ext_resource type="Script" path="res://Title/Title.cs" id="1_1tswy"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="1_eylnh"]
 [ext_resource type="PackedScene" uid="uid://bdohpbfaybfst" path="res://Title/SettingTab.tscn" id="3_oidxe"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uvp5f"]
+texture = ExtResource("1_eylnh")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate_color = Color(0.223103, 0.223103, 0.223103, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_8xkta"]
 font_size = 12
@@ -12,48 +18,20 @@ font_size = 50
 
 [node name="Title" type="Node" node_paths=PackedStringArray("_appNameLabel", "_appVersionLabel", "_godotVersionLabel", "_settingsButton", "_settingsControl")]
 script = ExtResource("1_1tswy")
-_appNameLabel = NodePath("Title Group/appTitle")
-_appVersionLabel = NodePath("Title Group/appVersion")
+_appNameLabel = NodePath("CenterContainer/VBoxContainer/Title Group/appTitle")
+_appVersionLabel = NodePath("CenterContainer/VBoxContainer/Title Group/appVersion")
 _godotVersionLabel = NodePath("powerdbygodot")
 _mainGameScene = "res://Infinity/Infinity.tscn"
-_settingsButton = NodePath("VBox Button Menu/SettingsButton")
+_settingsButton = NodePath("CenterContainer/VBoxContainer/VBox Button Menu/SettingsButton")
 _settingsControl = NodePath("SettingsTab")
 
-[node name="Background Texture" type="TextureRect" parent="."]
-modulate = Color(0.219501, 0.219501, 0.219501, 1)
+[node name="Panel" type="Panel" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_eylnh")
-expand_mode = 1
-stretch_mode = 1
-
-[node name="VBox Button Menu" type="VBoxContainer" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -35.0
-offset_top = 91.0
-offset_right = 35.0
-offset_bottom = 192.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="InfinityButton" type="Button" parent="VBox Button Menu"]
-layout_mode = 2
-text = "TITLE_START_INFINITY"
-
-[node name="SettingsButton" type="Button" parent="VBox Button Menu"]
-layout_mode = 2
-text = "UI_SETTINGS"
-
-[node name="ExitButton" type="Button" parent="VBox Button Menu"]
-layout_mode = 2
-text = "UI_QUIT"
+theme_override_styles/panel = SubResource("StyleBoxTexture_uvp5f")
 
 [node name="powerdbygodot" type="Label" parent="."]
 anchors_preset = 3
@@ -70,21 +48,21 @@ text = "Powered by Godot 0.0.0 (state)"
 label_settings = SubResource("LabelSettings_8xkta")
 horizontal_alignment = 2
 
-[node name="Title Group" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -68.0
-offset_right = 100.0
-offset_bottom = -28.0
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="appTitle" type="Label" parent="Title Group"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Title Group" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+
+[node name="appTitle" type="Label" parent="CenterContainer/VBoxContainer/Title Group"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -96,18 +74,34 @@ text = "sample"
 label_settings = SubResource("LabelSettings_55c07")
 horizontal_alignment = 2
 
-[node name="appVersion" type="Label" parent="Title Group"]
+[node name="appVersion" type="Label" parent="CenterContainer/VBoxContainer/Title Group"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -151.0
-offset_top = 54.0
-offset_bottom = 84.0
+offset_left = -150.0
+offset_top = 55.0
+offset_right = 1.0
+offset_bottom = 85.0
 grow_horizontal = 0
 text = "0.0.0"
 label_settings = SubResource("LabelSettings_8xkta")
 horizontal_alignment = 2
+
+[node name="VBox Button Menu" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="InfinityButton" type="Button" parent="CenterContainer/VBoxContainer/VBox Button Menu"]
+layout_mode = 2
+text = "TITLE_START_INFINITY"
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/VBox Button Menu"]
+layout_mode = 2
+text = "UI_SETTINGS"
+
+[node name="ExitButton" type="Button" parent="CenterContainer/VBoxContainer/VBox Button Menu"]
+layout_mode = 2
+text = "UI_QUIT"
 
 [node name="SettingsTab" parent="." instance=ExtResource("3_oidxe")]
 visible = false
@@ -125,5 +119,5 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[connection signal="pressed" from="VBox Button Menu/InfinityButton" to="." method="OnStartButtonPressed"]
-[connection signal="pressed" from="VBox Button Menu/ExitButton" to="." method="OnExitButtonPressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/VBox Button Menu/InfinityButton" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/VBox Button Menu/ExitButton" to="." method="OnExitButtonPressed"]
