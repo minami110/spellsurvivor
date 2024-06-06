@@ -69,20 +69,20 @@ public partial class SoundManager : Node
         }
     }
 
-    public static async void PlaySoundEffect(AudioStream stream)
+    public static void PlaySoundEffect(AudioStream stream)
     {
-        if (_instance is not null)
+        if (_instance is null)
         {
-            if (_instance._effectPlayer.Playing)
-            {
-                return;
-            }
-
-            _instance._effectPlayer.Stream = stream;
-            _instance._effectPlayer.Play();
-            await _instance.ToSignal(_instance._effectPlayer, AudioStreamPlayer.SignalName.Finished);
-            _instance._effectPlayer.Stop();
+            return;
         }
+
+        if (_instance._effectPlayer.Playing)
+        {
+            return;
+        }
+
+        _instance._effectPlayer.Stream = stream;
+        _instance._effectPlayer.Play();
     }
 
     public static void SetBgmBusLowPassFilterCutOff(float hz)

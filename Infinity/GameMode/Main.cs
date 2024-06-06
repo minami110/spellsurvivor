@@ -13,9 +13,6 @@ public partial class Main : Node
 
     [ExportGroup("Internal References")]
     [Export]
-    private Node2D _playerPawn = null!;
-
-    [Export]
     private EnemySpawner _enemySpawner = null!;
 
     private static Main? _instance;
@@ -23,6 +20,8 @@ public partial class Main : Node
     // 現在有効な Faction の辞書
     private readonly PlayerState _playerState;
     private PlayerInventory _playerInventory = null!;
+
+    private Node2D _playerPawn = null!;
     private ShopState _shopState = null!;
     private WaveState _waveState = null!;
 
@@ -93,6 +92,14 @@ public partial class Main : Node
 
     public override void _Ready()
     {
+        // Player を取得する
+        var n = GetTree().GetFirstNodeInGroup("Player");
+        if (n is MeMe p) // ToDo:
+        {
+            _playerPawn = p;
+            p.SetPlayerState(_playerState);
+        }
+
         // Battle Wave の開始時
         var d1 = _waveState.Phase.Where(x => x == WavePhase.BATTLE).Subscribe(this, (_, state) =>
         {
@@ -103,12 +110,32 @@ public partial class Main : Node
 
             // Spawner に設定を渡す
             _enemySpawner.Config = state._waveState.CurrentWaveConfig.EnemySpawnConfig;
+
+            // すべての武器を起動する
+            foreach (var m in PlayerInventory.Minions)
+            {
+                var w = m.Weapon;
+                w?.StartAttack();
+            }
+
+            // BGM のこもりを解消する (150hz => 2000hz (default))
+            var tween = CreateTween();
+            tween.TweenMethod(Callable.From((float value) => SoundManager.SetBgmBusLowPassFilterCutOff(value)), 150f,
+                2000f, 2d);
+            tween.Play();
         });
 
         // Battle Result 進入時
         var d2 = _waveState.Phase.Where(x => x == WavePhase.BATTLERESULT).Subscribe(this, (_, state) =>
         {
             var tree = state.GetTree();
+
+            // すべての武器を停止する
+            foreach (var m in PlayerInventory.Minions)
+            {
+                var w = m.Weapon;
+                w?.StopAttack();
+            }
 
             // 残った Projectile をすべてコロス
             tree.CallGroup("Projectile", "QueueFree");
@@ -132,6 +159,12 @@ public partial class Main : Node
 
             // Shop のリロール
             state._shopState.RefreshInStoreMinions();
+
+            // BGM をこもらせる (2000hz(Default) => 150hz)
+            var tween = CreateTween();
+            tween.TweenMethod(Callable.From((float value) => SoundManager.SetBgmBusLowPassFilterCutOff(value)), 2000f,
+                150f, 0.5d);
+            tween.Play();
         });
 
         // Disposable registration
