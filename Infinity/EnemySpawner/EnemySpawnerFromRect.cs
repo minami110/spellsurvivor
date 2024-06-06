@@ -11,6 +11,9 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
     [Export]
     private Vector2I _spawnHalfRectSize = new(500, 500);
 
+    [Export]
+    private PackedScene _emepySpawnMarkerPackScene = null!;
+
     private int _frameCounter;
 
     public override void _Ready()
@@ -50,7 +53,10 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
 
     private void KillAllEnemies()
     {
-        GetTree().CallGroup("Enemy", "KillByWaveEnd");
+        foreach (var child in GetChildren())
+        {
+            child.QueueFree();
+        }
     }
 
     private void SpawnEnemy(PackedScene packedScene)
@@ -61,9 +67,13 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
             _spawnHalfRectSize.Y * (GD.Randf() - 0.5f) * 2f
         );
 
-        // Add scene
-        var enemy = packedScene.Instantiate<Enemy>();
-        enemy.GlobalPosition = samplePosition;
-        AddChild(enemy);
+        var marker = _emepySpawnMarkerPackScene.Instantiate<EnemySpawnMarker>();
+        {
+            marker.GlobalPosition = samplePosition;
+            marker.EnemyScene = packedScene;
+            marker.LifeTime = 90;
+            marker.EnemeySpawnParent = this;
+        }
+        AddChild(marker);
     }
 }
