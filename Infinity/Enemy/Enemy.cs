@@ -88,6 +88,7 @@ public partial class Enemy : RigidBody2D
     {
         if (_isDead)
         {
+            LinearVelocity = Vector2.Zero;
             return;
         }
 
@@ -153,11 +154,11 @@ public partial class Enemy : RigidBody2D
 
         _isDead = true;
 
-
         // Hide and disable components
         _rigidBodyCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
         _damageAreaCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-
+        _rigidBodyCollision.Hide();
+        _damageAreaCollision.Hide();
         _mainTexture.Hide();
         _progressBar.Hide();
 
