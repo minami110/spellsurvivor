@@ -8,9 +8,8 @@ namespace fms;
 /// </summary>
 public partial class EnemySpawnerFromRect : EnemySpawnerBase
 {
-    [ExportSubgroup("Internal References")]
     [Export]
-    private Vector2I _spawnRectSize = new(1000, 1000);
+    private Vector2I _spawnHalfRectSize = new(500, 500);
 
     private int _frameCounter;
 
@@ -58,8 +57,8 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
     {
         // pick random point from rect
         var samplePosition = new Vector2(
-            _spawnRectSize.X * GD.Randf(),
-            _spawnRectSize.Y * GD.Randf()
+            _spawnHalfRectSize.X * (GD.Randf() - 0.5f) * 2f,
+            _spawnHalfRectSize.Y * (GD.Randf() - 0.5f) * 2f
         );
 
         // Add scene

@@ -13,9 +13,9 @@
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/Shop/ShopHUD.tscn" id="9_a7daw"]
 [ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) BigTako.tscn" id="10_t3ivl"]
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
+[ext_resource type="PackedScene" uid="uid://flhgl4ot2gv2" path="res://Infinity/EnemySpawner/EnemySpawnerRandomArea.tscn" id="11_mwu1c"]
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="12_42duw"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
-[ext_resource type="PackedScene" uid="uid://ceumkcw7s8urg" path="res://Infinity/EnemySpawner/EnemySpawnerFromPath.tscn" id="14_y2etr"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
 
 [sub_resource type="Resource" id="Resource_6njts"]
@@ -79,7 +79,8 @@ _gameSettings = SubResource("Resource_pdcir")
 
 [node name="Player" parent="." instance=ExtResource("12_e0mmc")]
 
-[node name="EnemySpawner" parent="." instance=ExtResource("14_y2etr")]
+[node name="EnemySpawner (RandomArea)" parent="." instance=ExtResource("11_mwu1c")]
+_spawnHalfRectSize = Vector2i(400, 400)
 
 [node name="HUDs" type="Node" parent="."]
 
