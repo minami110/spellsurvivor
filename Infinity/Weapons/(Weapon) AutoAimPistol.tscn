@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cmr1iekscwraj"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/AutoAimPistol.cs" id="1_p2onu"]
-[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Projectiles/(Projectile) Orb.tscn" id="2_gcrb3"]
+[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Projectiles/(Projectile) SimpleBullet.tscn" id="2_jngkm"]
 [ext_resource type="Script" path="res://Common/FrameTimer.cs" id="3_hmaku"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0ojw7"]
@@ -9,7 +9,7 @@ radius = 1.0
 
 [node name="AutoAimPistol" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_collisionShape", "_searchArea", "_frameTimer")]
 script = ExtResource("1_p2onu")
-_bulletPackedScene = ExtResource("2_gcrb3")
+_bulletPackedScene = ExtResource("2_jngkm")
 _bulletSpawnNode = NodePath("BulletSpawnRoot")
 _collisionShape = NodePath("Area2D/CollisionShape2D")
 _searchArea = NodePath("Area2D")

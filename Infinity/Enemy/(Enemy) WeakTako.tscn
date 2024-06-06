@@ -34,13 +34,15 @@ scale_max = 6.0
 scale_curve = SubResource("CurveTexture_4sd1q")
 color = Color(0.901961, 0.027451, 0.141176, 1)
 
-[node name="Enemy" type="RigidBody2D" node_paths=PackedStringArray("_mainTexture", "_progressBar", "_damageArea", "_attackTimer", "_bloodParticle") groups=["Enemy"]]
+[node name="Enemy" type="RigidBody2D" node_paths=PackedStringArray("_rigidBodyCollision", "_damageAreaCollision", "_mainTexture", "_progressBar", "_damageArea", "_attackTimer", "_bloodParticle") groups=["Enemy"]]
 collision_layer = 4
 collision_mask = 4
 gravity_scale = 0.0
 lock_rotation = true
 script = ExtResource("1_cjt84")
 _defaultMoveSpeed = 80.0
+_rigidBodyCollision = NodePath("CollisionForRigidbody")
+_damageAreaCollision = NodePath("DamageArea/CollisionForDamage")
 _mainTexture = NodePath("Texture")
 _progressBar = NodePath("HealthBar")
 _damageArea = NodePath("DamageArea")
@@ -66,9 +68,9 @@ grow_vertical = 2
 texture = ExtResource("1_26unp")
 expand_mode = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionForRigidbody" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_4ld33")
-debug_color = Color(1, 0, 0.701961, 0.0705882)
+debug_color = Color(0.356736, 0.551066, 1, 0.0705882)
 
 [node name="HealthBar" type="TextureProgressBar" parent="."]
 anchors_preset = 8
@@ -93,7 +95,7 @@ tint_progress = Color(1, 0, 0, 1)
 [node name="DamageArea" type="Area2D" parent="."]
 collision_layer = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
+[node name="CollisionForDamage" type="CollisionShape2D" parent="DamageArea"]
 shape = SubResource("CircleShape2D_ben2b")
 debug_color = Color(1, 0, 0, 0)
 

@@ -25,6 +25,12 @@ public partial class Enemy : RigidBody2D
 
     [ExportGroup("Internal References")]
     [Export]
+    private CollisionShape2D _rigidBodyCollision = null!;
+
+    [Export]
+    private CollisionShape2D _damageAreaCollision = null!;
+
+    [Export]
     private TextureRect _mainTexture = null!;
 
     [Export]
@@ -147,21 +153,29 @@ public partial class Enemy : RigidBody2D
 
         _isDead = true;
 
-        // Hide components
+
+        // Hide and disable components
+        _rigidBodyCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+        _damageAreaCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+
         _mainTexture.Hide();
         _progressBar.Hide();
-        _damageArea.Hide();
 
         // Emit Blood Particle
         _bloodParticle.Emitting = true;
 
-        await this.WaitForSecondsAsync(1f);
+        await this.WaitForSecondsAsync(0.5f);
 
         QueueFree();
     }
 
     private void KillByWaveEnd()
     {
+        if (_isDead)
+        {
+            return;
+        }
+
         QueueFree();
     }
 
