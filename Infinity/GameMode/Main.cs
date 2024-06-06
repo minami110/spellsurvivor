@@ -85,15 +85,10 @@ public partial class Main : Node
 
     public override void _EnterTree()
     {
-        // Note: Main スクリプトは Root 直下に置かれるため, 必ず最初に EnterTree します
-
         // Initialize States
         _waveState = new WaveState { Config = _gameSettings.WaveConfig };
         _shopState = new ShopState(_gameSettings.ShopConfig);
         _playerInventory = new PlayerInventory();
-
-        // デバッグ用の Collision を表示
-        GetTree().DebugCollisionsHint = true;
     }
 
     public override void _Ready()

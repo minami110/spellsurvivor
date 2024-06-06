@@ -41,6 +41,7 @@ public partial class PauseHud : CanvasLayer
 
     public override void _Input(InputEvent inputEvent)
     {
+        // 設定の Tab が開いている場合は何もしない
         if (SettingsHud.IsVisible)
         {
             return;
@@ -56,7 +57,14 @@ public partial class PauseHud : CanvasLayer
                 return;
             }
 
-            ShowHud();
+            if (Visible)
+            {
+                HideHud();
+            }
+            else
+            {
+                ShowHud();
+            }
         }
     }
 
