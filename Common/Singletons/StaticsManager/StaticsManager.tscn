@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxq3307e0nngm"]
+
+[ext_resource type="Script" path="res://Common/Singletons/StaticsManager/StaticsManager.cs" id="1_5hvg3"]
+[ext_resource type="PackedScene" uid="uid://5ck4fqkx4pvq" path="res://Common/Singletons/StaticsManager/DamageNumberHud.tscn" id="2_rkwjy"]
+
+[node name="StaticsManager" type="CanvasLayer"]
+layer = 3
+follow_viewport_enabled = true
+script = ExtResource("1_5hvg3")
+_damageNumberScene = ExtResource("2_rkwjy")
