@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://815dg6ll0tvk"]
+
+[ext_resource type="Script" path="res://Infinity/EnemySpawner/EnemySpawnMarker.cs" id="1_e2fqm"]
+[ext_resource type="Texture2D" uid="uid://d1raglf5yxg7b" path="res://Common/Resources/Textures/Emoji/x.png" id="1_wbxmd"]
+
+[node name="EnemySpawnMarker" type="Node2D" node_paths=PackedStringArray("_textureRect")]
+script = ExtResource("1_e2fqm")
+_textureRect = NodePath("TextureRect")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -18.0
+offset_right = 77.0
+offset_bottom = 78.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_wbxmd")
+expand_mode = 1
