@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://flhgl4ot2gv2"]
+[gd_scene load_steps=3 format=3 uid="uid://flhgl4ot2gv2"]
 
 [ext_resource type="Script" path="res://Infinity/EnemySpawner/EnemySpawnerFromRect.cs" id="1_t0mhe"]
+[ext_resource type="PackedScene" uid="uid://815dg6ll0tvk" path="res://Infinity/EnemySpawner/EnemySpawnMarker.tscn" id="2_dxw2u"]
 
 [node name="EnemySpawner (RandomRect)" type="Node2D" groups=["EnemySpawner"]]
 script = ExtResource("1_t0mhe")
+_emepySpawnMarkerPackScene = ExtResource("2_dxw2u")

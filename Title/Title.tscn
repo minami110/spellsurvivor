@@ -25,7 +25,7 @@ _appVersionLabel = NodePath("CenterContainer/VBoxContainer/Title Group/appVersio
 _godotVersionLabel = NodePath("powerdbygodot")
 _settingsButton = NodePath("CenterContainer/VBoxContainer/VBox Button Menu/SettingsButton")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="BG" type="Panel" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
