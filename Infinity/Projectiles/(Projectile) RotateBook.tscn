@@ -9,10 +9,10 @@ radius = 3.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_s8feo"]
 radius = 7.07
 
-[node name="Book" type="Node" node_paths=PackedStringArray("_rigidBody", "_enemyDamageArea") groups=["Projectile"]]
+[node name="Book" type="Node" node_paths=PackedStringArray("_enemyDamageArea", "_rigidBody") groups=["Projectile"]]
 script = ExtResource("1_f4ub0")
-_rigidBody = NodePath("RigidBody2D")
 _enemyDamageArea = NodePath("RigidBody2D/Area2D")
+_rigidBody = NodePath("RigidBody2D")
 
 [node name="RigidBody2D" type="RigidBody2D" parent="."]
 collision_layer = 0

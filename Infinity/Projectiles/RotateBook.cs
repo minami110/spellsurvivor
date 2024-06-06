@@ -5,13 +5,13 @@ namespace fms.Projectile;
 
 public partial class RotateBook : ProjectileBase
 {
-    private float _angularVelocity;
-
     [Export]
     private Area2D _enemyDamageArea = null!;
 
     [Export]
     private RigidBody2D _rigidBody = null!;
+
+    private float _angularVelocity;
 
     private double _timer;
 
@@ -61,11 +61,6 @@ public partial class RotateBook : ProjectileBase
         _rigidBody.GlobalPosition = CalculatePosition(_timer, _angularVelocity, Radius);
     }
 
-    private void OnEnemyBodyEntered(Enemy enemy)
-    {
-        enemy.TakeDamage(BaseDamage);
-    }
-
     private Vector2 CalculatePosition(double time, float angularVelocity, float radius)
     {
         var positionX = (float)Mathf.Cos(time * angularVelocity);
@@ -80,5 +75,10 @@ public partial class RotateBook : ProjectileBase
         }
 
         return unitVec * radius;
+    }
+
+    private void OnEnemyBodyEntered(Enemy enemy)
+    {
+        enemy.TakeDamage(BaseDamage);
     }
 }

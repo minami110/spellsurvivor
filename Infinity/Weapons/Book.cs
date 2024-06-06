@@ -44,29 +44,6 @@ public partial class Book : WeaponBase
         }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <param name="radius"></param>
-    /// <param name="num">たまの数</param>
-    /// <param name="degree"></param>
-    private void SpawnBullet(float radius = 100f, int num = 1, float degree = 0f)
-    {
-        for (var i = 0; i < num; i++)
-        {
-            var bullet = _bulletPackedScene.Instantiate<RotateBook>();
-            {
-                bullet.BaseDamage = 50;
-                bullet.Radius = radius;
-                bullet.Angle = degree;
-                bullet.SecondPerRound = 3;
-                bullet.LifeFrame = (int)SolvedCoolDownFrame;
-                bullet.InitTimeForRelativePos = CalculateRelativePositon(num, i, (float)SolvedCoolDownFrame / 60f);
-            }
-
-            _root.AddChild(bullet);
-        }
-    }
-
 
     /// <summary>
     ///     複数の弾を同時に発射するときの初期位置のずれを設定するために利用する時間を計算する
@@ -83,5 +60,28 @@ public partial class Book : WeaponBase
         }
 
         return coolDown / bulletTotalNum * bulletNum;
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="radius"></param>
+    /// <param name="num">たまの数</param>
+    /// <param name="degree"></param>
+    private void SpawnBullet(float radius = 100f, int num = 1, float degree = 0f)
+    {
+        for (var i = 0; i < num; i++)
+        {
+            var bullet = _bulletPackedScene.Instantiate<RotateBook>();
+            {
+                bullet.BaseDamage = 50;
+                bullet.Radius = radius;
+                bullet.Angle = degree;
+                bullet.SecondPerRound = 3;
+                bullet.LifeFrame = (int)SolvedCoolDownFrame;
+                bullet.InitTimeForRelativePos = CalculateRelativePositon(num, i, SolvedCoolDownFrame / 60f);
+            }
+
+            _root.AddChild(bullet);
+        }
     }
 }

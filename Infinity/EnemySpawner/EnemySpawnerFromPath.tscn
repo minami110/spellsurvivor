@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://ceumkcw7s8urg"]
+
+[ext_resource type="Script" path="res://Infinity/EnemySpawner/EnemySpawnerFromPath.cs" id="1_hw7l4"]
+
+[sub_resource type="Curve2D" id="Curve2D_dcvq1"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 496, -496, 0, 0, 0, 0, 496, 496, 0, 0, 0, 0, -496, 496, 0, 0, 0, 0, -496, -496, 0, 0, 0, 0, 496, -496)
+}
+point_count = 5
+
+[node name="EnemySpawner" type="Node2D" node_paths=PackedStringArray("_enemySpawnRoot", "_spawnPath") groups=["EnemySpawner"]]
+process_mode = 1
+script = ExtResource("1_hw7l4")
+_enemySpawnRoot = NodePath("EnemySpawnRoot")
+_spawnPath = NodePath("SpawnPath/SpawnPoint")
+
+[node name="SpawnPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_dcvq1")
+
+[node name="SpawnPoint" type="PathFollow2D" parent="SpawnPath"]
+position = Vector2(496, -496)
+rotation = 1.5708
+
+[node name="EnemySpawnRoot" type="Node" parent="."]
