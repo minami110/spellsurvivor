@@ -6,6 +6,7 @@ namespace fms;
 
 public partial class SoundManager : Node
 {
+    [ExportGroup("Player Reference")]
     [Export]
     private AudioStreamPlayer _bgmAPlayer = null!;
 
@@ -16,10 +17,11 @@ public partial class SoundManager : Node
     private AudioStreamPlayer _bgmCPlayer = null!;
 
     [Export]
-    private AudioStreamOggVorbis _seFanfale = null!;
-
-    [Export]
     private AudioStreamPlayer _effectPlayer = null!;
+
+    [ExportGroup("Stream Reference")]
+    [Export]
+    private AudioStreamOggVorbis _seFanfale = null!;
 
     [Export]
     private AudioStream _buttonClickSound = null!;
@@ -62,10 +64,10 @@ public partial class SoundManager : Node
             }
         });
 
-        GameConfig.Singleton.AudioMasterVolume.Subscribe(x =>
+        GameConfig.Singleton.AudioMasterVolume.Subscribe(linear =>
         {
             var busIndex = AudioServer.GetBusIndex("Master");
-            AudioServer.SetBusVolumeDb(busIndex, VolumeToDb(x));
+            AudioServer.SetBusVolumeDb(busIndex, Mathf.LinearToDb(linear));
         });
     }
 
@@ -88,6 +90,25 @@ public partial class SoundManager : Node
             await _instance.ToSignal(_instance._effectPlayer, AudioStreamPlayer.SignalName.Finished);
             _instance._effectPlayer.Stop();
         }
+    }
+
+    /// <summary>
+    ///     Linear volume (0 ~ 1) to dB
+    /// </summary>
+    /// <param name="volume"></param>
+    /// <returns></returns>
+    public static float VolumeToDb(float volume)
+    {
+        // Clamp the volume to the 0-1 range
+        volume = Mathf.Clamp(volume, 0f, 1f);
+
+        // Convert the volume to a dB scale
+        var db = 20f * Mathf.Log(volume);
+
+        // Clamp the dB value to the -80 to 0 range
+        db = Mathf.Clamp(db, -80f, 0f);
+
+        return db;
     }
 
     private async void EffectBgmBattleToShop()
@@ -153,19 +174,5 @@ public partial class SoundManager : Node
         _effectPlayer.Play();
         await ToSignal(_effectPlayer, AudioStreamPlayer.SignalName.Finished);
         _effectPlayer.Stop();
-    }
-
-    private static float VolumeToDb(float volume)
-    {
-        // Clamp the volume to the 0-1 range
-        volume = Mathf.Clamp(volume, 0f, 1f);
-
-        // Convert the volume to a dB scale
-        var db = 20f * Mathf.Log(volume);
-
-        // Clamp the dB value to the -80 to 0 range
-        db = Mathf.Max(-80f, Mathf.Min(0f, db));
-
-        return db;
     }
 }
