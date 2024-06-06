@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=34 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="2_2pohd"]
@@ -20,7 +20,6 @@
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="12_42duw"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
-[ext_resource type="PackedScene" uid="uid://jxv6yio5etx6" path="res://Common/Singletons/SoundManager/SoundManager.tscn" id="22_xj24c"]
 
 [sub_resource type="Resource" id="Resource_0ct4c"]
 script = ExtResource("2_2pohd")
@@ -95,8 +94,6 @@ script = ExtResource("1_tk8vx")
 _gameSettings = SubResource("Resource_pdcir")
 _playerPawn = NodePath("Player")
 _enemySpawner = NodePath("EnemySpawner")
-
-[node name="SoundManager" parent="." instance=ExtResource("22_xj24c")]
 
 [node name="Player" parent="." instance=ExtResource("12_e0mmc")]
 

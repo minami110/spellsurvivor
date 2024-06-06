@@ -5,6 +5,14 @@ namespace fms;
 
 public partial class Title : Node
 {
+    [ExportGroup("Resouce Reference")]
+    [Export(PropertyHint.File, "*.tscn")]
+    private string _mainGameScene = string.Empty;
+
+    [Export]
+    private AudioStream? _titleBgm;
+
+    [ExportGroup("Internal Reference")]
     [Export]
     private Label _appNameLabel = null!;
 
@@ -13,9 +21,6 @@ public partial class Title : Node
 
     [Export]
     private Label _godotVersionLabel = null!;
-
-    [Export(PropertyHint.File, "*.tscn")]
-    private string _mainGameScene = string.Empty;
 
     [Export]
     private Button _settingsButton = null!;
@@ -42,6 +47,12 @@ public partial class Title : Node
 
         // Settings
         _settingsButton.PressedAsObservable().Subscribe(_ => { SettingsHud.ShowHud(); }).AddTo(this);
+
+        // PlayBGM
+        if (_titleBgm is not null)
+        {
+            SoundManager.PlayBgm(_titleBgm);
+        }
     }
 
     public void OnExitButtonPressed()

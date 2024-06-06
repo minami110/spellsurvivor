@@ -1,35 +1,26 @@
-[gd_scene load_steps=6 format=3 uid="uid://jxv6yio5etx6"]
+[gd_scene load_steps=2 format=3 uid="uid://jxv6yio5etx6"]
 
 [ext_resource type="Script" path="res://Common/Singletons/SoundManager/SoundManager.cs" id="1_lf46y"]
-[ext_resource type="AudioStream" uid="uid://c3it4v22s0hck" path="res://Common/Resources/Sounds/se-fanfale-a.ogg" id="2_sd0y1"]
-[ext_resource type="AudioStream" uid="uid://cvxs4i276wwyw" path="res://Common/Resources/Sounds/ui-click-a.ogg" id="3_nkj45"]
-[ext_resource type="AudioStream" uid="uid://b87r0jey48csu" path="res://Common/Resources/Sounds/bgm-loop-a-bpm120.ogg" id="4_fdc34"]
-[ext_resource type="AudioStream" uid="uid://cdeinssa3sobx" path="res://Common/Resources/Sounds/bgm-loop-b-bpm120.ogg" id="5_jftiw"]
 
-[node name="SoundManager" type="Node" node_paths=PackedStringArray("_bgmAPlayer", "_bgmBPlayer", "_bgmCPlayer", "_effectPlayer")]
+[node name="SoundManager" type="Node" node_paths=PackedStringArray("_bgmBasePlayer", "_bgmOptionalAPlayer", "_bgmOptionalBPlayer", "_effectPlayer")]
 script = ExtResource("1_lf46y")
-_bgmAPlayer = NodePath("BGM A Player")
-_bgmBPlayer = NodePath("BGM B Player")
-_bgmCPlayer = NodePath("BGM C Player")
-_effectPlayer = NodePath("UI Player A")
-_seFanfale = ExtResource("2_sd0y1")
-_buttonClickSound = ExtResource("3_nkj45")
+_bgmBasePlayer = NodePath("BGM Base Player")
+_bgmOptionalAPlayer = NodePath("BGM OptionalA Player")
+_bgmOptionalBPlayer = NodePath("BGM OptionalB Player")
+_effectPlayer = NodePath("Effect Player A")
 
-[node name="BGM A Player" type="AudioStreamPlayer" parent="."]
+[node name="BGM Base Player" type="AudioStreamPlayer" parent="."]
 process_mode = 3
-stream = ExtResource("4_fdc34")
 bus = &"BGM"
 
-[node name="BGM B Player" type="AudioStreamPlayer" parent="."]
+[node name="BGM OptionalA Player" type="AudioStreamPlayer" parent="."]
 process_mode = 3
-stream = ExtResource("5_jftiw")
 bus = &"BGM"
 
-[node name="BGM C Player" type="AudioStreamPlayer" parent="."]
+[node name="BGM OptionalB Player" type="AudioStreamPlayer" parent="."]
 process_mode = 3
-stream = ExtResource("5_jftiw")
 bus = &"BGM"
 
-[node name="UI Player A" type="AudioStreamPlayer" parent="."]
+[node name="Effect Player A" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 bus = &"Effect"

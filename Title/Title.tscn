@@ -18,10 +18,11 @@ font_size = 50
 
 [node name="Title" type="Node" node_paths=PackedStringArray("_appNameLabel", "_appVersionLabel", "_godotVersionLabel", "_settingsButton")]
 script = ExtResource("1_1tswy")
+_mainGameScene = "res://Infinity/Infinity.tscn"
+_titleBgm = ExtResource("4_lpogd")
 _appNameLabel = NodePath("CenterContainer/VBoxContainer/Title Group/appTitle")
 _appVersionLabel = NodePath("CenterContainer/VBoxContainer/Title Group/appVersion")
 _godotVersionLabel = NodePath("powerdbygodot")
-_mainGameScene = "res://Infinity/Infinity.tscn"
 _settingsButton = NodePath("CenterContainer/VBoxContainer/VBox Button Menu/SettingsButton")
 
 [node name="Panel" type="Panel" parent="."]
@@ -101,10 +102,6 @@ text = "UI_SETTINGS"
 [node name="ExitButton" type="Button" parent="CenterContainer/VBoxContainer/VBox Button Menu"]
 layout_mode = 2
 text = "UI_QUIT"
-
-[node name="TitleBGMPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_lpogd")
-autoplay = true
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBox Button Menu/InfinityButton" to="." method="OnStartButtonPressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBox Button Menu/ExitButton" to="." method="OnExitButtonPressed"]

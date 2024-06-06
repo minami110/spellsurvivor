@@ -1,4 +1,3 @@
-using System.Linq;
 using Godot;
 using R3;
 
@@ -8,23 +7,19 @@ public partial class SoundManager : Node
 {
     [ExportGroup("Player Reference")]
     [Export]
-    private AudioStreamPlayer _bgmAPlayer = null!;
+    private AudioStreamPlayer _bgmBasePlayer = null!;
 
     [Export]
-    private AudioStreamPlayer _bgmBPlayer = null!;
+    private AudioStreamPlayer _bgmOptionalAPlayer = null!;
 
     [Export]
-    private AudioStreamPlayer _bgmCPlayer = null!;
+    private AudioStreamPlayer _bgmOptionalBPlayer = null!;
 
     [Export]
     private AudioStreamPlayer _effectPlayer = null!;
 
-    [ExportGroup("Stream Reference")]
-    [Export]
-    private AudioStreamOggVorbis _seFanfale = null!;
-
-    [Export]
-    private AudioStream _buttonClickSound = null!;
+    private static readonly StringName BusNameMaster = new("Master");
+    private static readonly StringName BusNameBgm = new("BGM");
 
     private static SoundManager? _instance;
 
@@ -35,45 +30,43 @@ public partial class SoundManager : Node
 
     public override void _Ready()
     {
-        var tree = GetTree();
-        var nodes = tree.Root.FindChildren("*", nameof(BaseButton), true, false);
-
-        _bgmBPlayer.Play();
-
-        foreach (var button in from n in nodes
-                 where n is BaseButton
-                 select n)
-        {
-            this.DebugLog($"Name: {button.Name} Binded Sound");
-            ((BaseButton)button).MouseEntered += PlayButtonClickSound;
-        }
-
-        Main.WaveState.Phase.Subscribe(x =>
-        {
-            if (x == WavePhase.BATTLE)
-            {
-                EffectBgmShopToBattle();
-            }
-            else if (x == WavePhase.SHOP)
-            {
-                EffectBgmBattleToShop();
-            }
-            else if (x == WavePhase.BATTLERESULT)
-            {
-                EnterBattleResult();
-            }
-        });
-
-        GameConfig.Singleton.AudioMasterVolume.Subscribe(linear =>
-        {
-            var busIndex = AudioServer.GetBusIndex("Master");
-            AudioServer.SetBusVolumeDb(busIndex, Mathf.LinearToDb(linear));
-        });
+        // Subscribe configs
+        GameConfig.Singleton.AudioMasterVolume.Subscribe(SetMasterBusVolume).AddTo(this);
     }
 
     public override void _ExitTree()
     {
         _instance = null;
+    }
+
+    public static void PlayBgm(AudioStream stream)
+    {
+        if (_instance is not null)
+        {
+            _instance._bgmBasePlayer.Stream = stream;
+            _instance._bgmBasePlayer.Play();
+        }
+    }
+
+    public static async void PlayBgmOnOptionalTrackA(AudioStream stream, bool syncBeat = true)
+    {
+        if (_instance is not null)
+        {
+            if (syncBeat)
+            {
+                // Add BGM
+                var nextStartTimeLeft = GetPlaybackTime(_instance._bgmBasePlayer);
+                var delay = AudioServer.GetTimeToNextMix() + AudioServer.GetOutputLatency();
+                await _instance.WaitForSecondsAsync(nextStartTimeLeft - delay);
+                _instance._bgmOptionalAPlayer.Stream = stream;
+                _instance._bgmOptionalAPlayer.Play();
+            }
+            else
+            {
+                _instance._bgmOptionalAPlayer.Stream = stream;
+                _instance._bgmOptionalAPlayer.Play();
+            }
+        }
     }
 
     public static async void PlaySoundEffect(AudioStream stream)
@@ -92,87 +85,31 @@ public partial class SoundManager : Node
         }
     }
 
+    public static void SetBgmBusLowPassFilterCutOff(float hz)
+    {
+        if (_instance is not null)
+        {
+            // acess bass
+            var busIndex = AudioServer.GetBusIndex(BusNameBgm);
+            var lowPass = (AudioEffectLowPassFilter)AudioServer.GetBusEffect(busIndex, 0);
+            lowPass.CutoffHz = hz;
+        }
+    }
+
     /// <summary>
-    ///     Linear volume (0 ~ 1) to dB
+    ///     Set Master Bus Volume
     /// </summary>
-    /// <param name="volume"></param>
-    /// <returns></returns>
-    public static float VolumeToDb(float volume)
+    /// <param name="volume">Linear volume [0, 1]</param>
+    public static void SetMasterBusVolume(float volume)
     {
-        // Clamp the volume to the 0-1 range
-        volume = Mathf.Clamp(volume, 0f, 1f);
-
-        // Convert the volume to a dB scale
-        var db = 20f * Mathf.Log(volume);
-
-        // Clamp the dB value to the -80 to 0 range
-        db = Mathf.Clamp(db, -80f, 0f);
-
-        return db;
-    }
-
-    private void EffectBgmBattleToShop()
-    {
-        // acess bass
-        var busIndex = AudioServer.GetBusIndex("BGM");
-        var lowPass = (AudioEffectLowPassFilter)AudioServer.GetBusEffect(busIndex, 0);
-
-        // 140Hz -> 2000Hz
-        var p = AudioEffectFilter.PropertyName.CutoffHz.ToString();
-        var tween = CreateTween();
-        tween.TweenProperty(lowPass, p, 140f, 0.5f);
-        tween.Play();
-    }
-
-    private async void EffectBgmShopToBattle()
-    {
-        // acess bass
-        var busIndex = AudioServer.GetBusIndex("BGM");
-        var lowPass = (AudioEffectLowPassFilter)AudioServer.GetBusEffect(busIndex, 0);
-
-        // 140Hz -> 2000Hz
-        var p = AudioEffectFilter.PropertyName.CutoffHz.ToString();
-        var tween = CreateTween();
-        tween.TweenProperty(lowPass, p, 2000f, 2f).SetEase(Tween.EaseType.InOut);
-        tween.Play();
-
-        // Add BGM
-        var nextStartTimeLeft = 6f - GetPlaybackTime(_bgmBPlayer);
-        var delay = AudioServer.GetTimeToNextMix() + AudioServer.GetOutputLatency();
-        await this.WaitForSecondsAsync(nextStartTimeLeft - delay);
-        _bgmAPlayer.Play();
-    }
-
-    private async void EnterBattleResult()
-    {
-        // Add BGM
-        var nextStartTimeLeft = (2f - GetPlaybackTime(_bgmBPlayer)) % 0.5f;
-        var delay = AudioServer.GetTimeToNextMix() + AudioServer.GetOutputLatency();
-        await this.WaitForSecondsAsync(nextStartTimeLeft - delay);
-
-        _bgmAPlayer.Stop();
-        _bgmCPlayer.Stream = _seFanfale;
-        _bgmCPlayer.Play();
-        await ToSignal(_bgmCPlayer, AudioStreamPlayer.SignalName.Finished);
-        _bgmCPlayer.Stop();
+        var busIndex = AudioServer.GetBusIndex(BusNameMaster);
+        AudioServer.SetBusVolumeDb(busIndex, Mathf.LinearToDb(volume));
+        GD.Print($"Master Bus Volume => {Mathf.LinearToDb(volume)} db");
     }
 
     private static double GetPlaybackTime(AudioStreamPlayer player)
     {
         var time = player.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix();
         return time;
-    }
-
-    private async void PlayButtonClickSound()
-    {
-        if (_effectPlayer.Playing)
-        {
-            return;
-        }
-
-        _effectPlayer.Stream = _buttonClickSound;
-        _effectPlayer.Play();
-        await ToSignal(_effectPlayer, AudioStreamPlayer.SignalName.Finished);
-        _effectPlayer.Stop();
     }
 }
