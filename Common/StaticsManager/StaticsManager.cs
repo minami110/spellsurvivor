@@ -6,7 +6,7 @@ namespace fms;
 ///     統計を収集するためのクラス
 ///     ダメージ表示も担当している
 /// </summary>
-public partial class StaticsManager : Node
+public partial class StaticsManager : CanvasLayer
 {
     [Export]
     private PackedScene _damageNumberScene = null!;
