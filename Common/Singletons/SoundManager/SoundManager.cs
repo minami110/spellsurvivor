@@ -104,7 +104,6 @@ public partial class SoundManager : Node
     {
         var busIndex = AudioServer.GetBusIndex(BusNameMaster);
         AudioServer.SetBusVolumeDb(busIndex, Mathf.LinearToDb(volume));
-        GD.Print($"Master Bus Volume => {Mathf.LinearToDb(volume)} db");
     }
 
     private static double GetPlaybackTime(AudioStreamPlayer player)
