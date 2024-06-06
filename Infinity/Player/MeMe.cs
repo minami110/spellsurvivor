@@ -8,9 +8,21 @@ public partial class MeMe : CharacterBody2D, IPawn
     [Export]
     private float _moveSpeed = 100f;
 
+    [Export]
+    private Vector2I _cameraLimit = new(550, 550);
+
     private Vector2 _nextMoveDirection;
 
     private PlayerState? _playerState;
+
+    public override void _Ready()
+    {
+        var camera = GetNode<Camera2D>("%MainCamera");
+        camera.LimitLeft = -_cameraLimit.X;
+        camera.LimitRight = _cameraLimit.X;
+        camera.LimitTop = -_cameraLimit.Y;
+        camera.LimitBottom = _cameraLimit.Y;
+    }
 
     public override void _PhysicsProcess(double delta)
     {

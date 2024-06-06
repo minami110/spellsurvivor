@@ -12,6 +12,7 @@ collision_mask = 16
 script = ExtResource("1_xi18f")
 
 [node name="MainCamera" type="Camera2D" parent="."]
+unique_name_in_owner = true
 zoom = Vector2(1.5, 1.5)
 
 [node name="TextureRect" type="TextureRect" parent="."]
