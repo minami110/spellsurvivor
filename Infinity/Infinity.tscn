@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=33 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="2_2pohd"]
@@ -13,12 +13,12 @@
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfigRaw.cs" id="7_pnyu1"]
 [ext_resource type="PackedScene" uid="uid://cn70mo64dy7mh" path="res://Infinity/HUDs/BattleResult/BattleResultHUD.tscn" id="8_gtxqj"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfig.cs" id="8_joqf5"]
-[ext_resource type="Script" path="res://Infinity/GameMode/EnemySpawner.cs" id="8_lc8x0"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/Shop/ShopHUD.tscn" id="9_a7daw"]
 [ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) BigTako.tscn" id="10_t3ivl"]
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="12_42duw"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
+[ext_resource type="PackedScene" uid="uid://ceumkcw7s8urg" path="res://Infinity/EnemySpawner/EnemySpawnerFromPath.tscn" id="14_y2etr"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
 
 [sub_resource type="Resource" id="Resource_0ct4c"]
@@ -77,39 +77,19 @@ DefaultMoveSpeed = 100.0
 ShopConfig = SubResource("Resource_0ct4c")
 WaveConfig = SubResource("Resource_t4uxh")
 
-[sub_resource type="Curve2D" id="Curve2D_dcvq1"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 496, -496, 0, 0, 0, 0, 496, 496, 0, 0, 0, 0, -496, 496, 0, 0, 0, 0, -496, -496, 0, 0, 0, 0, 496, -496)
-}
-point_count = 5
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2x8fi"]
 size = Vector2(100, 1200)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rh687"]
 size = Vector2(1200, 100)
 
-[node name="Main" type="Node" node_paths=PackedStringArray("_enemySpawner")]
+[node name="Main" type="Node"]
 script = ExtResource("1_tk8vx")
 _gameSettings = SubResource("Resource_pdcir")
-_enemySpawner = NodePath("EnemySpawner")
 
 [node name="Player" parent="." instance=ExtResource("12_e0mmc")]
 
-[node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("_enemySpawnRoot", "_spawnPath")]
-process_mode = 1
-script = ExtResource("8_lc8x0")
-_enemySpawnRoot = NodePath("EnemySpawnRoot")
-_spawnPath = NodePath("SpawnPath/SpawnPoint")
-
-[node name="SpawnPath" type="Path2D" parent="EnemySpawner"]
-curve = SubResource("Curve2D_dcvq1")
-
-[node name="SpawnPoint" type="PathFollow2D" parent="EnemySpawner/SpawnPath"]
-position = Vector2(496, -496)
-rotation = 1.5708
-
-[node name="EnemySpawnRoot" type="Node" parent="EnemySpawner"]
+[node name="EnemySpawner" parent="." instance=ExtResource("14_y2etr")]
 
 [node name="HUDs" type="Node" parent="."]
 

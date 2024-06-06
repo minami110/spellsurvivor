@@ -11,10 +11,6 @@ public partial class Main : Node
     [Export]
     private InfinityGameSettings _gameSettings = null!;
 
-    [ExportGroup("Internal References")]
-    [Export]
-    private EnemySpawner _enemySpawner = null!;
-
     private static Main? _instance;
 
     // 現在有効な Faction の辞書
@@ -109,7 +105,11 @@ public partial class Main : Node
             state._playerState.SolveEffect();
 
             // Spawner に設定を渡す
-            _enemySpawner.Config = state._waveState.CurrentWaveConfig.EnemySpawnConfig;
+            var node = GetTree().GetFirstNodeInGroup("EnemySpawner");
+            if (node is EnemySpawnerBase spawner)
+            {
+                spawner.SetConfig(state._waveState.CurrentWaveConfig.EnemySpawnConfig);
+            }
 
             // すべての武器を起動する
             foreach (var m in PlayerInventory.Minions)

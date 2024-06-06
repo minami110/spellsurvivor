@@ -6,7 +6,7 @@ namespace fms;
 /// <summary>
 ///     画面端のランダムな位置に Enemy をスポーsんする
 /// </summary>
-public partial class EnemySpawner : Node2D
+public partial class EnemySpawnerFromPath : EnemySpawnerBase
 {
     [ExportSubgroup("Internal References")]
     [Export]
@@ -16,8 +16,6 @@ public partial class EnemySpawner : Node2D
     private PathFollow2D _spawnPath = null!;
 
     private int _frameCounter;
-
-    public EnemySpawnConfig? Config { get; set; }
 
     public override void _Ready()
     {
@@ -54,12 +52,12 @@ public partial class EnemySpawner : Node2D
         }
     }
 
-    public void KillAllEnemies()
+    private void KillAllEnemies()
     {
         GetTree().CallGroup("Enemy", "KillByWaveEnd");
     }
 
-    public void SpawnEnemy(PackedScene packedScene)
+    private void SpawnEnemy(PackedScene packedScene)
     {
         // pick random point on path
         _spawnPath.ProgressRatio = GD.Randf();
