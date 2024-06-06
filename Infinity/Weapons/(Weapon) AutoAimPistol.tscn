@@ -17,6 +17,9 @@ BaseCoolDownFrame = 30
 _frameTimer = NodePath("FrameTimer")
 metadata/_edit_group_ = true
 
+[node name="FrameTimer" type="Node" parent="."]
+script = ExtResource("3_hmaku")
+
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 4
@@ -27,6 +30,3 @@ shape = SubResource("CircleShape2D_0ojw7")
 debug_color = Color(0.282353, 0.6, 0.294118, 0.027451)
 
 [node name="BulletSpawnRoot" type="Node" parent="."]
-
-[node name="FrameTimer" type="Node" parent="."]
-script = ExtResource("3_hmaku")
