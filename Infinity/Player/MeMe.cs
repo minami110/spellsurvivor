@@ -1,10 +1,16 @@
 using Godot;
+using R3;
 
 namespace fms;
 
 public partial class MeMe : CharacterBody2D, IPawn
 {
+    [Export]
+    private float _moveSpeed = 100f;
+
     private Vector2 _nextMoveDirection;
+
+    private PlayerState? _playerState;
 
     public override void _PhysicsProcess(double delta)
     {
@@ -17,28 +23,34 @@ public partial class MeMe : CharacterBody2D, IPawn
         var angle = Mathf.Atan2(_nextMoveDirection.Y, _nextMoveDirection.X);
         Rotation = angle;
 
-        // Update Position
-        var speed = Main.PlayerState.MoveSpeed.CurrentValue;
-
-        var motion = _nextMoveDirection * (float)delta * speed;
+        var motion = _nextMoveDirection * (float)delta * _moveSpeed;
         MoveAndCollide(motion);
+    }
+
+    public void SetPlayerState(PlayerState state)
+    {
+        _playerState = state;
+        _playerState.MoveSpeed.Subscribe(this, (x, state) => state._moveSpeed = x).AddTo(this);
     }
 
     public void TakeDamage(float amount)
     {
-        var state = Main.PlayerState;
+        if (_playerState is null)
+        {
+            return;
+        }
 
         var effect = new PhysicalDamageEffect
         {
             Value = amount
         };
 
-        state.AddEffect(effect);
-        state.SolveEffect();
+        _playerState.AddEffect(effect);
+        _playerState.SolveEffect();
 
-        NotificationManager.CommitDamage(NotificationManager.DamageTakeOwner.Player, amount, GlobalPosition);
+        // 統計をおくる
+        StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Player, amount, GlobalPosition);
     }
-
 
     void IPawn.PrimaryPressed()
     {

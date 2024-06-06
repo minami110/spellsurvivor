@@ -14,6 +14,9 @@ public partial class SettingTab : TabContainer
     [Export]
     private CheckButton _showDamageNumbersCheckButton = null!;
 
+    [Export]
+    private CheckButton _debugShowCollisionCheckButton = null!;
+
     public override void _Ready()
     {
         var config = GameConfig.Singleton;
@@ -23,14 +26,13 @@ public partial class SettingTab : TabContainer
             _masterVolumeSlider.MinValue = 0;
             _masterVolumeSlider.MaxValue = 1;
             _masterVolumeSlider.Step = 0.05f;
-            _masterVolumeSlider.Value = config.AudioMasterVolume.Value;
+            _masterVolumeSlider.SetValueNoSignal(config.AudioMasterVolume.Value);
             _masterVolumeSlider.ValueChanged += value => { config.AudioMasterVolume.Value = (float)value; };
         }
 
         // Language PopupMenu initialization and bindings
         {
             var popup = _languageMenuButton.GetPopup();
-
 
             var locales = TranslationServer.GetLoadedLocales();
             foreach (var locale in locales)
@@ -52,9 +54,22 @@ public partial class SettingTab : TabContainer
         // Show Damage Numbers CheckButton initialization and bindings
         {
             // Fetch current value from config
-            _showDamageNumbersCheckButton.ButtonPressed = config.ShowDamageNumbers.Value;
+            _showDamageNumbersCheckButton.SetPressedNoSignal(config.ShowDamageNumbers.Value);
             _showDamageNumbersCheckButton.ToggledAsObservable().Subscribe(x => { config.ShowDamageNumbers.Value = x; })
                 .AddTo(this);
+        }
+
+        // (Debug) Show Collision CheckButton initialization and bindings
+        {
+            // Fetch current value from config
+            _debugShowCollisionCheckButton.ToggledAsObservable()
+                .Subscribe(x => { config.DebugShowCollision.Value = x; })
+                .AddTo(this);
+            config.DebugShowCollision.Subscribe(x =>
+            {
+                _debugShowCollisionCheckButton.SetPressedNoSignal(x);
+                GetTree().DebugCollisionsHint = x;
+            }).AddTo(this);
         }
     }
 

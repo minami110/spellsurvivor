@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=34 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="2_2pohd"]
@@ -10,7 +10,6 @@
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfig.cs" id="4_p7g23"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/InfinityGameSettings.cs" id="5_g1fii"]
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="6_fcw3t"]
-[ext_resource type="Script" path="res://Common/Inputs/PlayerController.cs" id="6_m3lsh"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfigRaw.cs" id="7_pnyu1"]
 [ext_resource type="PackedScene" uid="uid://cn70mo64dy7mh" path="res://Infinity/HUDs/BattleResult/BattleResultHUD.tscn" id="8_gtxqj"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfig.cs" id="8_joqf5"]
@@ -20,15 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="12_42duw"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
-[ext_resource type="Script" path="res://Infinity/GameMode/Notification/NotificationManager.cs" id="13_mqafi"]
-[ext_resource type="PackedScene" uid="uid://5ck4fqkx4pvq" path="res://Infinity/GameMode/Notification/DamageNumberHud.tscn" id="14_mtewq"]
-[ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://PoseMenu/PoseMenu.tscn" id="16_ngbfj"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
-[ext_resource type="Script" path="res://Infinity/GameMode/SoundManager.cs" id="23_nx00x"]
-[ext_resource type="AudioStream" uid="uid://cvxs4i276wwyw" path="res://Common/Resources/Sounds/ui-click-a.ogg" id="24_behmy"]
-[ext_resource type="AudioStream" uid="uid://b87r0jey48csu" path="res://Common/Resources/Sounds/bgm-loop-a-bpm120.ogg" id="24_x6bpv"]
-[ext_resource type="AudioStream" uid="uid://c3it4v22s0hck" path="res://Common/Resources/Sounds/se-fanfale-a.ogg" id="25_vwna5"]
-[ext_resource type="AudioStream" uid="uid://cdeinssa3sobx" path="res://Common/Resources/Sounds/bgm-loop-b-bpm120.ogg" id="26_dbtdb"]
 
 [sub_resource type="Resource" id="Resource_0ct4c"]
 script = ExtResource("2_2pohd")
@@ -98,23 +89,12 @@ size = Vector2(100, 1200)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rh687"]
 size = Vector2(1200, 100)
 
-[node name="Main" type="Node" node_paths=PackedStringArray("_playerController", "_playerPawn", "_enemySpawner")]
+[node name="Main" type="Node" node_paths=PackedStringArray("_enemySpawner")]
 script = ExtResource("1_tk8vx")
 _gameSettings = SubResource("Resource_pdcir")
-_playerController = NodePath("PlayerController")
-_playerPawn = NodePath("MeMe (Player)")
 _enemySpawner = NodePath("EnemySpawner")
 
-[node name="NotificationManager" type="Node" parent="." node_paths=PackedStringArray("_damageNumberContainer")]
-script = ExtResource("13_mqafi")
-_damageNumberScene = ExtResource("14_mtewq")
-_damageNumberContainer = NodePath("../HUDs/DamageHud (Layer 3)")
-
-[node name="PlayerController" type="Node" parent="."]
-process_mode = 1
-script = ExtResource("6_m3lsh")
-
-[node name="MeMe (Player)" parent="." instance=ExtResource("12_e0mmc")]
+[node name="Player" parent="." instance=ExtResource("12_e0mmc")]
 
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("_enemySpawnRoot", "_spawnPath")]
 process_mode = 1
@@ -173,13 +153,6 @@ shape = SubResource("RectangleShape2D_2x8fi")
 [node name="InGameHUD (Layer 2)" parent="HUDs" instance=ExtResource("11_3i81h")]
 visible = false
 
-[node name="DamageHud (Layer 3)" type="CanvasLayer" parent="HUDs"]
-layer = 3
-follow_viewport_enabled = true
-
-[node name="DamageNumberHud" parent="HUDs/DamageHud (Layer 3)" instance=ExtResource("14_mtewq")]
-position = Vector2(314, 181)
-
 [node name="BattleResult HUD (Layer 2)" parent="HUDs" instance=ExtResource("8_gtxqj")]
 
 [node name="ShopHUD (Layer 4)" parent="HUDs" instance=ExtResource("9_a7daw")]
@@ -191,35 +164,4 @@ layer = 8
 [node name="TooltipToast" parent="HUDs/Tooltip Toast (Layer 8)" instance=ExtResource("12_42duw")]
 visible = false
 
-[node name="PoseHUD (Layer 10)" parent="HUDs" instance=ExtResource("16_ngbfj")]
-visible = false
-
 [node name="DebugHUD (Layer 20)" parent="HUDs" instance=ExtResource("16_qck06")]
-
-[node name="SoundManager" type="Node" parent="." node_paths=PackedStringArray("_bgmAPlayer", "_bgmBPlayer", "_bgmCPlayer", "_effectPlayer")]
-script = ExtResource("23_nx00x")
-_bgmAPlayer = NodePath("BGM A Player")
-_bgmBPlayer = NodePath("BGM B Player")
-_bgmCPlayer = NodePath("BGM C Player")
-_seFanfale = ExtResource("25_vwna5")
-_effectPlayer = NodePath("SE Player")
-_buttonClickSound = ExtResource("24_behmy")
-
-[node name="BGM A Player" type="AudioStreamPlayer" parent="SoundManager"]
-process_mode = 3
-stream = ExtResource("24_x6bpv")
-bus = &"BGM"
-
-[node name="BGM B Player" type="AudioStreamPlayer" parent="SoundManager"]
-process_mode = 3
-stream = ExtResource("26_dbtdb")
-bus = &"BGM"
-
-[node name="BGM C Player" type="AudioStreamPlayer" parent="SoundManager"]
-process_mode = 3
-stream = ExtResource("26_dbtdb")
-bus = &"BGM"
-
-[node name="SE Player" type="AudioStreamPlayer" parent="SoundManager"]
-process_mode = 3
-bus = &"Effect"

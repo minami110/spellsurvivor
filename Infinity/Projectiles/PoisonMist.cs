@@ -38,7 +38,7 @@ public partial class PoisonMist : ProjectileBase
             {
                 if (body is Enemy enemy)
                 {
-                    enemy.TakeDamage(BaseDamage, false);
+                    enemy.TakeDamage(BaseDamage);
                 }
             }
 

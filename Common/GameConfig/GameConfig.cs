@@ -12,6 +12,7 @@ public sealed class GameConfig
 
     // Audio
     public readonly ReactiveProperty<float> AudioMasterVolume = new(0.8f);
+    public readonly ReactiveProperty<bool> DebugShowCollision = new();
 
     // General
     public readonly ReactiveProperty<string> Locale = new();
@@ -31,9 +32,10 @@ public sealed class GameConfig
         var config = new ConfigFile();
 
         // Globals
-        config.SetValue(_SECTION_GLOBAL, nameof(AudioMasterVolume), AudioMasterVolume.Value);
         config.SetValue(_SECTION_GLOBAL, nameof(Locale), Locale.Value);
+        config.SetValue(_SECTION_GLOBAL, nameof(AudioMasterVolume), AudioMasterVolume.Value);
         config.SetValue(_SECTION_GLOBAL, nameof(ShowDamageNumbers), ShowDamageNumbers.Value);
+        config.SetValue(_SECTION_GLOBAL, nameof(DebugShowCollision), DebugShowCollision.Value);
         config.Save(_CONFIG_PATH);
     }
 
@@ -54,6 +56,7 @@ public sealed class GameConfig
 
             // Graphics
             ShowDamageNumbers.Value = (bool)config.GetValue(_SECTION_GLOBAL, nameof(ShowDamageNumbers), true);
+            DebugShowCollision.Value = (bool)config.GetValue(_SECTION_GLOBAL, nameof(DebugShowCollision), true);
         }
         else
         {

@@ -1,19 +1,21 @@
 [gd_scene load_steps=3 format=3 uid="uid://bdohpbfaybfst"]
 
-[ext_resource type="Script" path="res://Title/SettingTab.cs" id="1_i1xjl"]
+[ext_resource type="Script" path="res://Common/Singletons/Huds/SettingTab.cs" id="1_xmkw4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf86h"]
 bg_color = Color(0.20871, 0.20871, 0.20871, 1)
 
-[node name="SettingsTab" type="TabContainer" node_paths=PackedStringArray("_masterVolumeSlider", "_languageMenuButton", "_showDamageNumbersCheckButton")]
-process_mode = 3
+[node name="SettingsTab" type="TabContainer" node_paths=PackedStringArray("_masterVolumeSlider", "_languageMenuButton", "_showDamageNumbersCheckButton", "_debugShowCollisionCheckButton")]
 custom_minimum_size = Vector2(600, 600)
-script = ExtResource("1_i1xjl")
+current_tab = 2
+script = ExtResource("1_xmkw4")
 _masterVolumeSlider = NodePath("UI_AUDIO/MarginContainer/VBox/HBoxContainer/MasterVolumeSlider")
 _languageMenuButton = NodePath("UI_GENERAL/MarginContainer/VBox/HBoxContainer/MenuButton")
-_showDamageNumbersCheckButton = NodePath("UI_GRAPHICS/MarginContainer/VBox/CheckButton")
+_showDamageNumbersCheckButton = NodePath("UI_GRAPHICS/MarginContainer/VBox/ShowDamageCheckButton")
+_debugShowCollisionCheckButton = NodePath("UI_GRAPHICS/MarginContainer/VBox/DebugShowCollisionCheckButton")
 
 [node name="UI_GENERAL" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_yf86h")
 
@@ -71,7 +73,6 @@ step = 0.1
 scrollable = false
 
 [node name="UI_GRAPHICS" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_yf86h")
 
@@ -85,6 +86,10 @@ theme_override_constants/margin_bottom = 25
 [node name="VBox" type="VBoxContainer" parent="UI_GRAPHICS/MarginContainer"]
 layout_mode = 2
 
-[node name="CheckButton" type="CheckButton" parent="UI_GRAPHICS/MarginContainer/VBox"]
+[node name="ShowDamageCheckButton" type="CheckButton" parent="UI_GRAPHICS/MarginContainer/VBox"]
 layout_mode = 2
 text = "UI_SHOW_DAMAGE"
+
+[node name="DebugShowCollisionCheckButton" type="CheckButton" parent="UI_GRAPHICS/MarginContainer/VBox"]
+layout_mode = 2
+text = "(DEBUG) Show Collision"

@@ -195,11 +195,6 @@ text = "Player Status"
 layout_mode = 2
 text = "Gold: N/A"
 
-[node name="Label Gold2" type="Label" parent="Container/VBox Player Status"]
-layout_mode = 2
-text = "MaxHealth: 100
-MoveSpeed: 100"
-
 [node name="VBox Active Factions" type="VBoxContainer" parent="Container"]
 layout_mode = 1
 anchors_preset = 4

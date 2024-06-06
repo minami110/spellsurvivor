@@ -1,18 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://cfoh2vs087f48"]
+[gd_scene load_steps=3 format=3 uid="uid://cfoh2vs087f48"]
 
-[ext_resource type="Script" path="res://PoseMenu/EscapeGUI.cs" id="1_4hbvv"]
-[ext_resource type="PackedScene" uid="uid://bdohpbfaybfst" path="res://Title/SettingTab.tscn" id="2_gtihs"]
+[ext_resource type="Script" path="res://Common/Singletons/Huds/PauseHud.cs" id="1_rimer"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ysej8"]
 bg_color = Color(0, 0, 0, 0.615686)
 
-[node name="PoseMenu" type="CanvasLayer" node_paths=PackedStringArray("_settingsbutton", "_settingsRoot")]
+[node name="PauseHud" type="CanvasLayer" node_paths=PackedStringArray("_settingsbutton")]
 process_mode = 3
-layer = 10
-script = ExtResource("1_4hbvv")
+layer = 100
+script = ExtResource("1_rimer")
 _titleScene = "res://Title/Title.tscn"
 _settingsbutton = NodePath("PanelContainer/CenterContainer/Escape/SettingsButton")
-_settingsRoot = NodePath("PanelContainer/CenterContainer/Settings Tab")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 process_mode = 2
@@ -31,29 +29,26 @@ layout_mode = 2
 alignment = 1
 
 [node name="ResumeButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
+unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "ゲームに戻ります"
 text = "Resume"
 
 [node name="SettingsButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
+unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "設定を開きます"
 text = "Setting
 "
 
 [node name="TitleButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
+unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "タイトルに戻ります"
 text = "Title"
 
 [node name="ExitButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
+unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "ゲームを終了します"
 text = "Exit to Desktop"
-
-[node name="Settings Tab" parent="PanelContainer/CenterContainer" instance=ExtResource("2_gtihs")]
-layout_mode = 2
-
-[connection signal="pressed" from="PanelContainer/CenterContainer/Escape/ResumeButton" to="." method="OnResumePressed"]
-[connection signal="pressed" from="PanelContainer/CenterContainer/Escape/TitleButton" to="." method="OnTitlePressed"]
-[connection signal="pressed" from="PanelContainer/CenterContainer/Escape/ExitButton" to="." method="OnExitPressed"]

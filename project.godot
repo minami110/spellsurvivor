@@ -18,7 +18,12 @@ config/icon="res://Common/Resources/Textures/icon.svg"
 
 [autoload]
 
-SceneManager="*res://Common/SceneManager/SceneManager.cs"
+SettingsHud="*res://Common/Singletons/Huds/SettingsHud.tscn"
+SoundManager="*res://Common/Singletons/SoundManager/SoundManager.tscn"
+SceneManager="*res://Common/Singletons/SceneManager/SceneManager.cs"
+PlayerController="*res://Common/Singletons/PlayerController/PlayerController.tscn"
+StaticsManager="*res://Common/Singletons/StaticsManager/StaticsManager.tscn"
+PauseHud="*res://Common/Singletons/Huds/PauseHud.tscn"
 
 [debug]
 

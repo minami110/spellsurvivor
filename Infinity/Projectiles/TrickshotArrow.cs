@@ -62,7 +62,6 @@ public partial class TrickshotArrow : ProjectileBase
         SoundManager.PlaySoundEffect(_spawnSound);
     }
 
-
     private void OnEnemyBodyEntered(Enemy enemy)
     {
         if (_previousEnemy == enemy)

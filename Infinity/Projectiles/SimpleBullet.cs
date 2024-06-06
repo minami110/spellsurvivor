@@ -14,7 +14,6 @@ public partial class SimpleBullet : ProjectileBase
     public float InitialSpeed { get; set; }
     public Vector2 InitialVelocity { get; set; }
 
-
     public override void _Ready()
     {
         // Set rigidbody parameter

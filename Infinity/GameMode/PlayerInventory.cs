@@ -56,14 +56,11 @@ public sealed class PlayerInventory : IDisposable
             throw new ApplicationException($"Minion already has been in-hand : {minionId}");
         }
 
-        // Player Pawn に Item を追加で装備させる
+        // Player Pawn に Weapon を追加で装備させる
         minion.Place = MinionPlace.InHand;
         var weapon = minion.WeaponPackedScene.Instantiate<WeaponBase>();
-        {
-            weapon.CoreData = minion;
-        }
-        Main.PlayerNode.AddChild(weapon);
         minion.Weapon = weapon;
+        Main.PlayerNode.AddChild(weapon);
 
         OnEquipedMinionChanged();
     }
