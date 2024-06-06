@@ -1,15 +1,11 @@
-[gd_scene load_steps=33 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=29 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
-[ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="2_2pohd"]
-[ext_resource type="Resource" uid="uid://dg1a0sshsyi4h" path="res://Infinity/Datebase/Items/(ShopItem) AutoAimPistol.tres" id="2_6p6xg"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
+[ext_resource type="Resource" uid="uid://cc2mm30mcw05i" path="res://Infinity/Datebase/Shop/(ShopConfig) Version1.tres" id="2_gfx80"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfigRaw.cs" id="3_rspfj"]
-[ext_resource type="Resource" uid="uid://brkbpmer5vx5k" path="res://Infinity/Datebase/Items/(ShopItem) ForwardKnife.tres" id="3_uxbtr"]
-[ext_resource type="Resource" uid="uid://bwrvuumsylvne" path="res://Infinity/Datebase/Items/(ShopItem) PoisonMistGen.tres" id="4_1r4lc"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfig.cs" id="4_p7g23"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/InfinityGameSettings.cs" id="5_g1fii"]
-[ext_resource type="Resource" uid="uid://b5yd1ajpdgy0g" path="res://Infinity/Datebase/Items/(ShopItem) Book.tres" id="5_y3wx1"]
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="6_fcw3t"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfigRaw.cs" id="7_pnyu1"]
 [ext_resource type="PackedScene" uid="uid://cn70mo64dy7mh" path="res://Infinity/HUDs/BattleResult/BattleResultHUD.tscn" id="8_gtxqj"]
@@ -21,13 +17,6 @@
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
 [ext_resource type="PackedScene" uid="uid://ceumkcw7s8urg" path="res://Infinity/EnemySpawner/EnemySpawnerFromPath.tscn" id="14_y2etr"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
-
-[sub_resource type="Resource" id="Resource_0ct4c"]
-script = ExtResource("2_2pohd")
-RerollCost = 1
-UpgradeCost = 1
-AddSlotCost = 1
-DefaultMinionPool = [ExtResource("2_6p6xg"), ExtResource("3_uxbtr"), ExtResource("4_1r4lc"), ExtResource("5_y3wx1")]
 
 [sub_resource type="Resource" id="Resource_6njts"]
 script = ExtResource("7_pnyu1")
@@ -75,7 +64,7 @@ script = ExtResource("5_g1fii")
 DefaultMoney = 10
 DefaultHealth = 100.0
 DefaultMoveSpeed = 100.0
-ShopConfig = SubResource("Resource_0ct4c")
+ShopConfig = ExtResource("2_gfx80")
 WaveConfig = SubResource("Resource_t4uxh")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2x8fi"]
