@@ -11,5 +11,6 @@ public enum FactionType
 {
     Bruiser = 1 << 0,
     Duelist = 1 << 1,
-    Trickshot = 1 << 2
+    Trickshot = 1 << 2,
+    Invoker = 1 << 3
 }

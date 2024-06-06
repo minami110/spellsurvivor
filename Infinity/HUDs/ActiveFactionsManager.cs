@@ -15,6 +15,9 @@ public partial class ActiveFactionsManager : Node
 
     [Export]
     private Label _trickshot = null!;
+    
+    [Export]
+    private Label _invoker = null!;
 
     public override void _Ready()
     {
@@ -46,6 +49,9 @@ public partial class ActiveFactionsManager : Node
                     break;
                 case FactionType.Trickshot:
                     UpdateLabel(_trickshot, nameof(Trickshot), faction);
+                    break;
+                case FactionType.Invoker:
+                    UpdateLabel(_invoker, nameof(Invoker), faction);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
