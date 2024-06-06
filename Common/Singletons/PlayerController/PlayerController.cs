@@ -20,37 +20,25 @@ public partial class PlayerController : Node
         SetProcess(false);
     }
 
-    public override void _Ready()
-    {
-        if (_customPawn is null)
-        {
-            // Pawn が指定されていない場合, ツリー内に存在する "Player" グループに所属する最初のノードを取得する
-            if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
-            {
-                _customPawn = player;
-            }
-        }
-
-        if (_customPawn is IPawn pawn)
-        {
-            Possess(pawn);
-        }
-    }
-
     public override void _Input(InputEvent inputEvent)
     {
         if (_posessedPawn is null)
         {
-            return;
+            // Note: 入力があるたびに Player タグがシーン内に存在するかを検索する
+            if (TryPossesFromPlayerTag() == false)
+            {
+                return;
+            }
         }
 
+        var pawn = _posessedPawn!;
         if (inputEvent.IsActionPressed(InputPrimary))
         {
-            _posessedPawn.PrimaryPressed();
+            pawn.PrimaryPressed();
         }
         else if (inputEvent.IsActionReleased(InputPrimary))
         {
-            _posessedPawn.PrimaryReleased();
+            pawn.PrimaryReleased();
         }
     }
 
@@ -88,5 +76,25 @@ public partial class PlayerController : Node
     {
         _posessedPawn = null;
         SetProcess(false);
+    }
+
+    private bool TryPossesFromPlayerTag()
+    {
+        if (_customPawn is null)
+        {
+            // Pawn が指定されていない場合, ツリー内に存在する "Player" グループに所属する最初のノードを取得する
+            if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
+            {
+                _customPawn = player;
+            }
+        }
+
+        if (_customPawn is not IPawn pawn)
+        {
+            return false;
+        }
+
+        Possess(pawn);
+        return true;
     }
 }

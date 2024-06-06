@@ -1,14 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://bdohpbfaybfst"]
 
-[ext_resource type="Script" path="res://Title/SettingTab.cs" id="1_i1xjl"]
+[ext_resource type="Script" path="res://Common/Singletons/Huds/SettingTab.cs" id="1_xmkw4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf86h"]
 bg_color = Color(0.20871, 0.20871, 0.20871, 1)
 
 [node name="SettingsTab" type="TabContainer" node_paths=PackedStringArray("_masterVolumeSlider", "_languageMenuButton", "_showDamageNumbersCheckButton")]
-process_mode = 3
 custom_minimum_size = Vector2(600, 600)
-script = ExtResource("1_i1xjl")
+script = ExtResource("1_xmkw4")
 _masterVolumeSlider = NodePath("UI_AUDIO/MarginContainer/VBox/HBoxContainer/MasterVolumeSlider")
 _languageMenuButton = NodePath("UI_GENERAL/MarginContainer/VBox/HBoxContainer/MenuButton")
 _showDamageNumbersCheckButton = NodePath("UI_GRAPHICS/MarginContainer/VBox/CheckButton")

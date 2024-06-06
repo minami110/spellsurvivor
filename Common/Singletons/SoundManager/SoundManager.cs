@@ -111,7 +111,7 @@ public partial class SoundManager : Node
         return db;
     }
 
-    private async void EffectBgmBattleToShop()
+    private void EffectBgmBattleToShop()
     {
         // acess bass
         var busIndex = AudioServer.GetBusIndex("BGM");

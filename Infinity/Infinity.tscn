@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=35 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
 [ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="2_2pohd"]
@@ -19,13 +19,8 @@
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="11_3i81h"]
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="12_42duw"]
 [ext_resource type="PackedScene" uid="uid://bfke7q0b0owyb" path="res://Infinity/Player/MeMe.tscn" id="12_e0mmc"]
-[ext_resource type="PackedScene" uid="uid://cfoh2vs087f48" path="res://PoseMenu/PoseMenu.tscn" id="16_ngbfj"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="16_qck06"]
-[ext_resource type="Script" path="res://Infinity/GameMode/SoundManager.cs" id="23_nx00x"]
-[ext_resource type="AudioStream" uid="uid://cvxs4i276wwyw" path="res://Common/Resources/Sounds/ui-click-a.ogg" id="24_behmy"]
-[ext_resource type="AudioStream" uid="uid://b87r0jey48csu" path="res://Common/Resources/Sounds/bgm-loop-a-bpm120.ogg" id="24_x6bpv"]
-[ext_resource type="AudioStream" uid="uid://c3it4v22s0hck" path="res://Common/Resources/Sounds/se-fanfale-a.ogg" id="25_vwna5"]
-[ext_resource type="AudioStream" uid="uid://cdeinssa3sobx" path="res://Common/Resources/Sounds/bgm-loop-b-bpm120.ogg" id="26_dbtdb"]
+[ext_resource type="PackedScene" uid="uid://jxv6yio5etx6" path="res://Common/Singletons/SoundManager/SoundManager.tscn" id="22_xj24c"]
 
 [sub_resource type="Resource" id="Resource_0ct4c"]
 script = ExtResource("2_2pohd")
@@ -101,6 +96,8 @@ _gameSettings = SubResource("Resource_pdcir")
 _playerPawn = NodePath("Player")
 _enemySpawner = NodePath("EnemySpawner")
 
+[node name="SoundManager" parent="." instance=ExtResource("22_xj24c")]
+
 [node name="Player" parent="." instance=ExtResource("12_e0mmc")]
 
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("_enemySpawnRoot", "_spawnPath")]
@@ -171,35 +168,4 @@ layer = 8
 [node name="TooltipToast" parent="HUDs/Tooltip Toast (Layer 8)" instance=ExtResource("12_42duw")]
 visible = false
 
-[node name="PoseHUD (Layer 10)" parent="HUDs" instance=ExtResource("16_ngbfj")]
-visible = false
-
 [node name="DebugHUD (Layer 20)" parent="HUDs" instance=ExtResource("16_qck06")]
-
-[node name="SoundManager" type="Node" parent="." node_paths=PackedStringArray("_bgmAPlayer", "_bgmBPlayer", "_bgmCPlayer", "_effectPlayer")]
-script = ExtResource("23_nx00x")
-_bgmAPlayer = NodePath("BGM A Player")
-_bgmBPlayer = NodePath("BGM B Player")
-_bgmCPlayer = NodePath("BGM C Player")
-_seFanfale = ExtResource("25_vwna5")
-_effectPlayer = NodePath("SE Player")
-_buttonClickSound = ExtResource("24_behmy")
-
-[node name="BGM A Player" type="AudioStreamPlayer" parent="SoundManager"]
-process_mode = 3
-stream = ExtResource("24_x6bpv")
-bus = &"BGM"
-
-[node name="BGM B Player" type="AudioStreamPlayer" parent="SoundManager"]
-process_mode = 3
-stream = ExtResource("26_dbtdb")
-bus = &"BGM"
-
-[node name="BGM C Player" type="AudioStreamPlayer" parent="SoundManager"]
-process_mode = 3
-stream = ExtResource("26_dbtdb")
-bus = &"BGM"
-
-[node name="SE Player" type="AudioStreamPlayer" parent="SoundManager"]
-process_mode = 3
-bus = &"Effect"

@@ -20,9 +20,6 @@ public partial class Title : Node
     [Export]
     private Button _settingsButton = null!;
 
-    [Export]
-    private Control _settingsControl = null!;
-
     public override void _Ready()
     {
         // Update App Name Label
@@ -44,19 +41,7 @@ public partial class Title : Node
         }
 
         // Settings
-        _settingsControl.Hide();
-        _settingsButton.PressedAsObservable().Subscribe(_ => { _settingsControl.Show(); }).AddTo(this);
-    }
-
-    public override void _Input(InputEvent inputEvent)
-    {
-        if (inputEvent.IsActionPressed("open_pose"))
-        {
-            if (_settingsControl.Visible)
-            {
-                _settingsControl.Hide();
-            }
-        }
+        _settingsButton.PressedAsObservable().Subscribe(_ => { SettingsHud.ShowHud(); }).AddTo(this);
     }
 
     public void OnExitButtonPressed()

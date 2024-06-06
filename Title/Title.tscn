@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://btwg0ccbd6qst"]
+[gd_scene load_steps=7 format=3 uid="uid://btwg0ccbd6qst"]
 
 [ext_resource type="Script" path="res://Title/Title.cs" id="1_1tswy"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="1_eylnh"]
-[ext_resource type="PackedScene" uid="uid://bdohpbfaybfst" path="res://Title/SettingTab.tscn" id="3_oidxe"]
 [ext_resource type="AudioStream" uid="uid://c3renef04l1i5" path="res://Common/Resources/Sounds/bgm-title.ogg" id="4_lpogd"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uvp5f"]
@@ -17,14 +16,13 @@ font_size = 12
 [sub_resource type="LabelSettings" id="LabelSettings_55c07"]
 font_size = 50
 
-[node name="Title" type="Node" node_paths=PackedStringArray("_appNameLabel", "_appVersionLabel", "_godotVersionLabel", "_settingsButton", "_settingsControl")]
+[node name="Title" type="Node" node_paths=PackedStringArray("_appNameLabel", "_appVersionLabel", "_godotVersionLabel", "_settingsButton")]
 script = ExtResource("1_1tswy")
 _appNameLabel = NodePath("CenterContainer/VBoxContainer/Title Group/appTitle")
 _appVersionLabel = NodePath("CenterContainer/VBoxContainer/Title Group/appVersion")
 _godotVersionLabel = NodePath("powerdbygodot")
 _mainGameScene = "res://Infinity/Infinity.tscn"
 _settingsButton = NodePath("CenterContainer/VBoxContainer/VBox Button Menu/SettingsButton")
-_settingsControl = NodePath("SettingsTab")
 
 [node name="Panel" type="Panel" parent="."]
 anchors_preset = 15
@@ -103,22 +101,6 @@ text = "UI_SETTINGS"
 [node name="ExitButton" type="Button" parent="CenterContainer/VBoxContainer/VBox Button Menu"]
 layout_mode = 2
 text = "UI_QUIT"
-
-[node name="SettingsTab" parent="." instance=ExtResource("3_oidxe")]
-visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -300.0
-offset_right = 300.0
-offset_bottom = 300.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
 
 [node name="TitleBGMPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_lpogd")
