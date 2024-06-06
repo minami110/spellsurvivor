@@ -4,6 +4,9 @@ namespace fms;
 
 public partial class PlayerController : Node
 {
+    [Export]
+    private Node2D? _customPawn;
+
     private static readonly StringName InputMoveRight = "move_right";
     private static readonly StringName InputMoveLeft = "move_left";
     private static readonly StringName InputMoveUp = "move_up";
@@ -21,16 +24,21 @@ public partial class PlayerController : Node
     {
         if (_posessedPawn is null)
         {
-            return;
+            // Note: 入力があるたびに Player タグがシーン内に存在するかを検索する
+            if (TryPossesFromPlayerTag() == false)
+            {
+                return;
+            }
         }
 
+        var pawn = _posessedPawn!;
         if (inputEvent.IsActionPressed(InputPrimary))
         {
-            _posessedPawn.PrimaryPressed();
+            pawn.PrimaryPressed();
         }
         else if (inputEvent.IsActionReleased(InputPrimary))
         {
-            _posessedPawn.PrimaryReleased();
+            pawn.PrimaryReleased();
         }
     }
 
@@ -68,5 +76,25 @@ public partial class PlayerController : Node
     {
         _posessedPawn = null;
         SetProcess(false);
+    }
+
+    private bool TryPossesFromPlayerTag()
+    {
+        if (_customPawn is null)
+        {
+            // Pawn が指定されていない場合, ツリー内に存在する "Player" グループに所属する最初のノードを取得する
+            if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
+            {
+                _customPawn = player;
+            }
+        }
+
+        if (_customPawn is not IPawn pawn)
+        {
+            return false;
+        }
+
+        Possess(pawn);
+        return true;
     }
 }

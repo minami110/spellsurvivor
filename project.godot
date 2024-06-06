@@ -18,7 +18,12 @@ config/icon="res://Common/Resources/Textures/icon.svg"
 
 [autoload]
 
-SceneManager="*res://Common/SceneManager/SceneManager.cs"
+SettingsHud="*res://Common/Singletons/Huds/SettingsHud.tscn"
+SoundManager="*res://Common/Singletons/SoundManager/SoundManager.tscn"
+SceneManager="*res://Common/Singletons/SceneManager/SceneManager.cs"
+PlayerController="*res://Common/Singletons/PlayerController/PlayerController.tscn"
+StaticsManager="*res://Common/Singletons/StaticsManager/StaticsManager.tscn"
+PauseHud="*res://Common/Singletons/Huds/PauseHud.tscn"
 
 [debug]
 
@@ -78,6 +83,10 @@ open_pose={
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":4,"pressure":0.0,"pressed":true,"script":null)
 ]
 }
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://Common/Resources/Translation/infinity.en.en.translation", "res://Common/Resources/Translation/infinity.ja.ja.translation")
 
 [layer_names]
 

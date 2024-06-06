@@ -35,7 +35,7 @@ public static partial class NodeExtensions
     /// <param name="node"></param>
     /// <param name="timeSec"></param>
     /// <returns></returns>
-    public static SignalAwaiter WaitForSecondsAsync(this Node node, float timeSec)
+    public static SignalAwaiter WaitForSecondsAsync(this Node node, double timeSec)
     {
         return node.ToSignal(node.GetTree().CreateTimer(timeSec), SceneTreeTimer.SignalName.Timeout);
     }

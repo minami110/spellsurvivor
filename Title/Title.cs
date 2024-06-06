@@ -1,9 +1,18 @@
 using Godot;
+using R3;
 
 namespace fms;
 
 public partial class Title : Node
 {
+    [ExportGroup("Resouce Reference")]
+    [Export(PropertyHint.File, "*.tscn")]
+    private string _mainGameScene = string.Empty;
+
+    [Export]
+    private AudioStream? _titleBgm;
+
+    [ExportGroup("Internal Reference")]
     [Export]
     private Label _appNameLabel = null!;
 
@@ -13,8 +22,8 @@ public partial class Title : Node
     [Export]
     private Label _godotVersionLabel = null!;
 
-    [Export(PropertyHint.File, "*.tscn")]
-    private string _mainGameScene = string.Empty;
+    [Export]
+    private Button _settingsButton = null!;
 
     public override void _Ready()
     {
@@ -35,6 +44,15 @@ public partial class Title : Node
             _godotVersionLabel.Text =
                 $"Powered by Godot ({godotVersionInfo["major"]}.{godotVersionInfo["minor"]}.{godotVersionInfo["patch"]} {godotVersionInfo["status"]})";
         }
+
+        // Settings
+        _settingsButton.PressedAsObservable().Subscribe(_ => { SettingsHud.ShowHud(); }).AddTo(this);
+
+        // PlayBGM
+        if (_titleBgm is not null)
+        {
+            SoundManager.PlayBgm(_titleBgm);
+        }
     }
 
     public void OnExitButtonPressed()
@@ -42,7 +60,6 @@ public partial class Title : Node
         // Close Application
         GetTree().Quit();
     }
-
 
     public void OnStartButtonPressed()
     {

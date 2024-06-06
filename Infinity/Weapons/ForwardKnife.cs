@@ -17,11 +17,9 @@ public partial class ForwardKnife : WeaponBase
     private int _trickshotBounceCount;
     private float _trickshotBounceDamageMultiplier;
 
-    private protected override int BaseCoolDownFrame => 60;
-
-    private protected override void DoAttack()
+    private protected override void DoAttack(uint level)
     {
-        switch (MinionLevel)
+        switch (level)
         {
             // Level 1 は1つの弾をだす
             case 1:

@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfoh2vs087f48"]
+
+[ext_resource type="Script" path="res://Common/Singletons/Huds/PauseHud.cs" id="1_rimer"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ysej8"]
+bg_color = Color(0, 0, 0, 0.615686)
+
+[node name="PauseHud" type="CanvasLayer" node_paths=PackedStringArray("_settingsbutton")]
+process_mode = 3
+layer = 100
+script = ExtResource("1_rimer")
+_titleScene = "res://Title/Title.tscn"
+_settingsbutton = NodePath("PanelContainer/CenterContainer/Escape/SettingsButton")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+process_mode = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ysej8")
+
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="Escape" type="VBoxContainer" parent="PanelContainer/CenterContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "ゲームに戻ります"
+text = "Resume"
+
+[node name="SettingsButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "設定を開きます"
+text = "Setting
+"
+
+[node name="TitleButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "タイトルに戻ります"
+text = "Title"
+
+[node name="ExitButton" type="Button" parent="PanelContainer/CenterContainer/Escape"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "ゲームを終了します"
+text = "Exit to Desktop"

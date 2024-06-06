@@ -18,18 +18,22 @@ public enum MinionPlace
 /// </summary>
 public sealed class MinionInRuntime : IDisposable
 {
-    private const int _MIN_LEVEL = 1;
-    private const int _MAX_LEVEL = 5;
+    private const uint _MIN_LEVEL = 1;
+    private const uint _MAX_LEVEL = 5;
 
-    private readonly ReactiveProperty<int> _levelRp = new(1);
+    private readonly ReactiveProperty<uint> _levelRp = new(1);
 
     /// <summary>
     /// </summary>
     public readonly string Id;
 
+    private WeaponBase? _weapon;
+
+    private IDisposable? _weaponSubscription;
+
     /// <summary>
     /// </summary>
-    public ReadOnlyReactiveProperty<int> Level => _levelRp;
+    public ReadOnlyReactiveProperty<uint> Level => _levelRp;
 
     public bool IsMaxLevel => _levelRp.Value >= _MAX_LEVEL;
 
@@ -48,7 +52,28 @@ public sealed class MinionInRuntime : IDisposable
     /// <summary>
     ///     この Minion が装備している Weapon, InHand にない場合は所有していない
     /// </summary>
-    public WeaponBase? Weapon { get; set; }
+    public WeaponBase? Weapon
+    {
+        get => _weapon;
+        set
+        {
+            // 前の装備
+            if (_weapon is not null)
+            {
+                _weaponSubscription?.Dispose();
+                _weaponSubscription = null;
+            }
+
+            _weapon = value;
+
+            // 新しい装備
+            if (_weapon is not null)
+            {
+                _weapon.Id = Id;
+                _weaponSubscription = _levelRp.Subscribe(x => { _weapon.Level = x; });
+            }
+        }
+    }
 
     /// <summary>
     ///     この Minion の所属する Faction (Flag)
@@ -80,7 +105,7 @@ public sealed class MinionInRuntime : IDisposable
     }
 
 
-    public void SetLevel(int level)
+    public void SetLevel(uint level)
     {
         _levelRp.Value = Math.Clamp(level, _MIN_LEVEL, _MAX_LEVEL);
     }
@@ -89,5 +114,7 @@ public sealed class MinionInRuntime : IDisposable
     public void Dispose()
     {
         _levelRp.Dispose();
+        _weaponSubscription?.Dispose();
+        _weaponSubscription = null;
     }
 }

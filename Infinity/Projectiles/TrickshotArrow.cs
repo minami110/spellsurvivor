@@ -20,6 +20,12 @@ public partial class TrickshotArrow : ProjectileBase
     [Export]
     private TextureRect _texture = null!;
 
+    [Export]
+    private AudioStream _spawnSound = null!;
+
+    [Export]
+    private AudioStream _hitSound = null!;
+
     private int _bounceCounter;
 
     private Enemy? _previousEnemy;
@@ -51,8 +57,10 @@ public partial class TrickshotArrow : ProjectileBase
             .Cast<Node2D, Enemy>()
             .Subscribe(this, (x, state) => { state.OnEnemyBodyEntered(x); })
             .AddTo(this);
-    }
 
+        // Spawn Sound
+        SoundManager.PlaySoundEffect(_spawnSound);
+    }
 
     private void OnEnemyBodyEntered(Enemy enemy)
     {
@@ -69,6 +77,7 @@ public partial class TrickshotArrow : ProjectileBase
 
         enemy.TakeDamage(damage);
         _previousEnemy = enemy;
+        SoundManager.PlaySoundEffect(_hitSound);
 
         if (_bounceCounter >= BounceCount)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using Godot;
+﻿using Godot;
 using R3;
 
 namespace fms;
@@ -8,7 +7,10 @@ namespace fms;
 public partial class FrameTimer : Node
 {
     [Export(PropertyHint.Range, "1,99999")]
-    private int _waitFrame = 20;
+    private uint _waitFrame = 20;
+
+    [Export]
+    private bool _autostart;
 
     private readonly ReactiveProperty<int> _frameLeft = new(-1);
 
@@ -18,18 +20,10 @@ public partial class FrameTimer : Node
 
     public ReadOnlyReactiveProperty<int> FrameLeft => _frameLeft;
 
-    public int WaitFrame
+    public uint WaitFrame
     {
         get => _waitFrame;
-        set
-        {
-            if (value < 0)
-            {
-                throw new ArgumentException("WaitFrame must be greater than or equal to 0");
-            }
-
-            _waitFrame = value;
-        }
+        set => _waitFrame = value;
     }
 
     public bool IsStopped => _frameLeft.Value <= 0;
@@ -38,8 +32,15 @@ public partial class FrameTimer : Node
     {
         if (what == NotificationReady)
         {
-            Stop();
             Disposable.Combine(_timeOut, _frameLeft).AddTo(this);
+            if (_autostart)
+            {
+                Start();
+            }
+            else
+            {
+                Stop();
+            }
         }
         else if (what == NotificationProcess)
         {
@@ -48,7 +49,7 @@ public partial class FrameTimer : Node
             if (nextFrameLeft < 0)
             {
                 _timeOut.OnNext(Unit.Default);
-                _frameLeft.Value = _waitFrame;
+                _frameLeft.Value = (int)_waitFrame;
             }
             else
             {
@@ -59,7 +60,7 @@ public partial class FrameTimer : Node
 
     public void Start()
     {
-        _frameLeft.Value = _waitFrame;
+        _frameLeft.Value = (int)_waitFrame;
         SetProcess(true);
     }
 

@@ -18,14 +18,12 @@ public partial class PoisonMistGen : WeaponBase
     private int _trickshotBounceCount;
     private float _trickshotBounceDamageMultiplier;
 
-    private protected override int BaseCoolDownFrame => 300;
-
-    private protected override void DoAttack()
+    private protected override void DoAttack(uint level)
     {
-        SpawnBullet(MinionLevel);
+        SpawnBullet(level);
     }
 
-    private void SpawnBullet(int level)
+    private void SpawnBullet(uint level)
     {
         if (level == 1)
         {

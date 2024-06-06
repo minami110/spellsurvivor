@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://jxv6yio5etx6"]
+
+[ext_resource type="Script" path="res://Common/Singletons/SoundManager/SoundManager.cs" id="1_lf46y"]
+
+[node name="SoundManager" type="Node" node_paths=PackedStringArray("_bgmBasePlayer", "_bgmOptionalAPlayer", "_bgmOptionalBPlayer", "_effectPlayer")]
+script = ExtResource("1_lf46y")
+_bgmBasePlayer = NodePath("BGM Base Player")
+_bgmOptionalAPlayer = NodePath("BGM OptionalA Player")
+_bgmOptionalBPlayer = NodePath("BGM OptionalB Player")
+_effectPlayer = NodePath("Effect Player A")
+
+[node name="BGM Base Player" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+bus = &"BGM"
+
+[node name="BGM OptionalA Player" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+bus = &"BGM"
+
+[node name="BGM OptionalB Player" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+bus = &"BGM"
+
+[node name="Effect Player A" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+bus = &"Effect"

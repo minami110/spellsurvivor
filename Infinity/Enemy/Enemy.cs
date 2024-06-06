@@ -8,7 +8,7 @@ public partial class Enemy : RigidBody2D
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _defaultMoveSpeed = 50f;
 
-    [Export(PropertyHint.Range, "0,1000,1")]
+    [Export(PropertyHint.Range, "0,10000,1")]
     private float _defaultHealth = 100f;
 
     /// <summary>
@@ -20,10 +20,16 @@ public partial class Enemy : RigidBody2D
     /// <summary>
     ///     プレイヤーと重なっている時攻撃を発生させるクールダウン
     /// </summary>
-    [Export]
-    private float _attackCoolDown = 0.333f;
+    [Export(PropertyHint.Range, "1,9999,1")]
+    private uint _coolDownFrame = 20;
 
     [ExportGroup("Internal References")]
+    [Export]
+    private CollisionShape2D _rigidBodyCollision = null!;
+
+    [Export]
+    private CollisionShape2D _damageAreaCollision = null!;
+
     [Export]
     private TextureRect _mainTexture = null!;
 
@@ -33,17 +39,33 @@ public partial class Enemy : RigidBody2D
     [Export]
     private Area2D _damageArea = null!;
 
+    [Export]
+    private FrameTimer _attackTimer = null!;
+
+    [Export]
+    private GpuParticles2D _bloodParticle = null!;
+
     private readonly EnemyState _state = new();
 
-    private float _attachCooldownTimer;
+    private bool _isDead;
 
-    private bool _isHitStopping;
+    private Node2D? _targetNode;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        _attachCooldownTimer = _attackCoolDown;
-        _state.AddTo(this);
+        // Gets the player's position
+        if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
+        {
+            _targetNode = player;
+        }
+        else
+        {
+            GD.PrintErr($"[{nameof(Enemy)}] Player node is not found");
+            SetProcess(false);
+            SetPhysicsProcess(false);
+            return;
+        }
 
         // Init state
         _state.AddEffect(new AddMaxHealthEffect { Value = _defaultHealth });
@@ -53,27 +75,61 @@ public partial class Enemy : RigidBody2D
 
         // Refresh HUD
         UpdateHealthBar();
+
+        // Subscribe and start FrameTimer
+        var d1 = _attackTimer.TimeOut.Subscribe(_ => Attack()).AddTo(this);
+        _attackTimer.WaitFrame = _coolDownFrame;
+        _attackTimer.Start();
+
+        Disposable.Combine(_state, d1).AddTo(this);
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override void _PhysicsProcess(double _)
     {
-        if (_isHitStopping)
+        if (_isDead)
+        {
+            LinearVelocity = Vector2.Zero;
+            return;
+        }
+
+        var delta = _targetNode!.GlobalPosition - GlobalPosition;
+        // 2opx 以内に近づいたら移動を停止する
+        if (delta.LengthSquared() < 400)
+        {
+            LinearVelocity = Vector2.Zero;
+            return;
+        }
+
+        var direction = delta.Normalized();
+        var force = direction * _state.MoveSpeed.CurrentValue;
+        LinearVelocity = force;
+    }
+
+    public void TakeDamage(float amount)
+    {
+        if (_isDead)
         {
             return;
         }
 
-        MoveToPlayer(delta);
+        _state.AddEffect(new PhysicalDamageEffect { Value = amount });
+        _state.SolveEffect();
+        StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Enemy, amount, GlobalPosition);
+
+        if (_state.Health.CurrentValue <= 0)
+        {
+            // Dead
+            KillByDamage();
+        }
+        else
+        {
+            TakeDamageAnimationAsync();
+            UpdateHealthBar();
+        }
     }
 
-    public override void _Process(double delta)
+    private void Attack()
     {
-        if (_attachCooldownTimer > 0)
-        {
-            _attachCooldownTimer -= (float)delta;
-            return;
-        }
-
-        _attachCooldownTimer = _attackCoolDown;
         var overlappingBodies = _damageArea.GetOverlappingBodies();
         if (overlappingBodies.Count <= 0)
         {
@@ -89,75 +145,63 @@ public partial class Enemy : RigidBody2D
         }
     }
 
-    public void KillByDamage()
+    private async void KillByDamage()
     {
-        QueueFree();
-    }
-
-    /// <summary>
-    ///     Wave 終了時に GameMode から呼ばれる
-    /// </summary>
-    public void KillByWaveEnd()
-    {
-        QueueFree();
-    }
-
-
-    public void TakeDamage(float amount, bool isHitStop = true)
-    {
-        _state.AddEffect(new PhysicalDamageEffect { Value = amount });
-        _state.SolveEffect();
-
-        if (_state.Health.CurrentValue <= 0)
-        {
-            // Dead
-            KillByDamage();
-        }
-        else
-        {
-            TakeDamageAnimationAsync(isHitStop);
-            UpdateHealthBar();
-        }
-    }
-
-    private void MoveToPlayer(double delta)
-    {
-        var playerPosition = Main.PlayerNode.GlobalPosition;
-        var direction = playerPosition - GlobalPosition;
-        direction = direction.Normalized();
-        var force = direction * _state.MoveSpeed.CurrentValue;
-        LinearVelocity = force;
-    }
-
-    private async void TakeDamageAnimationAsync(bool isHitStop)
-    {
-        if (_mainTexture.Material is not ShaderMaterial sm)
+        if (_isDead)
         {
             return;
         }
 
+        _isDead = true;
+
+        // Hide and disable components
+        _rigidBodyCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+        _damageAreaCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+        _rigidBodyCollision.Hide();
+        _damageAreaCollision.Hide();
+        _mainTexture.Hide();
+        _progressBar.Hide();
+
+        // Emit Blood Particle
+        _bloodParticle.Emitting = true;
+
+        await this.WaitForSecondsAsync(0.5f);
+
+        QueueFree();
+    }
+
+    private void KillByWaveEnd()
+    {
+        if (_isDead)
+        {
+            return;
+        }
+
+        QueueFree();
+    }
+
+    private void TakeDamageAnimationAsync()
+    {
         // Hitstop and blink shader
-        sm.SetShaderParameter("hit", 1.0f);
-
-        if (isHitStop)
-        {
-            _isHitStopping = true;
-            LinearVelocity = Vector2.Zero;
-        }
-
-        await this.WaitForSecondsAsync(0.1f);
-
-        if (isHitStop)
-        {
-            _isHitStopping = false;
-        }
-
-        sm.SetShaderParameter("hit", 0.0f);
+        var tween = CreateTween();
+        tween.TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 0f, 1f, 0.05f);
+        tween.Chain().TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 1f, 0f, 0.05f);
+        tween.Play();
     }
 
     private void UpdateHealthBar()
     {
         _progressBar.MaxValue = _state.MaxHealth.CurrentValue;
         _progressBar.SetValueNoSignal(_state.Health.CurrentValue);
+    }
+
+    private void UpdateShaderParameter(float value)
+    {
+        if (_mainTexture.Material is not ShaderMaterial sm)
+        {
+            return;
+        }
+
+        sm.SetShaderParameter("hit", value);
     }
 }
