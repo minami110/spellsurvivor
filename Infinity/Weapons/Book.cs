@@ -19,11 +19,9 @@ public partial class Book : WeaponBase
     [Export]
     private Node2D _root = null!;
 
-    private protected override int BaseCoolDownFrame => 180;
-
-    private protected override void DoAttack()
+    private protected override void DoAttack(uint level)
     {
-        switch (MinionLevel)
+        switch (level)
         {
             // Level 1 は1つの弾をだす
             case 1:
@@ -61,8 +59,8 @@ public partial class Book : WeaponBase
                 bullet.Radius = radius;
                 bullet.Angle = degree;
                 bullet.SecondPerRound = 3;
-                bullet.LifeFrame = CoolDown;
-                bullet.InitTimeForRelativePos = CalculateRelativePositon(num, i, CoolDown / 60);
+                bullet.LifeFrame = (int)SolvedCoolDownFrame;
+                bullet.InitTimeForRelativePos = CalculateRelativePositon(num, i, (float)SolvedCoolDownFrame / 60f);
             }
 
             _root.AddChild(bullet);

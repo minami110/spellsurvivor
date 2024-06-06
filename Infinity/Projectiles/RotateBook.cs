@@ -73,6 +73,12 @@ public partial class RotateBook : ProjectileBase
 
         var unitVec = new Vector2(positionX, positionY);
 
-        return unitVec * radius + Main.PlayerNode.GlobalPosition;
+        var playerNode = GetTree().GetFirstNodeInGroup("Player");
+        if (playerNode is Node2D player)
+        {
+            return player.GlobalPosition + unitVec * radius;
+        }
+
+        return unitVec * radius;
     }
 }

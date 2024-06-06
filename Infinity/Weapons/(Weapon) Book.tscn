@@ -9,6 +9,7 @@ script = ExtResource("1_vqguh")
 _bulletPackedScene = ExtResource("2_icmed")
 _bulletSpawnNode = NodePath("BulletSpawnRoot")
 _root = NodePath("BulletSpawnRoot")
+BaseCoolDownFrame = 180
 _frameTimer = NodePath("FrameTimer")
 
 [node name="BulletSpawnRoot" type="Node2D" parent="."]
