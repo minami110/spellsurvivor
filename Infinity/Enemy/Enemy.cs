@@ -37,7 +37,7 @@ public partial class Enemy : RigidBody2D
     private FrameTimer _attackTimer = null!;
 
     [Export]
-    private GpuParticles2D _emitter = null!;
+    private GpuParticles2D _bloodParticle = null!;
 
     private readonly EnemyState _state = new();
 
@@ -152,8 +152,8 @@ public partial class Enemy : RigidBody2D
         _progressBar.Hide();
         _damageArea.Hide();
 
-        // Emit Partivle
-        _emitter.Restart();
+        // Emit Blood Particle
+        _bloodParticle.Emitting = true;
 
         await this.WaitForSecondsAsync(1f);
 

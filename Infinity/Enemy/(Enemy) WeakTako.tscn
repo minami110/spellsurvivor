@@ -34,7 +34,7 @@ scale_max = 6.0
 scale_curve = SubResource("CurveTexture_4sd1q")
 color = Color(0.901961, 0.027451, 0.141176, 1)
 
-[node name="Enemy" type="RigidBody2D" node_paths=PackedStringArray("_mainTexture", "_progressBar", "_damageArea", "_attackTimer", "_emitter") groups=["Enemy"]]
+[node name="Enemy" type="RigidBody2D" node_paths=PackedStringArray("_mainTexture", "_progressBar", "_damageArea", "_attackTimer", "_bloodParticle") groups=["Enemy"]]
 collision_layer = 4
 collision_mask = 4
 gravity_scale = 0.0
@@ -45,7 +45,7 @@ _mainTexture = NodePath("Texture")
 _progressBar = NodePath("HealthBar")
 _damageArea = NodePath("DamageArea")
 _attackTimer = NodePath("FrameTimer")
-_emitter = NodePath("BloodParticles")
+_bloodParticle = NodePath("BloodParticles")
 
 [node name="FrameTimer" type="Node" parent="."]
 script = ExtResource("5_31l7r")
