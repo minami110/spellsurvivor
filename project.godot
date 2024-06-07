@@ -38,6 +38,11 @@ window/size/viewport_height=900
 
 project/assembly_name="spellsurvivor"
 
+[editor]
+
+naming/node_name_num_separator=2
+naming/scene_name_casing=1
+
 [filesystem]
 
 import/blender/enabled=false
