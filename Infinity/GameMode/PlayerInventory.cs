@@ -125,24 +125,17 @@ public sealed class PlayerInventory : IDisposable
         return true;
     }
 
-    private void CreateOrUpgradeFaction(FactionType factionType)
+    private void CreateOrUpgradeFaction(FactionType faction)
     {
-        if (_factions.TryGetValue(factionType, out var existingFaction))
+        if (_factions.TryGetValue(faction, out var existingFaction))
         {
             existingFaction.UpgradeLevel();
         }
         else
         {
-            FactionBase newFaction = factionType switch
-            {
-                FactionType.Bruiser => new Bruiser(),
-                FactionType.Duelist => new Duelist(),
-                FactionType.Trickshot => new Trickshot(),
-                _ => throw new ArgumentException($"Unsupported faction type: {factionType}", nameof(factionType))
-            };
-
-            newFaction.UpgradeLevel();
-            _factions.Add(factionType, newFaction);
+            var newFaction = FactionUtil.CreateFaction(faction);
+            newFaction.UpgradeLevel(); // Lv.0 => Lv.1
+            _factions.Add(faction, newFaction);
         }
     }
 
@@ -155,21 +148,19 @@ public sealed class PlayerInventory : IDisposable
         }
 
         // 現在しているすべての Minion を照会する
-        foreach (var faction in from minion in _minions where minion.Place == MinionPlace.InHand select minion.Faction)
+        foreach (var minion in _minions)
         {
-            if (faction.HasFlag(FactionType.Bruiser))
+            if (minion.Place != MinionPlace.InHand)
             {
-                CreateOrUpgradeFaction(FactionType.Bruiser);
+                continue;
             }
 
-            if (faction.HasFlag(FactionType.Duelist))
+            foreach (var faction in FactionUtil.GetFactionTypes())
             {
-                CreateOrUpgradeFaction(FactionType.Duelist);
-            }
-
-            if (faction.HasFlag(FactionType.Trickshot))
-            {
-                CreateOrUpgradeFaction(FactionType.Trickshot);
+                if (minion.IsBelongTo(faction))
+                {
+                    CreateOrUpgradeFaction(faction);
+                }
             }
         }
 

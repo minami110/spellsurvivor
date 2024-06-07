@@ -97,6 +97,16 @@ public sealed class MinionInRuntime : IDisposable
         WeaponPackedScene = minionCoreData.WeaponPackedScene;
     }
 
+    /// <summary>
+    ///     Minion が指定した Faction に所属しているかどうか
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <returns></returns>
+    public bool IsBelongTo(FactionType faction)
+    {
+        return Faction.HasFlag(faction);
+    }
+
     public void ResetRuntimeStatus()
     {
         Place = MinionPlace.InShop;
