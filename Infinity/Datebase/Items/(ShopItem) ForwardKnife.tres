@@ -8,7 +8,7 @@
 script = ExtResource("3_oigos")
 Id = "ForwardKnife"
 Tier = 1
-Faction = 7
+Faction = 15
 Price = 3
 Name = "ダガー"
 Description = "プレイヤーの正面に常に攻撃を行う

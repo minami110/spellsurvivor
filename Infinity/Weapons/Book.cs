@@ -84,10 +84,4 @@ public partial class Book : WeaponBase
             _root.AddChild(bullet);
         }
     }
-
-    public override void _Process(double delta)
-    {
-        base._Process(delta);
-        GD.Print(this.Mana);
-    }
 }

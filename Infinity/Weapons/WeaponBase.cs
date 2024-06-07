@@ -120,9 +120,8 @@ public partial class WeaponBase : Node2D, IEffectSolver
             
             if (effect is AddManaRegeneration addManaRegeneration)
             {
-                // ここで何かしらの処理をする
-                ManaRegenerationInterval += addManaRegeneration.Interval;
-                ManaRegenerationValue += addManaRegeneration.Value;
+                _manaRegenerationInterval += addManaRegeneration.Interval;
+                _manaRegenerationValue += addManaRegeneration.Value;
             }
         }
 
@@ -131,22 +130,22 @@ public partial class WeaponBase : Node2D, IEffectSolver
     }
 
     
-    private int ManaRegenerationInterval = 0;
-    private int ManaRegenerationValue = 0;
+    private int _manaRegenerationInterval = 0;
+    private int _manaRegenerationValue = 0;
     public int Mana = 0;
-    private int timeCounter = 0;
+    private int _timeCounter = 0;
     public override void _Process(double delta)
     {
-        if (ManaRegenerationInterval == 0 || ManaRegenerationValue == 0)
+        if (_manaRegenerationInterval == 0 || _manaRegenerationValue == 0)
         {
             return;
         }
         
-        timeCounter++;
-        if (timeCounter > ManaRegenerationInterval)
+        _timeCounter++;
+        if (_timeCounter > _manaRegenerationInterval)
         {
-            Mana += ManaRegenerationValue;
-            timeCounter = 0;
+            Mana += _manaRegenerationValue;
+            _timeCounter = 0;
         }
     }
 }
