@@ -138,6 +138,7 @@ public sealed class PlayerInventory : IDisposable
                 FactionType.Bruiser => new Bruiser(),
                 FactionType.Duelist => new Duelist(),
                 FactionType.Trickshot => new Trickshot(),
+                FactionType.Invoker => new Invoker(),
                 _ => throw new ArgumentException($"Unsupported faction type: {factionType}", nameof(factionType))
             };
 
@@ -170,6 +171,11 @@ public sealed class PlayerInventory : IDisposable
             if (faction.HasFlag(FactionType.Trickshot))
             {
                 CreateOrUpgradeFaction(FactionType.Trickshot);
+            }
+
+            if (faction.HasFlag(FactionType.Invoker))
+            {
+                CreateOrUpgradeFaction(FactionType.Invoker);
             }
         }
 

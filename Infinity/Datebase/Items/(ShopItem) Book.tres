@@ -8,7 +8,7 @@
 script = ExtResource("3_qvqf1")
 Id = "Book"
 Tier = 2
-Faction = 3
+Faction = 8
 Price = 5
 Name = "本"
 Description = "プレイヤーの周囲を回る

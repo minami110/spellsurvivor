@@ -206,11 +206,12 @@ offset_right = 238.0
 offset_bottom = 19.0
 grow_vertical = 2
 
-[node name="ActiveFactionsManager" type="Node" parent="Container/VBox Active Factions" node_paths=PackedStringArray("_bruiser", "_duelist", "_trickshot")]
+[node name="ActiveFactionsManager" type="Node" parent="Container/VBox Active Factions" node_paths=PackedStringArray("_bruiser", "_duelist", "_trickshot", "_invoker")]
 script = ExtResource("8_6u4gn")
 _bruiser = NodePath("../Label Bruser")
 _duelist = NodePath("../Label Duelist")
 _trickshot = NodePath("../Label Trickshot")
+_invoker = NodePath("../Label Invoker")
 
 [node name="Label Bruser" type="Label" parent="Container/VBox Active Factions"]
 visible = false
@@ -245,3 +246,11 @@ ToolTipText = "Trickshot
 
 Lv2: 跳ね返り回数 1,  跳ね返った攻撃倍率 40 %
 Lv4: 跳ね返り回数 2, 跳ね返った攻撃倍率 60 %"
+
+[node name="Label Invoker" type="Label" parent="Container/VBox Active Factions"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Trickshot: Lv1"
+script = ExtResource("8_qxwon")
+ToolTipText = "Invoker"

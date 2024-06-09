@@ -8,7 +8,7 @@
 script = ExtResource("3_liksq")
 Id = "AutoAimPistol"
 Tier = 1
-Faction = 7
+Faction = 15
 Price = 10
 Name = "魔法の杖"
 Description = "範囲内にいる一番近い対象に自動で攻撃を行う
