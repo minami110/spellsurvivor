@@ -16,16 +16,13 @@ public enum MinionPlace
 /// <summary>
 ///     Player が所有済みの Minion の情報
 /// </summary>
-public sealed class MinionInRuntime : IDisposable
+[GlobalClass]
+public partial class Minion : Node
 {
-    private const uint _MIN_LEVEL = 1;
-    private const uint _MAX_LEVEL = 5;
+    [Export]
+    internal MinionCoreData CoreData { get; set; } = null!;
 
     private readonly ReactiveProperty<uint> _levelRp = new(1);
-
-    /// <summary>
-    /// </summary>
-    public readonly string Id;
 
     private WeaponBase? _weapon;
 
@@ -33,21 +30,25 @@ public sealed class MinionInRuntime : IDisposable
 
     /// <summary>
     /// </summary>
+    public string Id => CoreData.Id;
+
+    /// <summary>
+    /// </summary>
     public ReadOnlyReactiveProperty<uint> Level => _levelRp;
 
-    public bool IsMaxLevel => _levelRp.Value >= _MAX_LEVEL;
+    public bool IsMaxLevel => _levelRp.Value >= Constant.MINION_MAX_LEVEL;
 
-    public int Tier { get; }
+    public int Tier => CoreData.Tier;
 
-    public int Price { get; }
+    public int Price => CoreData.Price;
 
-    public Texture2D Sprite { get; }
+    public Texture2D Sprite => CoreData.Sprite;
 
-    public string Name { get; }
+    public new string Name => CoreData.Name;
 
-    public string Description { get; }
+    public string Description => CoreData.Description;
 
-    public PackedScene WeaponPackedScene { get; }
+    public PackedScene WeaponPackedScene => CoreData.WeaponPackedScene;
 
     /// <summary>
     ///     この Minion が装備している Weapon, InHand にない場合は所有していない
@@ -78,23 +79,19 @@ public sealed class MinionInRuntime : IDisposable
     /// <summary>
     ///     この Minion の所属する Faction (Flag)
     /// </summary>
-    public FactionType Faction { get; }
+    public FactionType Faction => CoreData.Faction;
 
     /// <summary>
     ///     現在の Minion の場所
     /// </summary>
     public MinionPlace Place { get; set; }
 
-    public MinionInRuntime(MinionCoreData minionCoreData)
+
+    public override void _ExitTree()
     {
-        Id = minionCoreData.Id;
-        Price = minionCoreData.Price;
-        Faction = minionCoreData.Faction;
-        Tier = minionCoreData.Tier;
-        Name = minionCoreData.Name;
-        Description = minionCoreData.Description;
-        Sprite = minionCoreData.Sprite;
-        WeaponPackedScene = minionCoreData.WeaponPackedScene;
+        _levelRp.Dispose();
+        _weaponSubscription?.Dispose();
+        _weaponSubscription = null;
     }
 
     /// <summary>
@@ -114,17 +111,8 @@ public sealed class MinionInRuntime : IDisposable
         SetLevel(1);
     }
 
-
     public void SetLevel(uint level)
     {
-        _levelRp.Value = Math.Clamp(level, _MIN_LEVEL, _MAX_LEVEL);
-    }
-
-
-    public void Dispose()
-    {
-        _levelRp.Dispose();
-        _weaponSubscription?.Dispose();
-        _weaponSubscription = null;
+        _levelRp.Value = Math.Clamp(level, Constant.MINION_MIN_LEVEL, Constant.MINION_MAX_LEVEL);
     }
 }

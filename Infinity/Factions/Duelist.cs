@@ -18,9 +18,14 @@ public partial class Duelist : FactionBase
             return;
         }
 
-        var minions = Main.PlayerInventory.Minions;
-        foreach (var minion in minions)
+        var nodes = GetTree().GetNodesInGroup(Constant.GroupNameMinion);
+        foreach (var node in nodes)
         {
+            if (node is not Minion minion)
+            {
+                continue;
+            }
+
             // Weapon を所持していない (手札にない)
             var weapon = minion.Weapon;
             if (weapon == null)
@@ -34,7 +39,7 @@ public partial class Duelist : FactionBase
                 continue;
             }
 
-            if (minion.Faction.HasFlag(FactionType.Duelist))
+            if (minion.IsBelongTo(FactionType.Duelist))
             {
                 switch (level)
                 {
@@ -49,9 +54,8 @@ public partial class Duelist : FactionBase
         }
     }
 
-    private static void AddReduceCoolDownEffect(WeaponBase weapon, float value)
+    private void AddReduceCoolDownEffect(WeaponBase weapon, float value)
     {
-        weapon.AddEffect(new ReduceCoolDownRate { Value = value });
-        weapon.SolveEffect();
+        AddEffectToWeapon(weapon, new ReduceCoolDownRate { Value = value });
     }
 }

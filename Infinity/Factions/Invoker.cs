@@ -1,4 +1,5 @@
 ﻿using fms.Effect;
+using fms.Weapon;
 using Godot;
 
 namespace fms.Faction;
@@ -14,19 +15,17 @@ public partial class Invoker : FactionBase
 {
     private protected override void OnLevelChanged(uint level)
     {
-        var minions = Main.PlayerInventory.Minions;
-        foreach (var minion in minions)
+        var nodes = GetTree().GetNodesInGroup(Constant.GroupNameWeapon);
+        foreach (var node in nodes)
         {
+            if (node is not WeaponBase weapon)
+            {
+                continue;
+            }
+
             if (level >= 2)
             {
-                var weapon = minion.Weapon;
-                if (weapon == null)
-                {
-                    continue;
-                }
-
-                weapon.AddEffect(new AddManaRegeneration { Value = 1, Interval = 180 });
-                weapon.SolveEffect();
+                AddEffectToWeapon(weapon, new AddManaRegeneration { Value = 1, Interval = 180 });
             }
         }
     }

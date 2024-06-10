@@ -4,14 +4,8 @@
 [ext_resource type="Script" path="res://Infinity/HUDs/LabelHasToolTip.cs" id="2_7e8q8"]
 
 [node name="ActiveFactionsHud" type="VBoxContainer"]
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 35.0
-offset_top = -185.0
-offset_right = 238.0
-offset_bottom = 19.0
-grow_vertical = 2
+offset_right = 107.0
+offset_bottom = 104.0
 
 [node name="ActiveFactionsManager" type="Node" parent="."]
 script = ExtResource("1_5cyrl")

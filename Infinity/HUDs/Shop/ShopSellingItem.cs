@@ -22,7 +22,7 @@ public partial class ShopSellingItem : VBoxContainer
 
     private bool _isSoldOut;
 
-    public MinionInRuntime Minion { get; internal set; } = null!;
+    public Minion Minion { get; internal set; } = null!;
 
     public override void _Ready()
     {

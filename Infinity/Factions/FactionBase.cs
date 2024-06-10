@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using fms.Weapon;
 using Godot;
 
 namespace fms.Faction;
@@ -46,7 +47,7 @@ public partial class FactionBase : Node
     }
 
     /// <summary>
-    /// Player に対して Effect を追加
+    ///     Player に対して Effect を追加
     /// </summary>
     /// <param name="effect"></param>
     private protected void AddEffactToPlayer(EffectBase effect)
@@ -56,6 +57,15 @@ public partial class FactionBase : Node
 
         // PlayerState に Effect を追加
         Main.PlayerState.AddEffect(effect);
+    }
+
+    private protected void AddEffectToWeapon(WeaponBase weapon, EffectBase effect)
+    {
+        // 発行済みエフェクトとしてマークしておく
+        _publishedEffects.Add(effect);
+
+        // Weapon に Effect を追加
+        weapon.AddEffect(effect);
     }
 
     /// <summary>

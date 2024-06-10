@@ -38,13 +38,18 @@ public partial class WeaponBase : Node2D, IEffectSolver
     private bool _autostart;
 
 
-    
     [ExportGroup("Internal Reference")]
     [Export]
     private FrameTimer _frameTimer = null!;
 
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
     private readonly List<EffectBase> _effects = new();
+
+
+    private int _manaRegenerationInterval;
+    private int _manaRegenerationValue;
+    private int _timeCounter;
+    public int Mana;
 
     /// <summary>
     ///     Effect の解決後の Cooldown のフレーム数
@@ -69,6 +74,11 @@ public partial class WeaponBase : Node2D, IEffectSolver
         {
             var d1 = _frameTimer.TimeOut.Subscribe(this, (_, state) => { state.DoAttack(state.Level); });
             Disposable.Combine(d1, _coolDownReduceRateRp).AddTo(this);
+
+            if (!IsInGroup(Constant.GroupNameWeapon))
+            {
+                AddToGroup(Constant.GroupNameWeapon);
+            }
         }
         else if (what == NotificationReady)
         {
@@ -80,6 +90,21 @@ public partial class WeaponBase : Node2D, IEffectSolver
             {
                 StopAttack();
             }
+        }
+    }
+
+    public override void _Process(double delta)
+    {
+        if (_manaRegenerationInterval == 0 || _manaRegenerationValue == 0)
+        {
+            return;
+        }
+
+        _timeCounter++;
+        if (_timeCounter > _manaRegenerationInterval)
+        {
+            Mana += _manaRegenerationValue;
+            _timeCounter = 0;
         }
     }
 
@@ -117,7 +142,7 @@ public partial class WeaponBase : Node2D, IEffectSolver
                 var newRate = _coolDownReduceRateRp.Value + reduceCoolDownRate.Value;
                 _coolDownReduceRateRp.Value = Mathf.Clamp(newRate, 0f, 1f);
             }
-            
+
             if (effect is AddManaRegeneration addManaRegeneration)
             {
                 _manaRegenerationInterval += addManaRegeneration.Interval;
@@ -127,25 +152,5 @@ public partial class WeaponBase : Node2D, IEffectSolver
 
         OnSolveEffect(_effects);
         _effects.Clear();
-    }
-
-    
-    private int _manaRegenerationInterval = 0;
-    private int _manaRegenerationValue = 0;
-    public int Mana = 0;
-    private int _timeCounter = 0;
-    public override void _Process(double delta)
-    {
-        if (_manaRegenerationInterval == 0 || _manaRegenerationValue == 0)
-        {
-            return;
-        }
-        
-        _timeCounter++;
-        if (_timeCounter > _manaRegenerationInterval)
-        {
-            Mana += _manaRegenerationValue;
-            _timeCounter = 0;
-        }
     }
 }

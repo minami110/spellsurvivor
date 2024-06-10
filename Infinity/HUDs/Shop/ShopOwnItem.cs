@@ -21,7 +21,7 @@ public partial class ShopOwnItem : VBoxContainer
     [Export]
     private Control _toolTipControl = null!;
 
-    public MinionInRuntime Minion { get; set; } = null!;
+    public Minion Minion { get; set; } = null!;
 
     public override void _Ready()
     {

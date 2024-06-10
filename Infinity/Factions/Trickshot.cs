@@ -19,9 +19,14 @@ public partial class Trickshot : FactionBase
             return;
         }
 
-        var minions = Main.PlayerInventory.Minions;
-        foreach (var minion in minions)
+        var nodes = GetTree().GetNodesInGroup(Constant.GroupNameMinion);
+        foreach (var node in nodes)
         {
+            if (node is not Minion minion)
+            {
+                continue;
+            }
+
             // Weapon を所持していない (手札にない)
             var weapon = minion.Weapon;
             if (weapon == null)
@@ -30,7 +35,7 @@ public partial class Trickshot : FactionBase
             }
 
             // トリックショットを持っていない
-            if (!minion.Faction.HasFlag(FactionType.Trickshot))
+            if (!minion.IsBelongTo(FactionType.Trickshot))
             {
                 continue;
             }
@@ -51,10 +56,9 @@ public partial class Trickshot : FactionBase
         }
     }
 
-    private static void AddTrickshotEffect(WeaponBase weapon, int bounceCount, float bounceDamageMultiplier)
+    private void AddTrickshotEffect(WeaponBase weapon, int bounceCount, float bounceDamageMultiplier)
     {
-        weapon.AddEffect(new TrickshotBounce
+        AddEffectToWeapon(weapon, new TrickshotBounce
             { BounceCount = bounceCount, BounceDamageMultiplier = bounceDamageMultiplier });
-        weapon.SolveEffect();
     }
 }
