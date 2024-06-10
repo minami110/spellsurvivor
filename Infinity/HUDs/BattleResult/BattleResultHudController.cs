@@ -24,7 +24,7 @@ internal partial class BattleResultHudController : Node
         var ws = Main.WaveState;
         var d1 = ws.Phase.Subscribe(this, (p, state) =>
         {
-            if (p == WavePhase.BATTLERESULT)
+            if (p == WavePhase.Battleresult)
             {
                 var reward = Main.WaveState.CurrentWaveConfig.Reward;
                 var playerMoney = Main.PlayerState.Money.CurrentValue;
@@ -41,7 +41,7 @@ internal partial class BattleResultHudController : Node
 
         var d2 = _acceptButton.PressedAsObservable().Subscribe(_ =>
         {
-            Main.WaveState.SendSignal(WaveState.Signal.PLAYER_ACCEPTED_BATTLE_RESULT);
+            Main.WaveState.SendSignal(WaveState.Signal.PlayerAcceptedBattleResult);
         });
 
         Disposable.Combine(d1, d2).AddTo(this);

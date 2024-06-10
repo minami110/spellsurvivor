@@ -54,7 +54,7 @@ public partial class ShopHudController : Node
         var d01 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.UpgradeShopLevel(); });
         var d02 = _quitShopButton.PressedAsObservable().Subscribe(_ =>
         {
-            Main.WaveState.SendSignal(WaveState.Signal.PLAYER_ACCEPTED_SHOP);
+            Main.WaveState.SendSignal(WaveState.Signal.PlayerAcceptedShop);
         });
         var d03 = _lockButton.PressedAsObservable().Subscribe(_ =>
         {
@@ -86,7 +86,7 @@ public partial class ShopHudController : Node
         // WaveState
         var d40 = Main.WaveState.Phase.Subscribe(this, (x, state) =>
         {
-            if (x == WavePhase.SHOP)
+            if (x == WavePhase.Shop)
             {
                 state._container.Show();
             }

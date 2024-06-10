@@ -39,7 +39,7 @@ public sealed partial class InGameHUD : CanvasLayer
         var d4 = ws.BattlePhaseTimeLeft.Subscribe(x => _waveTimerLabel.Text = $"{x:000}");
         var d5 = ws.Phase.Subscribe(p =>
         {
-            if (p == WavePhase.BATTLE)
+            if (p == WavePhase.Battle)
             {
                 OnBattleWaveStarted();
             }

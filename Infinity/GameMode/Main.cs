@@ -83,7 +83,7 @@ public partial class Main : Node
         }
 
         // Battle Wave の開始時
-        var d1 = _waveState.Phase.Where(x => x == WavePhase.BATTLE).Subscribe(this, (_, state) =>
+        var d1 = _waveState.Phase.Where(x => x == WavePhase.Battle).Subscribe(this, (_, state) =>
         {
             // Playerの体力を全回復する
             state._playerState.SolveEffect(); // Pending wo kaiketu
@@ -117,7 +117,7 @@ public partial class Main : Node
         });
 
         // Battle Result 進入時
-        var d2 = _waveState.Phase.Where(x => x == WavePhase.BATTLERESULT).Subscribe(this, (_, state) =>
+        var d2 = _waveState.Phase.Where(x => x == WavePhase.Battleresult).Subscribe(this, (_, state) =>
         {
             var tree = state.GetTree();
 
@@ -138,7 +138,7 @@ public partial class Main : Node
         });
 
         // Shop 進入時
-        var d3 = _waveState.Phase.Where(x => x == WavePhase.SHOP).Subscribe(this, (_, state) =>
+        var d3 = _waveState.Phase.Where(x => x == WavePhase.Shop).Subscribe(this, (_, state) =>
         {
             if (state._waveState.Wave.CurrentValue >= 0)
             {
@@ -167,7 +167,7 @@ public partial class Main : Node
         Disposable.Combine(_playerState, _waveState, _shopState, d1, d2, d3).AddTo(this);
 
         // Start Game
-        _waveState.SendSignal(WaveState.Signal.GAMEMODE_START);
+        _waveState.SendSignal(WaveState.Signal.GamemodeStart);
     }
 
     public override void _Process(double delta)
