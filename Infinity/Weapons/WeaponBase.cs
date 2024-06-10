@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using fms.Effect;
 using Godot;
 using R3;
 
@@ -36,6 +37,8 @@ public partial class WeaponBase : Node2D, IEffectSolver
     [Export]
     private bool _autostart;
 
+
+    
     [ExportGroup("Internal Reference")]
     [Export]
     private FrameTimer _frameTimer = null!;
@@ -114,9 +117,35 @@ public partial class WeaponBase : Node2D, IEffectSolver
                 var newRate = _coolDownReduceRateRp.Value + reduceCoolDownRate.Value;
                 _coolDownReduceRateRp.Value = Mathf.Clamp(newRate, 0f, 1f);
             }
+            
+            if (effect is AddManaRegeneration addManaRegeneration)
+            {
+                _manaRegenerationInterval += addManaRegeneration.Interval;
+                _manaRegenerationValue += addManaRegeneration.Value;
+            }
         }
 
         OnSolveEffect(_effects);
         _effects.Clear();
+    }
+
+    
+    private int _manaRegenerationInterval = 0;
+    private int _manaRegenerationValue = 0;
+    public int Mana = 0;
+    private int _timeCounter = 0;
+    public override void _Process(double delta)
+    {
+        if (_manaRegenerationInterval == 0 || _manaRegenerationValue == 0)
+        {
+            return;
+        }
+        
+        _timeCounter++;
+        if (_timeCounter > _manaRegenerationInterval)
+        {
+            Mana += _manaRegenerationValue;
+            _timeCounter = 0;
+        }
     }
 }
