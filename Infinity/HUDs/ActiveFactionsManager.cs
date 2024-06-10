@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using fms.Faction;
 using Godot;
 using R3;
@@ -7,62 +7,70 @@ namespace fms;
 
 public partial class ActiveFactionsManager : Node
 {
-    [Export]
-    private Label _bruiser = null!;
-
-    [Export]
-    private Label _duelist = null!;
-
-    [Export]
-    private Label _trickshot = null!;
-    
-    [Export]
-    private Label _invoker = null!;
+    private readonly Dictionary<string, Label> _labels = new();
 
     public override void _Ready()
     {
-        var d1 = Main.PlayerInventory.InHandMinionChanged.Subscribe(_ => OnChangedEquippedMinion());
-        Disposable.Combine(d1).AddTo(this);
-    }
-
-    private void OnChangedEquippedMinion()
-    {
-        _bruiser.Hide();
-        _duelist.Hide();
-        _trickshot.Hide();
-
-        var factions = Main.PlayerInventory.Factions;
-        foreach (var (type, faction) in factions)
+        // 兄弟の Label を全部キャッシュしておく
+        var nodes = this.FindSibling("*", nameof(Label));
+        foreach (var node in nodes)
         {
-            if (faction.Level == 0)
+            if (node is not Label label)
             {
                 continue;
             }
 
-            switch (type)
-            {
-                case FactionType.Bruiser:
-                    UpdateLabel(_bruiser, nameof(Bruiser), faction);
-                    break;
-                case FactionType.Duelist:
-                    UpdateLabel(_duelist, nameof(Duelist), faction);
-                    break;
-                case FactionType.Trickshot:
-                    UpdateLabel(_trickshot, nameof(Trickshot), faction);
-                    break;
-                case FactionType.Invoker:
-                    UpdateLabel(_invoker, nameof(Invoker), faction);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            _labels.Add(label.Name, label);
+        }
+
+        // ラベルをすべて非表示に
+        HideAllLabel();
+
+        // Player の子ノードが変わったら更新
+        var player = this.GetPlayerNode();
+        player.ChildOrderChangedAsObservable().Subscribe(OnChangedPlayerChildren).AddTo(this);
+    }
+
+    private void HideAllLabel()
+    {
+        foreach (var (_, v) in _labels)
+        {
+            v.Hide();
         }
     }
 
-    private void UpdateLabel(Label characterLabel, string characterName, FactionBase faction)
+    private void OnChangedPlayerChildren(Unit _)
     {
+        HideAllLabel();
+
+        var factions = GetTree().GetNodesInGroup(Constant.GroupNameFaction);
+
+        foreach (var faction in factions)
+        {
+            if (faction is not FactionBase factionBase)
+            {
+                continue;
+            }
+
+            if (factionBase.Level == 0)
+            {
+                continue;
+            }
+
+            var typeName = factionBase.GetType().Name;
+            if (!_labels.TryGetValue(typeName, out var label))
+            {
+                continue;
+            }
+
+            UpdateLabel(label, typeName, factionBase);
+        }
+    }
+
+    private static void UpdateLabel(Label characterLabel, string factionName, FactionBase faction)
+    {
+        characterLabel.Text = $"{factionName} Lv.{faction.Level}";
+        characterLabel.Modulate = faction.IsActiveAnyEffect ? new Color(1, 1, 1) : new Color(1, 1, 1, 0.3f);
         characterLabel.Show();
-        characterLabel.Text = $"{characterName} Lv.{faction.Level}";
-        characterLabel.Modulate = faction.IsAnyEffectActive ? new Color(1, 1, 1) : new Color(1, 1, 1, 0.3f);
     }
 }

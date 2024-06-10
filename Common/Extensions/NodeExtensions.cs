@@ -1,4 +1,5 @@
 ﻿using Godot;
+using Godot.Collections;
 
 namespace fms;
 
@@ -27,6 +28,18 @@ public static partial class NodeExtensions
     public static void DebugLog(this Node node, string message)
     {
         GD.Print($"[{node.GetType()}] {message}");
+    }
+
+    /// <summary>
+    ///     Finds sibling nodes with the specified pattern and type. GetParent().FindChildren() wrapper.
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="pattern"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static Array<Node> FindSibling(this Node node, string pattern, string type = "")
+    {
+        return node.GetParent().FindChildren(pattern, type, false, false);
     }
 
     /// <summary>

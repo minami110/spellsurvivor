@@ -1,4 +1,3 @@
-using System.Linq;
 using Godot;
 using R3;
 
@@ -55,7 +54,7 @@ public partial class ShopHudController : Node
         var d01 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.UpgradeShopLevel(); });
         var d02 = _quitShopButton.PressedAsObservable().Subscribe(_ =>
         {
-            Main.WaveState.SendSignal(WaveState.Signal.PLAYER_ACCEPTED_SHOP);
+            Main.WaveState.SendSignal(WaveState.Signal.PlayerAcceptedShop);
         });
         var d03 = _lockButton.PressedAsObservable().Subscribe(_ =>
         {
@@ -77,7 +76,8 @@ public partial class ShopHudController : Node
         var d10 = Main.PlayerState.Money.Subscribe(this, (x, state) => state._playerMoneyLabel.Text = $"$ {x}");
 
         // Player Inventory
-        var d20 = Main.PlayerInventory.InHandMinionChanged.Subscribe(OnEquippedMinionChanged);
+        var playerNode = this.GetPlayerNode();
+        var d20 = playerNode.ChildOrderChangedAsObservable().Subscribe(OnEquippedMinionChanged);
 
         // ShopState
         var d30 = Main.ShopState.Level.Subscribe(x => { _shopLevelLabel.Text = $"Lv.{Main.ShopState.Level}"; });
@@ -86,7 +86,7 @@ public partial class ShopHudController : Node
         // WaveState
         var d40 = Main.WaveState.Phase.Subscribe(this, (x, state) =>
         {
-            if (x == WavePhase.SHOP)
+            if (x == WavePhase.Shop)
             {
                 state._container.Show();
             }
@@ -107,11 +107,14 @@ public partial class ShopHudController : Node
             old.QueueFree();
         }
 
-        foreach (var minion in Main.PlayerInventory.Minions.Where(x => x.Place == MinionPlace.InHand))
+        // Player が所有している Minion を取得する
+        var playerNode = this.GetPlayerNode();
+        var minions = playerNode.FindChildren("*", nameof(Minion), false, false);
+        foreach (var minion in minions)
         {
             var node = _shopOwnItemPackedScene.Instantiate<ShopOwnItem>();
             {
-                node.Minion = minion;
+                node.Minion = (Minion)minion;
             }
             _equipItemSpawnParent.AddChild(node);
         }

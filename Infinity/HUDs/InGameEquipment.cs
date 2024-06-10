@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using fms.Weapon;
 using Godot;
 using R3;
@@ -24,15 +23,31 @@ public partial class InGameEquipment : VBoxContainer
 
     public override void _Ready()
     {
-        var inventoryData = Main.PlayerInventory.Minions.FirstOrDefault(m => m.Id == Weapon.Id);
-        if (inventoryData == null)
+        Minion? targetMinion = null;
+        var nodes = GetTree().GetNodesInGroup(Constant.GroupNameMinion);
+        foreach (var node in nodes)
         {
-            throw new NotImplementedException("Minion が見つかりませんでした");
+            if (node is not Minion minion)
+            {
+                continue;
+            }
+
+            if (minion.Weapon != Weapon)
+            {
+                continue;
+            }
+
+            targetMinion = minion;
+            break;
         }
 
-        _icon.Texture = inventoryData.Sprite;
-        _name.Text = inventoryData.Name;
+        if (targetMinion is null)
+        {
+            throw new ApplicationException($"Minion not found for {Weapon}");
+        }
 
+        _icon.Texture = targetMinion.Sprite;
+        _name.Text = targetMinion.FriendlyName;
         _levelLabel.Text = $"Lv.{Weapon.Level}";
 
         var d1 = Weapon.CoolDownLeft.Subscribe(this, (x, s) =>

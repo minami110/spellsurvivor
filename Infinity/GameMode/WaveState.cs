@@ -6,18 +6,18 @@ namespace fms;
 public enum WavePhase
 {
     Init,
-    SHOP,
-    BATTLE,
-    BATTLERESULT
+    Shop,
+    Battle,
+    Battleresult
 }
 
 public sealed class WaveState : IDisposable
 {
     public enum Signal
     {
-        GAMEMODE_START,
-        PLAYER_ACCEPTED_BATTLE_RESULT,
-        PLAYER_ACCEPTED_SHOP
+        GamemodeStart,
+        PlayerAcceptedBattleResult,
+        PlayerAcceptedShop
     }
 
     private readonly ReactiveProperty<double> _battlePhaseTimeLeft = new();
@@ -42,7 +42,7 @@ public sealed class WaveState : IDisposable
 
     internal void _Process(double delta)
     {
-        if (_phaseRp.Value != WavePhase.BATTLE)
+        if (_phaseRp.Value != WavePhase.Battle)
         {
             return;
         }
@@ -51,29 +51,29 @@ public sealed class WaveState : IDisposable
         if (_battlePhaseTimeLeft.Value <= 0)
         {
             _battlePhaseTimeLeft.Value = 0;
-            _phaseRp.Value = WavePhase.BATTLERESULT;
+            _phaseRp.Value = WavePhase.Battleresult;
         }
     }
 
     public void SendSignal(Signal signal)
     {
-        if (signal == Signal.GAMEMODE_START)
+        if (signal == Signal.GamemodeStart)
         {
             if (_phaseRp.Value == WavePhase.Init)
             {
-                _phaseRp.Value = WavePhase.SHOP;
+                _phaseRp.Value = WavePhase.Shop;
             }
         }
-        else if (signal == Signal.PLAYER_ACCEPTED_BATTLE_RESULT)
+        else if (signal == Signal.PlayerAcceptedBattleResult)
         {
-            if (_phaseRp.Value == WavePhase.BATTLERESULT)
+            if (_phaseRp.Value == WavePhase.Battleresult)
             {
-                _phaseRp.Value = WavePhase.SHOP;
+                _phaseRp.Value = WavePhase.Shop;
             }
         }
-        else if (signal == Signal.PLAYER_ACCEPTED_SHOP)
+        else if (signal == Signal.PlayerAcceptedShop)
         {
-            if (_phaseRp.Value == WavePhase.SHOP)
+            if (_phaseRp.Value == WavePhase.Shop)
             {
                 // Wave を次に進める
                 // Note: Settings が足りない場合はループさせるので永遠に終わらない
@@ -91,7 +91,7 @@ public sealed class WaveState : IDisposable
                 _battlePhaseTimeLeft.Value = currentConfig.WaveTimeSeconds;
 
                 // バトルフェーズに移行
-                _phaseRp.Value = WavePhase.BATTLE;
+                _phaseRp.Value = WavePhase.Battle;
             }
         }
     }

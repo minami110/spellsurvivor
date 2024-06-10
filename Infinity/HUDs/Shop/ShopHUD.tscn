@@ -1,11 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://dvwlkv2f4pl2i"]
+[gd_scene load_steps=6 format=3 uid="uid://dvwlkv2f4pl2i"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopHudController.cs" id="1_5xunh"]
 [ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/InstoreMinionPanel.tscn" id="2_7j4ye"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="3_nlrg2"]
+[ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/ActiveFactionHud.tscn" id="5_jthwe"]
 [ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/OwnedMinionPanel.tscn" id="6_dux5n"]
-[ext_resource type="Script" path="res://Infinity/HUDs/ActiveFactionsManager.cs" id="8_6u4gn"]
-[ext_resource type="Script" path="res://Infinity/HUDs/LabelHasToolTip.cs" id="8_qxwon"]
 
 [node name="ShopHUD (Layer 2)" type="CanvasLayer"]
 layer = 2
@@ -195,62 +194,13 @@ text = "Player Status"
 layout_mode = 2
 text = "Gold: N/A"
 
-[node name="VBox Active Factions" type="VBoxContainer" parent="Container"]
+[node name="VBox Active Factions" parent="Container" instance=ExtResource("5_jthwe")]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 35.0
-offset_top = -185.0
-offset_right = 238.0
-offset_bottom = 19.0
+offset_left = 42.0
+offset_top = -50.0
+offset_right = 149.0
+offset_bottom = 54.0
 grow_vertical = 2
-
-[node name="ActiveFactionsManager" type="Node" parent="Container/VBox Active Factions" node_paths=PackedStringArray("_bruiser", "_duelist", "_trickshot", "_invoker")]
-script = ExtResource("8_6u4gn")
-_bruiser = NodePath("../Label Bruser")
-_duelist = NodePath("../Label Duelist")
-_trickshot = NodePath("../Label Trickshot")
-_invoker = NodePath("../Label Invoker")
-
-[node name="Label Bruser" type="Label" parent="Container/VBox Active Factions"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-text = "Duelist: Lv1"
-script = ExtResource("8_qxwon")
-ToolTipText = "Bruiser
-Lv2: Player の最大体力を50上げる
-Lv4: Player の最大体力を150上げる
-Lv6: Player の最大体力を400上げる"
-
-[node name="Label Duelist" type="Label" parent="Container/VBox Active Factions"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-text = "Duelist: Lv1"
-script = ExtResource("8_qxwon")
-ToolTipText = "Duelist
-Lv2: Duelist を持つミニオンのクールダウンを 10%減少させる
-Lv4: Duelist を持つミニオンのクールダウンを 20%減少させる
-Lv6: 自分が持っているすべてのミニオンのクールダウンを 20%減少させる"
-
-[node name="Label Trickshot" type="Label" parent="Container/VBox Active Factions"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-text = "Trickshot: Lv1"
-script = ExtResource("8_qxwon")
-ToolTipText = "Trickshot
-トリックショットを持つミニオンの通常攻撃が敵に当たった時、範囲内の最も近い敵に向かって反射する
-
-Lv2: 跳ね返り回数 1,  跳ね返った攻撃倍率 40 %
-Lv4: 跳ね返り回数 2, 跳ね返った攻撃倍率 60 %"
-
-[node name="Label Invoker" type="Label" parent="Container/VBox Active Factions"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-text = "Trickshot: Lv1"
-script = ExtResource("8_qxwon")
-ToolTipText = "Invoker"

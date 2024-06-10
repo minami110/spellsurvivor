@@ -1,4 +1,5 @@
-﻿using fms.Projectile;
+﻿using System;
+using fms.Projectile;
 using Godot;
 
 namespace fms.Weapon;
@@ -25,14 +26,25 @@ public partial class PoisonMistGen : WeaponBase
 
     private void SpawnBullet(uint level)
     {
+        // Gets the player's position
+        Vector2 playerPosotion;
+        if (GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer) is Node2D player)
+        {
+            playerPosotion = player.GlobalPosition;
+        }
+        else
+        {
+            throw new ApplicationException("Do not find the player node in the tree.");
+        }
+
         if (level == 1)
         {
             var bullet = _bulletPackedScene.Instantiate<PoisonMist>();
             {
-                bullet.InitialPosition = Main.PlayerNode.GlobalPosition;
-                bullet.CoolDown = 10; // 10 フレームに一回敵にダメージ
+                bullet.InitialPosition = playerPosotion;
+                bullet.CoolDownFrame = 10; // 10 フレームに一回敵にダメージ
                 bullet.BaseDamage = 2; // 10 フレームに1ダメージ
-                bullet.Radius = 100; // 100 ピクセル以内の敵にダメージ
+                bullet.DamageAreaRadius = 100; // 100 ピクセル以内の敵にダメージ
                 bullet.LifeFrame = 300; // 300 フレーム後に消滅
             }
             _bulletSpawnNode.AddChild(bullet);
@@ -41,10 +53,10 @@ public partial class PoisonMistGen : WeaponBase
         {
             var bullet = _bulletPackedScene.Instantiate<PoisonMist>();
             {
-                bullet.InitialPosition = Main.PlayerNode.GlobalPosition;
-                bullet.CoolDown = 10; // 10 フレームに一回敵にダメージ
+                bullet.InitialPosition = playerPosotion;
+                bullet.CoolDownFrame = 10; // 10 フレームに一回敵にダメージ
                 bullet.BaseDamage = 2; // 10 フレームに1ダメージ
-                bullet.Radius = 200; // 200 ピクセル以内の敵にダメージ
+                bullet.DamageAreaRadius = 200; // 200 ピクセル以内の敵にダメージ
                 bullet.LifeFrame = 300; // 300 フレーム後に消滅
             }
             _bulletSpawnNode.AddChild(bullet);
@@ -53,10 +65,10 @@ public partial class PoisonMistGen : WeaponBase
         {
             var bullet = _bulletPackedScene.Instantiate<PoisonMist>();
             {
-                bullet.InitialPosition = Main.PlayerNode.GlobalPosition;
-                bullet.CoolDown = 10; // 10 フレームに一回敵にダメージ
+                bullet.InitialPosition = playerPosotion;
+                bullet.CoolDownFrame = 10; // 10 フレームに一回敵にダメージ
                 bullet.BaseDamage = 2; // 10 フレームに1ダメージ
-                bullet.Radius = 300; // 200 ピクセル以内の敵にダメージ
+                bullet.DamageAreaRadius = 300; // 200 ピクセル以内の敵にダメージ
                 bullet.LifeFrame = 400; // 400 フレーム後に消滅
             }
             _bulletSpawnNode.AddChild(bullet);

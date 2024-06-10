@@ -6,17 +6,17 @@ using R3;
 
 namespace fms;
 
-public sealed class ShopState : IDisposable
+public partial class ShopState : Node
 {
-    private const int _MAX_SHOP_LEVEL = 8;
-    private const int _MAX_SHOP_ITEM_SLOT = 8;
+    [Export]
+    public ShopConfig Config { get; private set; } = null!;
 
-    private readonly List<MinionInRuntime> _inStoreMinions = new();
+    private readonly List<Minion> _inStoreMinions = new();
     private readonly Subject<Unit> _inStoreMinionsUpdatedSubject = new();
 
     private readonly ReactiveProperty<int> _levelRp = new(1);
 
-    private readonly Dictionary<int, List<MinionInRuntime>> _runtimeMinionPool = new();
+    private readonly Dictionary<int, List<Minion>> _runtimeMinionPool = new();
 
     private int _itemSlotCount;
 
@@ -30,15 +30,24 @@ public sealed class ShopState : IDisposable
 
     /// <summary>
     /// </summary>
-    public IReadOnlyList<MinionInRuntime> InStoreMinions => _inStoreMinions;
-
-    public ShopConfig Config { get; }
+    public IReadOnlyList<Minion> InStoreMinions => _inStoreMinions;
 
     public bool IsLocked { get; set; }
 
-    public ShopState(ShopConfig config)
+    public ShopState(ShopConfig config) : this()
     {
         Config = config;
+    }
+
+    private ShopState()
+    {
+        // Parameterless constructor for Godot Editor
+    }
+
+    public override void _EnterTree()
+    {
+        // Set Name (for debugging)
+        Name = nameof(ShopState);
 
         // Construct Runtime Minion Pool
         _runtimeMinionPool.Clear();
@@ -46,11 +55,11 @@ public sealed class ShopState : IDisposable
         {
             if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
             {
-                list = new List<MinionInRuntime>();
+                list = new List<Minion>();
                 _runtimeMinionPool[minionCoreData.Tier] = list;
             }
 
-            list.Add(new MinionInRuntime(minionCoreData));
+            list.Add(new Minion(minionCoreData));
         }
 
         // Default 
@@ -58,9 +67,14 @@ public sealed class ShopState : IDisposable
         _itemSlotCount = 3;
     }
 
+    public override void _ExitTree()
+    {
+        _levelRp.Dispose();
+    }
+
     public void AddItemSlot()
     {
-        if (_itemSlotCount < _MAX_SHOP_ITEM_SLOT)
+        if (_itemSlotCount < Constant.SHOP_MAX_ITEM_SLOT)
         {
             _itemSlotCount++;
         }
@@ -70,7 +84,7 @@ public sealed class ShopState : IDisposable
     ///     Minion をショップから購入
     /// </summary>
     /// <param name="minion"></param>
-    public void BuyItem(MinionInRuntime minion)
+    public void BuyItem(Minion minion)
     {
         if (!_inStoreMinions.Contains(minion))
         {
@@ -83,22 +97,23 @@ public sealed class ShopState : IDisposable
 
         // ToDo: 外部化していいかも
         // プレイヤーのお金を減らす
-        Main.PlayerState.AddEffect(new AddMoneyEffect { Value = -minion.Price });
+        Main.PlayerState.AddEffect(new MoneyEffect { Value = -minion.Price });
         Main.PlayerState.SolveEffect();
 
-        // インベントリに追加 あるいはアップグレード する
-        if (Main.PlayerInventory.HasMinion(minion))
+        // Player がすでに Minion を所持していたらレベルを上げる
+        var player = this.GetPlayerNode();
+        var minions = player.FindChildren("*", nameof(Minion), false, false);
+        if (minions.Any(m => m == minion))
         {
-            Main.PlayerInventory.UpgradeMinion(minion);
-        }
-        else
-        {
-            Main.PlayerInventory.AddMinion(minion);
+            minion.SetLevel(minion.Level.CurrentValue + 1);
+            return;
         }
 
+        // Playerは まだ所有していないので子にする
+        player.AddChild(minion);
+
         // ToDo: 現在購入後デフォで装備にしています
-        // 満タンの場合 とか ドラッグで購入とかで色々変わります
-        Main.PlayerInventory.EquipMinion(minion.Id);
+        minion.AddWeapon();
     }
 
     public void RefreshInStoreMinions()
@@ -123,11 +138,10 @@ public sealed class ShopState : IDisposable
         for (var i = 0; i < tryCount; i++)
         {
             // ティアを決定する
-            const int _MAX_TIER = 5;
             var targetTier = 1;
-            for (; targetTier <= _MAX_TIER; targetTier++)
+            for (; targetTier <= Constant.MINION_MAX_TIER; targetTier++)
             {
-                var odds = Config.Odds[(Level.CurrentValue - 1) * _MAX_TIER + targetTier - 1];
+                var odds = Config.Odds[(Level.CurrentValue - 1) * Constant.MINION_MAX_TIER + targetTier - 1];
                 if (odds < GD.Randf())
                 {
                     continue;
@@ -137,7 +151,7 @@ public sealed class ShopState : IDisposable
             }
 
             // ティアが決定したので Minion を選択する
-            MinionInRuntime? minion = null;
+            Minion? minion = null;
             if (_runtimeMinionPool.TryGetValue(targetTier, out var minions))
             {
                 // List から ランダムに Minion を取り出す, 最大レベルの場合はスキップする
@@ -169,14 +183,21 @@ public sealed class ShopState : IDisposable
     /// <summary>
     ///     Minion をショップに売却
     /// </summary>
-    /// <param name="minionData"></param>
-    public void SellItem(MinionInRuntime minionData)
+    /// <param name="minion"></param>
+    public void SellItem(Minion minion)
     {
-        if (Main.PlayerInventory.RemoveMinion(minionData))
+        var player = this.GetPlayerNode();
+        var minions = player.FindChildren("*", nameof(Minion), false, false);
+        if (minions.Any(m => m == minion))
         {
+            // ミニオンをプレイヤーの手持ちから取り除く
+            player.RemoveChild(minion);
+            // 次も Ready してほしいのでフラグを立てておく
+            minion.RequestReady();
+
             // プレイヤーのお金を増やす
             // TODO: 売却価格を売値と同じにしています
-            Main.PlayerState.AddEffect(new AddMoneyEffect { Value = minionData.Price });
+            Main.PlayerState.AddEffect(new MoneyEffect { Value = minion.Price });
             Main.PlayerState.SolveEffect();
         }
     }
@@ -184,7 +205,7 @@ public sealed class ShopState : IDisposable
     public void UpgradeShopLevel()
     {
         // ToDo: Level Up の値段を設定していない
-        if (_levelRp.Value < _MAX_SHOP_LEVEL)
+        if (_levelRp.Value < Constant.SHOP_MAX_LEVEL)
         {
             _levelRp.Value++;
         }
@@ -200,10 +221,5 @@ public sealed class ShopState : IDisposable
         }
 
         return indexes;
-    }
-
-    void IDisposable.Dispose()
-    {
-        _levelRp.Dispose();
     }
 }
