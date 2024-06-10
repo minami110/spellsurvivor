@@ -54,10 +54,7 @@ public partial class RotateBook : ProjectileBase
 
     public override void _Process(double delta)
     {
-        base._Process(delta);
-
         _timer += delta;
-
         _rigidBody.GlobalPosition = CalculatePosition(_timer, _angularVelocity, Radius);
     }
 

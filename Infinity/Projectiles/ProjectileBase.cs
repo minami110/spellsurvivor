@@ -11,12 +11,22 @@ public partial class ProjectileBase : Node
 
     public int LifeFrame { get; set; } = 120;
 
-    public override void _Process(double delta)
+    public override void _Notification(int what)
     {
-        _frameCounter++;
-        if (_frameCounter > LifeFrame)
+        if (what == NotificationEnterTree)
         {
-            KillThis();
+            if (!IsInGroup(Constant.GroupNameProjectile))
+            {
+                AddToGroup(Constant.GroupNameProjectile);
+            }
+        }
+        else if (what == NotificationProcess)
+        {
+            _frameCounter++;
+            if (_frameCounter > LifeFrame)
+            {
+                KillThis();
+            }
         }
     }
 
