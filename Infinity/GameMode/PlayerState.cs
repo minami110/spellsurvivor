@@ -16,7 +16,7 @@ public sealed class PlayerState : IEffectSolver, IDisposable
 
     private readonly ReactiveProperty<float> _health = new();
     private readonly ReactiveProperty<float> _maxHealth = new();
-    private readonly ReactiveProperty<int> _money = new();
+    private readonly ReactiveProperty<uint> _money = new();
     private readonly ReactiveProperty<float> _moveSpeed = new();
 
     private bool _isDirty;
@@ -24,7 +24,7 @@ public sealed class PlayerState : IEffectSolver, IDisposable
     /// <summary>
     ///     現在の所持金
     /// </summary>
-    public ReadOnlyReactiveProperty<int> Money => _money;
+    public ReadOnlyReactiveProperty<uint> Money => _money;
 
     /// <summary>
     ///     現在の移動速度
@@ -74,6 +74,8 @@ public sealed class PlayerState : IEffectSolver, IDisposable
         }
 
         _isDirty = false;
+
+        // Dispose されたエフェクトを削除
         _effects.RemoveWhere(effect => effect.IsDisposed);
 
         // スタートとなるパラメーターを用意
@@ -88,9 +90,9 @@ public sealed class PlayerState : IEffectSolver, IDisposable
         {
             switch (effect)
             {
-                case AddMoneyEffect addMoneyEffect:
+                case MoneyEffect moneyEffect:
                 {
-                    moveSpeed += addMoneyEffect.Value;
+                    money += moneyEffect.Value;
                     break;
                 }
                 case AddMoveSpeedEffect addMoveSpeedEffect:
@@ -127,7 +129,7 @@ public sealed class PlayerState : IEffectSolver, IDisposable
         // 最終的な値を計算する
         _maxHealth.Value = maxHealth;
         _health.Value = health;
-        _money.Value = Mathf.Max(0, money);
+        _money.Value = (uint)Math.Max(0, money);
         _moveSpeed.Value = moveSpeed;
     }
 }

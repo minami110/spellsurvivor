@@ -1,6 +1,6 @@
 ﻿namespace fms;
 
-public class AddMoneyEffect : EffectBase
+public class MoneyEffect : EffectBase
 {
     public required int Value { get; init; }
 }
