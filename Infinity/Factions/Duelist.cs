@@ -1,4 +1,5 @@
 ﻿using fms.Weapon;
+using Godot;
 
 namespace fms.Faction;
 
@@ -7,9 +8,10 @@ namespace fms.Faction;
 ///     Lv4: デュエリスト を持つミニオンのクールダウンを 20%減少させる
 ///     Lv6: 自分が持っているすべてのミニオンのクールダウンを 20%減少させる
 /// </summary>
-public sealed class Duelist : FactionBase
+[GlobalClass]
+public partial class Duelist : FactionBase
 {
-    private protected override void OnLevelConfirmed(int level)
+    private protected override void OnLevelChanged(uint level)
     {
         if (level < 2)
         {

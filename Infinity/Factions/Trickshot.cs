@@ -1,5 +1,6 @@
 ﻿using fms.Effect;
 using fms.Weapon;
+using Godot;
 
 namespace fms.Faction;
 
@@ -8,9 +9,10 @@ namespace fms.Faction;
 ///     Lv2: 跳ね返り回数 1、 跳ね返った攻撃倍率 40 %
 ///     Lv4: 跳ね返り回数 2、 跳ね返った攻撃倍率 60 %
 /// </summary>
-public sealed class Trickshot : FactionBase
+[GlobalClass]
+public partial class Trickshot : FactionBase
 {
-    private protected override void OnLevelConfirmed(int level)
+    private protected override void OnLevelChanged(uint level)
     {
         if (level < 2)
         {

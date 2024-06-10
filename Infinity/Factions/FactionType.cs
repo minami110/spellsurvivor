@@ -12,9 +12,9 @@ public enum FactionType
 {
     Bruiser = 1 << 0,
     Duelist = 1 << 1,
-
     Trickshot = 1 << 2,
-    Invoker = 1 << 3,
+
+    Invoker = 1 << 3
     // Note: ↓ に新しい Faction を追加していく
 }
 

@@ -50,7 +50,7 @@ public partial class ShopSellingItem : VBoxContainer
         ToolTipToast.Hide();
     }
 
-    private void OnChangedPlayerMoney(int money)
+    private void OnChangedPlayerMoney(uint money)
     {
         if (money < Minion.Price)
         {

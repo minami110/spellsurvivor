@@ -1,13 +1,16 @@
-﻿namespace fms.Faction;
+﻿using Godot;
+
+namespace fms.Faction;
 
 /// <summary>
 ///     Lv2: Player の最大体力を 50 上げる (100 => 150)
 ///     Lv4: Player の最大体力 150 上げる (100 => 250)
 ///     Lv6: Player の最大体力 450 上げる (100 => 500)
 /// </summary>
-public sealed class Bruiser : FactionBase
+[GlobalClass]
+public partial class Bruiser : FactionBase
 {
-    private protected override void OnLevelConfirmed(int level)
+    private protected override void OnLevelChanged(uint level)
     {
         var value = level switch
         {
@@ -22,16 +25,7 @@ public sealed class Bruiser : FactionBase
             return;
         }
 
-        CreateEffect(value);
-    }
-
-    private void CreateEffect(int value)
-    {
-        // エフェクトを新規作成して, 抜港済みエフェクトとしてマークしておく
         var effect = new AddMaxHealthEffect { Value = value };
-        OnEffectPublished(effect);
-
-        // PlayerState に Effect を追加して, 解決処理を依頼する
-        Main.PlayerState.AddEffect(effect);
+        AddEffactToPlayer(effect);
     }
 }

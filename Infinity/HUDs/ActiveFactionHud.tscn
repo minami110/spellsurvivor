@@ -1,0 +1,59 @@
+[gd_scene load_steps=3 format=3 uid="uid://28gdcb4eskv"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/ActiveFactionsManager.cs" id="1_5cyrl"]
+[ext_resource type="Script" path="res://Infinity/HUDs/LabelHasToolTip.cs" id="2_7e8q8"]
+
+[node name="VBox Active Factions" type="VBoxContainer"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 35.0
+offset_top = -185.0
+offset_right = 238.0
+offset_bottom = 19.0
+grow_vertical = 2
+
+[node name="ActiveFactionsManager" type="Node" parent="." node_paths=PackedStringArray("_bruiser", "_duelist", "_trickshot", "_invoker")]
+script = ExtResource("1_5cyrl")
+_bruiser = NodePath("../Label Bruser")
+_duelist = NodePath("../Label Duelist")
+_trickshot = NodePath("../Label Trickshot")
+_invoker = NodePath("../Label Invoker")
+
+[node name="Label Bruser" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Duelist: Lv1"
+script = ExtResource("2_7e8q8")
+ToolTipText = "Bruiser
+Lv2: Player の最大体力を50上げる
+Lv4: Player の最大体力を150上げる
+Lv6: Player の最大体力を400上げる"
+
+[node name="Label Duelist" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Duelist: Lv1"
+script = ExtResource("2_7e8q8")
+ToolTipText = "Duelist
+Lv2: Duelist を持つミニオンのクールダウンを 10%減少させる
+Lv4: Duelist を持つミニオンのクールダウンを 20%減少させる
+Lv6: 自分が持っているすべてのミニオンのクールダウンを 20%減少させる"
+
+[node name="Label Trickshot" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Trickshot: Lv1"
+script = ExtResource("2_7e8q8")
+ToolTipText = "Trickshot
+トリックショットを持つミニオンの通常攻撃が敵に当たった時、範囲内の最も近い敵に向かって反射する
+
+Lv2: 跳ね返り回数 1,  跳ね返った攻撃倍率 40 %
+Lv4: 跳ね返り回数 2, 跳ね返った攻撃倍率 60 %"
+
+[node name="Label Invoker" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Trickshot: Lv1"
+script = ExtResource("2_7e8q8")
+ToolTipText = "Invoker"

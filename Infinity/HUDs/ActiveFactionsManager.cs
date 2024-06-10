@@ -1,4 +1,3 @@
-using System;
 using fms.Faction;
 using Godot;
 using R3;
@@ -15,54 +14,66 @@ public partial class ActiveFactionsManager : Node
 
     [Export]
     private Label _trickshot = null!;
-    
+
     [Export]
     private Label _invoker = null!;
 
     public override void _Ready()
     {
-        var d1 = Main.PlayerInventory.InHandMinionChanged.Subscribe(_ => OnChangedEquippedMinion());
-        Disposable.Combine(d1).AddTo(this);
+        HideAllLabel();
+        GetTree().TreeChangedAsObservable().Subscribe(OnChangedTree).AddTo(this);
     }
 
-    private void OnChangedEquippedMinion()
+    private void HideAllLabel()
     {
         _bruiser.Hide();
         _duelist.Hide();
         _trickshot.Hide();
+        _invoker.Hide();
+    }
 
-        var factions = Main.PlayerInventory.Factions;
-        foreach (var (type, faction) in factions)
+    private void OnChangedTree(Unit _)
+    {
+        HideAllLabel();
+
+        var factions = GetTree().GetNodesInGroup(Constant.GroupNameFaction);
+
+        foreach (var faction in factions)
         {
-            if (faction.Level == 0)
+            if (faction is not FactionBase factionBase)
             {
                 continue;
             }
 
-            switch (type)
+            if (factionBase.Level == 0)
             {
-                case FactionType.Bruiser:
-                    UpdateLabel(_bruiser, nameof(Bruiser), faction);
-                    break;
-                case FactionType.Duelist:
-                    UpdateLabel(_duelist, nameof(Duelist), faction);
-                    break;
-                case FactionType.Trickshot:
-                    UpdateLabel(_trickshot, nameof(Trickshot), faction);
-                    break;
-                case FactionType.Invoker:
-                    UpdateLabel(_invoker, nameof(Invoker), faction);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                continue;
+            }
+
+            var type = factionBase.GetType();
+            if (type == typeof(Bruiser))
+            {
+                UpdateLabel(_bruiser, nameof(Bruiser), factionBase);
+            }
+            else if (type == typeof(Duelist))
+            {
+                UpdateLabel(_duelist, nameof(Duelist), factionBase);
+            }
+            else if (type == typeof(Trickshot))
+            {
+                UpdateLabel(_trickshot, nameof(Trickshot), factionBase);
+            }
+            else if (type == typeof(Invoker))
+            {
+                UpdateLabel(_invoker, nameof(Invoker), factionBase);
             }
         }
     }
 
-    private void UpdateLabel(Label characterLabel, string characterName, FactionBase faction)
+    private static void UpdateLabel(Label characterLabel, string factionName, FactionBase faction)
     {
-        characterLabel.Show();
-        characterLabel.Text = $"{characterName} Lv.{faction.Level}";
+        characterLabel.Text = $"{factionName} Lv.{faction.Level}";
         characterLabel.Modulate = faction.IsActiveAnyEffect ? new Color(1, 1, 1) : new Color(1, 1, 1, 0.3f);
+        characterLabel.Show();
     }
 }
