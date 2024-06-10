@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using fms.Faction;
 using Godot;
 using R3;
@@ -6,30 +7,35 @@ namespace fms;
 
 public partial class ActiveFactionsManager : Node
 {
-    [Export]
-    private Label _bruiser = null!;
-
-    [Export]
-    private Label _duelist = null!;
-
-    [Export]
-    private Label _trickshot = null!;
-
-    [Export]
-    private Label _invoker = null!;
+    private readonly Dictionary<string, Label> _labels = new();
 
     public override void _Ready()
     {
+        // 兄弟の Label を全部キャッシュしておく
+        var nodes = this.FindSibling("*", nameof(Label));
+        foreach (var node in nodes)
+        {
+            if (node is not Label label)
+            {
+                continue;
+            }
+
+            _labels.Add(label.Name, label);
+        }
+
+        // ラベルをすべて非表示に
         HideAllLabel();
+
+        // ToDo: 富豪プログラム, Tree の構造変化に応じてラベルを更新する
         GetTree().TreeChangedAsObservable().Subscribe(OnChangedTree).AddTo(this);
     }
 
     private void HideAllLabel()
     {
-        _bruiser.Hide();
-        _duelist.Hide();
-        _trickshot.Hide();
-        _invoker.Hide();
+        foreach (var (_, v) in _labels)
+        {
+            v.Hide();
+        }
     }
 
     private void OnChangedTree(Unit _)
@@ -50,23 +56,13 @@ public partial class ActiveFactionsManager : Node
                 continue;
             }
 
-            var type = factionBase.GetType();
-            if (type == typeof(Bruiser))
+            var typeName = factionBase.GetType().Name;
+            if (!_labels.TryGetValue(typeName, out var label))
             {
-                UpdateLabel(_bruiser, nameof(Bruiser), factionBase);
+                continue;
             }
-            else if (type == typeof(Duelist))
-            {
-                UpdateLabel(_duelist, nameof(Duelist), factionBase);
-            }
-            else if (type == typeof(Trickshot))
-            {
-                UpdateLabel(_trickshot, nameof(Trickshot), factionBase);
-            }
-            else if (type == typeof(Invoker))
-            {
-                UpdateLabel(_invoker, nameof(Invoker), factionBase);
-            }
+
+            UpdateLabel(label, typeName, factionBase);
         }
     }
 
