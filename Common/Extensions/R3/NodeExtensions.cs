@@ -31,6 +31,38 @@ public static class NodeExtensions
         return disposable;
     }
 
+    public static Observable<Node> ChildEnteredTreeAsObservable(this Node node,
+        CancellationToken cancellationToken = default)
+    {
+        return Observable.FromEvent<Node.ChildEnteredTreeEventHandler, Node>(
+            h => new Node.ChildEnteredTreeEventHandler(h),
+            h => node.ChildEnteredTree += h,
+            h => node.ChildEnteredTree -= h,
+            cancellationToken
+        );
+    }
+
+    public static Observable<Node> ChildExtingTreeAsObservable(this Node node,
+        CancellationToken cancellationToken = default)
+    {
+        return Observable.FromEvent<Node.ChildExitingTreeEventHandler, Node>(
+            h => new Node.ChildExitingTreeEventHandler(h),
+            h => node.ChildExitingTree += h,
+            h => node.ChildExitingTree -= h,
+            cancellationToken
+        );
+    }
+
+    public static Observable<Unit> ChildOrderChangedAsObservable(this Node node,
+        CancellationToken cancellationToken = default)
+    {
+        return Observable.FromEvent(
+            h => node.ChildOrderChanged += h,
+            h => node.ChildOrderChanged -= h,
+            cancellationToken
+        );
+    }
+
     public static Observable<Unit> TreeEnteredAsObservable(this Node node,
         CancellationToken cancellationToken = default)
     {
