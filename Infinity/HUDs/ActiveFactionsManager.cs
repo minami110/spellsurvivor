@@ -57,6 +57,6 @@ public partial class ActiveFactionsManager : Node
     {
         characterLabel.Show();
         characterLabel.Text = $"{characterName} Lv.{faction.Level}";
-        characterLabel.Modulate = faction.IsAnyEffectActive ? new Color(1, 1, 1) : new Color(1, 1, 1, 0.3f);
+        characterLabel.Modulate = faction.IsActiveAnyEffect ? new Color(1, 1, 1) : new Color(1, 1, 1, 0.3f);
     }
 }

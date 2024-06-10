@@ -9,51 +9,29 @@ public sealed class Bruiser : FactionBase
 {
     private protected override void OnLevelConfirmed(int level)
     {
-        if (level < 2)
+        var value = level switch
+        {
+            >= 6 => 450,
+            >= 4 => 150,
+            >= 2 => 50,
+            _ => 0
+        };
+
+        if (value == 0)
         {
             return;
         }
 
-        var playerState = Main.PlayerState;
-        switch (level)
-        {
-            case >= 6:
-                playerState.AddEffect(new AddMaxHealthEffect { Value = 450 });
-                playerState.SolveEffect();
-                break;
-            case >= 4:
-                playerState.AddEffect(new AddMaxHealthEffect { Value = 150 });
-                playerState.SolveEffect();
-                break;
-            case >= 2:
-                playerState.AddEffect(new AddMaxHealthEffect { Value = 50 });
-                playerState.SolveEffect();
-                break;
-        }
+        CreateEffect(value);
     }
 
-    private protected override void OnLevelReset(int oldLevel)
+    private void CreateEffect(int value)
     {
-        if (oldLevel < 2)
-        {
-            return;
-        }
+        // エフェクトを新規作成して, 抜港済みエフェクトとしてマークしておく
+        var effect = new AddMaxHealthEffect { Value = value };
+        OnEffectPublished(effect);
 
-        var playerState = Main.PlayerState;
-        switch (oldLevel)
-        {
-            case >= 6:
-                playerState.AddEffect(new AddMaxHealthEffect { Value = -450 });
-                playerState.SolveEffect();
-                break;
-            case >= 4:
-                playerState.AddEffect(new AddMaxHealthEffect { Value = -150 });
-                playerState.SolveEffect();
-                break;
-            case >= 2:
-                playerState.AddEffect(new AddMaxHealthEffect { Value = -50 });
-                playerState.SolveEffect();
-                break;
-        }
+        // PlayerState に Effect を追加して, 解決処理を依頼する
+        Main.PlayerState.AddEffect(effect);
     }
 }

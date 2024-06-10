@@ -1,8 +1,20 @@
-﻿namespace fms.Faction;
+﻿using System.Collections.Generic;
 
-public abstract class FactionBase : IEffectSolver
+namespace fms.Faction;
+
+public abstract class FactionBase
 {
-    public virtual bool IsAnyEffectActive => Level >= 2;
+    private readonly List<EffectBase> _publishedEffects = new();
+
+    /// <summary>
+    ///     この Faction でなんらかの効果が有効になっているかどうか
+    ///     UI がこの値に応じて表示を切り替える
+    /// </summary>
+    public virtual bool IsActiveAnyEffect => Level >= 2;
+
+    /// <summary>
+    ///     現在の Faction の Level
+    /// </summary>
     public int Level { get; private set; }
 
     // レベルを確定
@@ -23,14 +35,30 @@ public abstract class FactionBase : IEffectSolver
             return;
         }
 
-        var oldLevel = Level;
         Level = 0;
-        OnLevelReset(oldLevel);
+
+        if (_publishedEffects.Count == 0)
+        {
+            return;
+        }
+
+        // 発行済のエフェクトすべてを削除する
+        foreach (var effect in _publishedEffects)
+        {
+            effect.Dispose();
+        }
+
+        _publishedEffects.Clear();
     }
 
     public void UpgradeLevel(int amount = 1)
     {
         Level += amount;
+    }
+
+    private protected void OnEffectPublished(EffectBase effect)
+    {
+        _publishedEffects.Add(effect);
     }
 
     /// <summary>
@@ -39,22 +67,6 @@ public abstract class FactionBase : IEffectSolver
     /// </summary>
     /// <param name="level"></param>
     private protected virtual void OnLevelConfirmed(int level)
-    {
-    }
-
-    /// <summary>
-    ///     プレイヤーが装備を切り替えるさい, 最初に Level が 0 にリセットされるときに呼ばれるコールバック
-    /// </summary>
-    /// <param name="oldLevel"></param>
-    private protected virtual void OnLevelReset(int oldLevel)
-    {
-    }
-
-    public void AddEffect(EffectBase effect)
-    {
-    }
-
-    public void SolveEffect()
     {
     }
 }
