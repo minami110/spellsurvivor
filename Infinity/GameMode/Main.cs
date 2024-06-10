@@ -70,7 +70,9 @@ public partial class Main : Node
     {
         // Initialize States
         _waveState = new WaveState { Config = _gameSettings.WaveConfig };
+
         _shopState = new ShopState(_gameSettings.ShopConfig);
+        AddChild(_shopState);
     }
 
     public override void _Ready()

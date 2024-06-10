@@ -72,9 +72,7 @@ public partial class WeaponBase : Node2D, IEffectSolver
     {
         if (what == NotificationEnterTree)
         {
-            var d1 = _frameTimer.TimeOut.Subscribe(this, (_, state) => { state.DoAttack(state.Level); });
-            Disposable.Combine(d1, _coolDownReduceRateRp).AddTo(this);
-
+            Name = $"(Weapon) {Id}";
             if (!IsInGroup(Constant.GroupNameWeapon))
             {
                 AddToGroup(Constant.GroupNameWeapon);
@@ -82,6 +80,9 @@ public partial class WeaponBase : Node2D, IEffectSolver
         }
         else if (what == NotificationReady)
         {
+            var d1 = _frameTimer.TimeOut.Subscribe(this, (_, state) => { state.DoAttack(state.Level); });
+            Disposable.Combine(d1, _coolDownReduceRateRp).AddTo(this);
+
             if (_autostart)
             {
                 StartAttack();

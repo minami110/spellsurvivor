@@ -6,13 +6,6 @@ using R3;
 
 namespace fms;
 
-public enum MinionPlace
-{
-    InShop,
-    InHand,
-    InStorage
-}
-
 /// <summary>
 ///     Player が所有済みの Minion の情報
 /// </summary>
@@ -20,13 +13,14 @@ public enum MinionPlace
 public partial class Minion : Node
 {
     [Export]
-    internal MinionCoreData CoreData { get; set; } = null!;
+    private MinionCoreData CoreData { get; set; } = null!;
 
     private readonly ReactiveProperty<uint> _levelRp = new(1);
 
     private WeaponBase? _weapon;
 
     private IDisposable? _weaponSubscription;
+
 
     /// <summary>
     /// </summary>
@@ -38,17 +32,15 @@ public partial class Minion : Node
 
     public bool IsMaxLevel => _levelRp.Value >= Constant.MINION_MAX_LEVEL;
 
+    public string FriendlyName => CoreData.Name;
+
     public int Tier => CoreData.Tier;
 
     public int Price => CoreData.Price;
 
     public Texture2D Sprite => CoreData.Sprite;
 
-    public new string Name => CoreData.Name;
-
     public string Description => CoreData.Description;
-
-    public PackedScene WeaponPackedScene => CoreData.WeaponPackedScene;
 
     /// <summary>
     ///     この Minion が装備している Weapon, InHand にない場合は所有していない
@@ -56,7 +48,7 @@ public partial class Minion : Node
     public WeaponBase? Weapon
     {
         get => _weapon;
-        set
+        private set
         {
             // 前の装備
             if (_weapon is not null)
@@ -81,17 +73,42 @@ public partial class Minion : Node
     /// </summary>
     public FactionType Faction => CoreData.Faction;
 
-    /// <summary>
-    ///     現在の Minion の場所
-    /// </summary>
-    public MinionPlace Place { get; set; }
+    private Minion()
+    {
+    }
 
+    public Minion(MinionCoreData data)
+    {
+        CoreData = data;
+    }
+
+    public override void _EnterTree()
+    {
+        // Set Name (for debugging)
+        Name = $"(Minion) {CoreData.Id}";
+
+        // Set Group
+        if (!IsInGroup(Constant.GroupNameMinion))
+        {
+            AddToGroup(Constant.GroupNameMinion);
+        }
+    }
 
     public override void _ExitTree()
     {
-        _levelRp.Dispose();
-        _weaponSubscription?.Dispose();
-        _weaponSubscription = null;
+        RemoveWeapon();
+    }
+
+    public void AddWeapon()
+    {
+        // Spawn Weapon
+        if (Weapon is null)
+        {
+            Weapon = CoreData.WeaponPackedScene.Instantiate<WeaponBase>();
+            Weapon!.Id = Id;
+            Weapon!.Level = _levelRp.Value;
+            AddSibling(Weapon);
+        }
     }
 
     /// <summary>
@@ -104,15 +121,31 @@ public partial class Minion : Node
         return Faction.HasFlag(faction);
     }
 
+    public void RemoveWeapon()
+    {
+        if (Weapon is null)
+        {
+            return;
+        }
+
+        Weapon.QueueFree();
+        Weapon = null;
+    }
+
     public void ResetRuntimeStatus()
     {
-        Place = MinionPlace.InShop;
-        Weapon = null;
+        RemoveWeapon();
         SetLevel(1);
     }
 
     public void SetLevel(uint level)
     {
         _levelRp.Value = Math.Clamp(level, Constant.MINION_MIN_LEVEL, Constant.MINION_MAX_LEVEL);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        _levelRp.Dispose();
     }
 }

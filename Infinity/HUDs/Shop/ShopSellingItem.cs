@@ -27,7 +27,7 @@ public partial class ShopSellingItem : VBoxContainer
     public override void _Ready()
     {
         _iconTextureRect.Texture = Minion.Sprite;
-        _nameLabel.Text = Minion.Name;
+        _nameLabel.Text = Minion.FriendlyName;
         _buyButton.Text = $"${Minion.Price}";
 
         // Subscribe 
@@ -79,7 +79,7 @@ public partial class ShopSellingItem : VBoxContainer
             return;
         }
 
-        var text = $"{Minion.Name}\n";
+        var text = $"{Minion.FriendlyName}\n";
         text += $"Tier: {Minion.Tier}\n";
         text += $"Faction: ${Minion.Faction}\n";
         text += $"{Minion.Description}\n";

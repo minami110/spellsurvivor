@@ -26,7 +26,7 @@ public partial class ShopOwnItem : VBoxContainer
     public override void _Ready()
     {
         _icon.Texture = Minion.Sprite;
-        _name.Text = Minion.Name;
+        _name.Text = Minion.FriendlyName;
 
         // Subscribe level
         var d1 = Minion.Level.Subscribe(this, (x, t) => { t._level.Text = $"(Lv.{x})"; });
@@ -49,7 +49,7 @@ public partial class ShopOwnItem : VBoxContainer
 
     private void ShowToolTip()
     {
-        var text = $"{Minion.Name} Lv.{Minion.Level.CurrentValue}\n";
+        var text = $"{Minion.FriendlyName} Lv.{Minion.Level.CurrentValue}\n";
         text += $"Tier: {Minion.Tier}\n";
         text += $"Faction: ${Minion.Faction}\n";
         text += $"{Minion.Description}\n";

@@ -20,8 +20,6 @@ public partial class AutoAimPistol : WeaponBase
 
     public override void _Ready()
     {
-        base._Ready();
-
         // 範囲 100 px
         _collisionShape.Scale = new Vector2(100, 100);
     }

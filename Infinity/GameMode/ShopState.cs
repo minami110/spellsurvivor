@@ -6,8 +6,11 @@ using R3;
 
 namespace fms;
 
-public sealed class ShopState : IDisposable
+public partial class ShopState : Node
 {
+    [Export]
+    public ShopConfig Config { get; private set; } = null!;
+
     private readonly List<Minion> _inStoreMinions = new();
     private readonly Subject<Unit> _inStoreMinionsUpdatedSubject = new();
 
@@ -29,13 +32,22 @@ public sealed class ShopState : IDisposable
     /// </summary>
     public IReadOnlyList<Minion> InStoreMinions => _inStoreMinions;
 
-    public ShopConfig Config { get; }
-
     public bool IsLocked { get; set; }
 
-    public ShopState(ShopConfig config)
+    public ShopState(ShopConfig config) : this()
     {
         Config = config;
+    }
+
+    private ShopState()
+    {
+        // Parameterless constructor for Godot Editor
+    }
+
+    public override void _EnterTree()
+    {
+        // Set Name (for debugging)
+        Name = nameof(ShopState);
 
         // Construct Runtime Minion Pool
         _runtimeMinionPool.Clear();
@@ -47,12 +59,17 @@ public sealed class ShopState : IDisposable
                 _runtimeMinionPool[minionCoreData.Tier] = list;
             }
 
-            // list.Add(new Minion(minionCoreData));
+            list.Add(new Minion(minionCoreData));
         }
 
         // Default 
         _levelRp.Value = 1;
         _itemSlotCount = 3;
+    }
+
+    public override void _ExitTree()
+    {
+        _levelRp.Dispose();
     }
 
     public void AddItemSlot()
@@ -74,6 +91,7 @@ public sealed class ShopState : IDisposable
             throw new InvalidProgramException("購入対象の Minion が現在販売されていません");
         }
 
+
         // ショップから排除する
         _inStoreMinions.Remove(minion);
         _inStoreMinionsUpdatedSubject.OnNext(Unit.Default);
@@ -83,21 +101,20 @@ public sealed class ShopState : IDisposable
         Main.PlayerState.AddEffect(new MoneyEffect { Value = -minion.Price });
         Main.PlayerState.SolveEffect();
 
-        // インベントリに追加 あるいはアップグレード する
-        /*
-        if (Main.PlayerInventory.HasMinion(minion))
+        // Player がすでに Minion を所持していたらレベルを上げる
+        var player = this.GetPlayerNode();
+        var minions = player.FindChildren("*", nameof(Minion), false, false);
+        if (minions.Any(m => m == minion))
         {
-            Main.PlayerInventory.UpgradeMinion(minion);
-        }
-        else
-        {
-            Main.PlayerInventory.AddMinion(minion);
+            minion.SetLevel(minion.Level.CurrentValue + 1);
+            return;
         }
 
+        // Playerは まだ所有していないので子にする
+        player.AddChild(minion);
+
         // ToDo: 現在購入後デフォで装備にしています
-        // 満タンの場合 とか ドラッグで購入とかで色々変わります
-        Main.PlayerInventory.EquipMinion(minion.Id);
-        */
+        minion.AddWeapon();
     }
 
     public void RefreshInStoreMinions()
@@ -167,18 +184,22 @@ public sealed class ShopState : IDisposable
     /// <summary>
     ///     Minion をショップに売却
     /// </summary>
-    /// <param name="minionData"></param>
-    public void SellItem(Minion minionData)
+    /// <param name="minion"></param>
+    public void SellItem(Minion minion)
     {
-        /*
-        if (Main.PlayerInventory.RemoveMinion(minionData))
+        var player = this.GetPlayerNode();
+        var minions = player.FindChildren("*", nameof(Minion), false, false);
+        if (minions.Any(m => m == minion))
         {
+            // ミニオンをプレイヤーの手持ちから取り除く
+            player.RemoveChild(minion);
+            minion.ResetRuntimeStatus();
+
             // プレイヤーのお金を増やす
             // TODO: 売却価格を売値と同じにしています
-            Main.PlayerState.AddEffect(new MoneyEffect { Value = minionData.Price });
+            Main.PlayerState.AddEffect(new MoneyEffect { Value = minion.Price });
             Main.PlayerState.SolveEffect();
         }
-        */
     }
 
     public void UpgradeShopLevel()
@@ -200,10 +221,5 @@ public sealed class ShopState : IDisposable
         }
 
         return indexes;
-    }
-
-    void IDisposable.Dispose()
-    {
-        _levelRp.Dispose();
     }
 }
