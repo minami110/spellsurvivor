@@ -26,8 +26,9 @@ public partial class ActiveFactionsManager : Node
         // ラベルをすべて非表示に
         HideAllLabel();
 
-        // ToDo: 富豪プログラム, Tree の構造変化に応じてラベルを更新する
-        GetTree().TreeChangedAsObservable().Subscribe(OnChangedTree).AddTo(this);
+        // Player の子ノードが変わったら更新
+        var player = this.GetPlayerNode();
+        player.ChildOrderChangedAsObservable().Subscribe(OnChangedPlayerChildren).AddTo(this);
     }
 
     private void HideAllLabel()
@@ -38,7 +39,7 @@ public partial class ActiveFactionsManager : Node
         }
     }
 
-    private void OnChangedTree(Unit _)
+    private void OnChangedPlayerChildren(Unit _)
     {
         HideAllLabel();
 

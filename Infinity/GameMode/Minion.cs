@@ -21,7 +21,6 @@ public partial class Minion : Node
 
     private IDisposable? _weaponSubscription;
 
-
     /// <summary>
     /// </summary>
     public string Id => CoreData.Id;
@@ -82,21 +81,69 @@ public partial class Minion : Node
         CoreData = data;
     }
 
-    public override void _EnterTree()
+    public override void _Notification(int what)
     {
-        // Set Name (for debugging)
-        Name = $"(Minion) {CoreData.Id}";
-
-        // Set Group
-        if (!IsInGroup(Constant.GroupNameMinion))
+        if (what == NotificationEnterTree)
         {
-            AddToGroup(Constant.GroupNameMinion);
-        }
-    }
+            // Set Name (for debugging)
+            Name = $"(Minion) {CoreData.Id}";
 
-    public override void _ExitTree()
-    {
-        RemoveWeapon();
+            // Set Group
+            if (!IsInGroup(Constant.GroupNameMinion))
+            {
+                AddToGroup(Constant.GroupNameMinion);
+            }
+
+            // Set Level
+            SetLevel(1);
+        }
+        else if (what == NotificationReady)
+        {
+            // Add Faction
+            foreach (var faction in FactionUtil.GetFactionTypes())
+            {
+                if (!IsBelongTo(faction))
+                {
+                    continue;
+                }
+
+                // すでに Faction が存在していたらレベルを上げる
+                var s = this.FindSibling("*", faction.ToString());
+                if (s.Count > 0)
+                {
+                    var f = (FactionBase)s[0];
+                    f.SetLevel(f.Level + 1);
+                }
+                else
+                {
+                    // Faction が存在していなかったら作成
+                    var f = FactionUtil.CreateFaction(faction);
+                    AddSibling(f);
+                }
+            }
+        }
+        else if (what == NotificationExitTree)
+        {
+            // Add Faction
+            foreach (var faction in FactionUtil.GetFactionTypes())
+            {
+                if (!IsBelongTo(faction))
+                {
+                    continue;
+                }
+
+                // すでに Faction が存在していたらレベルを下げる
+                var s = this.FindSibling("*", faction.ToString());
+                if (s.Count > 0)
+                {
+                    var f = (FactionBase)s[0];
+                    f.SetLevel(f.Level - 1);
+                }
+            }
+
+            RemoveWeapon();
+            SetLevel(0);
+        }
     }
 
     public void AddWeapon()
@@ -130,12 +177,6 @@ public partial class Minion : Node
 
         Weapon.QueueFree();
         Weapon = null;
-    }
-
-    public void ResetRuntimeStatus()
-    {
-        RemoveWeapon();
-        SetLevel(1);
     }
 
     public void SetLevel(uint level)

@@ -91,7 +91,6 @@ public partial class ShopState : Node
             throw new InvalidProgramException("購入対象の Minion が現在販売されていません");
         }
 
-
         // ショップから排除する
         _inStoreMinions.Remove(minion);
         _inStoreMinionsUpdatedSubject.OnNext(Unit.Default);
@@ -193,7 +192,8 @@ public partial class ShopState : Node
         {
             // ミニオンをプレイヤーの手持ちから取り除く
             player.RemoveChild(minion);
-            minion.ResetRuntimeStatus();
+            // 次も Ready してほしいのでフラグを立てておく
+            minion.RequestReady();
 
             // プレイヤーのお金を増やす
             // TODO: 売却価格を売値と同じにしています

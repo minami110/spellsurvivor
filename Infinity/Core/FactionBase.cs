@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using fms.Weapon;
 using Godot;
 
@@ -28,22 +29,40 @@ public partial class FactionBase : Node
         // OnEnterTree
         if (what == NotificationEnterTree)
         {
+            // Name にクラス名を設定
+            Name = GetType().Name;
+
             // Faction グループに追加
             if (!IsInGroup(Constant.GroupNameFaction))
             {
                 AddToGroup(Constant.GroupNameFaction);
             }
         }
+        else if (what == NotificationReady)
+        {
+            SetLevel(1);
+        }
     }
 
-    public void ResetLevel()
+    public void SetLevel(uint level)
     {
-        SetLevel(0);
-    }
+        var newLevel = Math.Clamp(level, 0, Constant.FACTION_MAX_LEVEL);
+        if (Level == newLevel)
+        {
+            return;
+        }
 
-    public void UpgradeLevel(uint amount = 1)
-    {
-        SetLevel(Level + amount);
+        // 発行済のエフェクトすべてを削除する
+        foreach (var effect in _publishedEffects)
+        {
+            effect.Dispose();
+        }
+
+        _publishedEffects.Clear();
+
+        Level = newLevel;
+
+        OnLevelChanged(Level);
     }
 
     /// <summary>
@@ -75,24 +94,5 @@ public partial class FactionBase : Node
     /// <param name="level"></param>
     private protected virtual void OnLevelChanged(uint level)
     {
-    }
-
-    private void SetLevel(uint level)
-    {
-        if (Level == level)
-        {
-            return;
-        }
-
-        // 発行済のエフェクトすべてを削除する
-        foreach (var effect in _publishedEffects)
-        {
-            effect.Dispose();
-        }
-
-        _publishedEffects.Clear();
-
-        Level = level;
-        OnLevelChanged(Level);
     }
 }
