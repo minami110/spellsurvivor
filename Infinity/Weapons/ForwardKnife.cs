@@ -45,8 +45,11 @@ public partial class ForwardKnife : WeaponBase
         }
     }
 
-    private protected override void OnSolveEffect(IReadOnlyList<EffectBase> effects)
+    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
     {
+        _trickshotBounceCount = 0;
+        _trickshotBounceDamageMultiplier = 0f;
+
         foreach (var effect in effects)
         {
             switch (effect)

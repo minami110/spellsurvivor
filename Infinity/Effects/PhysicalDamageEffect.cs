@@ -6,10 +6,4 @@
 public class PhysicalDamageEffect : EffectBase
 {
     public required float Value { get; init; }
-
-    public override void OnSolved()
-    {
-        // このエフェクトは解決されたときにすぐ Dispose する
-        Dispose();
-    }
 }

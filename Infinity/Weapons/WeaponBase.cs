@@ -9,7 +9,7 @@ namespace fms.Weapon;
 /// <summary>
 ///     Weapon のベースクラス
 /// </summary>
-public partial class WeaponBase : Node2D, IEffectSolver
+public partial class WeaponBase : Node2D
 {
     /// <summary>
     ///     武器の Id
@@ -43,7 +43,9 @@ public partial class WeaponBase : Node2D, IEffectSolver
     private FrameTimer _frameTimer = null!;
 
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
-    private readonly List<EffectBase> _effects = new();
+    private readonly HashSet<EffectBase> _effects = new();
+
+    private bool _isDirty;
 
 
     private int _manaRegenerationInterval;
@@ -92,6 +94,10 @@ public partial class WeaponBase : Node2D, IEffectSolver
                 StopAttack();
             }
         }
+        else if (what == NotificationProcess)
+        {
+            SolveEffect();
+        }
     }
 
     public override void _Process(double delta)
@@ -109,6 +115,12 @@ public partial class WeaponBase : Node2D, IEffectSolver
         }
     }
 
+    public virtual void AddEffect(EffectBase effect)
+    {
+        _effects.Add(effect);
+        _isDirty = true;
+    }
+
     public void StartAttack()
     {
         _frameTimer.WaitFrame = SolvedCoolDownFrame;
@@ -124,34 +136,55 @@ public partial class WeaponBase : Node2D, IEffectSolver
     {
     }
 
-    private protected virtual void OnSolveEffect(IReadOnlyList<EffectBase> effects)
+    private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
     {
     }
 
-
-    public virtual void AddEffect(EffectBase effect)
+    private void SolveEffect()
     {
-        _effects.Add(effect);
-    }
+        if (_effects.Count == 0)
+        {
+            return;
+        }
 
-    public void SolveEffect()
-    {
+        // Dispose されたエフェクトを削除
+        var count = _effects.RemoveWhere(effect => effect.IsDisposed);
+        if (count > 0)
+        {
+            _isDirty = true;
+        }
+
+        if (!_isDirty)
+        {
+            return;
+        }
+
+        _isDirty = false;
+
+        var reduceCoolDownRate = 0f;
+        var manaRegenerationValue = 0;
+        var manaRegenerationInterval = 0;
+
         foreach (var effect in _effects)
         {
-            if (effect is ReduceCoolDownRate reduceCoolDownRate)
+            switch (effect)
             {
-                var newRate = _coolDownReduceRateRp.Value + reduceCoolDownRate.Value;
-                _coolDownReduceRateRp.Value = Mathf.Clamp(newRate, 0f, 1f);
-            }
-
-            if (effect is AddManaRegeneration addManaRegeneration)
-            {
-                _manaRegenerationInterval += addManaRegeneration.Interval;
-                _manaRegenerationValue += addManaRegeneration.Value;
+                case ReduceCoolDownRate reduceCoolDownRateEffect:
+                {
+                    reduceCoolDownRate += reduceCoolDownRateEffect.Value;
+                    break;
+                }
+                case AddManaRegeneration addManaRegeneration:
+                    manaRegenerationValue += addManaRegeneration.Value;
+                    manaRegenerationInterval += addManaRegeneration.Interval;
+                    break;
             }
         }
 
         OnSolveEffect(_effects);
-        _effects.Clear();
+
+        _coolDownReduceRateRp.Value = Math.Max(reduceCoolDownRate, 0);
+        _manaRegenerationInterval = Math.Max(manaRegenerationInterval, 0);
+        _manaRegenerationValue = Math.Max(manaRegenerationValue, 0);
     }
 }

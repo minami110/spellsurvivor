@@ -116,15 +116,13 @@ public sealed class PlayerState : IEffectSolver, IDisposable
                     break;
                 }
             }
-
-            effect.OnSolved();
         }
-
-        // 最大体力と体力の計算
-        health = Mathf.Min(health, maxHealth);
 
         // ダメージの計算
         health -= damage;
+
+        // 最大体力と体力の計算
+        health = Mathf.Min(health, maxHealth);
 
         // 最終的な値を計算する
         _maxHealth.Value = maxHealth;
