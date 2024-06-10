@@ -47,7 +47,7 @@ public partial class InGameEquipment : VBoxContainer
         }
 
         _icon.Texture = targetMinion.Sprite;
-        _name.Text = targetMinion.Name;
+        _name.Text = targetMinion.FriendlyName;
         _levelLabel.Text = $"Lv.{Weapon.Level}";
 
         var d1 = Weapon.CoolDownLeft.Subscribe(this, (x, s) =>

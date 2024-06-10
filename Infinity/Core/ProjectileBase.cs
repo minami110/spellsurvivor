@@ -4,12 +4,16 @@ namespace fms.Projectile;
 
 public partial class ProjectileBase : Node
 {
-    private int _frameCounter;
     public float BaseDamage { get; set; }
 
     public Vector2 InitialPosition { get; set; }
 
+    /// <summary>
+    ///     Projectile の寿命
+    /// </summary>
     public int LifeFrame { get; set; } = 120;
+
+    public int CurrentFrame { get; private set; }
 
     public override void _Notification(int what)
     {
@@ -22,8 +26,8 @@ public partial class ProjectileBase : Node
         }
         else if (what == NotificationProcess)
         {
-            _frameCounter++;
-            if (_frameCounter > LifeFrame)
+            CurrentFrame++;
+            if (CurrentFrame > LifeFrame)
             {
                 KillThis();
             }
@@ -37,6 +41,6 @@ public partial class ProjectileBase : Node
 
     private protected void ResetLifeFrameCounter()
     {
-        _frameCounter = 0;
+        CurrentFrame = 0;
     }
 }

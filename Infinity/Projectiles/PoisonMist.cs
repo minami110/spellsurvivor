@@ -34,7 +34,7 @@ public partial class PoisonMist : ProjectileBase
 
     public override void _Process(double delta)
     {
-        if (LifeFrame % CoolDownFrame != 0)
+        if (CurrentFrame % CoolDownFrame != 0)
         {
             return;
         }
