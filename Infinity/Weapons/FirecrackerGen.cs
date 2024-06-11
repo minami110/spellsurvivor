@@ -20,8 +20,6 @@ public partial class FirecrackerGen : WeaponBase
 
     public override void _Ready()
     {
-        base._Ready();
-
         // 範囲 100 px
         _collisionShape.Scale = new Vector2(100, 100);
     }
@@ -34,14 +32,14 @@ public partial class FirecrackerGen : WeaponBase
         }
 
         // Fire to targetEnemy
-        var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
 
         // Spawn bullet
         var bullet = _bulletPackedScene.Instantiate<SimpleBullet>();
         {
+            bullet.GlobalPosition = GlobalPosition;
             bullet.BaseDamage = 34;
+            var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
             bullet.InitialVelocity = direction;
-            bullet.InitialPosition = GlobalPosition;
             bullet.InitialSpeed = 1000f;
         }
         _bulletSpawnNode.AddChild(bullet);
