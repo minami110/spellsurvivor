@@ -1,3 +1,4 @@
+using fms.Weapon;
 using Godot;
 using R3;
 
@@ -7,7 +8,16 @@ public partial class Firecracker : ProjectileRigidBodyBase
 {
     [Export]
     private Area2D _enemyDamageArea = null!;
-
+    
+    [ExportGroup("Internal Reference")]
+    [Export]
+    private PackedScene _bulletPackedScene = null!;
+    
+    [Export]
+    private Node _bulletSpawnNode = null!;
+    
+    public FirecrackerSparkData FirecrackerSparkDataSettings;
+    
     public override void _Ready()
     {
         // Connect
@@ -19,7 +29,28 @@ public partial class Firecracker : ProjectileRigidBodyBase
 
     private void OnEnemyBodyEntered(Enemy enemy)
     {
-        enemy.TakeDamage(BaseDamage);
+        SpawnFirecrackerSparks();
         KillThis();
     }
+    
+    private void SpawnFirecrackerSparks()
+    {
+        GD.Print("spawn firecracker sparks");
+        var bullet = _bulletPackedScene.Instantiate<FirecrackerSparks>();
+        {
+            bullet.GlobalPosition = GlobalPosition;
+            bullet.FirecrackerSparkDataSettings = FirecrackerSparkDataSettings;
+        }
+    }
+}
+
+/// <summary>
+///     爆竹の火花の初期化用データ
+/// </summary>
+public readonly struct FirecrackerSparkData
+{
+    public required int DamageCoolDownFrame { get; init; }
+    public required float BaseDamage { get; init; }
+    public required float DamageAreaRadius { get; init; }
+    public required float LifeFrame { get; init; }
 }

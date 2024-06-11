@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://b48mplq4itcdy"]
+
+[ext_resource type="Script" path="res://Infinity/Projectiles/FirecrackerSparks.cs" id="1_lplmp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hwfgv"]
+radius = 1.0
+
+[node name="FirecrackerSparks" type="Node2D"]
+script = ExtResource("1_lplmp")
+
+[node name="DamageArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="DamageShape" type="CollisionShape2D" parent="DamageArea"]
+shape = SubResource("CircleShape2D_hwfgv")
+debug_color = Color(0, 0.407843, 0.337255, 0)

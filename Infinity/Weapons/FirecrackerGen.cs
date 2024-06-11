@@ -3,6 +3,9 @@ using Godot;
 
 namespace fms.Weapon;
 
+/// <summary>
+///     爆竹を生成する
+/// </summary>
 public partial class FirecrackerGen : WeaponBase
 {
     [ExportGroup("Internal Reference")]
@@ -18,10 +21,23 @@ public partial class FirecrackerGen : WeaponBase
     [Export]
     private Area2D _searchArea = null!;
 
+    [ExportGroup("Sparks Reference")]
+    [Export]
+    private int _damageCoolDownFrame = 10; // フレーム毎に一回敵にダメージ
+    
+    [Export]
+    private float _baseDamage = 2; // ダメージ発生1回につき与えるダメージ
+    
+    [Export]
+    private float _damageAreaRadius = 50; // ダメージ範囲の半径 (px)
+    
+    [Export]
+    private float _lifeFrame = 120; // 設定フレーム後に消滅する
+    
     public override void _Ready()
     {
         // 範囲 100 px
-        _collisionShape.Scale = new Vector2(100, 100);
+        _collisionShape.Scale = new Vector2(200, 200);
     }
 
     private protected override void DoAttack(uint level)
@@ -34,13 +50,20 @@ public partial class FirecrackerGen : WeaponBase
         // Fire to targetEnemy
 
         // Spawn bullet
-        var bullet = _bulletPackedScene.Instantiate<SimpleBullet>();
+        var bullet = _bulletPackedScene.Instantiate<Firecracker>();
         {
             bullet.GlobalPosition = GlobalPosition;
-            bullet.BaseDamage = 34;
+            bullet.BaseDamage = 0;
             var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
             bullet.InitialVelocity = direction;
             bullet.InitialSpeed = 1000f;
+            bullet.FirecrackerSparkDataSettings = new FirecrackerSparkData
+            {
+                DamageCoolDownFrame = _damageCoolDownFrame,
+                BaseDamage = _baseDamage,
+                DamageAreaRadius = _damageAreaRadius,
+                LifeFrame = _lifeFrame
+            };
         }
         _bulletSpawnNode.AddChild(bullet);
     }
