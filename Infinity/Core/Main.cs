@@ -13,20 +13,12 @@ public partial class Main : Node
     private InfinityGameSettings _gameSettings = null!;
 
     private static Main? _instance;
-    private readonly PlayerState _playerState;
+
+    private PlayerState _playerState = null!;
     private ShopState _shopState = null!;
     private WaveState _waveState = null!;
 
-    /// <summary>
-    ///     Get the PlayerState
-    /// </summary>
-    public static PlayerState PlayerState
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Instance._playerState;
-    }
-
-    public static ShopState ShopState
+    public static ShopState Shop
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => Instance._shopState;
@@ -61,54 +53,41 @@ public partial class Main : Node
         {
             throw new AggregateException("Main instance already exists");
         }
-
-        // Create PlayerState
-        _playerState = new PlayerState();
     }
 
     public override void _EnterTree()
     {
-        // Initialize States
         _waveState = new WaveState { Config = _gameSettings.WaveConfig };
-
+        AddChild(_waveState);
         _shopState = new ShopState(_gameSettings.ShopConfig);
         AddChild(_shopState);
     }
 
     public override void _Ready()
     {
-        // Player を取得する
-        var n = GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer);
-        if (n is MeMe p) // ToDo:
-        {
-            p.SetPlayerState(_playerState);
-        }
+        // PlayerState をキャッシュ
+        _playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
 
         // Battle Wave の開始時
         var d1 = _waveState.Phase.Where(x => x == WavePhase.Battle).Subscribe(this, (_, state) =>
         {
+            // ToDo: ダメージの Effect の解決方法決まり次第こちらも変える (#34)
             // Playerの体力を全回復する
-            state._playerState.SolveEffect(); // Pending wo kaiketu
-            state._playerState.AddEffect(new AddHealthEffect { Value = state._playerState.MaxHealth.CurrentValue });
-            state._playerState.SolveEffect();
+            state._playerState.AddEffect(new AddHealthEffect
+                { Value = state._playerState.MaxHealth.CurrentValue - state._playerState.Health.CurrentValue });
 
             // Spawner に設定を渡す
-            var node = GetTree().GetFirstNodeInGroup("EnemySpawner");
-            if (node is EnemySpawnerBase spawner)
-            {
-                spawner.SetConfig(state._waveState.CurrentWaveConfig.EnemySpawnConfig);
-            }
+            var spawner = (EnemySpawnerBase)GetTree().GetFirstNodeInGroup("EnemySpawner");
+            spawner.SetConfig(state._waveState.CurrentWaveConfig.EnemySpawnConfig);
 
             // すべての武器を起動する
-            var nodes = GetTree().GetNodesInGroup(Constant.GroupNameWeapon);
-            foreach (var j in nodes)
+            var player = this.GetPlayerNode();
+            foreach (var n in player.GetChildren())
             {
-                if (j is not WeaponBase weapon)
+                if (n is WeaponBase weapon)
                 {
-                    continue;
+                    weapon.StartAttack();
                 }
-
-                weapon.StartAttack();
             }
 
             // BGM のこもりを解消する (150hz => 2000hz (default))
@@ -124,19 +103,17 @@ public partial class Main : Node
             var tree = state.GetTree();
 
             // すべての武器を停止する
-            var nodes = GetTree().GetNodesInGroup(Constant.GroupNameWeapon);
-            foreach (var j in nodes)
+            var player = this.GetPlayerNode();
+            foreach (var n in player.GetChildren())
             {
-                if (j is not WeaponBase weapon)
+                if (n is WeaponBase weapon)
                 {
-                    continue;
+                    weapon.StopAttack();
                 }
-
-                weapon.StopAttack();
             }
 
             // 残った Projectile をすべてコロス
-            tree.CallGroup("Projectile", "QueueFree");
+            tree.CallGroup(Constant.GroupNameProjectile, Node.MethodName.QueueFree);
         });
 
         // Shop 進入時
@@ -147,7 +124,6 @@ public partial class Main : Node
                 // Playerに報酬を与える
                 var reward = state._waveState.CurrentWaveConfig.Reward;
                 state._playerState.AddEffect(new MoneyEffect { Value = reward });
-                state._playerState.SolveEffect();
             }
             else
             {
@@ -166,15 +142,10 @@ public partial class Main : Node
         });
 
         // Disposable registration
-        Disposable.Combine(_playerState, _waveState, _shopState, d1, d2, d3).AddTo(this);
+        Disposable.Combine(d1, d2, d3).AddTo(this);
 
         // Start Game
         _waveState.SendSignal(WaveState.Signal.GamemodeStart);
-    }
-
-    public override void _Process(double delta)
-    {
-        _waveState._Process(delta);
     }
 
     public override void _ExitTree()
@@ -193,6 +164,5 @@ public partial class Main : Node
         _playerState.AddEffect(new MoneyEffect { Value = (int)_gameSettings.DefaultMoney });
         _playerState.AddEffect(new AddHealthEffect { Value = _gameSettings.DefaultHealth });
         _playerState.AddEffect(new AddMaxHealthEffect { Value = _gameSettings.DefaultHealth });
-        _playerState.SolveEffect();
     }
 }

@@ -30,6 +30,15 @@ public partial class PlayerController : Node
                 return;
             }
         }
+        else
+        {
+            if (!IsInstanceValid((Node)_posessedPawn))
+            {
+                Unpossess();
+                this.DebugLog("Invalid pawn detected. unposssed");
+                return;
+            }
+        }
 
         var pawn = _posessedPawn!;
         if (inputEvent.IsActionPressed(InputPrimary))
@@ -64,37 +73,30 @@ public partial class PlayerController : Node
     /// <summary>
     /// </summary>
     /// <param name="pawn"></param>
-    public void Possess(IPawn pawn)
+    private bool Possess(IPawn pawn)
     {
-        _posessedPawn = pawn;
-        SetProcess(true);
-    }
-
-    /// <summary>
-    /// </summary>
-    public void Unpossess()
-    {
-        _posessedPawn = null;
-        SetProcess(false);
-    }
-
-    private bool TryPossesFromPlayerTag()
-    {
-        if (_customPawn is null)
-        {
-            // Pawn が指定されていない場合, ツリー内に存在する "Player" グループに所属する最初のノードを取得する
-            if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
-            {
-                _customPawn = player;
-            }
-        }
-
-        if (_customPawn is not IPawn pawn)
+        if (_posessedPawn is not null)
         {
             return false;
         }
 
-        Possess(pawn);
+        _posessedPawn = pawn;
+        SetProcess(true);
         return true;
+    }
+
+    private bool TryPossesFromPlayerTag()
+    {
+        // Pawn が指定されていない場合, ツリー内に存在する "Player" グループに所属する最初のノードを取得する
+        var node = GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer);
+        return node is IPawn pawn && Possess(pawn);
+    }
+
+    /// <summary>
+    /// </summary>
+    private void Unpossess()
+    {
+        _posessedPawn = null;
+        SetProcess(false);
     }
 }

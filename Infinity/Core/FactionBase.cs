@@ -83,7 +83,8 @@ public partial class FactionBase : Node
         _publishedEffects.Add(effect);
 
         // PlayerState に Effect を追加
-        Main.PlayerState.AddEffect(effect);
+        var ps = GetParent().GetNode<PlayerState>("PlayerState");
+        ps.AddEffect(effect);
     }
 
     private protected void AddEffectToWeapon(WeaponBase weapon, EffectBase effect)

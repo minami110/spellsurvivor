@@ -100,6 +100,9 @@ public partial class WeaponBase : Node2D
             {
                 StopAttack();
             }
+
+            // Note: Process を override していないのでここで手動で有効化する
+            SetProcess(true);
         }
         else if (what == NotificationProcess)
         {
