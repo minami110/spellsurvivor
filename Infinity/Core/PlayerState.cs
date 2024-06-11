@@ -47,16 +47,16 @@ public partial class PlayerState : Node
                 AddToGroup(Constant.GroupNamePlayerState);
             }
         }
+        else if (what == NotificationProcess)
+        {
+            SolveEffect();
+        }
         else if (what == NotificationExitTree)
         {
             _health.Dispose();
             _maxHealth.Dispose();
             _money.Dispose();
             _moveSpeed.Dispose();
-        }
-        else if (what == NotificationProcess)
-        {
-            SolveEffect();
         }
     }
 
@@ -143,9 +143,9 @@ public partial class PlayerState : Node
         health = Mathf.Min(health, maxHealth);
 
         // 最終的な値を計算する
+        _money.Value = (uint)Math.Max(0, money);
         _maxHealth.Value = maxHealth;
         _health.Value = health;
-        _money.Value = (uint)Math.Max(0, money);
         _moveSpeed.Value = moveSpeed;
     }
 }
