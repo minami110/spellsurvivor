@@ -68,10 +68,10 @@ public partial class ForwardKnife : WeaponBase
     {
         var bullet = _bulletPackedScene.Instantiate<TrickshotArrow>();
         {
-            bullet.BaseSpeed = 1000f;
+            bullet.GlobalPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
             bullet.BaseDamage = 50;
-            bullet.InitialVelocity = GlobalTransform.X; // Forward
-            bullet.InitialPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
+            bullet.InitialSpeed = 1000f;
+            bullet.InitialVelocity = GlobalTransform.X; // Playerの正面に飛んでいく
             bullet.BounceCount = _trickshotBounceCount;
             bullet.BounceDamageMultiplier = _trickshotBounceDamageMultiplier;
             bullet.BounceSearchRadius = 400f;

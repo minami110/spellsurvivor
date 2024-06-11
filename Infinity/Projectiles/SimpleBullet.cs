@@ -10,10 +10,6 @@ public partial class SimpleBullet : ProjectileRigidBodyBase
 
     public override void _Ready()
     {
-        // Set rigidbody parameter
-        LinearVelocity = InitialVelocity * InitialSpeed;
-        Rotation = LinearVelocity.Angle();
-
         // Connect
         _enemyDamageArea.BodyEnteredAsObservable()
             .Cast<Node2D, Enemy>()

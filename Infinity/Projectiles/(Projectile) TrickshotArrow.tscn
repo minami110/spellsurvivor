@@ -10,29 +10,20 @@ radius = 16.1245
 [sub_resource type="CircleShape2D" id="CircleShape2D_d2y1d"]
 radius = 1.0
 
-[node name="TrickshotArrow" type="Node" node_paths=PackedStringArray("_rigidBody", "_enemyDamageArea", "_enemySearchArea", "_enemySearchCollisionShape", "_texture") groups=["Projectile"]]
-script = ExtResource("1_0vn1c")
-_rigidBody = NodePath("RigidBody2D")
-_enemyDamageArea = NodePath("RigidBody2D/Enemy Damage Area")
-_enemySearchArea = NodePath("RigidBody2D/Nearest Enemy Search Area")
-_enemySearchCollisionShape = NodePath("RigidBody2D/Nearest Enemy Search Area/CollisionShape")
-_texture = NodePath("RigidBody2D/TextureRect")
-_spawnSound = ExtResource("2_5kwiy")
-_hitSound = ExtResource("2_5kwiy")
-
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
+[node name="TrickshotArrow" type="RigidBody2D" node_paths=PackedStringArray("_enemyDamageArea", "_trickshotSearchArea", "_trickshotSearchCollision", "_sprite") groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 0
 gravity_scale = 0.0
-lock_rotation = true
+script = ExtResource("1_0vn1c")
+_enemyDamageArea = NodePath("DamageArea")
+_trickshotSearchArea = NodePath("TrickshotSearchArea")
+_trickshotSearchCollision = NodePath("TrickshotSearchArea/TrickshotSearchShape")
+_sprite = NodePath("Sprite")
+_spawnSound = ExtResource("2_5kwiy")
+_hitSound = ExtResource("2_5kwiy")
+metadata/_edit_group_ = true
 
-[node name="DummyCollision" type="CollisionShape2D" parent="RigidBody2D"]
-visible = false
-shape = SubResource("CircleShape2D_rj5bs")
-disabled = true
-debug_color = Color(1, 0, 0, 0)
-
-[node name="TextureRect" type="TextureRect" parent="RigidBody2D"]
+[node name="Sprite" type="TextureRect" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -47,22 +38,26 @@ grow_vertical = 2
 texture = ExtResource("2_bu4uw")
 expand_mode = 1
 
-[node name="Nearest Enemy Search Area" type="Area2D" parent="RigidBody2D"]
+[node name="DummyCollision" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_rj5bs")
+disabled = true
+debug_color = Color(1, 0, 0, 0)
+
+[node name="TrickshotSearchArea" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape" type="CollisionShape2D" parent="RigidBody2D/Nearest Enemy Search Area"]
+[node name="TrickshotSearchShape" type="CollisionShape2D" parent="TrickshotSearchArea"]
 visible = false
 shape = SubResource("CircleShape2D_d2y1d")
 disabled = true
 debug_color = Color(0, 1, 0, 0)
 
-[node name="Enemy Damage Area" type="Area2D" parent="RigidBody2D"]
-position = Vector2(-20, -20)
+[node name="DamageArea" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 4
 
-[node name="弾自体の当たり判定" type="CollisionShape2D" parent="RigidBody2D/Enemy Damage Area"]
-position = Vector2(20, 20)
+[node name="DamageShape" type="CollisionShape2D" parent="DamageArea"]
 shape = SubResource("CircleShape2D_rj5bs")
 debug_color = Color(1, 0, 0, 0)

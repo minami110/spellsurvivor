@@ -39,6 +39,12 @@ public partial class ProjectileRigidBodyBase : RigidBody2D
                 AddToGroup(Constant.GroupNameProjectile);
             }
         }
+        else if (what == NotificationReady)
+        {
+            // Set rigidbody parameter
+            LinearVelocity = InitialVelocity * InitialSpeed;
+            Rotation = LinearVelocity.Angle();
+        }
         else if (what == NotificationProcess)
         {
             // 寿命が 0 の場合は無限に生存するとする
