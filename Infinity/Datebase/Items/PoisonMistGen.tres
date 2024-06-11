@@ -2,15 +2,14 @@
 
 [ext_resource type="PackedScene" uid="uid://bplb3ghk4ycic" path="res://Infinity/Weapons/(Weapon) PoisonMistGen.tscn" id="1_xkfvm"]
 [ext_resource type="Texture2D" uid="uid://cg4pdl81tg8pq" path="res://Common/Resources/Textures/Emoji/snake.png" id="2_mr1ib"]
-[ext_resource type="Script" path="res://Infinity/Datebase/Items/MinionCoreData.cs" id="3_7flxl"]
+[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_7flxl"]
 
 [resource]
 script = ExtResource("3_7flxl")
-Id = "PoisonMistGen"
-Tier = 2
+WeaponPackedScene = ExtResource("1_xkfvm")
 Faction = 7
+Tier = 2
 Price = 3
 Name = "毒沼"
 Description = "一定間隔で毒沼を生成"
 Sprite = ExtResource("2_mr1ib")
-WeaponPackedScene = ExtResource("1_xkfvm")

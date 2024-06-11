@@ -35,7 +35,7 @@ public partial class Minion : Node
 
     public int Tier => CoreData.Tier;
 
-    public int Price => CoreData.Price;
+    public uint Price => CoreData.Price;
 
     public Texture2D Sprite => CoreData.Sprite;
 

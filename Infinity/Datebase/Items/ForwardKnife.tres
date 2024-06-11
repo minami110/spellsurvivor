@@ -2,16 +2,15 @@
 
 [ext_resource type="PackedScene" uid="uid://hvaujiufb0ew" path="res://Infinity/Weapons/(Weapon) ForwardKnife.tscn" id="1_lo58r"]
 [ext_resource type="Texture2D" uid="uid://bngagbi0xt2mu" path="res://Common/Resources/Textures/Emoji/dagger_knife.png" id="2_cd5jy"]
-[ext_resource type="Script" path="res://Infinity/Datebase/Items/MinionCoreData.cs" id="3_oigos"]
+[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_oigos"]
 
 [resource]
 script = ExtResource("3_oigos")
-Id = "ForwardKnife"
-Tier = 1
+WeaponPackedScene = ExtResource("1_lo58r")
 Faction = 15
+Tier = 1
 Price = 3
 Name = "ダガー"
 Description = "プレイヤーの正面に常に攻撃を行う
 攻撃力: 50"
 Sprite = ExtResource("2_cd5jy")
-WeaponPackedScene = ExtResource("1_lo58r")
