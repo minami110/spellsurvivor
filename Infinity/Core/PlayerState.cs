@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Godot;
 using R3;
@@ -38,6 +38,7 @@ public partial class PlayerState : Node
     /// </summary>
     public ReadOnlyReactiveProperty<float> MaxHealth => _maxHealth;
 
+
     public override void _Notification(int what)
     {
         if (what == NotificationEnterTree)
@@ -47,9 +48,10 @@ public partial class PlayerState : Node
                 AddToGroup(Constant.GroupNamePlayerState);
             }
         }
-        else if (what == NotificationProcess)
+        else if (what == NotificationReady)
         {
-            SolveEffect();
+            // Note: Process を override していないのでここで手動で有効化する
+            SetProcess(true);
         }
         else if (what == NotificationExitTree)
         {
@@ -57,6 +59,10 @@ public partial class PlayerState : Node
             _maxHealth.Dispose();
             _money.Dispose();
             _moveSpeed.Dispose();
+        }
+        else if (what == NotificationProcess)
+        {
+            SolveEffect();
         }
     }
 
@@ -143,9 +149,9 @@ public partial class PlayerState : Node
         health = Mathf.Min(health, maxHealth);
 
         // 最終的な値を計算する
-        _money.Value = (uint)Math.Max(0, money);
         _maxHealth.Value = maxHealth;
         _health.Value = health;
+        _money.Value = (uint)Math.Max(0, money);
         _moveSpeed.Value = moveSpeed;
     }
 }

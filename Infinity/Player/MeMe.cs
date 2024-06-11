@@ -16,13 +16,9 @@ public partial class MeMe : CharacterBody2D, IPawn
     public override void _Ready()
     {
         var playerState = GetNode<PlayerState>("%PlayerState");
-        playerState.AddEffect(new AddMoveSpeedEffect { Value = 100f });
+        playerState.AddEffect(new AddMoveSpeedEffect { Value = _moveSpeed });
         playerState.MoveSpeed
-            .Subscribe(this, (x, state) =>
-            {
-                GD.Print($"MoveSpeed: {x}");
-                state._moveSpeed = x;
-            })
+            .Subscribe(this, (x, state) => { state._moveSpeed = x; })
             .AddTo(this);
 
         var camera = GetNode<Camera2D>("%MainCamera");
