@@ -77,7 +77,7 @@ public partial class Book : WeaponBase
                 bullet.Radius = radius;
                 bullet.Angle = degree;
                 bullet.SecondPerRound = 3;
-                bullet.LifeFrame = (int)SolvedCoolDownFrame;
+                bullet.LifeFrame = SolvedCoolDownFrame;
                 bullet.InitTimeForRelativePos = CalculateRelativePositon(num, i, SolvedCoolDownFrame / 60f);
             }
 

@@ -86,7 +86,7 @@ public partial class TrickshotArrow : ProjectileBase
         }
 
         // Bounce!
-        ResetLifeFrameCounter();
+        ResetAge();
         _texture.Modulate = new Color(0, 1, 0);
         _bounceCounter++;
 
