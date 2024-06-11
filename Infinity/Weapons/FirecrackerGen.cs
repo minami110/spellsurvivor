@@ -56,7 +56,8 @@ public partial class FirecrackerGen : WeaponBase
             bullet.BaseDamage = 0;
             var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
             bullet.InitialVelocity = direction;
-            bullet.InitialSpeed = 1000f;
+            bullet.InitialSpeed = 500f;
+            bullet.BulletSpawnNode = _bulletSpawnNode;
             bullet.FirecrackerSparkDataSettings = new FirecrackerSparkData
             {
                 DamageCoolDownFrame = _damageCoolDownFrame,

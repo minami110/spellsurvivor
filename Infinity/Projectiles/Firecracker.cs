@@ -13,8 +13,7 @@ public partial class Firecracker : ProjectileRigidBodyBase
     [Export]
     private PackedScene _bulletPackedScene = null!;
     
-    [Export]
-    private Node _bulletSpawnNode = null!;
+    public Node BulletSpawnNode = null!;
     
     public FirecrackerSparkData FirecrackerSparkDataSettings;
     
@@ -41,6 +40,8 @@ public partial class Firecracker : ProjectileRigidBodyBase
             bullet.GlobalPosition = GlobalPosition;
             bullet.FirecrackerSparkDataSettings = FirecrackerSparkDataSettings;
         }
+        BulletSpawnNode.AddChild(bullet);
+        KillThis();
     }
 }
 

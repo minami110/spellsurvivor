@@ -18,12 +18,12 @@ public partial class FirecrackerSparks : ProjectileNode2DBase
     /// <summary>
     ///     敵にダメージを与えるクールダウン
     /// </summary>
-    public int CoolDownFrame { get; set; }
+    private int CoolDownFrame { get; set; }
 
     /// <summary>
     ///     的にダメージを与える範囲の半径 (px)
     /// </summary>
-    public float DamageAreaRadius { get; set; }
+    private float DamageAreaRadius { get; set; }
 
     public override void _Ready()
     {

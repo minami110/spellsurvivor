@@ -5,8 +5,12 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_hwfgv"]
 radius = 1.0
 
-[node name="FirecrackerSparks" type="Node2D"]
+[node name="FirecrackerSparks" type="Node2D" node_paths=PackedStringArray("_enemyDamageArea", "_enemyDamageCollisionShape")]
 script = ExtResource("1_lplmp")
+_enemyDamageArea = NodePath("DamageArea")
+_enemyDamageCollisionShape = NodePath("DamageArea/DamageShape")
+BaseDamage = 5.0
+LifeFrame = 60
 
 [node name="DamageArea" type="Area2D" parent="."]
 collision_layer = 0
