@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using fms.Effect;
 using fms.Projectile;
 using Godot;
 
@@ -36,10 +34,6 @@ public partial class FirecrackerGen : WeaponBase
     [Export]
     private float _lifeFrame = 120; // 設定フレーム後に消滅する
     
-    // trickshot settings
-    private int _trickshotBounceCount;
-    private float _trickshotBounceDamageMultiplier;
-    
     public override void _Ready()
     {
         // 範囲 100 px
@@ -64,12 +58,6 @@ public partial class FirecrackerGen : WeaponBase
             bullet.InitialVelocity = direction;
             bullet.InitialSpeed = 500f;
             bullet.BulletSpawnNode = _bulletSpawnNode;
-            bullet.FirecrackerTrickshotArrowData = new FirecrackerTrickshotArrowData
-            {
-                BounceCount = _trickshotBounceCount,
-                BounceDamageMultiplier = _trickshotBounceDamageMultiplier,
-                BounceSearchRadius = 400
-            };
             bullet.FirecrackerSparkDataSettings = new FirecrackerSparkData
             {
                 DamageCoolDownFrame = _damageCoolDownFrame,
@@ -108,25 +96,5 @@ public partial class FirecrackerGen : WeaponBase
         }
 
         return nearestEnemy is not null;
-    }
-
-    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
-    {
-        _trickshotBounceCount = 0;
-        _trickshotBounceDamageMultiplier = 0f;
-
-        foreach (var effect in effects)
-        {
-            switch (effect)
-            {
-                case TrickshotBounce trickshotBounceCount:
-                {
-                    _trickshotBounceCount += trickshotBounceCount.BounceCount;
-                    _trickshotBounceDamageMultiplier += trickshotBounceCount.BounceDamageMultiplier;
-                    break;
-                }
-            }
-        }
-        
     }
 }
