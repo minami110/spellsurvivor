@@ -1,9 +1,9 @@
-﻿using fms.Projectile;
+using fms.Projectile;
 using Godot;
 
 namespace fms.Weapon;
 
-public partial class Firecracker : WeaponBase
+public partial class FirecrackerGen : WeaponBase
 {
     [ExportGroup("Internal Reference")]
     [Export]

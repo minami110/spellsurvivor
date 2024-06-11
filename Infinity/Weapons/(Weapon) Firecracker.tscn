@@ -1,13 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://snb350xl73aa"]
+[gd_scene load_steps=5 format=3 uid="uid://snb350xl73aa"]
 
-[ext_resource type="Script" path="res://Infinity/Weapons/Firecracker.cs" id="1_mohqy"]
+[ext_resource type="Script" path="res://Infinity/Weapons/FirecrackerGen.cs" id="1_j7148"]
+[ext_resource type="PackedScene" uid="uid://w7klme84oslc" path="res://Infinity/Projectiles/(Projectile) Firecracker.tscn" id="2_graak"]
 [ext_resource type="Script" path="res://Common/FrameTimer.cs" id="3_kkvxc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0ojw7"]
 radius = 1.0
 
-[node name="Firecracker" type="Node2D"]
-script = ExtResource("1_mohqy")
+[node name="Firecracker" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_collisionShape", "_searchArea", "_frameTimer")]
+script = ExtResource("1_j7148")
+_bulletPackedScene = ExtResource("2_graak")
+_bulletSpawnNode = NodePath("BulletSpawnRoot")
+_collisionShape = NodePath("Area2D/CollisionShape2D")
+_searchArea = NodePath("Area2D")
+BaseCoolDownFrame = 25
+_frameTimer = NodePath("FrameTimer")
 metadata/_edit_group_ = true
 
 [node name="FrameTimer" type="Node" parent="."]
