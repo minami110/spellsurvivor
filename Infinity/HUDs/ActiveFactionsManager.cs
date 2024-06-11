@@ -12,7 +12,7 @@ public partial class ActiveFactionsManager : Node
     public override void _Ready()
     {
         // 兄弟の Label を全部キャッシュしておく
-        var nodes = this.FindSibling("*", nameof(Label));
+        var nodes = this.GetSibling();
         foreach (var node in nodes)
         {
             if (node is not Label label)
@@ -43,9 +43,8 @@ public partial class ActiveFactionsManager : Node
     {
         HideAllLabel();
 
-        var factions = GetTree().GetNodesInGroup(Constant.GroupNameFaction);
-
-        foreach (var faction in factions)
+        var player = this.GetPlayerNode();
+        foreach (var faction in player.GetChildren())
         {
             if (faction is not FactionBase factionBase)
             {

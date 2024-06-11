@@ -14,9 +14,35 @@ public partial class FactionBase : Node
     ///     現在の Faction の Level
     /// </summary>
     [Export]
-    public uint Level { get; private set; }
+    public uint Level
+    {
+        get => _level;
+        set
+        {
+            var newLevel = Math.Clamp(value, 0, Constant.FACTION_MAX_LEVEL);
+            if (Level == newLevel)
+            {
+                return;
+            }
+
+            _level = newLevel;
+
+            if (IsNodeReady())
+            {
+                // 発行済のエフェクトすべてを削除する
+                foreach (var effect in _publishedEffects)
+                {
+                    effect.Dispose();
+                }
+
+                _publishedEffects.Clear();
+                OnLevelChanged(Level);
+            }
+        }
+    }
 
     private readonly List<EffectBase> _publishedEffects = new();
+    private uint _level;
 
     /// <summary>
     ///     この Faction でなんらかの効果が有効になっているかどうか
@@ -40,29 +66,11 @@ public partial class FactionBase : Node
         }
         else if (what == NotificationReady)
         {
-            SetLevel(1);
+            if (Level != 0)
+            {
+                OnLevelChanged(Level);
+            }
         }
-    }
-
-    public void SetLevel(uint level)
-    {
-        var newLevel = Math.Clamp(level, 0, Constant.FACTION_MAX_LEVEL);
-        if (Level == newLevel)
-        {
-            return;
-        }
-
-        // 発行済のエフェクトすべてを削除する
-        foreach (var effect in _publishedEffects)
-        {
-            effect.Dispose();
-        }
-
-        _publishedEffects.Clear();
-
-        Level = newLevel;
-
-        OnLevelChanged(Level);
     }
 
     /// <summary>

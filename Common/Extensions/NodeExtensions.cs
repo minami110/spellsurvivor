@@ -42,6 +42,11 @@ public static partial class NodeExtensions
         return node.GetParent().FindChildren(pattern, type, false, false);
     }
 
+    public static Array<Node> GetSibling(this Node node)
+    {
+        return node.GetParent().GetChildren();
+    }
+
     /// <summary>
     ///     Wrapper for GetTree().CreateTimer()
     /// </summary>
