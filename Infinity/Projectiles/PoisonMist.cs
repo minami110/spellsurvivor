@@ -5,7 +5,7 @@ namespace fms.Projectile;
 /// <summary>
 ///     範囲内にいる敵に定期的にダメージを与える
 /// </summary>
-public partial class PoisonMist : ProjectileBase
+public partial class PoisonMist : ProjectileNode2DBase
 {
     [Export]
     private Area2D _enemyDamageArea = null!;
@@ -27,14 +27,11 @@ public partial class PoisonMist : ProjectileBase
     {
         // Set collision shape
         _enemyDamageCollisionShape.GlobalScale = new Vector2(DamageAreaRadius, DamageAreaRadius);
-
-        // Move 
-        _enemyDamageArea.GlobalPosition = InitialPosition;
     }
 
     public override void _Process(double delta)
     {
-        if (CurrentFrame % CoolDownFrame != 0)
+        if (AgeFrame % CoolDownFrame != 0)
         {
             return;
         }

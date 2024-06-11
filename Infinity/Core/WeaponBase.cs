@@ -13,6 +13,23 @@ namespace fms.Weapon;
 public partial class WeaponBase : Node2D
 {
     /// <summary>
+    ///     武器の Cooldown にかかるフレーム数 (ベース値)
+    /// </summary>
+    [Export(PropertyHint.Range, "1,9999,1")]
+    public uint BaseCoolDownFrame { get; private set; } = 10;
+
+    [ExportGroup("Internal Reference")]
+    [Export]
+    private FrameTimer _frameTimer = null!;
+
+    /// <summary>
+    ///     Tree に入った時に自動で Start するかどうか
+    /// </summary>
+    [ExportGroup("For Debugging")]
+    [Export]
+    private bool _autostart;
+
+    /// <summary>
     ///     現在の武器の Level
     ///     Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
     /// </summary>
@@ -25,23 +42,6 @@ public partial class WeaponBase : Node2D
     /// </summary>
     [Export]
     public FactionType Faction { get; set; }
-
-    /// <summary>
-    ///     武器の Cooldown にかかるフレーム数 (ベース値)
-    /// </summary>
-    [Export(PropertyHint.Range, "1,9999,1")]
-    public uint BaseCoolDownFrame { get; private set; } = 10;
-
-    /// <summary>
-    ///     Tree に入った時に自動で Start するかどうか
-    /// </summary>
-    [Export]
-    private bool _autostart;
-
-
-    [ExportGroup("Internal Reference")]
-    [Export]
-    private FrameTimer _frameTimer = null!;
 
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
     private readonly HashSet<EffectBase> _effects = new();

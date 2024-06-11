@@ -7,11 +7,9 @@
 [node name="PoisonMistGen" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_frameTimer")]
 script = ExtResource("1_jge7x")
 _bulletPackedScene = ExtResource("2_8l6rs")
-_bulletSpawnNode = NodePath("BulletSpawnRoot")
+_bulletSpawnNode = NodePath("FrameTimer")
 BaseCoolDownFrame = 300
 _frameTimer = NodePath("FrameTimer")
-
-[node name="BulletSpawnRoot" type="Node" parent="."]
 
 [node name="FrameTimer" type="Node" parent="."]
 script = ExtResource("3_aw6w7")

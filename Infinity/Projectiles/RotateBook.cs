@@ -3,75 +3,56 @@ using R3;
 
 namespace fms.Projectile;
 
-public partial class RotateBook : ProjectileBase
+public partial class RotateBook : ProjectileNode2DBase
 {
     [Export]
     private Area2D _enemyDamageArea = null!;
 
-    [Export]
-    private RigidBody2D _rigidBody = null!;
-
-    private float _angularVelocity;
-
-    private double _timer;
-
+    /// <summary>
+    ///     中心距離からの半径距離 (px)
+    /// </summary>
     public float Radius { get; set; }
 
-    public float SecondPerRound { get; set; } = 1f;
-
-    public float Angle { get; set; }
+    /// <summary>
+    ///     一周するのにかかる秒数
+    /// </summary>
+    public float SpeedDegreePerSecond { get; set; }
 
     /// <summary>
-    ///     複数の弾を同時に発射するときの初期位置のずれを設定するために利用する時間(second)
-    ///     (クールダウン / 弾数)で導出する
+    ///     円周上における角度のオフセット (複数弾を描写するときにずらすように)
     /// </summary>
-
-    // (中桐)名前終わっています 単位も統一できていないです
-    public float InitTimeForRelativePos { get; set; }
+    public float OffsetAngleDegree { get; set; }
 
     public override void _Ready()
     {
-        _rigidBody.Hide();
-
-        // Set rigidbody parameter
-        _rigidBody.GlobalPosition = CalculatePosition(_timer, _angularVelocity, Radius);
-        _rigidBody.RotationDegrees = Angle;
-
         // Connect
         _enemyDamageArea.BodyEnteredAsObservable()
             .Cast<Node2D, Enemy>()
             .Subscribe(this, (x, state) => { state.OnEnemyBodyEntered(x); })
             .AddTo(this);
-
-        // Calculate Angular Velocity
-        _angularVelocity = Mathf.DegToRad(360 / SecondPerRound);
-
-        // Set relative position
-        _timer = InitTimeForRelativePos;
-
-        _rigidBody.Show();
     }
 
     public override void _Process(double delta)
     {
-        _timer += delta;
-        _rigidBody.GlobalPosition = CalculatePosition(_timer, _angularVelocity, Radius);
+        // 毎フレーム自分の位置を計算する
+        GlobalPosition = CalculatePosition(Mathf.DegToRad(SpeedDegreePerSecond), Radius);
     }
 
-    private Vector2 CalculatePosition(double time, float angularVelocity, float radius)
+    private Vector2 CalculatePosition(float speedRadiun, float radius)
     {
-        var positionX = (float)Mathf.Cos(time * angularVelocity);
-        var positionY = (float)Mathf.Sin(time * angularVelocity);
+        // Note: 滑らかな回転にするため UnixTime をベースにする
+        var currentTime = Time.GetUnixTimeFromSystem() * speedRadiun + Mathf.DegToRad(OffsetAngleDegree);
+        var positionX = (float)Mathf.Cos(currentTime);
+        var positionY = (float)Mathf.Sin(currentTime);
+        var unitPosition = new Vector2(positionX, positionY);
 
-        var unitVec = new Vector2(positionX, positionY);
-
-        var playerNode = GetTree().GetFirstNodeInGroup("Player");
+        var playerNode = this.GetPlayerNode();
         if (playerNode is Node2D player)
         {
-            return player.GlobalPosition + unitVec * radius;
+            return player.GlobalPosition + unitPosition * radius;
         }
 
-        return unitVec * radius;
+        return unitPosition * radius;
     }
 
     private void OnEnemyBodyEntered(Enemy enemy)
