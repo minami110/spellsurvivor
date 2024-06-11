@@ -34,12 +34,12 @@ public partial class AutoAimPistol : WeaponBase
         // Spawn bullet
         var bullet = _bulletPackedScene.Instantiate<SimpleBullet>();
         {
+            bullet.GlobalPosition = GlobalPosition;
             bullet.BaseDamage = 34;
             var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
             bullet.InitialVelocity = direction;
             bullet.InitialSpeed = 1000f;
         }
-        bullet.GlobalPosition = GlobalPosition;
         _bulletSpawnPoint.AddChild(bullet);
     }
 
