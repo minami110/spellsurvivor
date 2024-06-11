@@ -71,26 +71,23 @@ public partial class Main : Node
         // Battle Wave の開始時
         var d1 = _waveState.Phase.Where(x => x == WavePhase.Battle).Subscribe(this, (_, state) =>
         {
+            // ToDo: ダメージの Effect の解決方法決まり次第こちらも変える (#34)
             // Playerの体力を全回復する
-            state._playerState.AddEffect(new AddHealthEffect { Value = state._playerState.MaxHealth.CurrentValue });
+            state._playerState.AddEffect(new AddHealthEffect
+                { Value = state._playerState.MaxHealth.CurrentValue - state._playerState.Health.CurrentValue });
 
             // Spawner に設定を渡す
-            var node = GetTree().GetFirstNodeInGroup("EnemySpawner");
-            if (node is EnemySpawnerBase spawner)
-            {
-                spawner.SetConfig(state._waveState.CurrentWaveConfig.EnemySpawnConfig);
-            }
+            var spawner = (EnemySpawnerBase)GetTree().GetFirstNodeInGroup("EnemySpawner");
+            spawner.SetConfig(state._waveState.CurrentWaveConfig.EnemySpawnConfig);
 
             // すべての武器を起動する
-            var nodes = GetTree().GetNodesInGroup(Constant.GroupNameWeapon);
-            foreach (var j in nodes)
+            var player = this.GetPlayerNode();
+            foreach (var n in player.GetChildren())
             {
-                if (j is not WeaponBase weapon)
+                if (n is WeaponBase weapon)
                 {
-                    continue;
+                    weapon.StartAttack();
                 }
-
-                weapon.StartAttack();
             }
 
             // BGM のこもりを解消する (150hz => 2000hz (default))
@@ -109,12 +106,10 @@ public partial class Main : Node
             var player = this.GetPlayerNode();
             foreach (var n in player.GetChildren())
             {
-                if (n is not WeaponBase weapon)
+                if (n is WeaponBase weapon)
                 {
-                    continue;
+                    weapon.StopAttack();
                 }
-
-                weapon.StopAttack();
             }
 
             // 残った Projectile をすべてコロス
