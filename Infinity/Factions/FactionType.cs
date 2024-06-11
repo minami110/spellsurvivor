@@ -13,8 +13,9 @@ public enum FactionType
     Bruiser = 1 << 0,
     Duelist = 1 << 1,
     Trickshot = 1 << 2,
+    Invoker = 1 << 3,
 
-    Invoker = 1 << 3
+    Healer = 1 << 4
     // Note: ↓ に新しい Faction を追加していく
 }
 
@@ -28,6 +29,7 @@ public static class FactionUtil
             FactionType.Duelist => new Duelist(),
             FactionType.Trickshot => new Trickshot(),
             FactionType.Invoker => new Invoker(),
+            FactionType.Healer => new Healer(),
             // Note: ↓ に新しい Faction を追加していく
 
             _ => throw new ArgumentException($"Unsupported faction type: {faction}", nameof(faction))
