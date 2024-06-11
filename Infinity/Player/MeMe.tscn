@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bfke7q0b0owyb"]
+[gd_scene load_steps=5 format=3 uid="uid://bfke7q0b0owyb"]
 
 [ext_resource type="Script" path="res://Infinity/Player/MeMe.cs" id="1_xi18f"]
 [ext_resource type="Texture2D" uid="uid://bv2i2oqp72cwk" path="res://Common/Resources/Textures/LM7/chara-a.png" id="2_jbxe7"]
+[ext_resource type="Script" path="res://Infinity/Core/PlayerState.cs" id="2_ynkku"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
 radius = 20.0
@@ -10,6 +11,10 @@ radius = 20.0
 process_mode = 1
 collision_mask = 16
 script = ExtResource("1_xi18f")
+
+[node name="PlayerState" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_ynkku")
 
 [node name="MainCamera" type="Camera2D" parent="."]
 unique_name_in_owner = true

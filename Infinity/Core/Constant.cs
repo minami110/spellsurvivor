@@ -16,6 +16,7 @@ public static class Constant
     public const uint FACTION_MAX_LEVEL = PLYAER_INVENTORY_MAX_SLOT;
 
     public static readonly StringName GroupNamePlayer = new("Player");
+    public static readonly StringName GroupNamePlayerState = new("PlayerState");
     public static readonly StringName GroupNameMinion = new("Minion");
     public static readonly StringName GroupNameFaction = new("Faction");
     public static readonly StringName GroupNameWeapon = new("Weapon");

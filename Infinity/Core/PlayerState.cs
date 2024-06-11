@@ -8,12 +8,9 @@ namespace fms;
 /// <summary>
 ///     Player の体力やバフなどを管理するクラス
 /// </summary>
-public sealed class PlayerState : IEffectSolver, IDisposable
+public partial class PlayerState : Node
 {
-    private readonly IDisposable _disposable;
-
     private readonly HashSet<EffectBase> _effects = new();
-
     private readonly ReactiveProperty<float> _health = new();
     private readonly ReactiveProperty<float> _maxHealth = new();
     private readonly ReactiveProperty<uint> _money = new();
@@ -41,9 +38,32 @@ public sealed class PlayerState : IEffectSolver, IDisposable
     /// </summary>
     public ReadOnlyReactiveProperty<float> MaxHealth => _maxHealth;
 
-    public PlayerState()
+    public override void _Notification(int what)
     {
-        _disposable = Disposable.Combine(_health, _maxHealth);
+        if (what == NotificationEnterTree)
+        {
+            if (!IsInGroup(Constant.GroupNamePlayerState))
+            {
+                AddToGroup(Constant.GroupNamePlayerState);
+            }
+        }
+        else if (what == NotificationExitTree)
+        {
+            _health.Dispose();
+            _maxHealth.Dispose();
+            _money.Dispose();
+            _moveSpeed.Dispose();
+        }
+        else if (what == NotificationProcess)
+        {
+            SolveEffect();
+        }
+    }
+
+    public void AddEffect(EffectBase effect)
+    {
+        _effects.Add(effect);
+        _isDirty = true;
     }
 
     public void Reset()
@@ -55,28 +75,26 @@ public sealed class PlayerState : IEffectSolver, IDisposable
         _effects.Clear();
     }
 
-    public void Dispose()
+    private void SolveEffect()
     {
-        _disposable.Dispose();
-    }
+        if (_effects.Count == 0)
+        {
+            return;
+        }
 
-    public void AddEffect(EffectBase effect)
-    {
-        _effects.Add(effect);
-        _isDirty = true;
-    }
+        // Dispose されたエフェクトを削除
+        var count = _effects.RemoveWhere(effect => effect.IsDisposed);
+        if (count > 0)
+        {
+            _isDirty = true;
+        }
 
-    public void SolveEffect()
-    {
-        if (!_isDirty || _effects.Count == 0)
+        if (!_isDirty)
         {
             return;
         }
 
         _isDirty = false;
-
-        // Dispose されたエフェクトを削除
-        _effects.RemoveWhere(effect => effect.IsDisposed);
 
         // スタートとなるパラメーターを用意
         var maxHealth = 0f;
