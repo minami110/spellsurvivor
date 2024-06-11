@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://w7klme84oslc"]
 
-[ext_resource type="Script" path="res://Infinity/Projectiles/SimpleBullet.cs" id="1_al3wv"]
+[ext_resource type="Script" path="res://Infinity/Projectiles/Firecracker.cs" id="1_hqkbq"]
 [ext_resource type="Texture2D" uid="uid://b7qsm3wpjrqd8" path="res://Common/Resources/Textures/Noita/Spell_bouncy_orb.webp" id="2_tdfmy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gdwp8"]
@@ -9,10 +9,8 @@ radius = 3.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_s8feo"]
 radius = 7.07107
 
-[node name="SimpleBullet" type="Node" node_paths=PackedStringArray("_rigidBody", "_enemyDamageArea") groups=["Projectile"]]
-script = ExtResource("1_al3wv")
-_rigidBody = NodePath("RigidBody2D")
-_enemyDamageArea = NodePath("RigidBody2D/DamageArea")
+[node name="Firecracker" type="Node" groups=["Projectile"]]
+script = ExtResource("1_hqkbq")
 
 [node name="RigidBody2D" type="RigidBody2D" parent="."]
 collision_layer = 0
