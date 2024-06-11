@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using fms.Weapon;
 using Godot;
 using R3;
 
@@ -12,22 +13,9 @@ public partial class Main : Node
     private InfinityGameSettings _gameSettings = null!;
 
     private static Main? _instance;
-
-    // 現在有効な Faction の辞書
     private readonly PlayerState _playerState;
-    private PlayerInventory _playerInventory = null!;
-
-    private Node2D _playerPawn = null!;
     private ShopState _shopState = null!;
     private WaveState _waveState = null!;
-
-    public static PlayerInventory PlayerInventory
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Instance._playerInventory;
-    }
-
-    public static Node2D PlayerNode => Instance._playerPawn;
 
     /// <summary>
     ///     Get the PlayerState
@@ -82,22 +70,22 @@ public partial class Main : Node
     {
         // Initialize States
         _waveState = new WaveState { Config = _gameSettings.WaveConfig };
+
         _shopState = new ShopState(_gameSettings.ShopConfig);
-        _playerInventory = new PlayerInventory();
+        AddChild(_shopState);
     }
 
     public override void _Ready()
     {
         // Player を取得する
-        var n = GetTree().GetFirstNodeInGroup("Player");
+        var n = GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer);
         if (n is MeMe p) // ToDo:
         {
-            _playerPawn = p;
             p.SetPlayerState(_playerState);
         }
 
         // Battle Wave の開始時
-        var d1 = _waveState.Phase.Where(x => x == WavePhase.BATTLE).Subscribe(this, (_, state) =>
+        var d1 = _waveState.Phase.Where(x => x == WavePhase.Battle).Subscribe(this, (_, state) =>
         {
             // Playerの体力を全回復する
             state._playerState.SolveEffect(); // Pending wo kaiketu
@@ -112,10 +100,15 @@ public partial class Main : Node
             }
 
             // すべての武器を起動する
-            foreach (var m in PlayerInventory.Minions)
+            var nodes = GetTree().GetNodesInGroup(Constant.GroupNameWeapon);
+            foreach (var j in nodes)
             {
-                var w = m.Weapon;
-                w?.StartAttack();
+                if (j is not WeaponBase weapon)
+                {
+                    continue;
+                }
+
+                weapon.StartAttack();
             }
 
             // BGM のこもりを解消する (150hz => 2000hz (default))
@@ -126,15 +119,20 @@ public partial class Main : Node
         });
 
         // Battle Result 進入時
-        var d2 = _waveState.Phase.Where(x => x == WavePhase.BATTLERESULT).Subscribe(this, (_, state) =>
+        var d2 = _waveState.Phase.Where(x => x == WavePhase.Battleresult).Subscribe(this, (_, state) =>
         {
             var tree = state.GetTree();
 
             // すべての武器を停止する
-            foreach (var m in PlayerInventory.Minions)
+            var nodes = GetTree().GetNodesInGroup(Constant.GroupNameWeapon);
+            foreach (var j in nodes)
             {
-                var w = m.Weapon;
-                w?.StopAttack();
+                if (j is not WeaponBase weapon)
+                {
+                    continue;
+                }
+
+                weapon.StopAttack();
             }
 
             // 残った Projectile をすべてコロス
@@ -142,13 +140,13 @@ public partial class Main : Node
         });
 
         // Shop 進入時
-        var d3 = _waveState.Phase.Where(x => x == WavePhase.SHOP).Subscribe(this, (_, state) =>
+        var d3 = _waveState.Phase.Where(x => x == WavePhase.Shop).Subscribe(this, (_, state) =>
         {
             if (state._waveState.Wave.CurrentValue >= 0)
             {
                 // Playerに報酬を与える
                 var reward = state._waveState.CurrentWaveConfig.Reward;
-                state._playerState.AddEffect(new AddMoneyEffect { Value = reward });
+                state._playerState.AddEffect(new MoneyEffect { Value = reward });
                 state._playerState.SolveEffect();
             }
             else
@@ -168,10 +166,10 @@ public partial class Main : Node
         });
 
         // Disposable registration
-        Disposable.Combine(_playerState, _waveState, _shopState, _playerInventory, d1, d2, d3).AddTo(this);
+        Disposable.Combine(_playerState, _waveState, _shopState, d1, d2, d3).AddTo(this);
 
         // Start Game
-        _waveState.SendSignal(WaveState.Signal.GAMEMODE_START);
+        _waveState.SendSignal(WaveState.Signal.GamemodeStart);
     }
 
     public override void _Process(double delta)
@@ -192,7 +190,7 @@ public partial class Main : Node
         // Plauer を初期化する
         _playerState.Reset();
         _playerState.AddEffect(new AddMoveSpeedEffect { Value = _gameSettings.DefaultMoveSpeed });
-        _playerState.AddEffect(new AddMoneyEffect { Value = _gameSettings.DefaultMoney });
+        _playerState.AddEffect(new MoneyEffect { Value = (int)_gameSettings.DefaultMoney });
         _playerState.AddEffect(new AddHealthEffect { Value = _gameSettings.DefaultHealth });
         _playerState.AddEffect(new AddMaxHealthEffect { Value = _gameSettings.DefaultHealth });
         _playerState.SolveEffect();

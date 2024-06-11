@@ -5,7 +5,7 @@ namespace fms.Projectile;
 /// <summary>
 ///     範囲内にいる敵に定期的にダメージを与える
 /// </summary>
-public partial class PoisonMist : ProjectileBase
+public partial class PoisonMist : ProjectileNode2DBase
 {
     [Export]
     private Area2D _enemyDamageArea = null!;
@@ -13,39 +13,36 @@ public partial class PoisonMist : ProjectileBase
     [Export]
     private CollisionShape2D _enemyDamageCollisionShape = null!;
 
-    private int _coolDownCounter;
+    /// <summary>
+    ///     敵にダメージを与えるクールダウン
+    /// </summary>
+    public int CoolDownFrame { get; set; }
 
-    public int CoolDown { get; set; }
-
-    public float Radius { get; set; }
+    /// <summary>
+    ///     的にダメージを与える範囲の半径 (px)
+    /// </summary>
+    public float DamageAreaRadius { get; set; }
 
     public override void _Ready()
     {
         // Set collision shape
-        _enemyDamageCollisionShape.GlobalScale = new Vector2(Radius, Radius);
-
-        // Move 
-        _enemyDamageArea.GlobalPosition = InitialPosition;
+        _enemyDamageCollisionShape.GlobalScale = new Vector2(DamageAreaRadius, DamageAreaRadius);
     }
 
     public override void _Process(double delta)
     {
-        base._Process(delta);
-        if (_coolDownCounter > CoolDown)
+        if (AgeFrame % CoolDownFrame != 0)
         {
-            var bodies = _enemyDamageArea.GetOverlappingBodies();
-            foreach (var body in bodies)
-            {
-                if (body is Enemy enemy)
-                {
-                    enemy.TakeDamage(BaseDamage);
-                }
-            }
-
-            _coolDownCounter = 0;
             return;
         }
 
-        _coolDownCounter++;
+        var bodies = _enemyDamageArea.GetOverlappingBodies();
+        foreach (var body in bodies)
+        {
+            if (body is Enemy enemy)
+            {
+                enemy.TakeDamage(BaseDamage);
+            }
+        }
     }
 }

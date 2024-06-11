@@ -1,3 +1,4 @@
+using fms.Weapon;
 using Godot;
 using R3;
 
@@ -38,7 +39,7 @@ public sealed partial class InGameHUD : CanvasLayer
         var d4 = ws.BattlePhaseTimeLeft.Subscribe(x => _waveTimerLabel.Text = $"{x:000}");
         var d5 = ws.Phase.Subscribe(p =>
         {
-            if (p == WavePhase.BATTLE)
+            if (p == WavePhase.Battle)
             {
                 OnBattleWaveStarted();
             }
@@ -71,10 +72,10 @@ public sealed partial class InGameHUD : CanvasLayer
     private void OnBattleWaveStarted()
     {
         // Spawn equipments
-        foreach (var minion in Main.PlayerInventory.Minions)
+        var nodes = GetTree().GetNodesInGroup(Constant.GroupNameWeapon);
+        foreach (var n in nodes)
         {
-            var weapon = minion.Weapon;
-            if (weapon == null)
+            if (n is not WeaponBase weapon)
             {
                 continue;
             }

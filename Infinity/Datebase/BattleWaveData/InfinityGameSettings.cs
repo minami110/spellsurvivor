@@ -7,7 +7,7 @@ public partial class InfinityGameSettings : FmsResource
 {
     [ExportCategory("Default Player Settings")]
     [Export(PropertyHint.Range, "0,1000,1")]
-    public int DefaultMoney { get; private set; } = 10;
+    public uint DefaultMoney { get; private set; } = 10u;
 
     [Export]
     public float DefaultHealth { get; private set; } = 100f;

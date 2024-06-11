@@ -10,18 +10,16 @@ public partial class AutoAimPistol : WeaponBase
     private PackedScene _bulletPackedScene = null!;
 
     [Export]
-    private Node _bulletSpawnNode = null!;
+    private Area2D _searchArea = null!;
 
     [Export]
     private CollisionShape2D _collisionShape = null!;
 
     [Export]
-    private Area2D _searchArea = null!;
+    private Node _bulletSpawnPoint = null!;
 
     public override void _Ready()
     {
-        base._Ready();
-
         // 範囲 100 px
         _collisionShape.Scale = new Vector2(100, 100);
     }
@@ -33,18 +31,16 @@ public partial class AutoAimPistol : WeaponBase
             return;
         }
 
-        // Fire to targetEnemy
-        var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
-
         // Spawn bullet
         var bullet = _bulletPackedScene.Instantiate<SimpleBullet>();
         {
+            bullet.GlobalPosition = GlobalPosition;
             bullet.BaseDamage = 34;
+            var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
             bullet.InitialVelocity = direction;
-            bullet.InitialPosition = GlobalPosition;
             bullet.InitialSpeed = 1000f;
         }
-        _bulletSpawnNode.AddChild(bullet);
+        _bulletSpawnPoint.AddChild(bullet);
     }
 
     private bool TryGetNearestEnemy(out Enemy? nearestEnemy)

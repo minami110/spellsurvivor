@@ -1,4 +1,6 @@
 ﻿using fms.Effect;
+using fms.Weapon;
+using Godot;
 
 namespace fms.Faction;
 
@@ -8,47 +10,23 @@ namespace fms.Faction;
 ///     Lv4: 「インヴォーカー」は2マナ、他のミニオンは1マナ
 ///     Lv6: 「インヴォーカー」は3マナ、他のミニオンは2マナ
 /// </summary>
-public sealed class Invoker : FactionBase
+[GlobalClass]
+public partial class Invoker : FactionBase
 {
-    private protected override void OnLevelConfirmed(int level)
+    private protected override void OnLevelChanged(uint level)
     {
-        var playerState = Main.PlayerState;
-
-        var minions = Main.PlayerInventory.Minions;
-        foreach (var minion in minions)
+        // 兄弟にある Weapon にアクセスする
+        var nodes = this.GetSibling();
+        foreach (var node in nodes)
         {
+            if (node is not WeaponBase weapon)
+            {
+                continue;
+            }
+
             if (level >= 2)
             {
-                var weapon = minion.Weapon;
-                if (weapon == null)
-                {
-                    continue;
-                }
-            
-                weapon.AddEffect(new AddManaRegeneration { Value = 1, Interval = 180 });
-                weapon.SolveEffect();
-            }
-        }
-    }
-
-    private protected override void OnLevelReset(int oldLevel)
-    {
-
-        var playerState = Main.PlayerState;
-
-        var minions = Main.PlayerInventory.Minions;
-        foreach (var minion in minions)
-        {
-            if (oldLevel >= 2)
-            {
-                var weapon = minion.Weapon;
-                if (weapon == null)
-                {
-                    continue;
-                }
-            
-                weapon.AddEffect(new AddManaRegeneration { Value = -1, Interval = -180 });
-                weapon.SolveEffect();
+                AddEffectToWeapon(weapon, new AddManaRegeneration { Value = 1, Interval = 180 });
             }
         }
     }

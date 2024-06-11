@@ -12,17 +12,19 @@ public sealed class PlayerState : IEffectSolver, IDisposable
 {
     private readonly IDisposable _disposable;
 
-    private readonly List<EffectBase> _effects = new();
+    private readonly HashSet<EffectBase> _effects = new();
 
     private readonly ReactiveProperty<float> _health = new();
     private readonly ReactiveProperty<float> _maxHealth = new();
-    private readonly ReactiveProperty<int> _money = new();
+    private readonly ReactiveProperty<uint> _money = new();
     private readonly ReactiveProperty<float> _moveSpeed = new();
+
+    private bool _isDirty;
 
     /// <summary>
     ///     現在の所持金
     /// </summary>
-    public ReadOnlyReactiveProperty<int> Money => _money;
+    public ReadOnlyReactiveProperty<uint> Money => _money;
 
     /// <summary>
     ///     現在の移動速度
@@ -61,31 +63,41 @@ public sealed class PlayerState : IEffectSolver, IDisposable
     public void AddEffect(EffectBase effect)
     {
         _effects.Add(effect);
+        _isDirty = true;
     }
 
     public void SolveEffect()
     {
-        if (_effects.Count == 0)
+        if (!_isDirty || _effects.Count == 0)
         {
             return;
         }
 
-        var maxHealth = _maxHealth.Value;
-        var health = _health.Value;
-        var damage = 0f;
+        _isDirty = false;
 
+        // Dispose されたエフェクトを削除
+        _effects.RemoveWhere(effect => effect.IsDisposed);
+
+        // スタートとなるパラメーターを用意
+        var maxHealth = 0f;
+        var health = 0f;
+        var damage = 0f;
+        var money = 0;
+        var moveSpeed = 0f;
+
+        // IsSolved が false のエフェクトを解決する
         foreach (var effect in _effects)
         {
             switch (effect)
             {
-                case AddMoneyEffect addMoneyEffect:
+                case MoneyEffect moneyEffect:
                 {
-                    _money.Value += addMoneyEffect.Value;
+                    money += moneyEffect.Value;
                     break;
                 }
                 case AddMoveSpeedEffect addMoveSpeedEffect:
                 {
-                    _moveSpeed.Value += addMoveSpeedEffect.Value;
+                    moveSpeed += addMoveSpeedEffect.Value;
                     break;
                 }
                 case AddHealthEffect addHealthEffect:
@@ -106,17 +118,16 @@ public sealed class PlayerState : IEffectSolver, IDisposable
             }
         }
 
-        // Clear effects
-        _effects.Clear();
+        // ダメージの計算
+        health -= damage;
 
         // 最大体力と体力の計算
         health = Mathf.Min(health, maxHealth);
 
-        // ダメージの計算
-        health -= damage;
-
         // 最終的な値を計算する
         _maxHealth.Value = maxHealth;
         _health.Value = health;
+        _money.Value = (uint)Math.Max(0, money);
+        _moveSpeed.Value = moveSpeed;
     }
 }

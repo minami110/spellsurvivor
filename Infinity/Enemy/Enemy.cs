@@ -55,7 +55,7 @@ public partial class Enemy : RigidBody2D
     public override void _Ready()
     {
         // Gets the player's position
-        if (GetTree().GetFirstNodeInGroup("Player") is Node2D player)
+        if (GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer) is Node2D player)
         {
             _targetNode = player;
         }

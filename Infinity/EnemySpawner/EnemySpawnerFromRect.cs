@@ -20,12 +20,12 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
     {
         Main.WaveState.Phase.Subscribe(x =>
         {
-            if (x == WavePhase.BATTLE)
+            if (x == WavePhase.Battle)
             {
                 _frameCounter = 0;
                 SetProcess(true);
             }
-            else if (x == WavePhase.BATTLERESULT)
+            else if (x == WavePhase.Battleresult)
             {
                 SetProcess(false);
                 KillAllEnemies();

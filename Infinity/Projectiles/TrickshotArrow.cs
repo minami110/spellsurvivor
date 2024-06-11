@@ -3,35 +3,33 @@ using R3;
 
 namespace fms.Projectile;
 
-public partial class TrickshotArrow : ProjectileBase
+/// <summary>
+///     Trickshot Faction 挙動が実装された Arrow
+/// </summary>
+public partial class TrickshotArrow : ProjectileRigidBodyBase
 {
-    [Export]
-    private RigidBody2D _rigidBody = null!;
-
     [Export]
     private Area2D _enemyDamageArea = null!;
 
     [Export]
-    private Area2D _enemySearchArea = null!;
+    private Area2D _trickshotSearchArea = null!;
 
     [Export]
-    private CollisionShape2D _enemySearchCollisionShape = null!;
+    private CollisionShape2D _trickshotSearchCollision = null!;
 
     [Export]
-    private TextureRect _texture = null!;
+    private TextureRect _sprite = null!;
 
+    [ExportCategory("Sounds")]
     [Export]
     private AudioStream _spawnSound = null!;
 
     [Export]
     private AudioStream _hitSound = null!;
 
-    private int _bounceCounter;
+    private Enemy? _prevTargetEnemy;
 
-    private Enemy? _previousEnemy;
-
-    public float BaseSpeed { get; set; }
-    public Vector2 InitialVelocity { get; set; }
+    private int _trickshotBounceCounter;
 
     public int BounceCount { get; set; }
     public float BounceDamageMultiplier { get; set; }
@@ -40,62 +38,69 @@ public partial class TrickshotArrow : ProjectileBase
 
     public override void _Ready()
     {
-        // Set rigidbody parameter
-        _rigidBody.GlobalPosition = InitialPosition;
-        _rigidBody.LinearVelocity = InitialVelocity * BaseSpeed;
-        _rigidBody.Rotation = _rigidBody.LinearVelocity.Angle();
-
+        // Bounce Count が 0 以上の場合は 敵を検索する Collision を有効にする
+        // 0 の場合は必要ないので無効化する
         if (BounceCount > 0)
         {
             // Set collision shape
-            _enemySearchCollisionShape.Disabled = false;
-            _enemySearchCollisionShape.GlobalScale = new Vector2(BounceSearchRadius, BounceSearchRadius);
+            _trickshotSearchCollision.Disabled = false;
+            _trickshotSearchCollision.GlobalScale = new Vector2(BounceSearchRadius, BounceSearchRadius);
+        }
+        else
+        {
+            _trickshotSearchCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
         }
 
-        // Connect
+        // ダメージ判定の Area を購読する
         _enemyDamageArea.BodyEnteredAsObservable()
             .Cast<Node2D, Enemy>()
             .Subscribe(this, (x, state) => { state.OnEnemyBodyEntered(x); })
             .AddTo(this);
 
-        // Spawn Sound
+        // Spawn 時の Sound を再生する
         SoundManager.PlaySoundEffect(_spawnSound);
     }
 
     private void OnEnemyBodyEntered(Enemy enemy)
     {
-        if (_previousEnemy == enemy)
+        if (_prevTargetEnemy == enemy)
         {
             return;
         }
 
+        // 敵に与えるダメージを決定する, Bounce 時 はスケールを加味する
         var damage = BaseDamage;
-        if (_bounceCounter > 0)
+        if (_trickshotBounceCounter > 0)
         {
             damage *= BounceDamageMultiplier;
         }
 
+        // 敵にダメージを与える
         enemy.TakeDamage(damage);
-        _previousEnemy = enemy;
+        _prevTargetEnemy = enemy;
+
+        // ヒット時のサウンドを再生する
         SoundManager.PlaySoundEffect(_hitSound);
 
-        if (_bounceCounter >= BounceCount)
+        // 残りの Bounce 回数が残っていなければ Projectile を殺す
+        if (_trickshotBounceCounter >= BounceCount)
         {
             KillThis();
             return;
         }
 
-        // Bounce!
-        ResetLifeFrameCounter();
-        _texture.Modulate = new Color(0, 1, 0);
-        _bounceCounter++;
+        // 次の Bounce の処理を行う
+        ResetAge();
+        _sprite.Modulate = new Color(0, 1, 0);
+        _trickshotBounceCounter++;
 
-        if (TryGetNearestEnemy(_previousEnemy, out var nextEnemy))
+        // Bounce 範囲の敵を検索する, 見つかった場合は弾の方向を更新する
+        if (TryGetNearestEnemy(_prevTargetEnemy, out var nextEnemy))
         {
             // Update Direction
-            _rigidBody.LinearVelocity =
-                (nextEnemy!.GlobalPosition - _rigidBody.GlobalPosition).Normalized() * BaseSpeed;
-            _rigidBody.Rotation = _rigidBody.LinearVelocity.Angle();
+            LinearVelocity =
+                (nextEnemy!.GlobalPosition - GlobalPosition).Normalized() * InitialSpeed;
+            Rotation = LinearVelocity.Angle();
         }
         else
         {
@@ -103,12 +108,18 @@ public partial class TrickshotArrow : ProjectileBase
         }
     }
 
-    private bool TryGetNearestEnemy(Enemy? ignore, out Enemy? nearestEnemy)
+    /// <summary>
+    ///     近くの敵を検索する
+    /// </summary>
+    /// <param name="ignoreEnemy">無視する Enemy</param>
+    /// <param name="nearestEnemy">最も近い Enemy が代入される</param>
+    /// <returns>Enemy が見つかった場合は true</returns>
+    private bool TryGetNearestEnemy(Enemy? ignoreEnemy, out Enemy? nearestEnemy)
     {
         nearestEnemy = null;
-        var distance = 99999f;
+        var nearestDistance = 99999f;
 
-        var overlappingArea = _enemySearchArea.GetOverlappingBodies();
+        var overlappingArea = _trickshotSearchArea.GetOverlappingBodies();
         if (overlappingArea.Count <= 0)
         {
             return false;
@@ -116,15 +127,21 @@ public partial class TrickshotArrow : ProjectileBase
 
         foreach (var body in overlappingArea)
         {
-            if (body is Enemy enemy && enemy != ignore)
+            // Enemy ではないか, 無視対象のばあいはスキップ
+            if (body is not Enemy enemy || enemy == ignoreEnemy)
             {
-                var d = _rigidBody.GlobalPosition.DistanceTo(enemy.GlobalPosition);
-                if (d < distance)
-                {
-                    distance = d;
-                    nearestEnemy = enemy;
-                }
+                continue;
             }
+
+            // 最も近い敵を探す
+            var d = GlobalPosition.DistanceTo(enemy.GlobalPosition);
+            if (d >= nearestDistance)
+            {
+                continue;
+            }
+
+            nearestDistance = d;
+            nearestEnemy = enemy;
         }
 
         return nearestEnemy is not null;

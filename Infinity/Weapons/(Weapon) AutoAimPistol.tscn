@@ -1,18 +1,18 @@
 [gd_scene load_steps=5 format=3 uid="uid://cmr1iekscwraj"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/AutoAimPistol.cs" id="1_p2onu"]
-[ext_resource type="PackedScene" path="res://Infinity/Projectiles/(Projectile) SimpleBullet.tscn" id="2_jngkm"]
+[ext_resource type="PackedScene" uid="uid://bagncidt6rgvp" path="res://Infinity/Projectiles/(Projectile) SimpleBullet.tscn" id="2_jngkm"]
 [ext_resource type="Script" path="res://Common/FrameTimer.cs" id="3_hmaku"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0ojw7"]
 radius = 1.0
 
-[node name="AutoAimPistol" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_collisionShape", "_searchArea", "_frameTimer")]
+[node name="AutoAimPistol" type="Node2D" node_paths=PackedStringArray("_searchArea", "_collisionShape", "_bulletSpawnPoint", "_frameTimer")]
 script = ExtResource("1_p2onu")
 _bulletPackedScene = ExtResource("2_jngkm")
-_bulletSpawnNode = NodePath("BulletSpawnRoot")
-_collisionShape = NodePath("Area2D/CollisionShape2D")
-_searchArea = NodePath("Area2D")
+_searchArea = NodePath("EnemySearchArea")
+_collisionShape = NodePath("EnemySearchArea/EnemySearchCollision")
+_bulletSpawnPoint = NodePath("FrameTimer")
 BaseCoolDownFrame = 30
 _frameTimer = NodePath("FrameTimer")
 metadata/_edit_group_ = true
@@ -20,13 +20,11 @@ metadata/_edit_group_ = true
 [node name="FrameTimer" type="Node" parent="."]
 script = ExtResource("3_hmaku")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="EnemySearchArea" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="EnemySearchCollision" type="CollisionShape2D" parent="EnemySearchArea"]
 scale = Vector2(10, 10)
 shape = SubResource("CircleShape2D_0ojw7")
 debug_color = Color(0.282353, 0.6, 0.294118, 0.027451)
-
-[node name="BulletSpawnRoot" type="Node" parent="."]

@@ -22,12 +22,12 @@ public partial class ShopSellingItem : VBoxContainer
 
     private bool _isSoldOut;
 
-    public MinionInRuntime Minion { get; internal set; } = null!;
+    public Minion Minion { get; internal set; } = null!;
 
     public override void _Ready()
     {
         _iconTextureRect.Texture = Minion.Sprite;
-        _nameLabel.Text = Minion.Name;
+        _nameLabel.Text = Minion.FriendlyName;
         _buyButton.Text = $"${Minion.Price}";
 
         // Subscribe 
@@ -50,7 +50,7 @@ public partial class ShopSellingItem : VBoxContainer
         ToolTipToast.Hide();
     }
 
-    private void OnChangedPlayerMoney(int money)
+    private void OnChangedPlayerMoney(uint money)
     {
         if (money < Minion.Price)
         {
@@ -79,7 +79,7 @@ public partial class ShopSellingItem : VBoxContainer
             return;
         }
 
-        var text = $"{Minion.Name}\n";
+        var text = $"{Minion.FriendlyName}\n";
         text += $"Tier: {Minion.Tier}\n";
         text += $"Faction: ${Minion.Faction}\n";
         text += $"{Minion.Description}\n";
