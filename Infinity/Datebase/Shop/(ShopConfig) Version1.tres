@@ -11,4 +11,5 @@ script = ExtResource("1_0jypj")
 RerollCost = 1
 UpgradeCost = 1
 AddSlotCost = 1
+ShopItemRootDir = ""
 DefaultMinionPool = [ExtResource("1_veq3r"), ExtResource("2_jmvr0"), ExtResource("3_8sgvx"), ExtResource("4_ocjwc")]

@@ -15,6 +15,9 @@ public partial class ShopConfig : FmsResource
     [Export]
     public int AddSlotCost { get; private set; } = 1;
 
+    [Export(PropertyHint.Dir)]
+    public string ShopItemRootDir { get; private set; } = string.Empty;
+
     [Export]
     public Array<MinionCoreData> DefaultMinionPool { get; private set; } = new();
 

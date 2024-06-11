@@ -1,6 +1,6 @@
 [gd_scene load_steps=29 format=3 uid="uid://c8nr5w2kj67dx"]
 
-[ext_resource type="Script" path="res://Infinity/GameMode/Main.cs" id="1_tk8vx"]
+[ext_resource type="Script" path="res://Infinity/Core/Main.cs" id="1_tk8vx"]
 [ext_resource type="Texture2D" uid="uid://gmh4ja31pvql" path="res://Common/Resources/Textures/grid_16x16_border_chipped_corner.basecolor.Utility - sRGB - Texture.256.png" id="2_b1ok3"]
 [ext_resource type="Resource" uid="uid://cc2mm30mcw05i" path="res://Infinity/Datebase/Shop/(ShopConfig) Version1.tres" id="2_gfx80"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfigRaw.cs" id="3_rspfj"]
