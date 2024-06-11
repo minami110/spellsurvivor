@@ -19,23 +19,17 @@ public partial class Trickshot : FactionBase
             return;
         }
 
-        var nodes = GetTree().GetNodesInGroup(Constant.GroupNameMinion);
+        // 兄弟にある Weapon にアクセスする
+        var nodes = this.GetSibling();
         foreach (var node in nodes)
         {
-            if (node is not Minion minion)
-            {
-                continue;
-            }
-
-            // Weapon を所持していない (手札にない)
-            var weapon = minion.Weapon;
-            if (weapon == null)
+            if (node is not WeaponBase weapon)
             {
                 continue;
             }
 
             // トリックショットを持っていない
-            if (!minion.IsBelongTo(FactionType.Trickshot))
+            if (!weapon.IsBelongTo(FactionType.Trickshot))
             {
                 continue;
             }

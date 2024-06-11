@@ -61,7 +61,7 @@ public partial class Minion : Node
             // 新しい装備
             if (_weapon is not null)
             {
-                _weapon.Id = Id;
+                _weapon.MinionId = Id;
                 _weaponSubscription = _levelRp.Subscribe(x => { _weapon.Level = x; });
             }
         }
@@ -112,12 +112,13 @@ public partial class Minion : Node
                 if (s.Count > 0)
                 {
                     var f = (FactionBase)s[0];
-                    f.SetLevel(f.Level + 1);
+                    f.Level++;
                 }
                 else
                 {
                     // Faction が存在していなかったら作成
                     var f = FactionUtil.CreateFaction(faction);
+                    f.Level++;
                     AddSibling(f);
                 }
             }
@@ -137,7 +138,7 @@ public partial class Minion : Node
                 if (s.Count > 0)
                 {
                     var f = (FactionBase)s[0];
-                    f.SetLevel(f.Level - 1);
+                    f.Level--;
                 }
             }
 
@@ -152,8 +153,9 @@ public partial class Minion : Node
         if (Weapon is null)
         {
             Weapon = CoreData.WeaponPackedScene.Instantiate<WeaponBase>();
-            Weapon!.Id = Id;
-            Weapon!.Level = _levelRp.Value;
+            Weapon.MinionId = Id;
+            Weapon.Faction = Faction;
+            Weapon.Level = _levelRp.Value;
             AddSibling(Weapon);
         }
     }

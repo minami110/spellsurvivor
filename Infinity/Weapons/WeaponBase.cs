@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using fms.Effect;
+using fms.Faction;
 using Godot;
 using R3;
 
@@ -12,18 +13,18 @@ namespace fms.Weapon;
 public partial class WeaponBase : Node2D
 {
     /// <summary>
-    ///     武器の Id
-    ///     Note: Minion から勝手に代入されます
-    /// </summary>
-    [Export]
-    public string Id { get; set; } = string.Empty;
-
-    /// <summary>
     ///     現在の武器の Level
-    ///     Note: Minion から勝手に代入されます
+    ///     Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
     /// </summary>
     [Export(PropertyHint.Range, "1,5")]
     public uint Level { get; set; } = 1;
+
+    /// <summary>
+    ///     Minion が所属する Faction
+    ///     Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
+    /// </summary>
+    [Export]
+    public FactionType Faction { get; set; }
 
     /// <summary>
     ///     武器の Cooldown にかかるフレーム数 (ベース値)
@@ -54,6 +55,12 @@ public partial class WeaponBase : Node2D
     public int Mana;
 
     /// <summary>
+    ///     武器の Id
+    ///     Note: Minion から勝手に代入されます
+    /// </summary>
+    public string MinionId { get; set; } = string.Empty;
+
+    /// <summary>
     ///     Effect の解決後の Cooldown のフレーム数
     /// </summary>
     public uint SolvedCoolDownFrame
@@ -74,7 +81,7 @@ public partial class WeaponBase : Node2D
     {
         if (what == NotificationEnterTree)
         {
-            Name = $"(Weapon) {Id}";
+            Name = $"(Weapon) {MinionId}";
             if (!IsInGroup(Constant.GroupNameWeapon))
             {
                 AddToGroup(Constant.GroupNameWeapon);
@@ -119,6 +126,11 @@ public partial class WeaponBase : Node2D
     {
         _effects.Add(effect);
         _isDirty = true;
+    }
+
+    public bool IsBelongTo(FactionType factionType)
+    {
+        return Faction.HasFlag(factionType);
     }
 
     public void StartAttack()
