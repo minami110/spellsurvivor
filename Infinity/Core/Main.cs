@@ -57,8 +57,8 @@ public partial class Main : Node
 
     public override void _EnterTree()
     {
-        // Initialize States
         _waveState = new WaveState { Config = _gameSettings.WaveConfig };
+        AddChild(_waveState);
         _shopState = new ShopState(_gameSettings.ShopConfig);
         AddChild(_shopState);
     }
@@ -106,10 +106,10 @@ public partial class Main : Node
             var tree = state.GetTree();
 
             // すべての武器を停止する
-            var nodes = GetTree().GetNodesInGroup(Constant.GroupNameWeapon);
-            foreach (var j in nodes)
+            var player = this.GetPlayerNode();
+            foreach (var n in player.GetChildren())
             {
-                if (j is not WeaponBase weapon)
+                if (n is not WeaponBase weapon)
                 {
                     continue;
                 }
@@ -118,7 +118,7 @@ public partial class Main : Node
             }
 
             // 残った Projectile をすべてコロス
-            tree.CallGroup("Projectile", "QueueFree");
+            tree.CallGroup(Constant.GroupNameProjectile, Node.MethodName.QueueFree);
         });
 
         // Shop 進入時
@@ -147,15 +147,10 @@ public partial class Main : Node
         });
 
         // Disposable registration
-        Disposable.Combine(_waveState, _shopState, d1, d2, d3).AddTo(this);
+        Disposable.Combine(d1, d2, d3).AddTo(this);
 
         // Start Game
         _waveState.SendSignal(WaveState.Signal.GamemodeStart);
-    }
-
-    public override void _Process(double delta)
-    {
-        _waveState._Process(delta);
     }
 
     public override void _ExitTree()

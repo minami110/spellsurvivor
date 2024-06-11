@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Godot;
 using R3;
 
 namespace fms;
@@ -11,7 +11,7 @@ public enum WavePhase
     Battleresult
 }
 
-public sealed class WaveState : IDisposable
+public partial class WaveState : Node
 {
     public enum Signal
     {
@@ -40,7 +40,13 @@ public sealed class WaveState : IDisposable
 
     public BattleWaveConfigRaw CurrentWaveConfig => Config.Waves[_waveRp.Value];
 
-    internal void _Process(double delta)
+    public override void _EnterTree()
+    {
+        // Set Name (for debugging)
+        Name = nameof(ShopState);
+    }
+
+    public override void _Process(double delta)
     {
         if (_phaseRp.Value != WavePhase.Battle)
         {
@@ -53,6 +59,13 @@ public sealed class WaveState : IDisposable
             _battlePhaseTimeLeft.Value = 0;
             _phaseRp.Value = WavePhase.Battleresult;
         }
+    }
+
+    public override void _ExitTree()
+    {
+        _phaseRp.Dispose();
+        _battlePhaseTimeLeft.Dispose();
+        _waveRp.Dispose();
     }
 
     public void SendSignal(Signal signal)
@@ -94,12 +107,5 @@ public sealed class WaveState : IDisposable
                 _phaseRp.Value = WavePhase.Battle;
             }
         }
-    }
-
-    void IDisposable.Dispose()
-    {
-        _phaseRp.Dispose();
-        _battlePhaseTimeLeft.Dispose();
-        _waveRp.Dispose();
     }
 }
