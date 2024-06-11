@@ -16,8 +16,9 @@ gravity_scale = 0.0
 lock_rotation = true
 script = ExtResource("1_u1wuv")
 _enemyDamageArea = NodePath("DamageArea")
+metadata/_edit_group_ = true
 
-[node name="Icon" type="TextureRect" parent="."]
+[node name="Sprite" type="TextureRect" parent="."]
 offset_left = -8.0
 offset_top = -8.0
 scale = Vector2(1.935, 1.935)
