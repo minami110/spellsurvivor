@@ -1,5 +1,4 @@
 ﻿using Godot;
-using Godot.Collections;
 
 namespace fms;
 
@@ -17,9 +16,6 @@ public partial class ShopConfig : FmsResource
 
     [Export(PropertyHint.Dir)]
     public string ShopItemRootDir { get; private set; } = string.Empty;
-
-    [Export]
-    public Array<MinionCoreData> DefaultMinionPool { get; private set; } = new();
 
     /// <summary>
     ///     Shop Level  別 Tier 別の 排出率

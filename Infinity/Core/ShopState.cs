@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Godot;
 using R3;
@@ -51,16 +52,43 @@ public partial class ShopState : Node
 
         // Construct Runtime Minion Pool
         _runtimeMinionPool.Clear();
-        foreach (var minionCoreData in Config.DefaultMinionPool)
+
+        var searchDir = Config.ShopItemRootDir;
+
+        // Load Minion Data
+        this.DebugLog($"Start loading shop items from: {searchDir}");
+        using var dir = DirAccess.Open(searchDir);
+        if (dir != null)
         {
-            if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
+            dir.ListDirBegin();
+            var fileName = dir.GetNext();
+            while (fileName != string.Empty)
             {
-                list = new List<Minion>();
-                _runtimeMinionPool[minionCoreData.Tier] = list;
+                if (fileName.EndsWith(".tres"))
+                {
+                    var path = Path.Combine(searchDir, fileName);
+                    var minionCoreData = GD.Load<MinionCoreData>(path);
+                    GD.Print($"  Loaded: {path} => {minionCoreData.Name}");
+                    if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
+                    {
+                        list = new List<Minion>();
+                        _runtimeMinionPool[minionCoreData.Tier] = list;
+                    }
+
+                    list.Add(new Minion(minionCoreData));
+                }
+
+                fileName = dir.GetNext();
             }
 
-            list.Add(new Minion(minionCoreData));
+            dir.ListDirEnd();
         }
+        else
+        {
+            throw new DirectoryNotFoundException($"Directory not found: {searchDir}");
+        }
+
+        this.DebugLog("Completed!");
 
         // Default 
         _levelRp.Value = 1;
