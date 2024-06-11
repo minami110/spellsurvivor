@@ -1,14 +1,10 @@
-[gd_resource type="Resource" script_class="ShopConfig" load_steps=6 format=3 uid="uid://cc2mm30mcw05i"]
+[gd_resource type="Resource" script_class="ShopConfig" load_steps=2 format=3 uid="uid://cc2mm30mcw05i"]
 
 [ext_resource type="Script" path="res://Infinity/Datebase/Shop/ShopConfig.cs" id="1_0jypj"]
-[ext_resource type="Resource" uid="uid://dg1a0sshsyi4h" path="res://Infinity/Datebase/Items/(ShopItem) AutoAimPistol.tres" id="1_veq3r"]
-[ext_resource type="Resource" uid="uid://b5yd1ajpdgy0g" path="res://Infinity/Datebase/Items/(ShopItem) Book.tres" id="2_jmvr0"]
-[ext_resource type="Resource" uid="uid://brkbpmer5vx5k" path="res://Infinity/Datebase/Items/(ShopItem) ForwardKnife.tres" id="3_8sgvx"]
-[ext_resource type="Resource" uid="uid://bwrvuumsylvne" path="res://Infinity/Datebase/Items/(ShopItem) PoisonMistGen.tres" id="4_ocjwc"]
 
 [resource]
 script = ExtResource("1_0jypj")
 RerollCost = 1
 UpgradeCost = 1
 AddSlotCost = 1
-DefaultMinionPool = [ExtResource("1_veq3r"), ExtResource("2_jmvr0"), ExtResource("3_8sgvx"), ExtResource("4_ocjwc")]
+ShopItemRootDir = "res://Infinity/Datebase/Items"
