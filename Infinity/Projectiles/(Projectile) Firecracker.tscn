@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://w7klme84oslc"]
+[gd_scene load_steps=5 format=3 uid="uid://cwimo5hshc2qe"]
 
 [ext_resource type="Script" path="res://Infinity/Projectiles/Firecracker.cs" id="1_hqkbq"]
 [ext_resource type="Texture2D" uid="uid://b7qsm3wpjrqd8" path="res://Common/Resources/Textures/Noita/Spell_bouncy_orb.webp" id="2_tdfmy"]
@@ -9,31 +9,30 @@ radius = 3.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_s8feo"]
 radius = 7.07107
 
-[node name="Firecracker" type="Node" groups=["Projectile"]]
-script = ExtResource("1_hqkbq")
-
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
+[node name="Firecracker" type="RigidBody2D"]
 collision_layer = 0
 collision_mask = 0
 gravity_scale = 0.0
 lock_rotation = true
+script = ExtResource("1_hqkbq")
+metadata/_edit_group_ = true
 
-[node name="DummyCollision" type="CollisionShape2D" parent="RigidBody2D"]
-visible = false
-shape = SubResource("CircleShape2D_gdwp8")
-disabled = true
-
-[node name="DamageArea" type="Area2D" parent="RigidBody2D"]
-collision_layer = 0
-collision_mask = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D/DamageArea"]
-shape = SubResource("CircleShape2D_s8feo")
-debug_color = Color(0.955606, 9.62615e-08, 0.544884, 0)
-
-[node name="Icon" type="TextureRect" parent="RigidBody2D"]
+[node name="Sprite" type="TextureRect" parent="."]
 offset_left = -8.0
 offset_top = -8.0
 scale = Vector2(1.935, 1.935)
 texture = ExtResource("2_tdfmy")
 expand_mode = 1
+
+[node name="DummyCollisionForRigidBody" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_gdwp8")
+disabled = true
+
+[node name="DamageArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="DamageCollision" type="CollisionShape2D" parent="DamageArea"]
+shape = SubResource("CircleShape2D_s8feo")
+debug_color = Color(0.955606, 9.62615e-08, 0.544884, 0)
