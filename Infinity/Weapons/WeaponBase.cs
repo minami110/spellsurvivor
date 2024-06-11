@@ -23,10 +23,16 @@ public partial class WeaponBase : Node2D
     private FrameTimer _frameTimer = null!;
 
     /// <summary>
+    ///     Tree に入った時に自動で Start するかどうか
+    /// </summary>
+    [ExportGroup("For Debugging")]
+    [Export]
+    private bool _autostart;
+
+    /// <summary>
     ///     現在の武器の Level
     ///     Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
     /// </summary>
-    [ExportGroup("For Debugging")]
     [Export(PropertyHint.Range, "1,5")]
     public uint Level { get; set; } = 1;
 
@@ -36,12 +42,6 @@ public partial class WeaponBase : Node2D
     /// </summary>
     [Export]
     public FactionType Faction { get; set; }
-
-    /// <summary>
-    ///     Tree に入った時に自動で Start するかどうか
-    /// </summary>
-    [Export]
-    private bool _autostart;
 
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
     private readonly HashSet<EffectBase> _effects = new();
