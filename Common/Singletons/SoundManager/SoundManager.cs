@@ -16,7 +16,13 @@ public partial class SoundManager : Node
     private AudioStreamPlayer _bgmOptionalBPlayer = null!;
 
     [Export]
-    private AudioStreamPlayer _effectPlayer = null!;
+    private AudioStreamPlayer _effectPlayerA = null!;
+
+    [Export]
+    private AudioStreamPlayer _effectPlayerB = null!;
+
+    [Export]
+    private AudioStreamPlayer _effectPlayerC = null!;
 
     private static readonly StringName BusNameMaster = new("Master");
     private static readonly StringName BusNameBgm = new("BGM");
@@ -76,13 +82,25 @@ public partial class SoundManager : Node
             return;
         }
 
-        if (_instance._effectPlayer.Playing)
+        if (_instance._effectPlayerA.Playing)
         {
-            return;
+            if (_instance._effectPlayerB.Playing)
+            {
+                if (_instance._effectPlayerC.Playing)
+                {
+                    return;
+                }
+
+                _instance._effectPlayerC.Stream = stream;
+                _instance._effectPlayerC.Play();
+            }
+
+            _instance._effectPlayerB.Stream = stream;
+            _instance._effectPlayerB.Play();
         }
 
-        _instance._effectPlayer.Stream = stream;
-        _instance._effectPlayer.Play();
+        _instance._effectPlayerA.Stream = stream;
+        _instance._effectPlayerA.Play();
     }
 
     public static void SetBgmBusLowPassFilterCutOff(float hz)

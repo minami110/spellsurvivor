@@ -2,12 +2,14 @@
 
 [ext_resource type="Script" path="res://Common/Singletons/SoundManager/SoundManager.cs" id="1_lf46y"]
 
-[node name="SoundManager" type="Node" node_paths=PackedStringArray("_bgmBasePlayer", "_bgmOptionalAPlayer", "_bgmOptionalBPlayer", "_effectPlayer")]
+[node name="SoundManager" type="Node" node_paths=PackedStringArray("_bgmBasePlayer", "_bgmOptionalAPlayer", "_bgmOptionalBPlayer", "_effectPlayerA", "_effectPlayerB", "_effectPlayerC")]
 script = ExtResource("1_lf46y")
 _bgmBasePlayer = NodePath("BGM Base Player")
 _bgmOptionalAPlayer = NodePath("BGM OptionalA Player")
 _bgmOptionalBPlayer = NodePath("BGM OptionalB Player")
-_effectPlayer = NodePath("Effect Player A")
+_effectPlayerA = NodePath("Effect Player A")
+_effectPlayerB = NodePath("Effect Player B")
+_effectPlayerC = NodePath("Effect Player C")
 
 [node name="BGM Base Player" type="AudioStreamPlayer" parent="."]
 process_mode = 3
@@ -22,5 +24,13 @@ process_mode = 3
 bus = &"BGM"
 
 [node name="Effect Player A" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+bus = &"Effect"
+
+[node name="Effect Player B" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+bus = &"Effect"
+
+[node name="Effect Player C" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 bus = &"Effect"
