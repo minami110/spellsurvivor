@@ -125,8 +125,8 @@ public partial class ShopState : Node
 
         // ToDo: 外部化していいかも
         // プレイヤーのお金を減らす
-        Main.PlayerState.AddEffect(new MoneyEffect { Value = -(int)minion.Price });
-        Main.PlayerState.SolveEffect();
+        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
+        playerState.AddEffect(new MoneyEffect { Value = -(int)minion.Price });
 
         // Player がすでに Minion を所持していたらレベルを上げる
         var player = this.GetPlayerNode();
@@ -225,8 +225,8 @@ public partial class ShopState : Node
 
             // プレイヤーのお金を増やす
             // TODO: 売却価格を売値と同じにしています
-            Main.PlayerState.AddEffect(new MoneyEffect { Value = (int)minion.Price });
-            Main.PlayerState.SolveEffect();
+            var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
+            playerState.AddEffect(new MoneyEffect { Value = (int)minion.Price });
         }
     }
 

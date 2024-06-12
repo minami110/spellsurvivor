@@ -13,10 +13,14 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     private Vector2 _nextMoveDirection;
 
-    private PlayerState? _playerState;
-
     public override void _Ready()
     {
+        var playerState = GetNode<PlayerState>("%PlayerState");
+        playerState.AddEffect(new AddMoveSpeedEffect { Value = _moveSpeed });
+        playerState.MoveSpeed
+            .Subscribe(this, (x, state) => { state._moveSpeed = x; })
+            .AddTo(this);
+
         var camera = GetNode<Camera2D>("%MainCamera");
         camera.LimitLeft = -_cameraLimit.X;
         camera.LimitRight = _cameraLimit.X;
@@ -39,26 +43,14 @@ public partial class MeMe : CharacterBody2D, IPawn
         MoveAndCollide(motion);
     }
 
-    public void SetPlayerState(PlayerState state)
-    {
-        _playerState = state;
-        _playerState.MoveSpeed.Subscribe(this, (x, state) => state._moveSpeed = x).AddTo(this);
-    }
-
     public void TakeDamage(float amount)
     {
-        if (_playerState is null)
-        {
-            return;
-        }
-
         var effect = new PhysicalDamageEffect
         {
             Value = amount
         };
 
-        _playerState.AddEffect(effect);
-        _playerState.SolveEffect();
+        GetNode<PlayerState>("%PlayerState").AddEffect(effect);
 
         // 統計をおくる
         StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Player, amount, GlobalPosition);

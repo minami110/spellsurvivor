@@ -44,44 +44,45 @@ public partial class ShopHudController : Node
     public override void _Ready()
     {
         // ボタンの名前を更新
-        _upgradeButton.Text = $"Upgrade (${Main.ShopState.Config.UpgradeCost})";
-        _rerollButton.Text = $"Reroll (${Main.ShopState.Config.RerollCost})";
-        _addSlotButton.Text = $"AddSlot (${Main.ShopState.Config.AddSlotCost})";
-        _lockButton.Text = Main.ShopState.IsLocked ? "Unlock" : "Lock";
+        _upgradeButton.Text = $"Upgrade (${Main.Shop.Config.UpgradeCost})";
+        _rerollButton.Text = $"Reroll (${Main.Shop.Config.RerollCost})";
+        _addSlotButton.Text = $"AddSlot (${Main.Shop.Config.AddSlotCost})";
+        _lockButton.Text = Main.Shop.IsLocked ? "Unlock" : "Lock";
 
         // ボタンのバインドを更新
-        var d00 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.RefreshInStoreMinions(); });
-        var d01 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.UpgradeShopLevel(); });
+        var d00 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.Shop.RefreshInStoreMinions(); });
+        var d01 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.Shop.UpgradeShopLevel(); });
         var d02 = _quitShopButton.PressedAsObservable().Subscribe(_ =>
         {
             Main.WaveState.SendSignal(WaveState.Signal.PlayerAcceptedShop);
         });
         var d03 = _lockButton.PressedAsObservable().Subscribe(_ =>
         {
-            if (Main.ShopState.IsLocked)
+            if (Main.Shop.IsLocked)
             {
                 _lockButton.Text = "Lock";
-                Main.ShopState.IsLocked = false;
+                Main.Shop.IsLocked = false;
             }
             else
             {
                 _lockButton.Text = "Unlock";
-                Main.ShopState.IsLocked = true;
+                Main.Shop.IsLocked = true;
             }
         });
-        var d04 = _addSlotButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.AddItemSlot(); });
+        var d04 = _addSlotButton.PressedAsObservable().Subscribe(_ => { Main.Shop.AddItemSlot(); });
 
 
         // Player Money の変更を監視
-        var d10 = Main.PlayerState.Money.Subscribe(this, (x, state) => state._playerMoneyLabel.Text = $"$ {x}");
+        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
+        var d10 = playerState.Money.Subscribe(this, (x, state) => state._playerMoneyLabel.Text = $"$ {x}");
 
         // Player Inventory
         var playerNode = this.GetPlayerNode();
         var d20 = playerNode.ChildOrderChangedAsObservable().Subscribe(OnEquippedMinionChanged);
 
         // ShopState
-        var d30 = Main.ShopState.Level.Subscribe(x => { _shopLevelLabel.Text = $"Lv.{Main.ShopState.Level}"; });
-        var d31 = Main.ShopState.InStoreMinionsUpdated.Subscribe(OnInStoreMinionsUpdated);
+        var d30 = Main.Shop.Level.Subscribe(x => { _shopLevelLabel.Text = $"Lv.{Main.Shop.Level}"; });
+        var d31 = Main.Shop.InStoreMinionsUpdated.Subscribe(OnInStoreMinionsUpdated);
 
         // WaveState
         var d40 = Main.WaveState.Phase.Subscribe(this, (x, state) =>
@@ -128,7 +129,7 @@ public partial class ShopHudController : Node
             old.QueueFree();
         }
 
-        foreach (var item in Main.ShopState.InStoreMinions)
+        foreach (var item in Main.Shop.InStoreMinions)
         {
             var node = _instoreItemPackedScene.Instantiate<ShopSellingItem>();
             {

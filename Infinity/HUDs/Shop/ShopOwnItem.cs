@@ -33,7 +33,7 @@ public partial class ShopOwnItem : VBoxContainer
 
         // ToDo: とりあえず買値と同じに..
         _sellButton.Text = $"Sell ${Minion.Price}";
-        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.ShopState.SellItem(Minion); });
+        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.Shop.SellItem(Minion); });
 
         // Tooltip
         _toolTipControl.MouseEntered += ShowToolTip;

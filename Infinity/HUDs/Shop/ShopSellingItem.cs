@@ -32,7 +32,9 @@ public partial class ShopSellingItem : VBoxContainer
 
         // Subscribe 
         var d1 = _buyButton.PressedAsObservable().Subscribe(this, (_, t) => t.OnPressedBuyButton());
-        var d2 = Main.PlayerState.Money.Subscribe(OnChangedPlayerMoney);
+        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
+        var d2 = playerState.Money.Subscribe(OnChangedPlayerMoney);
+
         Disposable.Combine(d1, d2).AddTo(this);
 
         // Tooltip
@@ -69,7 +71,7 @@ public partial class ShopSellingItem : VBoxContainer
     private void OnPressedBuyButton()
     {
         // GameMode に通知する
-        Main.ShopState.BuyItem(Minion);
+        Main.Shop.BuyItem(Minion);
     }
 
     private void ShowToolTip()
