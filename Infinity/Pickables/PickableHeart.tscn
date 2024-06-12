@@ -1,0 +1,50 @@
+[gd_scene load_steps=9 format=3 uid="uid://4j20q4sqfin0"]
+
+[ext_resource type="Texture2D" uid="uid://mwktotrigvof" path="res://Common/Resources/Textures/Emoji/green_heart.png" id="1_bwu7f"]
+[ext_resource type="Script" path="res://Infinity/Pickables/PickableHeart.cs" id="1_lk2ks"]
+[ext_resource type="AudioStream" uid="uid://6l11p8wa4h11" path="res://Common/Resources/Sounds/se-pong-a.wav" id="2_rbmxw"]
+[ext_resource type="AudioStream" uid="uid://bi8dq8nr685ce" path="res://Common/Resources/Sounds/se-pong-b.wav" id="3_jai5m"]
+[ext_resource type="AudioStream" uid="uid://cbhgksiyedaqt" path="res://Common/Resources/Sounds/se-pong-c.wav" id="4_kt638"]
+[ext_resource type="AudioStream" uid="uid://bin6ifccfgw7o" path="res://Common/Resources/Sounds/se-pong-d.wav" id="5_lgiyx"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ksyvo"]
+streams_count = 4
+stream_0/stream = ExtResource("2_rbmxw")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("3_jai5m")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("4_kt638")
+stream_2/weight = 1.0
+stream_3/stream = ExtResource("5_lgiyx")
+stream_3/weight = 1.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ko4ev"]
+radius = 30.0
+
+[node name="PickableHeart" type="Node2D"]
+script = ExtResource("1_lk2ks")
+_pickSound = SubResource("AudioStreamRandomizer_ksyvo")
+
+[node name="Sprite" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(7, 7)
+texture = ExtResource("1_bwu7f")
+expand_mode = 1
+
+[node name="AttractionArea" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape" type="CollisionShape2D" parent="AttractionArea"]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_ko4ev")
+debug_color = Color(0, 0.6, 0.701961, 0)

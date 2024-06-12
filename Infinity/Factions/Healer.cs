@@ -14,9 +14,9 @@ public partial class Healer : FactionBase
     {
         var value = level switch
         {
-            >= 6 => 450,
-            >= 4 => 150,
-            >= 2 => 50,
+            >= 6 => 50,
+            >= 4 => 30,
+            >= 2 => 10,
             _ => 0
         };
 

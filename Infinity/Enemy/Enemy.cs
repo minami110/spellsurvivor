@@ -165,6 +165,10 @@ public partial class Enemy : RigidBody2D
         // Emit Blood Particle
         _bloodParticle.Emitting = true;
 
+        // ToDo: Dev
+        // Spawn Heart
+        PickableItemSpawner.SpawnItem("PickableHeart", GlobalPosition);
+
         await this.WaitForSecondsAsync(0.5f);
 
         QueueFree();

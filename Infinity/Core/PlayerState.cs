@@ -139,6 +139,11 @@ public partial class PlayerState : Node
                     damage += physicalDamageEffect.Value;
                     break;
                 }
+                case HealEffect healEffect:
+                {
+                    health += healEffect.Value;
+                    break;
+                }
             }
         }
 

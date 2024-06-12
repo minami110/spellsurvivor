@@ -21,5 +21,6 @@ public static class Constant
     public static readonly StringName GroupNameFaction = new("Faction");
     public static readonly StringName GroupNameWeapon = new("Weapon");
     public static readonly StringName GroupNameProjectile = new("Projectile");
+    public static readonly StringName GroupNamePickableItem = new("PickableItem");
     public static readonly StringName GroupNameEnemy = new("Enemy");
 }

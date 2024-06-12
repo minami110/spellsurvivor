@@ -43,17 +43,25 @@ public partial class MeMe : CharacterBody2D, IPawn
         MoveAndCollide(motion);
     }
 
-    public void TakeDamage(float amount)
+    public void AddEffect(EffectBase effect)
     {
-        var effect = new PhysicalDamageEffect
-        {
-            Value = amount
-        };
-
         GetNode<PlayerState>("%PlayerState").AddEffect(effect);
 
         // 統計をおくる
-        StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Player, amount, GlobalPosition);
+        switch (effect)
+        {
+            case PhysicalDamageEffect damageEffect:
+                StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Player, damageEffect.Value, GlobalPosition);
+                break;
+            case HealEffect healEffect:
+                StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Player, -healEffect.Value, GlobalPosition);
+                break;
+        }
+    }
+
+    public void TakeDamage(float amount)
+    {
+        AddEffect(new PhysicalDamageEffect { Value = amount });
     }
 
     void IPawn.PrimaryPressed()
