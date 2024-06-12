@@ -14,7 +14,7 @@ public partial class FirecrackerSparks : ProjectileNode2DBase
     private CollisionShape2D _enemyDamageCollisionShape = null!;
 
     public FirecrackerSparkData FirecrackerSparkDataSettings;
-    
+
     /// <summary>
     ///     敵にダメージを与えるクールダウン
     /// </summary>
@@ -30,7 +30,7 @@ public partial class FirecrackerSparks : ProjectileNode2DBase
         // init settings
         CoolDownFrame = FirecrackerSparkDataSettings.DamageCoolDownFrame;
         DamageAreaRadius = FirecrackerSparkDataSettings.DamageAreaRadius;
-        
+
         // Set collision shape
         _enemyDamageCollisionShape.GlobalScale = new Vector2(DamageAreaRadius, DamageAreaRadius);
     }

@@ -8,6 +8,9 @@ namespace fms.Weapon;
 /// </summary>
 public partial class FirecrackerGen : WeaponBase
 {
+    [Export]
+    private float _baseDamage = 2; // ダメージ発生1回につき与えるダメージ
+
     [ExportGroup("Internal Reference")]
     [Export]
     private PackedScene _bulletPackedScene = null!;
@@ -19,21 +22,18 @@ public partial class FirecrackerGen : WeaponBase
     private CollisionShape2D _collisionShape = null!;
 
     [Export]
-    private Area2D _searchArea = null!;
+    private float _damageAreaRadius = 50; // ダメージ範囲の半径 (px)
 
     [ExportGroup("Sparks Reference")]
     [Export]
     private int _damageCoolDownFrame = 10; // フレーム毎に一回敵にダメージ
-    
-    [Export]
-    private float _baseDamage = 2; // ダメージ発生1回につき与えるダメージ
-    
-    [Export]
-    private float _damageAreaRadius = 50; // ダメージ範囲の半径 (px)
-    
+
     [Export]
     private float _lifeFrame = 120; // 設定フレーム後に消滅する
-    
+
+    [Export]
+    private Area2D _searchArea = null!;
+
     public override void _Ready()
     {
         // 範囲 100 px

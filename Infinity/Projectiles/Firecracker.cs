@@ -1,4 +1,3 @@
-using fms.Weapon;
 using Godot;
 using R3;
 
@@ -6,17 +5,17 @@ namespace fms.Projectile;
 
 public partial class Firecracker : ProjectileRigidBodyBase
 {
-    [Export]
-    private Area2D _enemyDamageArea = null!;
-    
     [ExportGroup("Internal Reference")]
     [Export]
     private PackedScene _bulletPackedScene = null!;
-    
+
+    [Export]
+    private Area2D _enemyDamageArea = null!;
+
     public Node BulletSpawnNode = null!;
-    
+
     public FirecrackerSparkData FirecrackerSparkDataSettings;
-    
+
     public override void _Ready()
     {
         // Connect
@@ -31,7 +30,7 @@ public partial class Firecracker : ProjectileRigidBodyBase
         SpawnFirecrackerSparks();
         KillThis();
     }
-    
+
     private void SpawnFirecrackerSparks()
     {
         var bullet = _bulletPackedScene.Instantiate<FirecrackerSparks>();
