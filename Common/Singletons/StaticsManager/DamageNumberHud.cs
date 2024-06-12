@@ -31,7 +31,6 @@ public partial class DamageNumberHud : Node2D
         };
 
         tween.TweenProperty(this, "scale", new Vector2(scale, scale), 0.08d);
-        tween.Play();
     }
 
     public override void _Process(double _)

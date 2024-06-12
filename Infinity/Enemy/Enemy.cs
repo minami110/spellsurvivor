@@ -185,8 +185,7 @@ public partial class Enemy : RigidBody2D
         // Hitstop and blink shader
         var tween = CreateTween();
         tween.TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 0f, 1f, 0.05f);
-        tween.Chain().TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 1f, 0f, 0.05f);
-        tween.Play();
+        tween.TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 1f, 0f, 0.05f);
     }
 
     private void UpdateHealthBar()

@@ -18,10 +18,6 @@ public partial class WeaponBase : Node2D
     [Export(PropertyHint.Range, "1,9999,1")]
     public uint BaseCoolDownFrame { get; private set; } = 10;
 
-    [ExportGroup("Internal Reference")]
-    [Export]
-    private FrameTimer _frameTimer = null!;
-
     /// <summary>
     ///     Tree に入った時に自動で Start するかどうか
     /// </summary>
@@ -45,6 +41,8 @@ public partial class WeaponBase : Node2D
 
     private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
     private readonly HashSet<EffectBase> _effects = new();
+
+    private FrameTimer _frameTimer = null!;
 
     private bool _isDirty;
 
@@ -89,6 +87,7 @@ public partial class WeaponBase : Node2D
         }
         else if (what == NotificationReady)
         {
+            _frameTimer = GetNode<FrameTimer>("FrameTimer");
             var d1 = _frameTimer.TimeOut.Subscribe(this, (_, state) => { state.DoAttack(state.Level); });
             Disposable.Combine(d1, _coolDownReduceRateRp).AddTo(this);
 
