@@ -34,14 +34,12 @@ public partial class Firecracker : ProjectileRigidBodyBase
     
     private void SpawnFirecrackerSparks()
     {
-        GD.Print("spawn firecracker sparks");
         var bullet = _bulletPackedScene.Instantiate<FirecrackerSparks>();
         {
             bullet.GlobalPosition = GlobalPosition;
             bullet.FirecrackerSparkDataSettings = FirecrackerSparkDataSettings;
         }
-        BulletSpawnNode.AddChild(bullet);
-        KillThis();
+        BulletSpawnNode.CallDeferred(Node.MethodName.AddChild, bullet);
     }
 }
 
