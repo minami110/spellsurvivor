@@ -51,6 +51,8 @@ public partial class WeaponBase : Node2D
     [Export]
     public float EnemyDropSmallHealRate { get; private set; }
 
+    private static readonly NodePath FrameTimerPath = new("FrameTimer");
+
     // 現在武器に付与されている Effect
     private readonly HashSet<EffectBase> _effects = new();
 
@@ -84,7 +86,7 @@ public partial class WeaponBase : Node2D
         }
     }
 
-    private FrameTimer FrameTimer => GetNode<FrameTimer>("FrameTimer");
+    private FrameTimer FrameTimer => GetNode<FrameTimer>(FrameTimerPath);
 
     /// <summary>
     ///     次の攻撃までの残りフレーム
@@ -99,6 +101,14 @@ public partial class WeaponBase : Node2D
             if (!IsInGroup(Constant.GroupNameWeapon))
             {
                 AddToGroup(Constant.GroupNameWeapon);
+            }
+
+            // Add FrameTimer
+            if (GetNodeOrNull<FrameTimer>(FrameTimerPath) == null)
+            {
+                var frameTimer = new FrameTimer();
+                frameTimer.Name = FrameTimerPath.ToString();
+                AddChild(frameTimer);
             }
         }
         else if (what == NotificationReady)

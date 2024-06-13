@@ -7,12 +7,15 @@ namespace fms.Weapon;
 
 public partial class ForwardKnife : WeaponBase
 {
-    [ExportGroup("Internal Reference")]
     [Export]
     private PackedScene _projectile = null!;
 
-    private int _trickshotBounceCount;
-    private float _trickshotBounceDamageMultiplier;
+    [ExportGroup("For Debugging")]
+    [Export]
+    private int TrickShotCount { get; set; }
+
+    [Export]
+    private float TrickShotDamageMul { get; set; }
 
     private protected override void DoAttack(uint level)
     {
@@ -44,8 +47,8 @@ public partial class ForwardKnife : WeaponBase
 
     private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
     {
-        _trickshotBounceCount = 0;
-        _trickshotBounceDamageMultiplier = 0f;
+        TrickShotCount = 0;
+        TrickShotDamageMul = 0f;
 
         foreach (var effect in effects)
         {
@@ -54,8 +57,8 @@ public partial class ForwardKnife : WeaponBase
                 // この武器は Trickshot に対応しているので拾う
                 case TrickshotBounce trickshotBounceCount:
                 {
-                    _trickshotBounceCount += trickshotBounceCount.BounceCount;
-                    _trickshotBounceDamageMultiplier += trickshotBounceCount.BounceDamageMultiplier;
+                    TrickShotCount += trickshotBounceCount.BounceCount;
+                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
                     break;
                 }
             }
@@ -65,8 +68,38 @@ public partial class ForwardKnife : WeaponBase
     private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
     {
         var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
-        var block = new SpellBlock(spawnPos, GlobalTransform.X);
-        block.Spawn(_projectile).At(new Inherit());
-        _ = block.StartAsync(GetNode("FrameTimer"));
+
+        var prj1 = _projectile.Instantiate<BaseProjectile>();
+        {
+            prj1.GlobalPosition = spawnPos;
+            prj1.Direction = GlobalTransform.X; // Player's Forward
+        }
+
+        if (TrickShotCount >= 1)
+        {
+            var prj2 = _projectile.Instantiate<BaseProjectile>();
+            prj2.AddChild(new DamageMod { Add = 0, Multiply = TrickShotDamageMul });
+            prj2.AddChild(new AutoAim
+            {
+                Mode = AutoAim.ModeType.JustOnce | AutoAim.ModeType.KillPrjWhenSearchFailed,
+                SearchRadius = 100
+            });
+            prj1.AddChild(new DeathTrigger { Next = prj2, When = WhyDead.CollidedWithAny });
+
+            if (TrickShotCount >= 2)
+            {
+                var prj3 = _projectile.Instantiate<BaseProjectile>();
+                prj3.AddChild(new DamageMod { Add = 0, Multiply = TrickShotDamageMul });
+                prj3.AddChild(new AutoAim
+                {
+                    Mode = AutoAim.ModeType.JustOnce | AutoAim.ModeType.KillPrjWhenSearchFailed,
+                    SearchRadius = 100
+                });
+                prj2.AddChild(new DeathTrigger { Next = prj3, When = WhyDead.CollidedWithAny });
+            }
+        }
+
+        // 弾をスポーンする (FrameTimer が Node (座標打消) なので代用)
+        GetNode("FrameTimer").AddChild(prj1);
     }
 }

@@ -3,6 +3,14 @@ using R3;
 
 namespace fms.Projectile;
 
+public readonly struct ProjectileHitInfo
+{
+    public required Node Node { get; init; }
+    public required Vector2 Position { get; init; }
+    public required Vector2 Normal { get; init; }
+    public required Vector2 Velocity { get; init; }
+}
+
 public partial class BaseProjectile : Area2D
 {
     /// <summary>
@@ -35,11 +43,23 @@ public partial class BaseProjectile : Area2D
     [Export]
     public uint DamageEveryXFrames;
 
+    /// <summary>
+    ///     生成直後ダメージを与えない猶予時間 (連続ヒットなどの防止)
+    /// </summary>
+    [Export]
+    public uint IgnoreDamageFirstFrames = 2;
+
     [ExportGroup("Sounds")]
     [Export]
     private AudioStream? _hitSound;
 
     private const uint _FORCED_LIFETIME = 7200;
+
+    private readonly Subject<WhyDead> _deadSubject = new();
+
+    public ProjectileHitInfo HitInfo { get; private set; }
+
+    public Observable<WhyDead> Dead => _deadSubject;
 
     /// <summary>
     ///     現在の寿命 (フレーム数)
@@ -62,6 +82,7 @@ public partial class BaseProjectile : Area2D
                 this.BodyEnteredAsObservable()
                     .Subscribe(this, (x, s) => s.OnBodyEntered(x))
                     .AddTo(this);
+                _deadSubject.AddTo(this);
                 SetProcess(true);
                 break;
             }
@@ -79,10 +100,13 @@ public partial class BaseProjectile : Area2D
                     GlobalRotation = velocity.Angle();
                 }
 
-                // 継続ダメージ処理
-                if (DamageEveryXFrames > 0 && Age % DamageEveryXFrames == 0)
+                if (Age >= IgnoreDamageFirstFrames)
                 {
-                    OnDamageEveryXFrames();
+                    // 継続ダメージ処理
+                    if (DamageEveryXFrames > 0 && Age % DamageEveryXFrames == 0)
+                    {
+                        OnDamageEveryXFrames();
+                    }
                 }
 
                 // 寿命が 0 の場合は無限に生存するとする
@@ -99,20 +123,56 @@ public partial class BaseProjectile : Area2D
         }
     }
 
+    public virtual void OnDead(WhyDead reason)
+    {
+        _deadSubject.OnNext(reason);
+        _deadSubject.OnCompleted();
+
+        // Physics Process から呼ばれる (衝突時死亡) ことがあるので CallDeferred で
+        CallDeferred(Node.MethodName.QueueFree);
+    }
+
     private protected virtual void OnBodyEntered(Node2D body)
     {
+        if (Age < IgnoreDamageFirstFrames)
+        {
+            return;
+        }
+
+        // 最新の HitInfo を更新
+        // Note: すべての当たり判定が Sphere という決め打ちで法線を計算しています
+        HitInfo = new ProjectileHitInfo
+        {
+            Node = body,
+            Position = GlobalPosition,
+            Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
+            Velocity = Direction.Normalized() * Speed
+        };
+
+        if (body is StaticBody2D staticBody)
+        {
+            // 壁など静的なオブジェクトとの衝突時の処理
+            if (OnCollisionDie)
+            {
+                OnDead(WhyDead.CollidedWithWall);
+            }
+
+            return;
+        }
+
         if (body is Enemy enemy)
         {
             enemy.TakeDamage(Damage);
+
             if (_hitSound != null)
             {
                 SoundManager.PlaySoundEffect(_hitSound);
             }
-        }
 
-        if (OnCollisionDie)
-        {
-            OnDead(WhyDead.Collision);
+            if (OnCollisionDie)
+            {
+                OnDead(WhyDead.CollidedWithEnemy);
+            }
         }
     }
 
@@ -132,11 +192,5 @@ public partial class BaseProjectile : Area2D
                 enemy.TakeDamage(Damage);
             }
         }
-    }
-
-    private protected virtual void OnDead(WhyDead reason)
-    {
-        // Physics Process から呼ばれる (衝突時死亡) ことがあるので CallDeferred で
-        CallDeferred(Node.MethodName.QueueFree);
     }
 }
