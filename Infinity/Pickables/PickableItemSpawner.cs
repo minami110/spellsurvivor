@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
 using Godot;
-using Godot.Collections;
 
 namespace fms;
 
@@ -8,7 +8,7 @@ public partial class PickableItemSpawner : Node
 {
     private static PickableItemSpawner? _instance;
 
-    private readonly Dictionary<string, PackedScene> _itemDict = new();
+    private readonly Godot.Collections.Dictionary<string, PackedScene> _itemDict = new();
 
     public override void _Notification(int what)
     {
@@ -23,8 +23,14 @@ public partial class PickableItemSpawner : Node
         }
     }
 
-    public static void SpawnItem(string id, Vector2 position, bool isCallDeffered = true,
-        Dictionary<string, float>? settings = null)
+    /// <summary>
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="position"></param>
+    /// <param name="isCallDeffered"></param>
+    /// <param name="settings"></param>
+    /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
+    public static void SpawnItem(string id, Vector2 position, bool isCallDeffered = true, Godot.Collections.Dictionary<string, float>? settings = null)
     {
         if (_instance is null)
         {
@@ -34,10 +40,8 @@ public partial class PickableItemSpawner : Node
 
         if (!_instance._itemDict.TryGetValue(id, out var packedScene))
         {
-            GD.PrintErr($"[{nameof(PickableItemSpawner)}] Item not found: {id}");
-            return;
+            throw new KeyNotFoundException($"[{nameof(PickableItemSpawner)}] Item not found: {id}");
         }
-
 
         var pickableItem = packedScene.Instantiate<Node2D>();
         pickableItem.GlobalPosition = position;
@@ -67,8 +71,17 @@ public partial class PickableItemSpawner : Node
             var fileName = dir.GetNext();
             while (fileName != string.Empty)
             {
-                if (fileName.EndsWith(".tscn"))
+                // Note: Godot 4.2.2
+                // Runtime で XXX.tres.remap となっていることがある (ランダム?)
+                // この場合 .remap を抜いたパスを読み込むとちゃんと行ける
+                // See https://github.com/godotengine/godot/issues/66014
+                if (fileName.EndsWith(".tscn") || fileName.EndsWith(".tscn.remap"))
                 {
+                    if (fileName.EndsWith(".remap"))
+                    {
+                        fileName = fileName.Replace(".remap", string.Empty);
+                    }
+
                     var path = Path.Combine(_SEARCH_DIR, fileName);
                     var packedScene = GD.Load<PackedScene>(path);
                     // Remove extension
