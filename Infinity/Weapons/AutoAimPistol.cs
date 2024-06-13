@@ -5,70 +5,23 @@ namespace fms.Weapon;
 
 public partial class AutoAimPistol : WeaponBase
 {
-    [ExportGroup("Internal Reference")]
     [Export]
-    private PackedScene _bulletPackedScene = null!;
+    private PackedScene _projectile = null!;
 
-    [Export]
-    private Area2D _searchArea = null!;
-
-    [Export]
-    private CollisionShape2D _collisionShape = null!;
-
-    [Export]
-    private Node _bulletSpawnPoint = null!;
-
-    public override void _Ready()
+    private protected override void SpawnProjectile(uint level)
     {
-        // 範囲 100 px
-        _collisionShape.Scale = new Vector2(100, 100);
-    }
-
-    private protected override void DoAttack(uint level)
-    {
-        if (!TryGetNearestEnemy(out var enemy))
+        var prj = _projectile.Instantiate<BaseProjectile>();
         {
-            return;
+            prj.GlobalPosition = GlobalPosition;
+            prj.Direction = GlobalTransform.X;
         }
 
-        // Spawn bullet
-        var bullet = _bulletPackedScene.Instantiate<SimpleBullet>();
+        prj.AddChild(new AutoAim
         {
-            bullet.GlobalPosition = GlobalPosition;
-            bullet.BaseDamage = 34;
-            var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
-            bullet.InitialVelocity = direction;
-            bullet.InitialSpeed = 1000f;
-        }
-        _bulletSpawnPoint.AddChild(bullet);
-    }
+            Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
+            SearchRadius = 100
+        });
 
-    private bool TryGetNearestEnemy(out Enemy? nearestEnemy)
-    {
-        nearestEnemy = null;
-
-        // Search near enemy
-        var overlappingBodies = _searchArea.GetOverlappingBodies();
-        if (overlappingBodies.Count <= 0)
-        {
-            return false;
-        }
-
-        // 最も近い敵を検索する
-        var distance = 999f;
-        foreach (var body in overlappingBodies)
-        {
-            if (body is Enemy e)
-            {
-                var d = GlobalPosition.DistanceTo(e.GlobalPosition);
-                if (d < distance)
-                {
-                    distance = d;
-                    nearestEnemy = e;
-                }
-            }
-        }
-
-        return nearestEnemy is not null;
+        FrameTimer.AddChild(prj);
     }
 }

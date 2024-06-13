@@ -42,7 +42,7 @@ public static partial class NodeExtensions
         return node.GetParent().FindChildren(pattern, type, false, false);
     }
 
-    public static Array<Node> GetSibling(this Node node)
+    public static Array<Node> GetSiblings(this Node node)
     {
         return node.GetParent().GetChildren();
     }

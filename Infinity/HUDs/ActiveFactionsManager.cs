@@ -12,7 +12,7 @@ public partial class ActiveFactionsManager : Node
     public override void _Ready()
     {
         // 兄弟の Label を全部キャッシュしておく
-        var nodes = this.GetSibling();
+        var nodes = this.GetSiblings();
         foreach (var node in nodes)
         {
             if (node is not Label label)
@@ -23,12 +23,14 @@ public partial class ActiveFactionsManager : Node
             _labels.Add(label.Name, label);
         }
 
-        // ラベルをすべて非表示に
-        HideAllLabel();
-
         // Player の子ノードが変わったら更新
         var player = this.GetPlayerNode();
-        player.ChildOrderChangedAsObservable().Subscribe(OnChangedPlayerChildren).AddTo(this);
+        player.ChildOrderChangedAsObservable()
+            .Subscribe(this, (_, state) => state.RefreshLabels())
+            .AddTo(this);
+
+        // 初回のラベル更新
+        RefreshLabels();
     }
 
     private void HideAllLabel()
@@ -39,7 +41,7 @@ public partial class ActiveFactionsManager : Node
         }
     }
 
-    private void OnChangedPlayerChildren(Unit _)
+    private void RefreshLabels()
     {
         HideAllLabel();
 

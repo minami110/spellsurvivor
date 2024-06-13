@@ -60,11 +60,12 @@ public partial class StaticsManager : CanvasLayer
         damageNumberHud.Damage = damage;
         if (ownerType == DamageTakeOwner.Player)
         {
-            damageNumberHud.Color = new Color(1f, 0.5f, 0.5f);
+            damageNumberHud.PhysicalDamageColor = new Color(1f, 0.5f, 0.5f);
+            damageNumberHud.HealColor = new Color(0.5f, 1.0f, 0.5f);
         }
         else
         {
-            damageNumberHud.Color = new Color(1f, 1f, 1f);
+            damageNumberHud.PhysicalDamageColor = new Color(1f, 1f, 1f);
         }
 
         if (_customDamageNumberContainer is not null)

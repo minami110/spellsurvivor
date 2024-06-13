@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://c03ya53oowgc4"]
+
+[ext_resource type="Texture2D" uid="uid://cos3d4b1k4o1q" path="res://Common/Resources/Textures/Emoji/bomb.png" id="1_fwdk2"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/BaseProjectile.cs" id="1_ool6k"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
+
+[node name="Bomb" type="Area2D" groups=["Projectile"]]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_ool6k")
+LifeFrame = 120
+Speed = 100
+
+[node name="Sprite" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(10, 10)
+texture = ExtResource("1_fwdk2")
+expand_mode = 1
+
+[node name="DamageCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jrj0e")
+debug_color = Color(1, 0, 0, 0)

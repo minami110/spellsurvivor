@@ -1,15 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://hvaujiufb0ew"]
+[gd_scene load_steps=3 format=3 uid="uid://hvaujiufb0ew"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/ForwardKnife.cs" id="1_6cweh"]
-[ext_resource type="PackedScene" uid="uid://cxr8k5llwgbsg" path="res://Infinity/Projectiles/(Projectile) TrickshotArrow.tscn" id="2_27mnn"]
-[ext_resource type="Script" path="res://Common/FrameTimer.cs" id="3_dwsfw"]
+[ext_resource type="PackedScene" uid="uid://cxr8k5llwgbsg" path="res://Infinity/Projectiles/(Projectile) Arrow.tscn" id="2_rgfqv"]
 
-[node name="ForwardKnife" type="Node2D" node_paths=PackedStringArray("_bulletSpawnNode", "_frameTimer")]
+[node name="ForwardKnife" type="Node2D"]
 script = ExtResource("1_6cweh")
-_bulletPackedScene = ExtResource("2_27mnn")
-_bulletSpawnNode = NodePath("FrameTimer")
+_projectile = ExtResource("2_rgfqv")
 BaseCoolDownFrame = 30
-_frameTimer = NodePath("FrameTimer")
-
-[node name="FrameTimer" type="Node" parent="."]
-script = ExtResource("3_dwsfw")

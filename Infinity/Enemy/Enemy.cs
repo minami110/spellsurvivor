@@ -47,9 +47,9 @@ public partial class Enemy : RigidBody2D
 
     private readonly EnemyState _state = new();
 
-    private bool _isDead;
-
     private Node2D? _targetNode;
+
+    public bool IsDead { get; private set; }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -86,7 +86,7 @@ public partial class Enemy : RigidBody2D
 
     public override void _PhysicsProcess(double _)
     {
-        if (_isDead)
+        if (IsDead)
         {
             LinearVelocity = Vector2.Zero;
             return;
@@ -107,7 +107,7 @@ public partial class Enemy : RigidBody2D
 
     public void TakeDamage(float amount)
     {
-        if (_isDead)
+        if (IsDead)
         {
             return;
         }
@@ -147,12 +147,12 @@ public partial class Enemy : RigidBody2D
 
     private async void KillByDamage()
     {
-        if (_isDead)
+        if (IsDead)
         {
             return;
         }
 
-        _isDead = true;
+        IsDead = true;
 
         // Hide and disable components
         _rigidBodyCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
@@ -165,14 +165,18 @@ public partial class Enemy : RigidBody2D
         // Emit Blood Particle
         _bloodParticle.Emitting = true;
 
+        // ToDo: 回復のパラメーターを設定する
+        // Spawn Heart
+        PickableItemSpawner.SpawnItem("PickableHeart", GlobalPosition);
+
         await this.WaitForSecondsAsync(0.5f);
 
-        QueueFree();
+        CallDeferred(Node.MethodName.QueueFree);
     }
 
     private void KillByWaveEnd()
     {
-        if (_isDead)
+        if (IsDead)
         {
             return;
         }
@@ -185,8 +189,7 @@ public partial class Enemy : RigidBody2D
         // Hitstop and blink shader
         var tween = CreateTween();
         tween.TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 0f, 1f, 0.05f);
-        tween.Chain().TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 1f, 0f, 0.05f);
-        tween.Play();
+        tween.TweenMethod(Callable.From((float value) => UpdateShaderParameter(value)), 1f, 0f, 0.05f);
     }
 
     private void UpdateHealthBar()

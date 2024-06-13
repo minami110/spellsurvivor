@@ -94,7 +94,6 @@ public partial class Main : Node
             var tween = CreateTween();
             tween.TweenMethod(Callable.From((float value) => SoundManager.SetBgmBusLowPassFilterCutOff(value)), 150f,
                 2000f, 2d);
-            tween.Play();
         });
 
         // Battle Result 進入時
@@ -138,7 +137,6 @@ public partial class Main : Node
             var tween = CreateTween();
             tween.TweenMethod(Callable.From((float value) => SoundManager.SetBgmBusLowPassFilterCutOff(value)), 2000f,
                 150f, 0.5d);
-            tween.Play();
         });
 
         // Disposable registration

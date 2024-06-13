@@ -7,17 +7,37 @@ namespace fms.Weapon;
 
 public partial class ForwardKnife : WeaponBase
 {
-    [ExportGroup("Internal Reference")]
     [Export]
-    private PackedScene _bulletPackedScene = null!;
+    private PackedScene _projectile = null!;
+
+    [ExportGroup("For Debugging")]
+    [Export]
+    private int TrickShotCount { get; set; }
 
     [Export]
-    private Node _bulletSpawnNode = null!;
+    private float TrickShotDamageMul { get; set; }
 
-    private int _trickshotBounceCount;
-    private float _trickshotBounceDamageMultiplier;
+    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    {
+        TrickShotCount = 0;
+        TrickShotDamageMul = 0f;
 
-    private protected override void DoAttack(uint level)
+        foreach (var effect in effects)
+        {
+            switch (effect)
+            {
+                // この武器は Trickshot に対応しているので拾う
+                case TrickshotBounce trickshotBounceCount:
+                {
+                    TrickShotCount += trickshotBounceCount.BounceCount;
+                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
+                    break;
+                }
+            }
+        }
+    }
+
+    private protected override void SpawnProjectile(uint level)
     {
         switch (level)
         {
@@ -45,38 +65,41 @@ public partial class ForwardKnife : WeaponBase
         }
     }
 
-    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
-    {
-        _trickshotBounceCount = 0;
-        _trickshotBounceDamageMultiplier = 0f;
-
-        foreach (var effect in effects)
-        {
-            switch (effect)
-            {
-                case TrickshotBounce trickshotBounceCount:
-                {
-                    _trickshotBounceCount += trickshotBounceCount.BounceCount;
-                    _trickshotBounceDamageMultiplier += trickshotBounceCount.BounceDamageMultiplier;
-                    break;
-                }
-            }
-        }
-    }
-
     private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
     {
-        var bullet = _bulletPackedScene.Instantiate<TrickshotArrow>();
+        var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
+
+        var prj1 = _projectile.Instantiate<BaseProjectile>();
         {
-            bullet.GlobalPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
-            bullet.BaseDamage = 50;
-            bullet.InitialSpeed = 1000f;
-            bullet.InitialVelocity = GlobalTransform.X; // Playerの正面に飛んでいく
-            bullet.BounceCount = _trickshotBounceCount;
-            bullet.BounceDamageMultiplier = _trickshotBounceDamageMultiplier;
-            bullet.BounceSearchRadius = 400f;
+            prj1.GlobalPosition = spawnPos;
+            prj1.Direction = GlobalTransform.X; // Player's Forward
         }
 
-        _bulletSpawnNode.AddChild(bullet);
+        if (TrickShotCount >= 1)
+        {
+            var prj2 = _projectile.Instantiate<BaseProjectile>();
+            prj2.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
+            prj2.AddChild(new AutoAim
+            {
+                Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
+                SearchRadius = 100
+            });
+            prj1.AddChild(new DeathTrigger { Next = prj2, When = WhyDead.CollidedWithAny });
+
+            if (TrickShotCount >= 2)
+            {
+                var prj3 = _projectile.Instantiate<BaseProjectile>();
+                prj3.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
+                prj3.AddChild(new AutoAim
+                {
+                    Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
+                    SearchRadius = 100
+                });
+                prj2.AddChild(new DeathTrigger { Next = prj3, When = WhyDead.CollidedWithAny });
+            }
+        }
+
+        // 弾をスポーンする (FrameTimer が Node (座標打消) なので代用)
+        FrameTimer.AddChild(prj1);
     }
 }

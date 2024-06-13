@@ -18,10 +18,6 @@ public partial class WeaponBase : Node2D
     [Export(PropertyHint.Range, "1,9999,1")]
     public uint BaseCoolDownFrame { get; private set; } = 10;
 
-    [ExportGroup("Internal Reference")]
-    [Export]
-    private FrameTimer _frameTimer = null!;
-
     /// <summary>
     ///     Tree に入った時に自動で Start するかどうか
     /// </summary>
@@ -43,16 +39,34 @@ public partial class WeaponBase : Node2D
     [Export]
     public FactionType Faction { get; set; }
 
-    private readonly ReactiveProperty<float> _coolDownReduceRateRp = new(0f);
+    /// <summary>
+    ///     現在武器が持っている マナ
+    /// </summary>
+    [Export]
+    public float Mana { get; private set; }
+
+    /// <summary>
+    ///     敵が確率で Heal を落とすようになる確率 (0, 1)
+    /// </summary>
+    [Export]
+    public float EnemyDropSmallHealRate { get; private set; }
+
+    private static readonly NodePath FrameTimerPath = new("FrameTimer");
+
+    // 現在武器に付与されている Effect
     private readonly HashSet<EffectBase> _effects = new();
 
-    private bool _isDirty;
+    // クールダウンの削減率 (範囲: 0 ~ 1 / デフォルト: 0)
+    private float _coolDownReduceRateRp;
 
+    // Effect の変更があったかどうか
+    private bool _isDirtyEffect;
 
-    private int _manaRegenerationInterval;
-    private int _manaRegenerationValue;
-    private int _timeCounter;
-    public int Mana;
+    // マナの生成にかかるフレーム数 (0 の場合は生成しない)
+    private int _manaGenerationInterval;
+
+    // マナの生成量
+    private int _manaGenerationValue;
 
     /// <summary>
     ///     武器の Id
@@ -67,15 +81,17 @@ public partial class WeaponBase : Node2D
     {
         get
         {
-            var coolDown = (uint)Mathf.Floor(BaseCoolDownFrame * (1f - _coolDownReduceRateRp.Value));
+            var coolDown = (uint)Mathf.Floor(BaseCoolDownFrame * (1f - _coolDownReduceRateRp));
             return Math.Max(coolDown, 1u);
         }
     }
 
+    protected FrameTimer FrameTimer => GetNode<FrameTimer>(FrameTimerPath);
+
     /// <summary>
     ///     次の攻撃までの残りフレーム
     /// </summary>
-    public ReadOnlyReactiveProperty<int> CoolDownLeft => _frameTimer.FrameLeft;
+    public ReadOnlyReactiveProperty<int> CoolDownLeft => FrameTimer.FrameLeft;
 
     public override void _Notification(int what)
     {
@@ -86,11 +102,20 @@ public partial class WeaponBase : Node2D
             {
                 AddToGroup(Constant.GroupNameWeapon);
             }
+
+            // Add FrameTimer
+            if (GetNodeOrNull<FrameTimer>(FrameTimerPath) == null)
+            {
+                var frameTimer = new FrameTimer();
+                frameTimer.Name = FrameTimerPath.ToString();
+                AddChild(frameTimer);
+            }
         }
         else if (what == NotificationReady)
         {
-            var d1 = _frameTimer.TimeOut.Subscribe(this, (_, state) => { state.DoAttack(state.Level); });
-            Disposable.Combine(d1, _coolDownReduceRateRp).AddTo(this);
+            FrameTimer.TimeOut
+                .Subscribe(this, (_, state) => { state.SpawnProjectile(state.Level); })
+                .AddTo(this);
 
             if (_autostart)
             {
@@ -107,28 +132,14 @@ public partial class WeaponBase : Node2D
         else if (what == NotificationProcess)
         {
             SolveEffect();
-        }
-    }
-
-    public override void _Process(double delta)
-    {
-        if (_manaRegenerationInterval == 0 || _manaRegenerationValue == 0)
-        {
-            return;
-        }
-
-        _timeCounter++;
-        if (_timeCounter > _manaRegenerationInterval)
-        {
-            Mana += _manaRegenerationValue;
-            _timeCounter = 0;
+            GenerateMana();
         }
     }
 
     public virtual void AddEffect(EffectBase effect)
     {
         _effects.Add(effect);
-        _isDirty = true;
+        _isDirtyEffect = true;
     }
 
     public bool IsBelongTo(FactionType factionType)
@@ -138,21 +149,36 @@ public partial class WeaponBase : Node2D
 
     public void StartAttack()
     {
-        _frameTimer.WaitFrame = SolvedCoolDownFrame;
-        _frameTimer.Start();
+        FrameTimer.WaitFrame = SolvedCoolDownFrame;
+        FrameTimer.Start();
     }
 
     public void StopAttack()
     {
-        _frameTimer.Stop();
-    }
-
-    private protected virtual void DoAttack(uint level)
-    {
+        FrameTimer.Stop();
     }
 
     private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
     {
+    }
+
+    private protected virtual void SpawnProjectile(uint level)
+    {
+    }
+
+    private void GenerateMana()
+    {
+        if (_manaGenerationInterval == 0 || _manaGenerationValue == 0)
+        {
+            return;
+        }
+
+        // Gets current frame
+        var frame = GetTree().GetFrame();
+        if (frame % _manaGenerationInterval == 0)
+        {
+            Mana += _manaGenerationValue;
+        }
     }
 
     private void SolveEffect()
@@ -166,40 +192,50 @@ public partial class WeaponBase : Node2D
         var count = _effects.RemoveWhere(effect => effect.IsDisposed);
         if (count > 0)
         {
-            _isDirty = true;
+            _isDirtyEffect = true;
         }
 
-        if (!_isDirty)
+        if (!_isDirtyEffect)
         {
             return;
         }
 
-        _isDirty = false;
+        _isDirtyEffect = false;
 
+        // 値を初期化する
         var reduceCoolDownRate = 0f;
         var manaRegenerationValue = 0;
         var manaRegenerationInterval = 0;
+        var enemyDropSmallHealRate = 0f;
 
         foreach (var effect in _effects)
         {
             switch (effect)
             {
+                // クールダウンを減少させるエフェクト
                 case ReduceCoolDownRate reduceCoolDownRateEffect:
                 {
                     reduceCoolDownRate += reduceCoolDownRateEffect.Value;
                     break;
                 }
+                // 常にマナを生成するエフェクト
                 case AddManaRegeneration addManaRegeneration:
                     manaRegenerationValue += addManaRegeneration.Value;
                     manaRegenerationInterval += addManaRegeneration.Interval;
                     break;
+                // 敵が確率で Heal を落とすようになる Effect
+                case EnemyDropSmallHeal enemyDropHealItem:
+                    enemyDropSmallHealRate += enemyDropHealItem.Rate;
+                    break;
             }
         }
 
-        OnSolveEffect(_effects);
+        // 値を更新
+        _coolDownReduceRateRp = Math.Max(reduceCoolDownRate, 0);
+        _manaGenerationInterval = Math.Max(manaRegenerationInterval, 0);
+        _manaGenerationValue = Math.Max(manaRegenerationValue, 0);
+        EnemyDropSmallHealRate = Math.Max(enemyDropSmallHealRate, 0f);
 
-        _coolDownReduceRateRp.Value = Math.Max(reduceCoolDownRate, 0);
-        _manaRegenerationInterval = Math.Max(manaRegenerationInterval, 0);
-        _manaRegenerationValue = Math.Max(manaRegenerationValue, 0);
+        OnSolveEffect(_effects);
     }
 }
