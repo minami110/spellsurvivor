@@ -82,8 +82,6 @@ public partial class FirecrackerGen : WeaponBase
             mainPrj.GlobalPosition = GlobalPosition;
         }
 
-        // ダメージなくす
-        mainPrj.AddChild(new DamageMod { Multiply = 0 });
         // 自動で敵狙う, 敵いないなら打たない
         mainPrj.AddChild(new AutoAim
         {

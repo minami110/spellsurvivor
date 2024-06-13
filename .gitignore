@@ -17,3 +17,5 @@ mono_crash.*.json
 # project-specific ignores
 /Development/
 /Developments/
+/Build/
+/Builds/
