@@ -15,6 +15,11 @@ public enum AutoAimMode : uint
     KillPrjWhenSearchFailed = 1 << 1
 }
 
+/// <summary>
+///     Projectile の Direction を補正する Mod
+///     Note: Godot はスクリプトベースでの CircleCast とかが簡単にできないので, Area2D 生成して.. でやってます
+///     開始数フレームは安定しない などの問題が微妙にあります
+/// </summary>
 public partial class AutoAim : Area2D
 {
     private CollisionShape2D _collision = null!;
@@ -45,7 +50,8 @@ public partial class AutoAim : Area2D
 
     public override void _PhysicsProcess(double delta)
     {
-        // 最初のフレームは判定が安定しないので無視する
+        // ToDo: 最初のフレームは判定が安定しないので無視する
+        // シェイプキャストみたいなのあればそれがいいよ~~
         if (_isFirstFrame)
         {
             _isFirstFrame = false;

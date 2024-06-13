@@ -1,14 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cc0rh5i501pkg"]
+[gd_scene load_steps=3 format=3 uid="uid://cc0rh5i501pkg"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Book.cs" id="1_vqguh"]
-[ext_resource type="PackedScene" uid="uid://5s5irgscu2xo" path="res://Infinity/Projectiles/(Projectile) RotateBook.tscn" id="2_icmed"]
-[ext_resource type="Script" path="res://Common/FrameTimer.cs" id="3_ys5ju"]
+[ext_resource type="PackedScene" uid="uid://dc8rn6v6qs5uy" path="res://Infinity/Projectiles/(Projectile) Disk.tscn" id="2_ceugq"]
 
-[node name="Book" type="Node2D" node_paths=PackedStringArray("_frameTimer")]
+[node name="Book" type="Node2D"]
 script = ExtResource("1_vqguh")
-_bulletPackedScene = ExtResource("2_icmed")
+_projectile = ExtResource("2_ceugq")
 BaseCoolDownFrame = 180
-_frameTimer = NodePath("FrameTimer")
-
-[node name="FrameTimer" type="Node" parent="."]
-script = ExtResource("3_ys5ju")

@@ -47,7 +47,7 @@ public partial class BaseProjectile : Area2D
     ///     生成直後ダメージを与えない猶予時間 (連続ヒットなどの防止)
     /// </summary>
     [Export]
-    public uint IgnoreDamageFirstFrames = 2;
+    public uint FirstSleepFrames = 2;
 
     [ExportGroup("Sounds")]
     [Export]
@@ -79,6 +79,11 @@ public partial class BaseProjectile : Area2D
             }
             case NotificationReady:
             {
+                if (FirstSleepFrames > 0)
+                {
+                    Hide();
+                }
+
                 this.BodyEnteredAsObservable()
                     .Subscribe(this, (x, s) => s.OnBodyEntered(x))
                     .AddTo(this);
@@ -91,8 +96,13 @@ public partial class BaseProjectile : Area2D
                 // 寿命を増加させる
                 Age++;
 
+                if (Age > FirstSleepFrames)
+                {
+                    Show();
+                }
+
                 // 移動処理を行う
-                if (Speed > 0)
+                if (Speed > 0 && Direction.LengthSquared() > 0)
                 {
                     var deltaTime = GetProcessDeltaTime();
                     var velocity = Direction.Normalized() * Speed;
@@ -100,13 +110,10 @@ public partial class BaseProjectile : Area2D
                     GlobalRotation = velocity.Angle();
                 }
 
-                if (Age >= IgnoreDamageFirstFrames)
+                // 継続ダメージ処理
+                if (Age >= FirstSleepFrames && DamageEveryXFrames > 0 && Age % DamageEveryXFrames == 0)
                 {
-                    // 継続ダメージ処理
-                    if (DamageEveryXFrames > 0 && Age % DamageEveryXFrames == 0)
-                    {
-                        OnDamageEveryXFrames();
-                    }
+                    OnDamageEveryXFrames();
                 }
 
                 // 寿命が 0 の場合は無限に生存するとする
@@ -134,7 +141,7 @@ public partial class BaseProjectile : Area2D
 
     private protected virtual void OnBodyEntered(Node2D body)
     {
-        if (Age < IgnoreDamageFirstFrames)
+        if (Age < FirstSleepFrames)
         {
             return;
         }

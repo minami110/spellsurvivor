@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://dc8rn6v6qs5uy"]
+
+[ext_resource type="Script" path="res://Infinity/Core/BaseProjectile.cs" id="1_regke"]
+[ext_resource type="Texture2D" uid="uid://dsn4catskks3m" path="res://Common/Resources/Textures/Noita/Spell_disc_bullet_big.webp" id="2_s8oem"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
+
+[node name="Disk" type="Area2D" groups=["Projectile"]]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_regke")
+Damage = 50.0
+LifeFrame = 300
+Speed = 100
+OnCollisionDie = false
+
+[node name="Sprite" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(10, 10)
+texture = ExtResource("2_s8oem")
+expand_mode = 1
+
+[node name="DamageCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jrj0e")
+debug_color = Color(1, 0, 0, 0)
