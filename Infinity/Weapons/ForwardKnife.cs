@@ -17,7 +17,27 @@ public partial class ForwardKnife : WeaponBase
     [Export]
     private float TrickShotDamageMul { get; set; }
 
-    private protected override void DoAttack(uint level)
+    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    {
+        TrickShotCount = 0;
+        TrickShotDamageMul = 0f;
+
+        foreach (var effect in effects)
+        {
+            switch (effect)
+            {
+                // この武器は Trickshot に対応しているので拾う
+                case TrickshotBounce trickshotBounceCount:
+                {
+                    TrickShotCount += trickshotBounceCount.BounceCount;
+                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
+                    break;
+                }
+            }
+        }
+    }
+
+    private protected override void SpawnProjectile(uint level)
     {
         switch (level)
         {
@@ -45,26 +65,6 @@ public partial class ForwardKnife : WeaponBase
         }
     }
 
-    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
-    {
-        TrickShotCount = 0;
-        TrickShotDamageMul = 0f;
-
-        foreach (var effect in effects)
-        {
-            switch (effect)
-            {
-                // この武器は Trickshot に対応しているので拾う
-                case TrickshotBounce trickshotBounceCount:
-                {
-                    TrickShotCount += trickshotBounceCount.BounceCount;
-                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
-                    break;
-                }
-            }
-        }
-    }
-
     private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
     {
         var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
@@ -78,7 +78,7 @@ public partial class ForwardKnife : WeaponBase
         if (TrickShotCount >= 1)
         {
             var prj2 = _projectile.Instantiate<BaseProjectile>();
-            prj2.AddChild(new DamageMod { Add = 0, Multiply = TrickShotDamageMul });
+            prj2.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
             prj2.AddChild(new AutoAim
             {
                 Mode = AutoAim.ModeType.JustOnce | AutoAim.ModeType.KillPrjWhenSearchFailed,
@@ -89,7 +89,7 @@ public partial class ForwardKnife : WeaponBase
             if (TrickShotCount >= 2)
             {
                 var prj3 = _projectile.Instantiate<BaseProjectile>();
-                prj3.AddChild(new DamageMod { Add = 0, Multiply = TrickShotDamageMul });
+                prj3.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
                 prj3.AddChild(new AutoAim
                 {
                     Mode = AutoAim.ModeType.JustOnce | AutoAim.ModeType.KillPrjWhenSearchFailed,
@@ -100,6 +100,6 @@ public partial class ForwardKnife : WeaponBase
         }
 
         // 弾をスポーンする (FrameTimer が Node (座標打消) なので代用)
-        GetNode("FrameTimer").AddChild(prj1);
+        FrameTimer.AddChild(prj1);
     }
 }

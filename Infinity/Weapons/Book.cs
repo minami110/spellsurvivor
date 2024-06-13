@@ -9,7 +9,7 @@ public partial class Book : WeaponBase
     [Export]
     private PackedScene _bulletPackedScene = null!;
 
-    private protected override void DoAttack(uint level)
+    private protected override void SpawnProjectile(uint level)
     {
         switch (level)
         {

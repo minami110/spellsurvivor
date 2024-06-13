@@ -86,7 +86,7 @@ public partial class WeaponBase : Node2D
         }
     }
 
-    private FrameTimer FrameTimer => GetNode<FrameTimer>(FrameTimerPath);
+    protected FrameTimer FrameTimer => GetNode<FrameTimer>(FrameTimerPath);
 
     /// <summary>
     ///     次の攻撃までの残りフレーム
@@ -114,7 +114,7 @@ public partial class WeaponBase : Node2D
         else if (what == NotificationReady)
         {
             FrameTimer.TimeOut
-                .Subscribe(this, (_, state) => { state.DoAttack(state.Level); })
+                .Subscribe(this, (_, state) => { state.SpawnProjectile(state.Level); })
                 .AddTo(this);
 
             if (_autostart)
@@ -158,11 +158,11 @@ public partial class WeaponBase : Node2D
         FrameTimer.Stop();
     }
 
-    private protected virtual void DoAttack(uint level)
+    private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
     {
     }
 
-    private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    private protected virtual void SpawnProjectile(uint level)
     {
     }
 

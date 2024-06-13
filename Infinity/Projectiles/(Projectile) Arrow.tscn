@@ -29,6 +29,6 @@ grow_vertical = 2
 texture = ExtResource("2_7rfok")
 expand_mode = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="DamageCollision" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_jrj0e")
 debug_color = Color(1, 0, 0, 0)

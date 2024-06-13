@@ -2,7 +2,7 @@
 
 namespace fms.Projectile;
 
-public partial class DamageMod : Node
+public partial class SpeedMod : Node
 {
     public int Add { get; init; } = 0;
     public float Multiply { get; init; } = 1.0f;
@@ -10,6 +10,6 @@ public partial class DamageMod : Node
     public override void _EnterTree()
     {
         var projectile = GetParent<BaseProjectile>();
-        projectile.Damage = (projectile.Damage + Add) * Multiply;
+        projectile.Speed = (uint)((projectile.Speed + Add) * Multiply);
     }
 }

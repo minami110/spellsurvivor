@@ -24,7 +24,7 @@ public partial class AutoAimPistol : WeaponBase
         _collisionShape.Scale = new Vector2(100, 100);
     }
 
-    private protected override void DoAttack(uint level)
+    private protected override void SpawnProjectile(uint level)
     {
         if (!TryGetNearestEnemy(out var enemy))
         {
