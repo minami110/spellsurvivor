@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using fms.Effect;
 using fms.Projectile;
 using Godot;
 
@@ -9,92 +11,88 @@ namespace fms.Weapon;
 public partial class FirecrackerGen : WeaponBase
 {
     [Export]
-    private float _baseDamage = 2; // ダメージ発生1回につき与えるダメージ
-
-    [ExportGroup("Internal Reference")]
-    [Export]
-    private PackedScene _bulletPackedScene = null!;
+    private PackedScene _projectile0 = null!;
 
     [Export]
-    private Node _bulletSpawnNode = null!;
+    private PackedScene _projectile1 = null!;
+
+    [ExportGroup("For Debugging")]
+    [Export]
+    private int TrickShotCount { get; set; }
 
     [Export]
-    private CollisionShape2D _collisionShape = null!;
+    private float TrickShotDamageMul { get; set; }
 
-    [Export]
-    private float _damageAreaRadius = 50; // ダメージ範囲の半径 (px)
-
-    [ExportGroup("Sparks Reference")]
-    [Export]
-    private int _damageCoolDownFrame = 10; // フレーム毎に一回敵にダメージ
-
-    [Export]
-    private float _lifeFrame = 120; // 設定フレーム後に消滅する
-
-    [Export]
-    private Area2D _searchArea = null!;
-
-    public override void _Ready()
+    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
     {
-        // 範囲 100 px
-        _collisionShape.Scale = new Vector2(200, 200);
-    }
+        TrickShotCount = 0;
+        TrickShotDamageMul = 0f;
 
-    private protected override void DoAttack(uint level)
-    {
-        if (!TryGetNearestEnemy(out var enemy))
+        foreach (var effect in effects)
         {
-            return;
-        }
-
-        // Fire to targetEnemy
-
-        // Spawn bullet
-        var bullet = _bulletPackedScene.Instantiate<Firecracker>();
-        {
-            bullet.GlobalPosition = GlobalPosition;
-            bullet.BaseDamage = 0;
-            var direction = (enemy!.GlobalPosition - GlobalPosition).Normalized();
-            bullet.InitialVelocity = direction;
-            bullet.InitialSpeed = 500f;
-            bullet.BulletSpawnNode = _bulletSpawnNode;
-            bullet.FirecrackerSparkDataSettings = new FirecrackerSparkData
+            switch (effect)
             {
-                DamageCoolDownFrame = _damageCoolDownFrame,
-                BaseDamage = _baseDamage,
-                DamageAreaRadius = _damageAreaRadius,
-                LifeFrame = _lifeFrame
-            };
-        }
-        _bulletSpawnNode.AddChild(bullet);
-    }
-
-    private bool TryGetNearestEnemy(out Enemy? nearestEnemy)
-    {
-        nearestEnemy = null;
-
-        // Search near enemy
-        var overlappingBodies = _searchArea.GetOverlappingBodies();
-        if (overlappingBodies.Count <= 0)
-        {
-            return false;
-        }
-
-        // 最も近い敵を検索する
-        var distance = 999f;
-        foreach (var body in overlappingBodies)
-        {
-            if (body is Enemy e)
-            {
-                var d = GlobalPosition.DistanceTo(e.GlobalPosition);
-                if (d < distance)
+                // この武器は Trickshot に対応しているので拾う
+                case TrickshotBounce trickshotBounceCount:
                 {
-                    distance = d;
-                    nearestEnemy = e;
+                    TrickShotCount += trickshotBounceCount.BounceCount;
+                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
+                    break;
                 }
             }
         }
+    }
 
-        return nearestEnemy is not null;
+    private protected override void SpawnProjectile(uint level)
+    {
+        var prj0 = ConstructProj(false);
+
+        if (TrickShotCount >= 1)
+        {
+            // Trickshot 1
+            var prj1 = ConstructProj(true);
+            prj0.AddChild(new DeathTrigger
+            {
+                Next = prj1,
+                When = WhyDead.CollidedWithAny
+            });
+        }
+
+        FrameTimer.AddChild(prj0);
+    }
+
+    private BaseProjectile ConstructProj(bool trickshot)
+    {
+        // 根本のダメージない奴
+        var mainPrj = _projectile0.Instantiate<BaseProjectile>();
+        if (!trickshot)
+        {
+            mainPrj.GlobalPosition = GlobalPosition;
+        }
+
+        // ダメージなくす
+        mainPrj.AddChild(new DamageMod { Multiply = 0 });
+        // 自動で敵狙う, 敵いないなら打たない
+        mainPrj.AddChild(new AutoAim
+        {
+            Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
+            SearchRadius = 200
+        });
+
+        // 毒沼部分
+        var subPrj = _projectile1.Instantiate<BaseProjectile>();
+
+        if (trickshot)
+        {
+            subPrj.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
+        }
+
+        mainPrj.AddChild(new DeathTrigger
+        {
+            Next = subPrj,
+            When = WhyDead.CollidedWithAny
+        });
+
+        return mainPrj;
     }
 }

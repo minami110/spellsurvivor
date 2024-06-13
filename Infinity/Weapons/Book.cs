@@ -10,15 +10,7 @@ public partial class Book : WeaponBase
 
     private protected override void SpawnProjectile(uint level)
     {
-        SpawnBullet(level);
-    }
-
-    /// <summary>
-    /// </summary>
-    /// <param name="spawnCount">たまの数</param>
-    private void SpawnBullet(uint spawnCount)
-    {
-        for (var i = 0; i < spawnCount; i++)
+        for (var i = 0; i < level; i++)
         {
             var prj = _projectile.Instantiate<BaseProjectile>();
             {
@@ -31,7 +23,7 @@ public partial class Book : WeaponBase
 
             // Orbit Mod を追加
             var player = GetParent<Node2D>();
-            var offset = 360f * i / spawnCount;
+            var offset = 360f * i / level;
             prj.AddChild(new Orbit { Target = player, Radius = 100, OffsetDeg = offset });
 
             FrameTimer.AddChild(prj);

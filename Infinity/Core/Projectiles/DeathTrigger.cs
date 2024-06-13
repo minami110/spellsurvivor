@@ -51,6 +51,10 @@ public partial class DeathTrigger : Node
 
         // Get Parent projectile parent (this node is projectile's root)
         var prjRoot = parent.GetParent();
+
+        // ToDO: HitInfo を継承する (Note: 一部 Mod が前回の HitInfo を使うので)
+        Next.HitInfo = parent.HitInfo;
+
         prjRoot.CallDeferred(Node.MethodName.AddChild, Next);
     }
 }

@@ -70,9 +70,19 @@ public partial class AutoAim : Area2D
         Enemy? nearest = null;
         var bodies = GetOverlappingBodies();
 
+        var parent = GetParent<BaseProjectile>();
+
+        // もし HitInfo に Node2D が入っていたら WhiteList にいれる (同じ敵に反応し続けるのを防止するため)
+        var prevHitNode = parent.HitInfo.HitNode;
+
         foreach (var body in bodies)
         {
             if (body is not Enemy enemy)
+            {
+                continue;
+            }
+
+            if (body == prevHitNode)
             {
                 continue;
             }
@@ -89,13 +99,13 @@ public partial class AutoAim : Area2D
         {
             // Parent (Projectile) の向きを変更する
             var direction = (nearest.GlobalPosition - GlobalPosition).Normalized();
-            GetParent<BaseProjectile>().Direction = direction;
+            parent.Direction = direction;
         }
         else
         {
             if (Mode.HasFlag(AutoAimMode.KillPrjWhenSearchFailed))
             {
-                GetParent<BaseProjectile>().OnDead(WhyDead.Short);
+                parent.OnDead(WhyDead.Short);
             }
         }
     }

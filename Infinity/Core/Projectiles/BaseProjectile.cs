@@ -5,7 +5,7 @@ namespace fms.Projectile;
 
 public readonly struct ProjectileHitInfo
 {
-    public required Node Node { get; init; }
+    public required Node? HitNode { get; init; }
     public required Vector2 Position { get; init; }
     public required Vector2 Normal { get; init; }
     public required Vector2 Velocity { get; init; }
@@ -57,7 +57,7 @@ public partial class BaseProjectile : Area2D
 
     private readonly Subject<WhyDead> _deadSubject = new();
 
-    public ProjectileHitInfo HitInfo { get; private set; }
+    public ProjectileHitInfo HitInfo { get; internal set; }
 
     public Observable<WhyDead> Dead => _deadSubject;
 
@@ -150,7 +150,7 @@ public partial class BaseProjectile : Area2D
         // Note: すべての当たり判定が Sphere という決め打ちで法線を計算しています
         HitInfo = new ProjectileHitInfo
         {
-            Node = body,
+            HitNode = body,
             Position = GlobalPosition,
             Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
             Velocity = Direction.Normalized() * Speed
