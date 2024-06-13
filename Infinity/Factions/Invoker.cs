@@ -16,7 +16,7 @@ public partial class Invoker : FactionBase
     private protected override void OnLevelChanged(uint level)
     {
         // 兄弟にある Weapon にアクセスする
-        var nodes = this.GetSibling();
+        var nodes = this.GetSiblings();
         foreach (var node in nodes)
         {
             if (node is not WeaponBase weapon)

@@ -12,7 +12,7 @@ public partial class ActiveFactionsManager : Node
     public override void _Ready()
     {
         // 兄弟の Label を全部キャッシュしておく
-        var nodes = this.GetSibling();
+        var nodes = this.GetSiblings();
         foreach (var node in nodes)
         {
             if (node is not Label label)

@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using fms.Weapon;
+using Godot;
 
 namespace fms.Faction;
 
@@ -12,20 +13,26 @@ public partial class Healer : FactionBase
 {
     private protected override void OnLevelChanged(uint level)
     {
-        var value = level switch
+        var rate = level switch
         {
-            >= 6 => 50,
-            >= 4 => 30,
-            >= 2 => 10,
-            _ => 0
+            >= 6 => 0.5f,
+            >= 4 => 0.3f,
+            >= 2 => 0.1f,
+            _ => 0f
         };
 
-        if (value == 0)
+        if (rate <= 0f)
         {
             return;
         }
 
-        var effect = new AddMaxHealthEffect { Value = value };
-        AddEffactToPlayer(effect);
+        // 兄弟にある武器に効果を付与
+        foreach (var node in this.GetSiblings())
+        {
+            if (node is WeaponBase weapon)
+            {
+                AddEffectToWeapon(weapon, new EnemyDropSmallHeal { Rate = rate });
+            }
+        }
     }
 }
