@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://cwimo5hshc2qe"]
+
+[ext_resource type="Script" path="res://Infinity/Projectiles/Firecracker.cs" id="1_hqkbq"]
+[ext_resource type="Texture2D" uid="uid://cos3d4b1k4o1q" path="res://Common/Resources/Textures/Emoji/bomb.png" id="2_0t8ss"]
+[ext_resource type="PackedScene" uid="uid://b48mplq4itcdy" path="res://Infinity/Projectiles/(Projectile) FirecrackerSparks.tscn" id="2_creqe"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gdwp8"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_s8feo"]
+radius = 7.07107
+
+[node name="Firecracker" type="RigidBody2D" node_paths=PackedStringArray("_enemyDamageArea")]
+collision_layer = 0
+collision_mask = 0
+gravity_scale = 0.0
+lock_rotation = true
+script = ExtResource("1_hqkbq")
+_enemyDamageArea = NodePath("DamageArea")
+_bulletPackedScene = ExtResource("2_creqe")
+metadata/_edit_group_ = true
+
+[node name="Sprite" type="TextureRect" parent="."]
+offset_left = -8.0
+offset_top = -8.0
+scale = Vector2(1.935, 1.935)
+texture = ExtResource("2_0t8ss")
+expand_mode = 1
+
+[node name="DummyCollisionForRigidBody" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_gdwp8")
+disabled = true
+
+[node name="DamageArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="DamageCollision" type="CollisionShape2D" parent="DamageArea"]
+shape = SubResource("CircleShape2D_s8feo")
+debug_color = Color(0.955606, 9.62615e-08, 0.544884, 0)
