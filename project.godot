@@ -37,7 +37,7 @@ window/size/viewport_height=900
 
 [dotnet]
 
-project/assembly_name="spellsurvivor"
+project/assembly_name="fms"
 
 [editor]
 
