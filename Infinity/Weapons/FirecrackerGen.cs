@@ -56,7 +56,19 @@ public partial class FirecrackerGen : WeaponBase
                 Next = prj1,
                 When = WhyDead.CollidedWithAny
             });
+            
+            if (TrickShotCount >= 2)
+            {
+                // Trickshot 2
+                var prj2 = ConstructProj(true);
+                prj1.AddChild(new DeathTrigger
+                {
+                    Next = prj2,
+                    When = WhyDead.CollidedWithAny
+                });
+            }
         }
+        
 
         FrameTimer.AddChild(prj0);
     }
@@ -75,7 +87,7 @@ public partial class FirecrackerGen : WeaponBase
         // 自動で敵狙う, 敵いないなら打たない
         mainPrj.AddChild(new AutoAim
         {
-            Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
+            Mode = AutoAimMode.KillPrjWhenSearchFailed,
             SearchRadius = 200
         });
 
