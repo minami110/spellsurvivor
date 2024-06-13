@@ -3,19 +3,25 @@ using Godot;
 
 namespace fms.Projectile;
 
+[Flags]
+public enum AutoAimMode : uint
+{
+    Default = 0,
+
+    // 最初一回きりの検索
+    JustOnce = 1 << 0,
+
+    // 検索に失敗した場合は Projectile を消す
+    KillPrjWhenSearchFailed = 1 << 1
+}
+
 public partial class AutoAim : Area2D
 {
-    [Flags]
-    public enum ModeType : uint
-    {
-        Default = 0,
-        JustOnce = 1 << 0,
-        KillPrjWhenSearchFailed = 1 << 1
-    }
-
     private CollisionShape2D _collision = null!;
 
-    public ModeType Mode { get; init; } = ModeType.Default;
+    private bool _isFirstFrame = true;
+
+    public AutoAimMode Mode { get; init; } = AutoAimMode.Default;
     public required int SearchRadius { get; init; }
 
     public override void _EnterTree()
@@ -39,7 +45,14 @@ public partial class AutoAim : Area2D
 
     public override void _PhysicsProcess(double delta)
     {
-        if (Mode.HasFlag(ModeType.JustOnce))
+        // 最初のフレームは判定が安定しないので無視する
+        if (_isFirstFrame)
+        {
+            _isFirstFrame = false;
+            return;
+        }
+
+        if (Mode.HasFlag(AutoAimMode.JustOnce))
         {
             _collision.Disabled = true;
             _collision.Hide();
@@ -50,6 +63,7 @@ public partial class AutoAim : Area2D
         var distance = 999999f;
         Enemy? nearest = null;
         var bodies = GetOverlappingBodies();
+
         foreach (var body in bodies)
         {
             if (body is not Enemy enemy)
@@ -73,7 +87,7 @@ public partial class AutoAim : Area2D
         }
         else
         {
-            if (Mode.HasFlag(ModeType.KillPrjWhenSearchFailed))
+            if (Mode.HasFlag(AutoAimMode.KillPrjWhenSearchFailed))
             {
                 GetParent<BaseProjectile>().OnDead(WhyDead.Short);
             }

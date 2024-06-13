@@ -81,7 +81,7 @@ public partial class ForwardKnife : WeaponBase
             prj2.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
             prj2.AddChild(new AutoAim
             {
-                Mode = AutoAim.ModeType.JustOnce | AutoAim.ModeType.KillPrjWhenSearchFailed,
+                Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
                 SearchRadius = 100
             });
             prj1.AddChild(new DeathTrigger { Next = prj2, When = WhyDead.CollidedWithAny });
@@ -92,7 +92,7 @@ public partial class ForwardKnife : WeaponBase
                 prj3.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
                 prj3.AddChild(new AutoAim
                 {
-                    Mode = AutoAim.ModeType.JustOnce | AutoAim.ModeType.KillPrjWhenSearchFailed,
+                    Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
                     SearchRadius = 100
                 });
                 prj2.AddChild(new DeathTrigger { Next = prj3, When = WhyDead.CollidedWithAny });
