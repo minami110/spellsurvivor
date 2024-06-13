@@ -23,7 +23,6 @@ public partial class PickableItemSpawner : Node
         }
     }
 
-
     public static void SpawnItem(string id, Vector2 position, bool isCallDeffered = true,
         Dictionary<string, float>? settings = null)
     {

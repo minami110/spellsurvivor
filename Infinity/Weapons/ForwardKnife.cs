@@ -9,10 +9,7 @@ public partial class ForwardKnife : WeaponBase
 {
     [ExportGroup("Internal Reference")]
     [Export]
-    private PackedScene _bulletPackedScene = null!;
-
-    [Export]
-    private Node _bulletSpawnNode = null!;
+    private PackedScene _projectile = null!;
 
     private int _trickshotBounceCount;
     private float _trickshotBounceDamageMultiplier;
@@ -54,6 +51,7 @@ public partial class ForwardKnife : WeaponBase
         {
             switch (effect)
             {
+                // この武器は Trickshot に対応しているので拾う
                 case TrickshotBounce trickshotBounceCount:
                 {
                     _trickshotBounceCount += trickshotBounceCount.BounceCount;
@@ -66,17 +64,9 @@ public partial class ForwardKnife : WeaponBase
 
     private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
     {
-        var bullet = _bulletPackedScene.Instantiate<TrickshotArrow>();
-        {
-            bullet.GlobalPosition = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
-            bullet.BaseDamage = 50;
-            bullet.InitialSpeed = 1000f;
-            bullet.InitialVelocity = GlobalTransform.X; // Playerの正面に飛んでいく
-            bullet.BounceCount = _trickshotBounceCount;
-            bullet.BounceDamageMultiplier = _trickshotBounceDamageMultiplier;
-            bullet.BounceSearchRadius = 400f;
-        }
-
-        _bulletSpawnNode.AddChild(bullet);
+        var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
+        var block = new SpellBlock(spawnPos, GlobalTransform.X);
+        block.Spawn(_projectile).At(new Inherit());
+        _ = block.StartAsync(GetNode("FrameTimer"));
     }
 }
