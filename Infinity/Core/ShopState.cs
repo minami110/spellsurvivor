@@ -64,10 +64,19 @@ public partial class ShopState : Node
             var fileName = dir.GetNext();
             while (fileName != string.Empty)
             {
-                if (fileName.EndsWith(".tres"))
+                // Note: Godot 4.2.2
+                // Runtime で XXX.tres.remap となっていることがある (ランダム?)
+                // この場合 .remap を抜いたパスを読み込むとちゃんと行ける
+                // See https://github.com/godotengine/godot/issues/66014
+                if (fileName.EndsWith(".tres") || fileName.EndsWith(".tres.remap"))
                 {
+                    if (fileName.EndsWith(".remap"))
+                    {
+                        fileName = fileName.Replace(".remap", string.Empty);
+                    }
+
                     var path = Path.Combine(searchDir, fileName);
-                    var minionCoreData = GD.Load<MinionCoreData>(path);
+                    var minionCoreData = ResourceLoader.Load<MinionCoreData>(path);
                     GD.Print($"  Loaded: {path} => {minionCoreData.Name}");
                     if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
                     {
