@@ -16,15 +16,24 @@ public partial class WeaponBase : Node2D
     ///     武器の Cooldown にかかるフレーム数 (ベース値)
     /// </summary>
     [Export(PropertyHint.Range, "1,9999,1")]
-    public uint BaseCoolDownFrame { get; private protected set; } = 10;
-
-    public void UpdateBaseCoolDownFrame(uint value)
+    public uint BaseCoolDownFrame
     {
-        BaseCoolDownFrame = value;
-        FrameTimer.Stop();
-        FrameTimer.WaitFrame = SolvedCoolDownFrame;
-        FrameTimer.Start();
+        get => _baseCoolDownFrame;
+        private protected set
+        {
+            if (_baseCoolDownFrame == value)
+            {
+                return;
+            }
 
+            _baseCoolDownFrame = value;
+
+            if (IsNodeReady())
+            {
+                // Update Frame Timer
+                FrameTimer.WaitFrame = SolvedCoolDownFrame;
+            }
+        }
     }
 
     /// <summary>
@@ -59,6 +68,7 @@ public partial class WeaponBase : Node2D
 
     // 現在武器に付与されている Effect
     private readonly HashSet<EffectBase> _effects = new();
+    private uint _baseCoolDownFrame = 10u;
 
     // クールダウンの削減率 (範囲: 0 ~ 1 / デフォルト: 0)
     private float _coolDownReduceRateRp;

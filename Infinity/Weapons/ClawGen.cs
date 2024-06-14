@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using fms.Projectile;
 using Godot;
 using R3;
+
 namespace fms.Weapon;
 
 public partial class ClawGen : WeaponBase
@@ -10,9 +10,36 @@ public partial class ClawGen : WeaponBase
     [Export]
     private PackedScene _projectile = null!;
 
-    private uint _enemyHitStacks = 0;
-    
-    private bool hitStackChaged = false;
+    private uint _enemyHitReduceCounter;
+    private uint _enemyHitStacks;
+
+    public override void _PhysicsProcess(double delta)
+    {
+        if (_enemyHitStacks == 0)
+        {
+            return;
+        }
+
+        // スタックの最大数は 5 にする
+        _enemyHitStacks = Math.Min(_enemyHitStacks, 5);
+
+        // 30 フレームに一回 スタックの数を 1 減らす
+        _enemyHitReduceCounter++;
+        if (_enemyHitReduceCounter >= 30)
+        {
+            _enemyHitStacks--;
+            _enemyHitReduceCounter = 0;
+        }
+
+        if (_enemyHitStacks == 0)
+        {
+            return;
+        }
+
+        var newCoolDown = 60u - _enemyHitStacks * 10u;
+        BaseCoolDownFrame = newCoolDown;
+    }
+
     private protected override void SpawnProjectile(uint level)
     {
         var prj = _projectile.Instantiate<BaseProjectile>();
@@ -21,45 +48,23 @@ public partial class ClawGen : WeaponBase
             prj.Direction = GlobalTransform.X;
         }
 
-        prj.Hit
-            //.Where(x => x.HitNode is Enemy)
-            //.Take(1)
+        // Projectile が Enemy にヒットしたら Stack を一つ貯める
+        // Prj は貫通するが, 一つの Prj につき 1回だけ Stack を貯められるので Take(1) を入れている
+        prj.Hit.Where(x => x.HitNode is Enemy)
+            .Take(1)
             .Subscribe(hitInfo =>
             {
                 _enemyHitStacks++;
-                GD.Print("hit");
-                hitStackChaged = true;
-            });
-        
+                _enemyHitReduceCounter = 0;
+            })
+            .AddTo(prj);
+
         prj.AddChild(new AutoAim
         {
             Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
             SearchRadius = 100
         });
 
-        // hit stack は最大値がある
-        // hit stack は時間経過で0になる
-        // hit stack の数だけCDが減少する
-        
-        
         FrameTimer.AddChild(prj);
-    }
-
-    // 一旦決め打ちで
-    public override void _Process(double delta)
-    {
-        base._Process(delta);
-        var enemyHitStacks = Math.Min(_enemyHitStacks, 10);
-        // いったん決め打ち
-
-        if (!hitStackChaged)
-        {
-            return;
-        }
-        
-        GD.Print(BaseCoolDownFrame);
-        UpdateBaseCoolDownFrame(300 - _enemyHitStacks * 30);
-
-        hitStackChaged = false;
     }
 }

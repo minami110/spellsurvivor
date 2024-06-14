@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bv2i2oqp72cwk"
-path="res://.godot/imported/chara-a.png-5e770d47a4ba6d8cb15045de7c853fae.ctex"
+uid="uid://x3av84ap24no"
+path="res://.godot/imported/hocho.png-c1400aa14860883df723c4ac51f6c0f7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/LM7/chara-a.png"
-dest_files=["res://.godot/imported/chara-a.png-5e770d47a4ba6d8cb15045de7c853fae.ctex"]
+source_file="res://Common/Resources/hocho.png"
+dest_files=["res://.godot/imported/hocho.png-c1400aa14860883df723c4ac51f6c0f7.ctex"]
 
 [params]
 

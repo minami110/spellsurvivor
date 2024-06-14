@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://donsa3j8b5ra4"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/PoisonMistGen.cs" id="1_3yoef"]
+[ext_resource type="PackedScene" uid="uid://drlxhju6fmftd" path="res://Infinity/Projectiles/(Projectile) PoisonMistArea.tscn" id="2_odigj"]
+[ext_resource type="Script" path="res://Infinity/Weapons/AimToNearEnemy.cs" id="3_yvvuh"]
+[ext_resource type="Texture2D" uid="uid://x3av84ap24no" path="res://Common/Resources/hocho.png" id="4_yxojg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fpnvt"]
+radius = 100.0
+
+[node name="Hocho" type="Node2D"]
+script = ExtResource("1_3yoef")
+_projectile = ExtResource("2_odigj")
+BaseCoolDownFrame = 300
+
+[node name="AimToNearEnemy" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("3_yvvuh")
+
+[node name="Sprite2D" type="Sprite2D" parent="AimToNearEnemy"]
+position = Vector2(12, 1)
+rotation = -0.768118
+scale = Vector2(0.263804, 0.248015)
+texture = ExtResource("4_yxojg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AimToNearEnemy"]
+shape = SubResource("CircleShape2D_fpnvt")
+debug_color = Color(0.756, 0.432, 0.397, 0)
