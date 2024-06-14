@@ -1,16 +1,16 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://dmopggccbhv7l"]
 
-[ext_resource type="Texture2D" uid="uid://bngagbi0xt2mu" path="res://Common/Resources/Textures/Emoji/dagger_knife.png" id="1_54udd"]
-[ext_resource type="PackedScene" uid="uid://hvaujiufb0ew" path="res://Infinity/Weapons/(Weapon) ForwardKnife.tscn" id="2_it6wr"]
+[ext_resource type="Texture2D" uid="uid://cqc7i4vktg7s" path="res://Common/Resources/Textures/Emoji/fist.png" id="1_vlxhg"]
+[ext_resource type="PackedScene" uid="uid://dmm37etgc0kjr" path="res://Infinity/Weapons/(Weapon) ClawGen.tscn" id="2_i8wpy"]
 [ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_vey8v"]
 
 [resource]
 script = ExtResource("3_vey8v")
-WeaponPackedScene = ExtResource("2_it6wr")
+WeaponPackedScene = ExtResource("2_i8wpy")
 Faction = 15
 Tier = 1
 Price = 3
-Name = "ダガー"
-Description = "プレイヤーの正面に常に攻撃を行う
+Name = "爪"
+Description = "超短距離範囲攻撃
 攻撃力: 50"
-Sprite = ExtResource("1_54udd")
+Sprite = ExtResource("1_vlxhg")
