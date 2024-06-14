@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Infinity/Weapons/PoisonMistGen.cs" id="1_jge7x"]
 [ext_resource type="PackedScene" uid="uid://drlxhju6fmftd" path="res://Infinity/Projectiles/(Projectile) PoisonMistArea.tscn" id="2_wcwa8"]
 
-[node name="PoisonMistGen" type="Node2D"]
+[node name="Claw" type="Node2D"]
 script = ExtResource("1_jge7x")
 _projectile = ExtResource("2_wcwa8")
 BaseCoolDownFrame = 300

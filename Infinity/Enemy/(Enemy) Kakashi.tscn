@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://ch6itnrhotsfi"]
+
+[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Enemy) WeakTako.tscn" id="1_pfb5x"]
+[ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_jktux"]
+[ext_resource type="Texture2D" uid="uid://qn3macr8gp12" path="res://Infinity/Enemy/clown_face.png" id="3_3e0ue"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i0scs"]
+resource_local_to_scene = true
+shader = ExtResource("2_jktux")
+shader_parameter/hit = 0.0
+
+[node name="Enemy" instance=ExtResource("1_pfb5x")]
+_defaultMoveSpeed = 0.0
+_defaultHealth = 9999.0
+
+[node name="Texture" parent="." index="1"]
+material = SubResource("ShaderMaterial_i0scs")
+offset_left = -27.0
+offset_top = -27.0
+offset_right = 0.0
+offset_bottom = 0.0
+scale = Vector2(2, 2)
+texture = ExtResource("3_3e0ue")
+
+[node name="HealthBar" parent="." index="3"]
+offset_top = 31.0
+offset_bottom = 39.0

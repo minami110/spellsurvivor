@@ -16,7 +16,16 @@ public partial class WeaponBase : Node2D
     ///     武器の Cooldown にかかるフレーム数 (ベース値)
     /// </summary>
     [Export(PropertyHint.Range, "1,9999,1")]
-    public uint BaseCoolDownFrame { get; private set; } = 10;
+    public uint BaseCoolDownFrame { get; private protected set; } = 10;
+
+    public void UpdateBaseCoolDownFrame(uint value)
+    {
+        BaseCoolDownFrame = value;
+        FrameTimer.Stop();
+        FrameTimer.WaitFrame = SolvedCoolDownFrame;
+        FrameTimer.Start();
+
+    }
 
     /// <summary>
     ///     Tree に入った時に自動で Start するかどうか
