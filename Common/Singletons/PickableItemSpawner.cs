@@ -1,25 +1,40 @@
 using System.Collections.Generic;
 using System.IO;
 using Godot;
+using R3;
 
 namespace fms;
 
 public partial class PickableItemSpawner : Node
 {
-    private static PickableItemSpawner? _instance;
-
     private readonly Godot.Collections.Dictionary<string, PackedScene> _itemDict = new();
+
+    public static PickableItemSpawner? Instance { get; private set; }
+
+    public float HeartSpawnRate { get; set; }
 
     public override void _Notification(int what)
     {
         if (what == NotificationEnterTree)
         {
-            _instance = this;
-            GatherPickableItems();
+            Instance = this;
+            LoadPickableItemScenesDynamic();
+
+            StaticsManager.EnemyDamageOccurred
+                .Where(x => x.IsDead)
+                .Subscribe(x =>
+                {
+                    var r = GD.RandRange(0f, 1f);
+                    if (r <= HeartSpawnRate)
+                    {
+                        SpawnItem("Heart", x.Position);
+                    }
+                })
+                .AddTo(this);
         }
         else if (what == NotificationExitTree)
         {
-            _instance = null;
+            Instance = null;
         }
     }
 
@@ -30,16 +45,11 @@ public partial class PickableItemSpawner : Node
     /// <param name="isCallDeffered"></param>
     /// <param name="settings"></param>
     /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
-    public static void SpawnItem(string id, Vector2 position, bool isCallDeffered = true, Godot.Collections.Dictionary<string, float>? settings = null)
+    public void SpawnItem(string id, Vector2 position, bool isCallDeffered = true, Godot.Collections.Dictionary<string, float>? settings = null)
     {
-        if (_instance is null)
+        if (!_itemDict.TryGetValue(id, out var packedScene))
         {
-            GD.PrintErr($"[{nameof(PickableItemSpawner)}] Failed to access the instance");
-            return;
-        }
-
-        if (!_instance._itemDict.TryGetValue(id, out var packedScene))
-        {
+            this.DebugLog($"Failed Item not found: {id}");
             throw new KeyNotFoundException($"[{nameof(PickableItemSpawner)}] Item not found: {id}");
         }
 
@@ -50,17 +60,17 @@ public partial class PickableItemSpawner : Node
 
         if (isCallDeffered)
         {
-            _instance.CallDeferred(Node.MethodName.AddChild, pickableItem);
+            CallDeferred(Node.MethodName.AddChild, pickableItem);
         }
         else
         {
-            _instance.AddChild(pickableItem);
+            AddChild(pickableItem);
         }
 
-        _instance.DebugLog($"New item spawned: {id} at {position}");
+        this.DebugLog($"New item spawned: {id} at {position}");
     }
 
-    private void GatherPickableItems()
+    private void LoadPickableItemScenesDynamic()
     {
         const string _SEARCH_DIR = "res://Infinity/Pickables/";
         this.DebugLog($"Start loading pickable items from: {_SEARCH_DIR}");

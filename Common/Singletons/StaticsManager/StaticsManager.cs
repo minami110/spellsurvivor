@@ -1,6 +1,13 @@
 ﻿using Godot;
+using R3;
 
 namespace fms;
+
+public readonly struct EnemyDamageStatic
+{
+    public required Vector2 Position { get; init; }
+    public required bool IsDead { get; init; }
+}
 
 /// <summary>
 ///     統計を収集するためのクラス
@@ -22,17 +29,33 @@ public partial class StaticsManager : CanvasLayer
 
     private static StaticsManager? _instance;
 
-    public override void _EnterTree()
+    private readonly Subject<EnemyDamageStatic> _enemyDamageOccurred = new();
+
+    /// <summary>
+    /// </summary>
+    public static Observable<EnemyDamageStatic> EnemyDamageOccurred =>
+        _instance?._enemyDamageOccurred ?? Observable.Empty<EnemyDamageStatic>();
+
+    public override void _Notification(int what)
     {
-        _instance = this;
+        if (what == NotificationEnterTree)
+        {
+            _instance = this;
+        }
+        else if (what == NotificationExitTree)
+        {
+            _instance = null;
+            _enemyDamageOccurred.Dispose();
+        }
     }
 
-    public override void _ExitTree()
-    {
-        _instance = null;
-    }
-
-    public static void CommitDamage(DamageTakeOwner ownerType, float amount, in Vector2 globalPosition)
+    /// <summary>
+    /// </summary>
+    /// <param name="ownerType"></param>
+    /// <param name="amount"></param>
+    /// <param name="globalPosition"></param>
+    public static void CommitDamage(DamageTakeOwner ownerType, float amount, in Vector2 globalPosition,
+        bool isDead = false)
     {
         if (_instance is null)
         {
@@ -44,10 +67,10 @@ public partial class StaticsManager : CanvasLayer
             return;
         }
 
-        _instance.SendDamageInternal(ownerType, amount, globalPosition);
+        _instance.SendDamageInternal(ownerType, amount, globalPosition, isDead);
     }
 
-    private void SendDamageInternal(DamageTakeOwner ownerType, float damage, in Vector2 globalPosition)
+    private void SendDamageInternal(DamageTakeOwner ownerType, float damage, in Vector2 position, bool isDead)
     {
         // Config で表示設定がされていない場合は表示しない
         if (!GameConfig.Singleton.ShowDamageNumbers.Value)
@@ -58,13 +81,16 @@ public partial class StaticsManager : CanvasLayer
         var damageNumberHud = _damageNumberScene.Instantiate<DamageNumberHud>();
         damageNumberHud.Hide();
         damageNumberHud.Damage = damage;
+        // Player
         if (ownerType == DamageTakeOwner.Player)
         {
             damageNumberHud.PhysicalDamageColor = new Color(1f, 0.5f, 0.5f);
             damageNumberHud.HealColor = new Color(0.5f, 1.0f, 0.5f);
         }
+        // Enemy
         else
         {
+            _enemyDamageOccurred.OnNext(new EnemyDamageStatic { Position = position, IsDead = isDead });
             damageNumberHud.PhysicalDamageColor = new Color(1f, 1f, 1f);
         }
 
@@ -77,7 +103,7 @@ public partial class StaticsManager : CanvasLayer
             AddChild(damageNumberHud);
         }
 
-        damageNumberHud.GlobalPosition = globalPosition;
+        damageNumberHud.GlobalPosition = position;
         damageNumberHud.Show();
     }
 }
