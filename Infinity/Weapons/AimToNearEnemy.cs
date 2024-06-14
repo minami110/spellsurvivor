@@ -4,6 +4,7 @@ namespace fms;
 
 public partial class AimToNearEnemy : Area2D
 {
+    private float _lastPlayerAngle;
     public bool IsAiming { get; private set; }
     public Enemy? NearestEnemy { get; private set; }
 
@@ -31,15 +32,27 @@ public partial class AimToNearEnemy : Area2D
             // Update ROtation
             var angle = Mathf.Atan2(nearestEnemy.GlobalPosition.Y - GlobalPosition.Y,
                 nearestEnemy.GlobalPosition.X - GlobalPosition.X);
-            Rotation = angle;
             IsAiming = true;
             NearestEnemy = nearestEnemy;
+            Rotation = angle;
         }
         else
         {
             // Update Rotation
-            var angle = Mathf.Atan2(0, 1);
-            Rotation = angle;
+            var parent = GetParent().GetParent<MeMe>();
+            if (parent.MoveDirection.X > 0)
+            {
+                var angle = Mathf.Atan2(0, 1);
+                _lastPlayerAngle = angle;
+                Rotation = angle;
+            }
+            else if (parent.MoveDirection.X < 0)
+            {
+                var angle = Mathf.Atan2(0, -1);
+                _lastPlayerAngle = angle;
+                Rotation = angle;
+            }
+
             IsAiming = false;
             NearestEnemy = null;
         }

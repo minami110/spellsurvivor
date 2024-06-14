@@ -14,9 +14,9 @@ public partial class MeMe : CharacterBody2D, IPawn
     [Export]
     private Vector2I _cameraLimit = new(550, 550);
 
-    private Vector2 _nextMoveDirection;
-
-    public float AimAngle { get; private set; }
+    /// <summary>
+    /// </summary>
+    public Vector2 MoveDirection { get; private set; }
 
     public override void _EnterTree()
     {
@@ -45,18 +45,14 @@ public partial class MeMe : CharacterBody2D, IPawn
     {
         var controller = GetNode<PlayerAnimationController>("AnimationController");
 
-        if (!(_nextMoveDirection.LengthSquared() > 0f))
+        if (!(MoveDirection.LengthSquared() > 0f))
         {
             controller.SendSignalStop();
             return;
         }
 
-        var motion = _nextMoveDirection * (float)delta * _moveSpeed;
+        var motion = MoveDirection * (float)delta * _moveSpeed;
         MoveAndCollide(motion);
-
-        // Update Aim Angle
-        var angle = Mathf.Atan2(_nextMoveDirection.Y, _nextMoveDirection.X);
-        AimAngle = angle;
 
         // Update Animation
         if (motion.X > 0)
@@ -102,6 +98,6 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     void IPawn.MoveForward(in Vector2 dir)
     {
-        _nextMoveDirection = dir;
+        MoveDirection = dir;
     }
 }
