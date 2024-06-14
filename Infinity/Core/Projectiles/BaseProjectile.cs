@@ -160,7 +160,7 @@ public partial class BaseProjectile : Area2D
             Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
             Velocity = Direction.Normalized() * Speed
         };
-
+        
         _hitSubject.OnNext(HitInfo);
 
         if (body is StaticBody2D staticBody)
