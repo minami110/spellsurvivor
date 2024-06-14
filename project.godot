@@ -11,9 +11,10 @@ config_version=5
 [application]
 
 config/name="fms"
-config/version="0.1.0"
+config/version="0.2.0"
 run/main_scene="res://Title/Title.tscn"
 config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
+run/max_fps=60
 config/icon="res://Common/Resources/Textures/icon.svg"
 
 [autoload]
