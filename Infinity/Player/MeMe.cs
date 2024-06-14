@@ -16,6 +16,8 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     private Vector2 _nextMoveDirection;
 
+    public float AimAngle { get; private set; }
+
     public override void _EnterTree()
     {
         AddToGroup(Constant.GroupNamePlayer);
@@ -29,7 +31,6 @@ public partial class MeMe : CharacterBody2D, IPawn
             .Subscribe(this, (x, state) => { state._moveSpeed = x; })
             .AddTo(this);
 
-
         playerState.AddEffect(new AddHealthEffect { Value = _health });
         playerState.AddEffect(new AddMaxHealthEffect { Value = _health });
 
@@ -42,17 +43,30 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     public override void _PhysicsProcess(double delta)
     {
+        var controller = GetNode<PlayerAnimationController>("AnimationController");
+
         if (!(_nextMoveDirection.LengthSquared() > 0f))
         {
+            controller.SendSignalStop();
             return;
         }
 
-        // Update PlayerForward
-        var angle = Mathf.Atan2(_nextMoveDirection.Y, _nextMoveDirection.X);
-        Rotation = angle;
-
         var motion = _nextMoveDirection * (float)delta * _moveSpeed;
         MoveAndCollide(motion);
+
+        // Update Aim Angle
+        var angle = Mathf.Atan2(_nextMoveDirection.Y, _nextMoveDirection.X);
+        AimAngle = angle;
+
+        // Update Animation
+        if (motion.X > 0)
+        {
+            controller.SendSignalMoveRight();
+        }
+        else
+        {
+            controller.SendSignalMoveLeft();
+        }
     }
 
     public void AddEffect(EffectBase effect)
