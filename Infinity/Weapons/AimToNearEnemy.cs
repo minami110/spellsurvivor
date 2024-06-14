@@ -5,11 +5,12 @@ namespace fms;
 public partial class AimToNearEnemy : Area2D
 {
     public bool IsAiming { get; private set; }
+    public Enemy? NearestEnemy { get; private set; }
 
     public override void _PhysicsProcess(double delta)
     {
         var overlap = GetOverlappingBodies();
-        var len = 99999f;
+        var len = 999999f;
         Enemy? nearestEnemy = null;
 
         foreach (var o in overlap)
@@ -32,6 +33,7 @@ public partial class AimToNearEnemy : Area2D
                 nearestEnemy.GlobalPosition.X - GlobalPosition.X);
             Rotation = angle;
             IsAiming = true;
+            NearestEnemy = nearestEnemy;
         }
         else
         {
@@ -39,6 +41,7 @@ public partial class AimToNearEnemy : Area2D
             var angle = Mathf.Atan2(0, 1);
             Rotation = angle;
             IsAiming = false;
+            NearestEnemy = null;
         }
     }
 }

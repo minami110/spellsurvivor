@@ -12,21 +12,32 @@ public partial class Hocho : WeaponBase
 
     private protected override void SpawnProjectile(uint level)
     {
+        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
+        if (!aim.IsAiming)
+        {
+            return;
+        }
+
+        var enemy = aim.NearestEnemy;
+
         var prj = _projectile.Instantiate<BaseProjectile>();
         {
             prj.GlobalPosition = GlobalPosition;
-        }
-
-        switch (level)
-        {
-            case 2:
-                prj.AddChild(new SizeMod { Add = 100 }); // 100 => 200
-                break;
-            case 3:
-                prj.AddChild(new SizeMod { Add = 200 }); // 100 => 300
-                break;
+            prj.Direction = enemy!.GlobalPosition - GlobalPosition;
         }
 
         FrameTimer.AddChild(prj);
+
+        // ToDo:
+        // BaseCoolDown = 30f 決め打ちのアニメ
+
+        // Sprite 
+        var sprite = GetNode<Node2D>("%Sprite");
+        var t = CreateTween();
+        t.TweenProperty(sprite, "position", new Vector2(12, 0), 0.05d);
+        t.TweenProperty(sprite, "position", new Vector2(70, 0), 0.3d)
+            .SetTrans(Tween.TransitionType.Elastic)
+            .SetEase(Tween.EaseType.Out);
+        t.TweenProperty(sprite, "position", new Vector2(24, 0), 0.1d);
     }
 }
