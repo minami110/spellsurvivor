@@ -56,7 +56,7 @@ public partial class FirecrackerGen : WeaponBase
                 Next = prj1,
                 When = WhyDead.CollidedWithAny
             });
-            
+
             if (TrickShotCount >= 2)
             {
                 // Trickshot 2
@@ -68,7 +68,7 @@ public partial class FirecrackerGen : WeaponBase
                 });
             }
         }
-        
+
 
         FrameTimer.AddChild(prj0);
     }

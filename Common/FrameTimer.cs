@@ -7,7 +7,7 @@ namespace fms;
 public partial class FrameTimer : Node
 {
     [Export(PropertyHint.Range, "1,99999")]
-    private uint _waitFrame = 20;
+    public uint WaitFrame { get; set; } = 20u;
 
     [Export]
     private bool _autostart;
@@ -19,12 +19,6 @@ public partial class FrameTimer : Node
     public Observable<Unit> TimeOut => _timeOut;
 
     public ReadOnlyReactiveProperty<int> FrameLeft => _frameLeft;
-
-    public uint WaitFrame
-    {
-        get => _waitFrame;
-        set => _waitFrame = value;
-    }
 
     public bool IsStopped => _frameLeft.Value <= 0;
 
@@ -49,7 +43,7 @@ public partial class FrameTimer : Node
             if (nextFrameLeft < 0)
             {
                 _timeOut.OnNext(Unit.Default);
-                _frameLeft.Value = (int)_waitFrame;
+                _frameLeft.Value = (int)WaitFrame;
             }
             else
             {
@@ -60,7 +54,7 @@ public partial class FrameTimer : Node
 
     public void Start()
     {
-        _frameLeft.Value = (int)_waitFrame;
+        _frameLeft.Value = (int)WaitFrame;
         SetProcess(true);
     }
 
