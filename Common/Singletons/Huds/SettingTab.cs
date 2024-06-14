@@ -60,7 +60,9 @@ public partial class SettingTab : TabContainer
         }
 
         // (Debug) Show Collision CheckButton initialization and bindings
+        if (OS.IsDebugBuild())
         {
+            _debugShowCollisionCheckButton.Show();
             // Fetch current value from config
             _debugShowCollisionCheckButton.ToggledAsObservable()
                 .Subscribe(x => { config.DebugShowCollision.Value = x; })
@@ -70,6 +72,10 @@ public partial class SettingTab : TabContainer
                 _debugShowCollisionCheckButton.SetPressedNoSignal(x);
                 GetTree().DebugCollisionsHint = x;
             }).AddTo(this);
+        }
+        else
+        {
+            _debugShowCollisionCheckButton.Hide();
         }
     }
 
