@@ -48,6 +48,15 @@ public partial class ClawGen : WeaponBase
             prj.Direction = GlobalTransform.X;
         }
 
+        prj.AddChild(new AutoAim
+        {
+            Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
+            SearchRadius = 100
+        });
+
+        FrameTimer.AddChild(prj);
+
+        // Note: AddTo はシーンに入れたあとしかできないので
         // Projectile が Enemy にヒットしたら Stack を一つ貯める
         // Prj は貫通するが, 一つの Prj につき 1回だけ Stack を貯められるので Take(1) を入れている
         prj.Hit.Where(x => x.HitNode is Enemy)
@@ -58,13 +67,5 @@ public partial class ClawGen : WeaponBase
                 _enemyHitReduceCounter = 0;
             })
             .AddTo(prj);
-
-        prj.AddChild(new AutoAim
-        {
-            Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
-            SearchRadius = 100
-        });
-
-        FrameTimer.AddChild(prj);
     }
 }
