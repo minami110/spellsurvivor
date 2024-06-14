@@ -61,9 +61,7 @@ Waves = [SubResource("Resource_72qcm"), SubResource("Resource_vs0s4")]
 
 [sub_resource type="Resource" id="Resource_pdcir"]
 script = ExtResource("5_g1fii")
-DefaultMoney = 10
-DefaultHealth = 100.0
-DefaultMoveSpeed = 100.0
+StartMoney = 10
 ShopConfig = ExtResource("2_gfx80")
 WaveConfig = SubResource("Resource_t4uxh")
 

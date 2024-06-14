@@ -5,13 +5,21 @@ namespace fms;
 
 public partial class MeMe : CharacterBody2D, IPawn
 {
-    [Export]
+    [Export(PropertyHint.Range, "0,1000,1")]
+    private float _health = 100f;
+
+    [Export(PropertyHint.Range, "0,1000,1")]
     private float _moveSpeed = 100f;
 
     [Export]
     private Vector2I _cameraLimit = new(550, 550);
 
     private Vector2 _nextMoveDirection;
+
+    public override void _EnterTree()
+    {
+        AddToGroup(Constant.GroupNamePlayer);
+    }
 
     public override void _Ready()
     {
@@ -20,6 +28,10 @@ public partial class MeMe : CharacterBody2D, IPawn
         playerState.MoveSpeed
             .Subscribe(this, (x, state) => { state._moveSpeed = x; })
             .AddTo(this);
+
+
+        playerState.AddEffect(new AddHealthEffect { Value = _health });
+        playerState.AddEffect(new AddMaxHealthEffect { Value = _health });
 
         var camera = GetNode<Camera2D>("%MainCamera");
         camera.LimitLeft = -_cameraLimit.X;

@@ -160,10 +160,6 @@ public partial class Main : Node
     private void ResetPlayerState()
     {
         // Plauer を初期化する
-        _playerState.Reset();
-        _playerState.AddEffect(new AddMoveSpeedEffect { Value = _gameSettings.DefaultMoveSpeed });
-        _playerState.AddEffect(new MoneyEffect { Value = (int)_gameSettings.DefaultMoney });
-        _playerState.AddEffect(new AddHealthEffect { Value = _gameSettings.DefaultHealth });
-        _playerState.AddEffect(new AddMaxHealthEffect { Value = _gameSettings.DefaultHealth });
+        _playerState.AddEffect(new MoneyEffect { Value = (int)_gameSettings.StartMoney });
     }
 }
