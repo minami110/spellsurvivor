@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmm37etgc0kjr"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/AutoAimPistol.cs" id="1_dftvx"]
+[ext_resource type="PackedScene" uid="uid://bh75eb2lfndkv" path="res://Infinity/Projectiles/(Projectile) EnergyOrb.tscn" id="2_2olof"]
+
+[node name="AutoAimPistol" type="Node2D"]
+script = ExtResource("1_dftvx")
+_projectile = ExtResource("2_2olof")
+BaseCoolDownFrame = 30
+metadata/_edit_group_ = true
