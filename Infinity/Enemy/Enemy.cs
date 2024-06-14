@@ -23,33 +23,12 @@ public partial class Enemy : RigidBody2D
     [Export(PropertyHint.Range, "1,9999,1")]
     private uint _coolDownFrame = 20;
 
-    [ExportGroup("Internal References")]
     [Export]
-    private CollisionShape2D _rigidBodyCollision = null!;
-
-    [Export]
-    private CollisionShape2D _damageAreaCollision = null!;
-
-    [Export]
-    private TextureRect _mainTexture = null!;
-
-    [Export]
-    private TextureProgressBar _progressBar = null!;
-
-    [Export]
-    private Area2D _damageArea = null!;
-
-    [Export]
-    private FrameTimer _attackTimer = null!;
-
-    [Export]
-    private GpuParticles2D _bloodParticle = null!;
+    private PackedScene _onDeadParticle = null!;
 
     private readonly EnemyState _state = new();
 
     private Node2D? _targetNode;
-
-    public bool IsDead { get; private set; }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -77,21 +56,17 @@ public partial class Enemy : RigidBody2D
         UpdateHealthBar();
 
         // Subscribe and start FrameTimer
-        var d1 = _attackTimer.TimeOut.Subscribe(_ => Attack()).AddTo(this);
-        _attackTimer.WaitFrame = _coolDownFrame;
-        _attackTimer.Start();
+        var timer = new FrameTimer();
+        AddChild(timer);
+        var d1 = timer.TimeOut.Subscribe(_ => Attack()).AddTo(this);
+        timer.WaitFrame = _coolDownFrame;
+        timer.Start();
 
         Disposable.Combine(_state, d1).AddTo(this);
     }
 
     public override void _PhysicsProcess(double _)
     {
-        if (IsDead)
-        {
-            LinearVelocity = Vector2.Zero;
-            return;
-        }
-
         var delta = _targetNode!.GlobalPosition - GlobalPosition;
         // 2opx 以内に近づいたら移動を停止する
         if (delta.LengthSquared() < 400)
@@ -107,11 +82,6 @@ public partial class Enemy : RigidBody2D
 
     public void TakeDamage(float amount)
     {
-        if (IsDead)
-        {
-            return;
-        }
-
         _state.AddEffect(new PhysicalDamageEffect { Value = amount });
         _state.SolveEffect();
         StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Enemy, amount, GlobalPosition);
@@ -130,7 +100,8 @@ public partial class Enemy : RigidBody2D
 
     private void Attack()
     {
-        var overlappingBodies = _damageArea.GetOverlappingBodies();
+        var damageArea = GetNode<Area2D>("DamageArea");
+        var overlappingBodies = damageArea.GetOverlappingBodies();
         if (overlappingBodies.Count <= 0)
         {
             return;
@@ -145,43 +116,21 @@ public partial class Enemy : RigidBody2D
         }
     }
 
-    private async void KillByDamage()
+    private void KillByDamage()
     {
-        if (IsDead)
-        {
-            return;
-        }
+        // Emit Dead Particle
+        var onDeadParticle = _onDeadParticle.Instantiate<GpuParticles2D>();
+        onDeadParticle.GlobalPosition = GlobalPosition;
+        GetParent().CallDeferred(Node.MethodName.AddChild, onDeadParticle);
+        onDeadParticle.Emitting = true;
 
-        IsDead = true;
-
-        // Hide and disable components
-        _rigidBodyCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-        _damageAreaCollision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-        _rigidBodyCollision.Hide();
-        _damageAreaCollision.Hide();
-        _mainTexture.Hide();
-        _progressBar.Hide();
-
-        // Emit Blood Particle
-        _bloodParticle.Emitting = true;
-
-        // ToDo: 回復のパラメーターを設定する
-        // Spawn Heart
-        PickableItemSpawner.SpawnItem("PickableHeart", GlobalPosition);
-
-        await this.WaitForSecondsAsync(0.5f);
-
-        CallDeferred(Node.MethodName.QueueFree);
+        // QueueFree
+        CallDeferred(GodotObject.MethodName.Free);
     }
 
     private void KillByWaveEnd()
     {
-        if (IsDead)
-        {
-            return;
-        }
-
-        QueueFree();
+        CallDeferred(GodotObject.MethodName.Free);
     }
 
     private void TakeDamageAnimationAsync()
@@ -194,13 +143,14 @@ public partial class Enemy : RigidBody2D
 
     private void UpdateHealthBar()
     {
-        _progressBar.MaxValue = _state.MaxHealth.CurrentValue;
-        _progressBar.SetValueNoSignal(_state.Health.CurrentValue);
+        var healthBar = GetNode<Range>("HealthBar");
+        healthBar.MaxValue = _state.MaxHealth.CurrentValue;
+        healthBar.SetValueNoSignal(_state.Health.CurrentValue);
     }
 
     private void UpdateShaderParameter(float value)
     {
-        if (_mainTexture.Material is not ShaderMaterial sm)
+        if (GetNode<TextureRect>("Sprite").Material is not ShaderMaterial sm)
         {
             return;
         }
