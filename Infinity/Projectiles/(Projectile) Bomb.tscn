@@ -1,9 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://c03ya53oowgc4"]
+[gd_scene load_steps=5 format=3 uid="uid://c03ya53oowgc4"]
 
 [ext_resource type="Texture2D" uid="uid://cos3d4b1k4o1q" path="res://Common/Resources/Textures/Emoji/bomb.png" id="1_fwdk2"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/BaseProjectile.cs" id="1_ool6k"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jnvr1"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 98, 0)
 
 [node name="Bomb" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
@@ -31,3 +35,6 @@ expand_mode = 1
 [node name="DamageCollision" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_jrj0e")
 debug_color = Color(1, 0, 0, 0)
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+process_material = SubResource("ParticleProcessMaterial_jnvr1")

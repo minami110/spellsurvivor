@@ -57,9 +57,13 @@ public partial class BaseProjectile : Area2D
 
     private readonly Subject<WhyDead> _deadSubject = new();
 
+    private readonly Subject<ProjectileHitInfo> _hitSubject = new();
+
     public ProjectileHitInfo HitInfo { get; internal set; }
 
     public Observable<WhyDead> Dead => _deadSubject;
+
+    public Observable<ProjectileHitInfo> Hit => _hitSubject;
 
     /// <summary>
     ///     現在の寿命 (フレーム数)
@@ -88,6 +92,7 @@ public partial class BaseProjectile : Area2D
                     .Subscribe(this, (x, s) => s.OnBodyEntered(x))
                     .AddTo(this);
                 _deadSubject.AddTo(this);
+                _hitSubject.AddTo(this);
                 SetProcess(true);
                 break;
             }
@@ -155,6 +160,8 @@ public partial class BaseProjectile : Area2D
             Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
             Velocity = Direction.Normalized() * Speed
         };
+        
+        _hitSubject.OnNext(HitInfo);
 
         if (body is StaticBody2D staticBody)
         {

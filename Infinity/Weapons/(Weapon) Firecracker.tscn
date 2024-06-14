@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" path="res://Infinity/Weapons/FirecrackerGen.cs" id="1_j7148"]
 [ext_resource type="PackedScene" uid="uid://c03ya53oowgc4" path="res://Infinity/Projectiles/(Projectile) Bomb.tscn" id="2_graak"]
-[ext_resource type="PackedScene" uid="uid://drlxhju6fmftd" path="res://Infinity/Projectiles/(Projectile) PoisonMistArea.tscn" id="3_bfxpu"]
+[ext_resource type="PackedScene" uid="uid://rjw7gc5oxitd" path="res://Infinity/Projectiles/(Projectile) SmallSparks.tscn" id="3_n2427"]
 
 [node name="Firecracker" type="Node2D"]
 script = ExtResource("1_j7148")
 _projectile0 = ExtResource("2_graak")
-_projectile1 = ExtResource("3_bfxpu")
+_projectile1 = ExtResource("3_n2427")
 BaseCoolDownFrame = 100
 metadata/_edit_group_ = true
