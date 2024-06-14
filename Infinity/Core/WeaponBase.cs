@@ -45,11 +45,6 @@ public partial class WeaponBase : Node2D
     [Export]
     public float Mana { get; private set; }
 
-    /// <summary>
-    ///     敵が確率で Heal を落とすようになる確率 (0, 1)
-    /// </summary>
-    [Export]
-    public float EnemyDropSmallHealRate { get; private set; }
 
     private static readonly NodePath FrameTimerPath = new("FrameTimer");
 
@@ -206,7 +201,6 @@ public partial class WeaponBase : Node2D
         var reduceCoolDownRate = 0f;
         var manaRegenerationValue = 0;
         var manaRegenerationInterval = 0;
-        var enemyDropSmallHealRate = 0f;
 
         foreach (var effect in _effects)
         {
@@ -223,10 +217,6 @@ public partial class WeaponBase : Node2D
                     manaRegenerationValue += addManaRegeneration.Value;
                     manaRegenerationInterval += addManaRegeneration.Interval;
                     break;
-                // 敵が確率で Heal を落とすようになる Effect
-                case EnemyDropSmallHeal enemyDropHealItem:
-                    enemyDropSmallHealRate += enemyDropHealItem.Rate;
-                    break;
             }
         }
 
@@ -234,7 +224,6 @@ public partial class WeaponBase : Node2D
         _coolDownReduceRateRp = Math.Max(reduceCoolDownRate, 0);
         _manaGenerationInterval = Math.Max(manaRegenerationInterval, 0);
         _manaGenerationValue = Math.Max(manaRegenerationValue, 0);
-        EnemyDropSmallHealRate = Math.Max(enemyDropSmallHealRate, 0f);
 
         OnSolveEffect(_effects);
     }

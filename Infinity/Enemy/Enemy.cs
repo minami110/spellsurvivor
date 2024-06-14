@@ -84,15 +84,25 @@ public partial class Enemy : RigidBody2D
     {
         _state.AddEffect(new PhysicalDamageEffect { Value = amount });
         _state.SolveEffect();
-        StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Enemy, amount, GlobalPosition);
 
         if (_state.Health.CurrentValue <= 0)
         {
             // Dead
+            StaticsManager.CommitDamage(
+                StaticsManager.DamageTakeOwner.Enemy,
+                amount,
+                GlobalPosition,
+                true
+            );
             KillByDamage();
         }
         else
         {
+            StaticsManager.CommitDamage(
+                StaticsManager.DamageTakeOwner.Enemy,
+                amount,
+                GlobalPosition
+            );
             TakeDamageAnimationAsync();
             UpdateHealthBar();
         }

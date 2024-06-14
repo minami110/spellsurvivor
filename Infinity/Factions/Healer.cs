@@ -1,5 +1,4 @@
-﻿using fms.Weapon;
-using Godot;
+﻿using Godot;
 
 namespace fms.Faction;
 
@@ -21,18 +20,10 @@ public partial class Healer : FactionBase
             _ => 0f
         };
 
-        if (rate <= 0f)
+        var p = PickableItemSpawner.Instance;
+        if (p is not null)
         {
-            return;
-        }
-
-        // 兄弟にある武器に効果を付与
-        foreach (var node in this.GetSiblings())
-        {
-            if (node is WeaponBase weapon)
-            {
-                AddEffectToWeapon(weapon, new EnemyDropSmallHeal { Rate = rate });
-            }
+            p.HeartSpawnRate = rate;
         }
     }
 }
