@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using R3;
 
 namespace fms;
@@ -29,28 +30,7 @@ public partial class AimToNearEnemy : Area2D
 
     public override void _PhysicsProcess(double delta)
     {
-        var overlap = GetOverlappingBodies();
-        var len = 9999999f;
-        Enemy? nearestEnemy = null;
-
-        foreach (var o in overlap)
-        {
-            if (o is not Enemy enemy)
-            {
-                continue;
-            }
-
-            var d = GlobalPosition.DistanceSquaredTo(enemy.GlobalPosition);
-            if (d >= len)
-            {
-                continue;
-            }
-
-            len = d;
-            nearestEnemy = enemy;
-        }
-
-        if (nearestEnemy != null)
+        if (FindNearestEnemy(GetOverlappingBodies(), out var nearestEnemy))
         {
             IsAiming = true;
             NearestEnemy = nearestEnemy;
@@ -60,7 +40,7 @@ public partial class AimToNearEnemy : Area2D
                 return;
             }
 
-            var targetAngle = Mathf.Atan2(nearestEnemy.GlobalPosition.Y - GlobalPosition.Y,
+            var targetAngle = Mathf.Atan2(nearestEnemy!.GlobalPosition.Y - GlobalPosition.Y,
                 nearestEnemy.GlobalPosition.X - GlobalPosition.X);
             Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotateSensitivity);
         }
@@ -77,5 +57,28 @@ public partial class AimToNearEnemy : Area2D
             // Update Rotation
             Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
         }
+    }
+
+    private bool FindNearestEnemy(Array<Node2D> bodies, out Enemy? enemy)
+    {
+        var len = float.MaxValue;
+        enemy = null;
+
+        foreach (var o in bodies)
+        {
+            if (o is not Enemy e)
+            {
+                continue;
+            }
+
+            var distance = GlobalPosition.DistanceSquaredTo(e.GlobalPosition);
+            if (distance < len)
+            {
+                len = distance;
+                enemy = e;
+            }
+        }
+
+        return enemy is not null;
     }
 }
