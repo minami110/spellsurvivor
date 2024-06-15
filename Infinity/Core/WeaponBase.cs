@@ -8,13 +8,17 @@ using R3;
 namespace fms.Weapon;
 
 /// <summary>
-///     Weapon のベースクラス
+/// Weapon のベースクラス
 /// </summary>
 public partial class WeaponBase : Node2D
 {
     /// <summary>
-    ///     武器の Cooldown にかかるフレーム数 (ベース値)
+    /// 武器の Cooldown にかかるフレーム数 (ベース値)
     /// </summary>
+    /// <remarks>
+    /// Note: .tscn 側で設定した値を取得します, レベルなどに応じて変更しても問題ありません
+    /// 
+    /// </remarks>
     [Export(PropertyHint.Range, "1,9999,1")]
     public uint BaseCoolDownFrame
     {
@@ -37,28 +41,28 @@ public partial class WeaponBase : Node2D
     }
 
     /// <summary>
-    ///     Tree に入った時に自動で Start するかどうか
+    /// Tree に入った時に自動で Start するかどうか
     /// </summary>
     [ExportGroup("For Debugging")]
     [Export]
     private bool _autostart;
 
     /// <summary>
-    ///     現在の武器の Level
-    ///     Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
+    /// 現在の武器の Level
+    /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
     /// </summary>
     [Export(PropertyHint.Range, "1,5")]
     public uint Level { get; set; } = 1;
 
     /// <summary>
-    ///     Minion が所属する Faction
-    ///     Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
+    /// Minion が所属する Faction
+    /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
     /// </summary>
     [Export]
     public FactionType Faction { get; set; }
 
     /// <summary>
-    ///     現在武器が持っている マナ
+    /// 現在武器が持っている マナ
     /// </summary>
     [Export]
     public float Mana { get; private set; }
@@ -83,13 +87,13 @@ public partial class WeaponBase : Node2D
     private int _manaGenerationValue;
 
     /// <summary>
-    ///     武器の Id
-    ///     Note: Minion から勝手に代入されます
+    /// 武器の Id
+    /// Note: Minion から勝手に代入されます
     /// </summary>
     public string MinionId { get; set; } = string.Empty;
 
     /// <summary>
-    ///     Effect の解決後の Cooldown のフレーム数
+    /// Effect の解決後の Cooldown のフレーム数
     /// </summary>
     public uint SolvedCoolDownFrame
     {
@@ -100,12 +104,15 @@ public partial class WeaponBase : Node2D
         }
     }
 
+    /// <summary>
+    /// FrameTimer を取得
+    /// </summary>
     protected FrameTimer FrameTimer => GetNode<FrameTimer>(FrameTimerPath);
 
     /// <summary>
-    ///     次の攻撃までの残りフレーム
+    /// 次の攻撃までの残りフレームを取得
     /// </summary>
-    public ReadOnlyReactiveProperty<int> CoolDownLeft => FrameTimer.FrameLeft;
+    public ReadOnlyReactiveProperty<uint> CoolDownLeft => FrameTimer.FrameLeft;
 
     public override void _Notification(int what)
     {
