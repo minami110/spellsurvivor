@@ -1,60 +1,81 @@
 using Godot;
+using R3;
 
 namespace fms;
 
 public partial class AimToNearEnemy : Area2D
 {
-    private float _lastPlayerAngle;
+    [Export]
+    private bool UpdateRotation { get; set; } = true;
+
+    [Export(PropertyHint.Range, "0,1")]
+    private float RotateSensitivity { get; set; } = 0.7f;
+
+    private float _restAngle;
+
+    private float _targetAngle;
+
     public bool IsAiming { get; private set; }
     public Enemy? NearestEnemy { get; private set; }
+
+    public override void _EnterTree()
+    {
+        // Subscribe to parent player's face direction
+        var parent = GetParent().GetParent<MeMe>(); // ToDo: Hardcoded
+        parent.FaceDirection
+            .Subscribe(x => { _restAngle = x == PawnFaceDirection.Right ? Mathf.Atan2(0, 1) : Mathf.Atan2(0, -1); })
+            .AddTo(this);
+    }
 
     public override void _PhysicsProcess(double delta)
     {
         var overlap = GetOverlappingBodies();
-        var len = 999999f;
+        var len = 9999999f;
         Enemy? nearestEnemy = null;
 
         foreach (var o in overlap)
         {
-            if (o is Enemy enemy)
+            if (o is not Enemy enemy)
             {
-                var d = GlobalPosition.DistanceSquaredTo(enemy.GlobalPosition);
-                if (d < len)
-                {
-                    len = d;
-                    nearestEnemy = enemy;
-                }
+                continue;
             }
+
+            var d = GlobalPosition.DistanceSquaredTo(enemy.GlobalPosition);
+            if (d >= len)
+            {
+                continue;
+            }
+
+            len = d;
+            nearestEnemy = enemy;
         }
 
         if (nearestEnemy != null)
         {
-            // Update ROtation
-            var angle = Mathf.Atan2(nearestEnemy.GlobalPosition.Y - GlobalPosition.Y,
-                nearestEnemy.GlobalPosition.X - GlobalPosition.X);
             IsAiming = true;
             NearestEnemy = nearestEnemy;
-            Rotation = angle;
+
+            if (!UpdateRotation)
+            {
+                return;
+            }
+
+            var targetAngle = Mathf.Atan2(nearestEnemy.GlobalPosition.Y - GlobalPosition.Y,
+                nearestEnemy.GlobalPosition.X - GlobalPosition.X);
+            Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotateSensitivity);
         }
         else
         {
-            // Update Rotation
-            var parent = GetParent().GetParent<MeMe>();
-            if (parent.MoveDirection.X > 0)
-            {
-                var angle = Mathf.Atan2(0, 1);
-                _lastPlayerAngle = angle;
-                Rotation = angle;
-            }
-            else if (parent.MoveDirection.X < 0)
-            {
-                var angle = Mathf.Atan2(0, -1);
-                _lastPlayerAngle = angle;
-                Rotation = angle;
-            }
-
             IsAiming = false;
             NearestEnemy = null;
+
+            if (!UpdateRotation)
+            {
+                return;
+            }
+
+            // Update Rotation
+            Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
         }
     }
 }

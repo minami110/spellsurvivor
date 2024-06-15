@@ -3,6 +3,12 @@ using R3;
 
 namespace fms;
 
+public enum PawnFaceDirection
+{
+    Right,
+    Left
+}
+
 public partial class MeMe : CharacterBody2D, IPawn
 {
     [Export(PropertyHint.Range, "0,1000,1")]
@@ -13,6 +19,9 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     [Export]
     private Vector2I _cameraLimit = new(550, 550);
+
+    private readonly ReactiveProperty<PawnFaceDirection> _faceDirection = new(PawnFaceDirection.Right);
+    public ReadOnlyReactiveProperty<PawnFaceDirection> FaceDirection => _faceDirection;
 
     /// <summary>
     /// </summary>
@@ -25,20 +34,24 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     public override void _Ready()
     {
+        // Inititialize PlayerState
         var playerState = GetNode<PlayerState>("%PlayerState");
         playerState.AddEffect(new AddMoveSpeedEffect { Value = _moveSpeed });
-        playerState.MoveSpeed
-            .Subscribe(this, (x, state) => { state._moveSpeed = x; })
-            .AddTo(this);
-
         playerState.AddEffect(new AddHealthEffect { Value = _health });
         playerState.AddEffect(new AddMaxHealthEffect { Value = _health });
 
+        // Initialize Camera
         var camera = GetNode<Camera2D>("%MainCamera");
         camera.LimitLeft = -_cameraLimit.X;
         camera.LimitRight = _cameraLimit.X;
         camera.LimitTop = -_cameraLimit.Y;
         camera.LimitBottom = _cameraLimit.Y;
+
+        // Subscribes
+        playerState.MoveSpeed
+            .Subscribe(this, (x, self) => { self._moveSpeed = x; })
+            .AddTo(this);
+        _faceDirection.AddTo(this);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -55,12 +68,15 @@ public partial class MeMe : CharacterBody2D, IPawn
         MoveAndCollide(motion);
 
         // Update Animation
+        controller.SendSignelMove();
         if (motion.X > 0)
         {
+            _faceDirection.Value = PawnFaceDirection.Right;
             controller.SendSignalMoveRight();
         }
-        else
+        else if (motion.X < 0)
         {
+            _faceDirection.Value = PawnFaceDirection.Left;
             controller.SendSignalMoveLeft();
         }
     }

@@ -37,13 +37,11 @@ public partial class PlayerAnimationController : Node
     public void SendSignalMoveLeft()
     {
         _body.Scale = new Vector2(-3, 3);
-        _movingFootTween.Play();
     }
 
     public void SendSignalMoveRight()
     {
         _body.Scale = new Vector2(3, 3);
-        _movingFootTween.Play();
     }
 
     public void SendSignalStop()
@@ -51,5 +49,10 @@ public partial class PlayerAnimationController : Node
         _footR.Position = new Vector2(0, 0);
         _footL.Position = new Vector2(3, 0);
         _movingFootTween.Stop();
+    }
+
+    public void SendSignelMove()
+    {
+        _movingFootTween.Play();
     }
 }

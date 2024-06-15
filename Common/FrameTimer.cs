@@ -14,7 +14,7 @@ public partial class FrameTimer : Node
     /// タイマーが稼働中の場合は, 次のループからここで設定した値で待機します
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    [Export(PropertyHint.Range, "1,99999")]
+    [Export(PropertyHint.Range, "1,216000")] // 216000f = 1 hour
     public uint WaitFrame
     {
         get => _waitFrame;
@@ -23,7 +23,9 @@ public partial class FrameTimer : Node
             if (value == 0)
             {
                 throw new ArgumentOutOfRangeException(
-                    $"[{nameof(FrameTimer)}] {nameof(WaitFrame)} must be greater than 0");
+                    nameof(WaitFrame),
+                    $"[{nameof(FrameTimer)}] {nameof(WaitFrame)} must be greater than 0"
+                );
             }
 
             _waitFrame = value;

@@ -119,10 +119,9 @@ public partial class WeaponBase : Node2D
         if (what == NotificationEnterTree)
         {
             Name = $"(Weapon) {MinionId}";
-            if (!IsInGroup(Constant.GroupNameWeapon))
-            {
-                AddToGroup(Constant.GroupNameWeapon);
-            }
+
+            // Weapon group に所属する
+            AddToGroup(Constant.GroupNameWeapon);
 
             // Add FrameTimer
             if (GetNodeOrNull<FrameTimer>(FrameTimerPath) == null)
