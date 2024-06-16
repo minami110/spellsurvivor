@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bfke7q0b0owyb"]
+[gd_scene load_steps=9 format=3 uid="uid://bfke7q0b0owyb"]
 
 [ext_resource type="Script" path="res://Infinity/Player/MeMe.cs" id="1_xi18f"]
 [ext_resource type="Script" path="res://Infinity/Core/PlayerState.cs" id="2_ynkku"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bt6mvjcjkcp32" path="res://Infinity/Player/torso.png" id="3_xbg53"]
 [ext_resource type="Texture2D" uid="uid://cup57j01kq1r7" path="res://Infinity/Player/head.png" id="4_a5xpj"]
 [ext_resource type="Texture2D" uid="uid://fxms0jyc10sf" path="res://Infinity/Player/feet.png" id="5_6j3or"]
+[ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="7_vvk78"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
 radius = 20.0
@@ -28,6 +29,9 @@ _body = NodePath("../Body")
 _head = NodePath("../Body/Head")
 _footL = NodePath("../Body/FeetLeft")
 _footR = NodePath("../Body/FeetRight")
+
+[node name="WeaponPositionAnimator" type="Node" parent="."]
+script = ExtResource("7_vvk78")
 
 [node name="Body" type="Sprite2D" parent="."]
 texture_filter = 1

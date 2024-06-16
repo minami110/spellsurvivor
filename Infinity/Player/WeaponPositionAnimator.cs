@@ -5,60 +5,38 @@ using R3;
 
 public partial class WeaponPositionAnimator : Node
 {
+    [Export(PropertyHint.Range, "0,100,1")]
+    private float _radius = 30;
+
     private readonly List<Node2D> _weapons = new();
 
-    public override void _EnterTree()
+    public override void _Notification(int what)
     {
-        // Note: Must be parent is MeMe
-        var parent = GetParent();
-        parent.ChildOrderChangedAsObservable()
-            .Subscribe(x => { RefreshWeapons(); })
-            .AddTo(this);
-    }
-
-    public override void _Ready()
-    {
-        RefreshWeapons();
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        if (_weapons.Count == 0)
+        if (what == NotificationEnterTree)
         {
-            SetPhysicsProcess(false);
-            return;
+            // 兄弟階層の Tree 構造の変化を検知する
+            // Note: Must be parent is MeMe
+            GetParent().ChildOrderChangedAsObservable()
+                .Subscribe(this, (_, self) => { self.RefreshWeapons(); })
+                .AddTo(this);
         }
-
-        var center = GetParent<Node2D>().GlobalPosition;
-
-        var radius = 10 + _weapons.Count * 3f;
-
-        // Weapon の数に応じて N角形 になるように それぞれの Weapon の Position を更新する
-        var angle = Mathf.Pi * 2 / _weapons.Count;
-        for (var i = 0; i < _weapons.Count; i++)
+        else if (what == NotificationReady)
         {
-            var weapon = _weapons[i];
-            var pos = new Vector2(
-                center.X + radius * Mathf.Cos(angle * i),
-                center.Y + radius * Mathf.Sin(angle * i)
-            );
-            // Weight に応じて移動する
-            weapon.GlobalPosition = pos;
+            RefreshWeapons();
         }
     }
 
     private void RefreshWeapons()
     {
         _weapons.Clear();
-        var sib = this.GetSiblings();
-        foreach (var node in sib)
+        foreach (var n in this.GetSiblings())
         {
-            if (node is not Node2D n2)
+            if (n is not Node2D n2)
             {
                 continue;
             }
 
-            if (node.IsInGroup(Constant.GroupNameWeapon))
+            if (n.IsInGroup(Constant.GroupNameWeapon))
             {
                 _weapons.Add(n2);
             }
@@ -66,7 +44,38 @@ public partial class WeaponPositionAnimator : Node
 
         if (_weapons.Count > 0)
         {
-            SetPhysicsProcess(true);
+            UpdateSiblingWeaponsLocalPosition();
+        }
+    }
+
+    private void UpdateSiblingWeaponsLocalPosition()
+    {
+        if (_weapons.Count == 0)
+        {
+            SetPhysicsProcess(false);
+            return;
+        }
+
+        if (_radius <= 0)
+        {
+            return;
+        }
+
+        // Weapon の数に応じて N角形 になるように それぞれの Weapon の Position を更新する
+        var angle = Mathf.Pi * 2 / _weapons.Count;
+        var targetPosition = Vector2.Zero;
+        for (var i = 0; i < _weapons.Count; i++)
+        {
+            if (_radius > 0)
+            {
+                targetPosition = new Vector2(
+                    _radius * Mathf.Cos(angle * i),
+                    _radius * Mathf.Sin(angle * i)
+                );
+            }
+
+            // Weight に応じて移動する
+            _weapons[i].Position = targetPosition;
         }
     }
 }

@@ -35,12 +35,16 @@ public partial class Hocho : WeaponBase
 
         // ToDo: アニメ の最初の タメ を待って 弾を打っている
         await this.WaitForSecondsAsync(0.2d);
-        var prj = _projectile.Instantiate<BaseProjectile>();
+
+        if (IsInstanceValid(enemy))
         {
-            prj.GlobalPosition = GlobalPosition;
-            prj.Direction = enemy!.GlobalPosition - GlobalPosition;
+            var prj = _projectile.Instantiate<BaseProjectile>();
+            {
+                prj.GlobalPosition = GlobalPosition;
+                prj.Direction = enemy!.GlobalPosition - GlobalPosition;
+            }
+            FrameTimer.AddChild(prj);
         }
-        FrameTimer.AddChild(prj);
     }
 
     private void A()
