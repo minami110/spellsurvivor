@@ -26,10 +26,12 @@ public partial class PlayerAnimationController : Node
         t.SetLoops();
 
         _movingFootTween = CreateTween();
+        _movingFootTween.SetParallel();
         _movingFootTween.TweenProperty(_footR, "position", new Vector2(3, 0), 0.1);
-        _movingFootTween.Parallel().TweenProperty(_footL, "position", new Vector2(0, 0), 0.1);
+        _movingFootTween.TweenProperty(_footL, "position", new Vector2(0, 0), 0.1);
+        _movingFootTween.Chain();
         _movingFootTween.TweenProperty(_footR, "position", new Vector2(0, 0), 0.1);
-        _movingFootTween.Parallel().TweenProperty(_footL, "position", new Vector2(3, 0), 0.1);
+        _movingFootTween.TweenProperty(_footL, "position", new Vector2(3, 0), 0.1);
         _movingFootTween.SetLoops();
         _movingFootTween.Stop();
     }
@@ -46,9 +48,9 @@ public partial class PlayerAnimationController : Node
 
     public void SendSignalStop()
     {
+        _movingFootTween.Stop();
         _footR.Position = new Vector2(0, 0);
         _footL.Position = new Vector2(3, 0);
-        _movingFootTween.Stop();
     }
 
     public void SendSignelMove()
