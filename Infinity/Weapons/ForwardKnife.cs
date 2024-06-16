@@ -69,10 +69,13 @@ public partial class ForwardKnife : WeaponBase
     {
         var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
 
+        // Get Player's aim direction
+        var direction = GetParent<MeMe>().LatestMoveDirection;
+
         var prj1 = _projectile.Instantiate<BaseProjectile>();
         {
             prj1.GlobalPosition = spawnPos;
-            prj1.Direction = GlobalTransform.X; // Player's Forward
+            prj1.Direction = direction;
         }
 
         if (TrickShotCount >= 1)

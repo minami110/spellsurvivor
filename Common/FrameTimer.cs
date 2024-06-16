@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 using R3;
 
 namespace fms;
@@ -6,61 +7,105 @@ namespace fms;
 [GlobalClass]
 public partial class FrameTimer : Node
 {
-    [Export(PropertyHint.Range, "1,99999")]
-    public uint WaitFrame { get; set; } = 20u;
+    /// <summary>
+    /// タイマーの待機フレームを設定, 1 以上の値を設定してください
+    /// </summary>
+    /// <remarks>
+    /// タイマーが稼働中の場合は, 次のループからここで設定した値で待機します
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    [Export(PropertyHint.Range, "1,216000")] // 216000f = 1 hour
+    public uint WaitFrame
+    {
+        get => _waitFrame;
+        set
+        {
+            if (value == 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(WaitFrame),
+                    $"[{nameof(FrameTimer)}] {nameof(WaitFrame)} must be greater than 0"
+                );
+            }
 
+            _waitFrame = value;
+        }
+    }
+
+    /// <summary>
+    /// Ready 時に自動でタイマーをスタートするかどうか
+    /// </summary>
     [Export]
     private bool _autostart;
 
-    private readonly ReactiveProperty<int> _frameLeft = new(-1);
-
+    private readonly ReactiveProperty<uint> _frameLeft = new(0);
     private readonly Subject<Unit> _timeOut = new();
+    private uint _waitFrame = 20u;
 
+    /// <summary>
+    /// タイマーがタイムアウトした時に発行されるイベント
+    /// </summary>
     public Observable<Unit> TimeOut => _timeOut;
 
-    public ReadOnlyReactiveProperty<int> FrameLeft => _frameLeft;
+    /// <summary>
+    /// タイマーの残りフレーム, 停止している場合は 0 が返ります
+    /// </summary>
+    public ReadOnlyReactiveProperty<uint> FrameLeft => _frameLeft;
 
-    public bool IsStopped => _frameLeft.Value <= 0;
+    /// <summary>
+    /// 現在タイマーが停止しているかどうか
+    /// </summary>
+    public bool IsStopped => _frameLeft.Value == 0;
 
     public override void _Notification(int what)
     {
         if (what == NotificationReady)
         {
-            Disposable.Combine(_timeOut, _frameLeft).AddTo(this);
             if (_autostart)
             {
                 Start();
-            }
-            else
-            {
-                Stop();
+                _autostart = false;
             }
         }
-        else if (what == NotificationProcess)
+        else if (what == NotificationPhysicsProcess)
         {
-            var nextFrameLeft = _frameLeft.Value - 1;
-
-            if (nextFrameLeft < 0)
+            var next = 0u;
+            if (_frameLeft.Value == 0)
             {
-                _timeOut.OnNext(Unit.Default);
-                _frameLeft.Value = (int)WaitFrame;
+                GD.PrintErr("FrameLeft is 0");
             }
             else
             {
-                _frameLeft.Value = nextFrameLeft;
+                next = _frameLeft.Value - 1;
             }
+
+            if (next == 0)
+            {
+                _timeOut.OnNext(Unit.Default);
+                _frameLeft.Value = WaitFrame;
+            }
+            else
+            {
+                _frameLeft.Value = next;
+            }
+        }
+        else if (what == NotificationExitTree)
+        {
+            _frameLeft.Dispose();
+            _timeOut.Dispose();
         }
     }
 
     public void Start()
     {
-        _frameLeft.Value = (int)WaitFrame;
-        SetProcess(true);
+        _frameLeft.Value = WaitFrame;
+        SetPhysicsProcess(true);
     }
 
     public void Stop()
     {
-        SetProcess(false);
-        _frameLeft.Value = -1;
+        _frameLeft.Value = 0;
+        SetPhysicsProcess(false);
+        _autostart = false;
     }
 }

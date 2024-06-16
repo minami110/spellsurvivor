@@ -3,6 +3,12 @@ using R3;
 
 namespace fms;
 
+public enum PawnFaceDirection
+{
+    Right,
+    Left
+}
+
 public partial class MeMe : CharacterBody2D, IPawn
 {
     [Export(PropertyHint.Range, "0,1000,1")]
@@ -14,9 +20,17 @@ public partial class MeMe : CharacterBody2D, IPawn
     [Export]
     private Vector2I _cameraLimit = new(550, 550);
 
+    private readonly ReactiveProperty<PawnFaceDirection> _faceDirection = new(PawnFaceDirection.Right);
+    public ReadOnlyReactiveProperty<PawnFaceDirection> FaceDirection => _faceDirection;
+
     /// <summary>
     /// </summary>
-    public Vector2 MoveDirection { get; private set; }
+    private Vector2 NextMoveDirection { get; set; }
+
+    /// <summary>
+    /// 停止する直前まで移動していた方向
+    /// </summary>
+    public Vector2 LatestMoveDirection { get; private set; } = Vector2.Right;
 
     public override void _EnterTree()
     {
@@ -25,42 +39,51 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     public override void _Ready()
     {
+        // Inititialize PlayerState
         var playerState = GetNode<PlayerState>("%PlayerState");
         playerState.AddEffect(new AddMoveSpeedEffect { Value = _moveSpeed });
-        playerState.MoveSpeed
-            .Subscribe(this, (x, state) => { state._moveSpeed = x; })
-            .AddTo(this);
-
         playerState.AddEffect(new AddHealthEffect { Value = _health });
         playerState.AddEffect(new AddMaxHealthEffect { Value = _health });
 
+        // Initialize Camera
         var camera = GetNode<Camera2D>("%MainCamera");
         camera.LimitLeft = -_cameraLimit.X;
         camera.LimitRight = _cameraLimit.X;
         camera.LimitTop = -_cameraLimit.Y;
         camera.LimitBottom = _cameraLimit.Y;
+
+        // Subscribes
+        playerState.MoveSpeed
+            .Subscribe(this, (x, self) => { self._moveSpeed = x; })
+            .AddTo(this);
+        _faceDirection.AddTo(this);
     }
 
     public override void _PhysicsProcess(double delta)
     {
         var controller = GetNode<PlayerAnimationController>("AnimationController");
 
-        if (!(MoveDirection.LengthSquared() > 0f))
+        if (NextMoveDirection.LengthSquared() <= 0f)
         {
             controller.SendSignalStop();
             return;
         }
 
-        var motion = MoveDirection * (float)delta * _moveSpeed;
+
+        LatestMoveDirection = NextMoveDirection;
+        var motion = LatestMoveDirection * (float)delta * _moveSpeed;
         MoveAndCollide(motion);
 
         // Update Animation
+        controller.SendSignelMove();
         if (motion.X > 0)
         {
+            _faceDirection.Value = PawnFaceDirection.Right;
             controller.SendSignalMoveRight();
         }
-        else
+        else if (motion.X < 0)
         {
+            _faceDirection.Value = PawnFaceDirection.Left;
             controller.SendSignalMoveLeft();
         }
     }
@@ -98,6 +121,6 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     void IPawn.MoveForward(in Vector2 dir)
     {
-        MoveDirection = dir;
+        NextMoveDirection = dir;
     }
 }
