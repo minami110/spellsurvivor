@@ -25,7 +25,12 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     /// <summary>
     /// </summary>
-    public Vector2 MoveDirection { get; private set; }
+    private Vector2 NextMoveDirection { get; set; }
+
+    /// <summary>
+    /// 停止する直前まで移動していた方向
+    /// </summary>
+    public Vector2 LatestMoveDirection { get; private set; } = Vector2.Right;
 
     public override void _EnterTree()
     {
@@ -58,13 +63,15 @@ public partial class MeMe : CharacterBody2D, IPawn
     {
         var controller = GetNode<PlayerAnimationController>("AnimationController");
 
-        if (!(MoveDirection.LengthSquared() > 0f))
+        if (NextMoveDirection.LengthSquared() <= 0f)
         {
             controller.SendSignalStop();
             return;
         }
 
-        var motion = MoveDirection * (float)delta * _moveSpeed;
+
+        LatestMoveDirection = NextMoveDirection;
+        var motion = LatestMoveDirection * (float)delta * _moveSpeed;
         MoveAndCollide(motion);
 
         // Update Animation
@@ -114,6 +121,6 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     void IPawn.MoveForward(in Vector2 dir)
     {
-        MoveDirection = dir;
+        NextMoveDirection = dir;
     }
 }
