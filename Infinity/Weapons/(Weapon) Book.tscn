@@ -1,9 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://cc0rh5i501pkg"]
+[gd_scene load_steps=4 format=3 uid="uid://cc0rh5i501pkg"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Book.cs" id="1_vqguh"]
 [ext_resource type="PackedScene" uid="uid://dc8rn6v6qs5uy" path="res://Infinity/Projectiles/(Projectile) Disk.tscn" id="2_ceugq"]
+[ext_resource type="Texture2D" uid="uid://bufla4g8aocx6" path="res://Common/Resources/Textures/2dgizmo_8x8.png" id="3_va8mq"]
 
 [node name="Book" type="Node2D"]
 script = ExtResource("1_vqguh")
 _projectile = ExtResource("2_ceugq")
 BaseCoolDownFrame = 180
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("3_va8mq")
+centered = false
