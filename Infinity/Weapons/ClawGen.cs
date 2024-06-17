@@ -56,8 +56,6 @@ public partial class ClawGen : WeaponBase
 
         var newCoolDown = 60u - _enemyHitStacks * 10u;
         BaseCoolDownFrame = newCoolDown;
-
-        GD.Print(BaseCoolDownFrame);
     }
 
     private protected override void SpawnProjectile(uint level)
