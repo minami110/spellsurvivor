@@ -43,18 +43,13 @@ public partial class ClawGen : WeaponBase
     private protected override void SpawnProjectile(uint level)
     {
         var prj = _projectile.Instantiate<BaseProjectile>();
-        {
-            prj.GlobalPosition = GlobalPosition;
-            prj.Direction = GlobalTransform.X;
-        }
-
         prj.AddChild(new AutoAim
         {
             Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
             SearchRadius = 100
         });
 
-        FrameTimer.AddChild(prj);
+        AddProjectile(prj, GlobalPosition);
 
         // Note: AddTo はシーンに入れたあとしかできないので
         // Projectile が Enemy にヒットしたら Stack を一つ貯める

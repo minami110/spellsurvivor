@@ -26,7 +26,7 @@ public partial class Book : WeaponBase
             var offset = 360f * i / level;
             prj.AddChild(new Orbit { Target = player, Radius = 100, OffsetDeg = offset });
 
-            FrameTimer.AddChild(prj);
+            AddProjectile(prj, GlobalPosition);
         }
     }
 }

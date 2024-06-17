@@ -1,17 +1,22 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using Godot;
 using R3;
 
 namespace fms;
 
-public readonly struct EnemyDamageStatic
+public readonly struct DamageReport
 {
+    public required float Amount { get; init; }
+    public required Node Victim { get; init; }
+    public required Node Instigator { get; init; }
     public required Vector2 Position { get; init; }
     public required bool IsDead { get; init; }
 }
 
 /// <summary>
-///     統計を収集するためのクラス
-///     ダメージ表示も担当している
+/// 統計を収集するためのクラス
+/// ダメージ表示も担当している
 /// </summary>
 public partial class StaticsManager : CanvasLayer
 {
@@ -29,12 +34,27 @@ public partial class StaticsManager : CanvasLayer
 
     private static StaticsManager? _instance;
 
-    private readonly Subject<EnemyDamageStatic> _enemyDamageOccurred = new();
+    private readonly Dictionary<ulong, List<DamageReport>> _damageInfoByInsitigator = new();
+
+    private readonly Subject<DamageReport> _enemyDamageOccurred = new();
+
+    public static IReadOnlyDictionary<ulong, List<DamageReport>> DamageInfoTable
+    {
+        get
+        {
+            if (_instance is not null)
+            {
+                return _instance._damageInfoByInsitigator;
+            }
+
+            return ImmutableDictionary<ulong, List<DamageReport>>.Empty;
+        }
+    }
 
     /// <summary>
     /// </summary>
-    public static Observable<EnemyDamageStatic> EnemyDamageOccurred =>
-        _instance?._enemyDamageOccurred ?? Observable.Empty<EnemyDamageStatic>();
+    public static Observable<DamageReport> EnemyDamageOccurred =>
+        _instance?._enemyDamageOccurred ?? Observable.Empty<DamageReport>();
 
     public override void _Notification(int what)
     {
@@ -51,11 +71,7 @@ public partial class StaticsManager : CanvasLayer
 
     /// <summary>
     /// </summary>
-    /// <param name="ownerType"></param>
-    /// <param name="amount"></param>
-    /// <param name="globalPosition"></param>
-    public static void CommitDamage(DamageTakeOwner ownerType, float amount, in Vector2 globalPosition,
-        bool isDead = false)
+    public static void CommitDamage(in DamageReport report)
     {
         if (_instance is null)
         {
@@ -67,10 +83,30 @@ public partial class StaticsManager : CanvasLayer
             return;
         }
 
-        _instance.SendDamageInternal(ownerType, amount, globalPosition, isDead);
+        // ダメージを与えたもの (Instigator) ごとにダメージ情報を保存する
+        var id = report.Instigator.GetInstanceId();
+        if (!_instance._damageInfoByInsitigator.TryGetValue(id, out var damageInfos))
+        {
+            damageInfos = new List<DamageReport>();
+            _instance._damageInfoByInsitigator[id] = damageInfos;
+        }
+
+        damageInfos.Add(report);
+
+
+        var victim = report.Victim;
+        if (victim.IsInGroup(Constant.GroupNamePlayer))
+        {
+            _instance.PopUpDamageHud(DamageTakeOwner.Player, report.Amount, report.Position, report.IsDead);
+        }
+        else if (victim.IsInGroup(Constant.GroupNameEnemy))
+        {
+            _instance.PopUpDamageHud(DamageTakeOwner.Enemy, report.Amount, report.Position, report.IsDead);
+            _instance._enemyDamageOccurred.OnNext(report);
+        }
     }
 
-    private void SendDamageInternal(DamageTakeOwner ownerType, float damage, in Vector2 position, bool isDead)
+    private void PopUpDamageHud(DamageTakeOwner ownerType, float damage, in Vector2 position, bool isDead)
     {
         // Config で表示設定がされていない場合は表示しない
         if (!GameConfig.Singleton.ShowDamageNumbers.Value)
@@ -90,7 +126,6 @@ public partial class StaticsManager : CanvasLayer
         // Enemy
         else
         {
-            _enemyDamageOccurred.OnNext(new EnemyDamageStatic { Position = position, IsDead = isDead });
             damageNumberHud.PhysicalDamageColor = new Color(1f, 1f, 1f);
         }
 

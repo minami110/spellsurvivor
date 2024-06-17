@@ -39,11 +39,7 @@ public partial class Hocho : WeaponBase
         if (IsInstanceValid(enemy))
         {
             var prj = _projectile.Instantiate<BaseProjectile>();
-            {
-                prj.GlobalPosition = GlobalPosition;
-                prj.Direction = enemy!.GlobalPosition - GlobalPosition;
-            }
-            FrameTimer.AddChild(prj);
+            AddProjectile(prj, GlobalPosition, enemy!.GlobalPosition - GlobalPosition);
         }
     }
 

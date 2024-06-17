@@ -65,7 +65,7 @@ public partial class PickableHeart : Node2D
         // Player を回復する
         if (_targetNode is MeMe player)
         {
-            player.AddEffect(new HealEffect { Value = _healAmount });
+            player.Heal(_healAmount);
         }
 
         QueueFree();

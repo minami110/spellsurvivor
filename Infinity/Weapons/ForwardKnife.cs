@@ -67,17 +67,7 @@ public partial class ForwardKnife : WeaponBase
 
     private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
     {
-        var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
-
-        // Get Player's aim direction
-        var direction = GetParent<MeMe>().LatestMoveDirection;
-
         var prj1 = _projectile.Instantiate<BaseProjectile>();
-        {
-            prj1.GlobalPosition = spawnPos;
-            prj1.Direction = direction;
-        }
-
         if (TrickShotCount >= 1)
         {
             var prj2 = _projectile.Instantiate<BaseProjectile>();
@@ -102,7 +92,10 @@ public partial class ForwardKnife : WeaponBase
             }
         }
 
-        // 弾をスポーンする (FrameTimer が Node (座標打消) なので代用)
-        FrameTimer.AddChild(prj1);
+        var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
+
+        // Get Player's aim direction
+        var direction = GetParent<MeMe>().LatestMoveDirection;
+        AddProjectile(prj1, spawnPos, direction);
     }
 }

@@ -11,17 +11,12 @@ public partial class AutoAimPistol : WeaponBase
     private protected override void SpawnProjectile(uint level)
     {
         var prj = _projectile.Instantiate<BaseProjectile>();
-        {
-            prj.GlobalPosition = GlobalPosition;
-            prj.Direction = GlobalTransform.X;
-        }
-
         prj.AddChild(new AutoAim
         {
             Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
             SearchRadius = 100
         });
 
-        FrameTimer.AddChild(prj);
+        AddProjectile(prj, GlobalPosition, GlobalTransform.X);
     }
 }

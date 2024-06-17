@@ -14,10 +14,6 @@ public partial class PoisonMistGen : WeaponBase
     private protected override void SpawnProjectile(uint level)
     {
         var prj = _projectile.Instantiate<BaseProjectile>();
-        {
-            prj.GlobalPosition = GlobalPosition;
-        }
-
         switch (level)
         {
             case 2:
@@ -28,6 +24,6 @@ public partial class PoisonMistGen : WeaponBase
                 break;
         }
 
-        FrameTimer.AddChild(prj);
+        AddProjectile(prj, GlobalPosition);
     }
 }

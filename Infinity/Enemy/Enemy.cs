@@ -80,7 +80,7 @@ public partial class Enemy : RigidBody2D
         LinearVelocity = force;
     }
 
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, Node instigator)
     {
         _state.AddEffect(new PhysicalDamageEffect { Value = amount });
         _state.SolveEffect();
@@ -88,21 +88,28 @@ public partial class Enemy : RigidBody2D
         if (_state.Health.CurrentValue <= 0)
         {
             // Dead
-            StaticsManager.CommitDamage(
-                StaticsManager.DamageTakeOwner.Enemy,
-                amount,
-                GlobalPosition,
-                true
-            );
+            var report = new DamageReport
+            {
+                Instigator = instigator,
+                Victim = this,
+                Amount = amount,
+                Position = GlobalPosition,
+                IsDead = true
+            };
+            StaticsManager.CommitDamage(report);
             KillByDamage();
         }
         else
         {
-            StaticsManager.CommitDamage(
-                StaticsManager.DamageTakeOwner.Enemy,
-                amount,
-                GlobalPosition
-            );
+            var report = new DamageReport
+            {
+                Instigator = instigator,
+                Victim = this,
+                Amount = amount,
+                Position = GlobalPosition,
+                IsDead = false
+            };
+            StaticsManager.CommitDamage(report);
             TakeDamageAnimationAsync();
             UpdateHealthBar();
         }
@@ -121,7 +128,7 @@ public partial class Enemy : RigidBody2D
         {
             if (node is MeMe player)
             {
-                player.TakeDamage(_power);
+                player.TakeDamage(_power, this);
             }
         }
     }

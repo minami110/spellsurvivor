@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using fms.Effect;
 using fms.Faction;
+using fms.Projectile;
 using Godot;
 using R3;
 
@@ -176,6 +177,25 @@ public partial class WeaponBase : Node2D
     public void StopAttack()
     {
         FrameTimer.Stop();
+    }
+
+    private protected void AddProjectile(BaseProjectile projectile, in Vector2 position = default,
+        in Vector2 direction = default)
+    {
+        projectile.Weapon = this;
+
+        if (position != default)
+        {
+            projectile.Position = position;
+        }
+
+        if (direction != default)
+        {
+            projectile.Direction = direction;
+        }
+
+        // Note: FrameTimer が Node 継承 (座標がない) かつ必ず存在しているのでその子にスポーンする
+        FrameTimer.AddChild(projectile);
     }
 
     private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)

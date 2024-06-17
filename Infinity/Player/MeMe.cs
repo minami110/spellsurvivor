@@ -88,25 +88,37 @@ public partial class MeMe : CharacterBody2D, IPawn
         }
     }
 
-    public void AddEffect(EffectBase effect)
+    public void Heal(uint amount)
     {
-        GetNode<PlayerState>("%PlayerState").AddEffect(effect);
-
-        // 統計をおくる
-        switch (effect)
+        AddEffect(new HealEffect { Value = amount });
+        var info = new DamageReport
         {
-            case PhysicalDamageEffect damageEffect:
-                StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Player, damageEffect.Value, GlobalPosition);
-                break;
-            case HealEffect healEffect:
-                StaticsManager.CommitDamage(StaticsManager.DamageTakeOwner.Player, -healEffect.Value, GlobalPosition);
-                break;
-        }
+            Amount = -amount,
+            Victim = this,
+            Instigator = this, // 自分自身で回復ということに..
+            Position = GlobalPosition,
+            IsDead = false
+        };
+        StaticsManager.CommitDamage(info);
     }
 
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, Node instigator)
     {
         AddEffect(new PhysicalDamageEffect { Value = amount });
+        var info = new DamageReport
+        {
+            Amount = amount,
+            Victim = this,
+            Instigator = instigator,
+            Position = GlobalPosition,
+            IsDead = false
+        };
+        StaticsManager.CommitDamage(info);
+    }
+
+    private void AddEffect(EffectBase effect)
+    {
+        GetNode<PlayerState>("%PlayerState").AddEffect(effect);
     }
 
     void IPawn.PrimaryPressed()

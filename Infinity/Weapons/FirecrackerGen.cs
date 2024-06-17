@@ -69,8 +69,7 @@ public partial class FirecrackerGen : WeaponBase
             }
         }
 
-
-        FrameTimer.AddChild(prj0);
+        AddProjectile(prj0);
     }
 
     private BaseProjectile ConstructProj(bool trickshot)

@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using fms.Weapon;
+using Godot;
 using R3;
 
 namespace fms.Projectile;
@@ -63,6 +64,9 @@ public partial class BaseProjectile : Area2D
 
     public Observable<WhyDead> Dead => _deadSubject;
 
+    /// <summary>
+    /// 敵/壁 を問わずなにかにヒットしたときに通知
+    /// </summary>
     public Observable<ProjectileHitInfo> Hit => _hitSubject;
 
     /// <summary>
@@ -70,7 +74,15 @@ public partial class BaseProjectile : Area2D
     /// </summary>
     private uint Age { get; set; }
 
+    /// <summary>
+    /// 現在進む方向
+    /// </summary>
     public Vector2 Direction { get; set; }
+
+    /// <summary>
+    /// この Projectile を発射した Weapon
+    /// </summary>
+    public WeaponBase Weapon { get; set; }
 
     public override void _Notification(int what)
     {
@@ -176,7 +188,7 @@ public partial class BaseProjectile : Area2D
 
         if (body is Enemy enemy)
         {
-            enemy.TakeDamage(Damage);
+            enemy.TakeDamage(Damage, Weapon);
 
             if (_hitSound != null)
             {
@@ -203,7 +215,7 @@ public partial class BaseProjectile : Area2D
         {
             if (body is Enemy enemy)
             {
-                enemy.TakeDamage(Damage);
+                enemy.TakeDamage(Damage, Weapon);
             }
         }
     }
