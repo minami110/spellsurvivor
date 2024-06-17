@@ -5,62 +5,47 @@
 [node name="BattleResult HUD (Layer 2)" type="CanvasLayer"]
 layer = 2
 
-[node name="BattleResultHudController" type="Node" parent="." node_paths=PackedStringArray("_rootControl", "_acceptButton", "_titleLabel", "_rewardLabel")]
+[node name="BattleResultHudController" type="Node" parent="." node_paths=PackedStringArray("_acceptButton", "_titleLabel", "_rewardLabel")]
 script = ExtResource("1_puswr")
-_rootControl = NodePath("../Control")
-_acceptButton = NodePath("../Control/VBoxContainer/AcceptButton")
-_titleLabel = NodePath("../Control/VBoxContainer/TitleLabel")
-_rewardLabel = NodePath("../Control/VBoxContainer/RewardLabel")
+_acceptButton = NodePath("../RootPanel/VBoxContainer/AcceptButton")
+_titleLabel = NodePath("../RootPanel/VBoxContainer/TitleLabel")
+_rewardLabel = NodePath("../RootPanel/VBoxContainer/RewardLabel")
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
+[node name="RootPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -100.0
-offset_right = 200.0
-offset_bottom = 100.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_group_ = true
-
-[node name="ColorRect" type="ColorRect" parent="Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.18359, 0.18359, 0.18359, 1)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = 10.0
-offset_right = -10.0
-offset_bottom = -10.0
+offset_left = -54.0
+offset_top = -44.5
+offset_right = 54.0
+offset_bottom = 44.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TitleLabel" type="Label" parent="Control/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="RootPanel"]
+custom_minimum_size = Vector2(400, 500)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="RootPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 2
 text = "Wave 1 Result"
 horizontal_alignment = 1
 
-[node name="RewardLabel" type="Label" parent="Control/VBoxContainer"]
+[node name="RewardLabel" type="Label" parent="RootPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 6
 text = "Reward: $100"
 horizontal_alignment = 1
 
-[node name="AcceptButton" type="Button" parent="Control/VBoxContainer"]
+[node name="VBoxWeaponStats" type="VBoxContainer" parent="RootPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AcceptButton" type="Button" parent="RootPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 10
 text = "OK"

@@ -1,4 +1,5 @@
 ﻿using System;
+using fms.Weapon;
 using Godot;
 using R3;
 
@@ -36,25 +37,25 @@ public partial class DeathTrigger : Node
             return;
         }
 
-        // parent prj
+
         var parent = GetParent<BaseProjectile>();
+        var weapon = parent.Weapon;
         var hitInfo = parent.HitInfo;
 
         // Spawn Next 
-        Next.GlobalPosition = hitInfo.Position;
+        {
+            Next.Position = hitInfo.Position;
 
-        // 反射ベクトルを計算する
-        var normal = hitInfo.Normal;
-        var direction = hitInfo.Velocity.Normalized();
-        var reflect = direction - 2 * direction.Dot(normal) * normal;
-        Next.Direction = reflect;
+            // ToDo: ベクトル生成, 外部化でいい節がある
+            // 反射ベクトルを計算する
+            var normal = hitInfo.Normal;
+            var direction = hitInfo.Velocity.Normalized();
+            Next.Direction = direction - 2 * direction.Dot(normal) * normal;
 
-        // Get Parent projectile parent (this node is projectile's root)
-        var prjRoot = parent.GetParent();
+            // ToDO: HitInfo を継承する (Note: 一部 Mod が前回の HitInfo を使うので)
+            Next.HitInfo = parent.HitInfo;
 
-        // ToDO: HitInfo を継承する (Note: 一部 Mod が前回の HitInfo を使うので)
-        Next.HitInfo = parent.HitInfo;
-
-        prjRoot.CallDeferred(Node.MethodName.AddChild, Next);
+            weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, Next);
+        }
     }
 }

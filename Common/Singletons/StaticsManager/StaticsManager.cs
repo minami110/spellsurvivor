@@ -69,6 +69,11 @@ public partial class StaticsManager : CanvasLayer
         }
     }
 
+    public static void ClearDamageInfoTable()
+    {
+        _instance?._damageInfoByInsitigator.Clear();
+    }
+
     /// <summary>
     /// </summary>
     public static void CommitDamage(in DamageReport report)

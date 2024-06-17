@@ -82,7 +82,7 @@ public partial class BaseProjectile : Area2D
     /// <summary>
     /// この Projectile を発射した Weapon
     /// </summary>
-    public WeaponBase Weapon { get; set; }
+    public WeaponBase Weapon { get; set; } = null!;
 
     public override void _Notification(int what)
     {

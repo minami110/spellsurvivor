@@ -163,6 +163,26 @@ public partial class WeaponBase : Node2D
         _isDirtyEffect = true;
     }
 
+    public void AddProjectile(BaseProjectile projectile)
+    {
+        projectile.Weapon = this;
+        // Note: FrameTimer が Node 継承 (座標がない) かつ必ず存在しているのでその子にスポーンする
+        FrameTimer.AddChild(projectile);
+    }
+
+    public void AddProjectile(BaseProjectile projectile, Vector2 position)
+    {
+        projectile.Position = position;
+        AddProjectile(projectile);
+    }
+
+    public void AddProjectile(BaseProjectile projectile, Vector2 position, Vector2 direction)
+    {
+        projectile.Position = position;
+        projectile.Direction = direction;
+        AddProjectile(projectile);
+    }
+
     public bool IsBelongTo(FactionType factionType)
     {
         return Faction.HasFlag(factionType);
@@ -177,25 +197,6 @@ public partial class WeaponBase : Node2D
     public void StopAttack()
     {
         FrameTimer.Stop();
-    }
-
-    private protected void AddProjectile(BaseProjectile projectile, in Vector2 position = default,
-        in Vector2 direction = default)
-    {
-        projectile.Weapon = this;
-
-        if (position != default)
-        {
-            projectile.Position = position;
-        }
-
-        if (direction != default)
-        {
-            projectile.Direction = direction;
-        }
-
-        // Note: FrameTimer が Node 継承 (座標がない) かつ必ず存在しているのでその子にスポーンする
-        FrameTimer.AddChild(projectile);
     }
 
     private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)

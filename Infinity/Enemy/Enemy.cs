@@ -82,6 +82,11 @@ public partial class Enemy : RigidBody2D
 
     public void TakeDamage(float amount, Node instigator)
     {
+        if (amount.Equals(0f))
+        {
+            return;
+        }
+
         _state.AddEffect(new PhysicalDamageEffect { Value = amount });
         _state.SolveEffect();
 
