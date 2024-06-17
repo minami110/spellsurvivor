@@ -10,34 +10,54 @@ public partial class ClawGen : WeaponBase
     [Export]
     private PackedScene _projectile = null!;
 
+
     private uint _enemyHitReduceCounter;
     private uint _enemyHitStacks;
 
     public override void _PhysicsProcess(double delta)
     {
-        if (_enemyHitStacks == 0)
+        if (_enemyHitStacks > 0)
         {
-            return;
+            // スタックの最大数は 5 にする
+            _enemyHitStacks = Math.Min(_enemyHitStacks, 5);
+
+            // スタックの数を 1 減らす
+            // Note: スタックが貯まるたびに猶予時間が短くなるイメージの式
+            _enemyHitReduceCounter++;
+            if (_enemyHitStacks > 4)
+            {
+                if (_enemyHitReduceCounter >= 10)
+                {
+                    _enemyHitStacks--;
+                    _enemyHitReduceCounter = 0;
+                }
+            }
+            else if (_enemyHitStacks > 2)
+            {
+                if (_enemyHitReduceCounter >= 30)
+                {
+                    _enemyHitStacks--;
+                    _enemyHitReduceCounter = 0;
+                }
+            }
+            else
+            {
+                if (_enemyHitReduceCounter >= 60)
+                {
+                    _enemyHitStacks--;
+                    _enemyHitReduceCounter = 0;
+                }
+            }
         }
-
-        // スタックの最大数は 5 にする
-        _enemyHitStacks = Math.Min(_enemyHitStacks, 5);
-
-        // 30 フレームに一回 スタックの数を 1 減らす
-        _enemyHitReduceCounter++;
-        if (_enemyHitReduceCounter >= 30)
+        else
         {
-            _enemyHitStacks--;
             _enemyHitReduceCounter = 0;
-        }
-
-        if (_enemyHitStacks == 0)
-        {
-            return;
         }
 
         var newCoolDown = 60u - _enemyHitStacks * 10u;
         BaseCoolDownFrame = newCoolDown;
+
+        GD.Print(BaseCoolDownFrame);
     }
 
     private protected override void SpawnProjectile(uint level)
