@@ -72,7 +72,7 @@ internal partial class BattleResultHudController : Node
                         {
                             var label = new Label();
                             label.HorizontalAlignment = HorizontalAlignment.Center;
-                            label.Text = $"{weapon.MinionId}: total {damage} damage";
+                            label.Text = $"{weapon.MinionId}: total {damage:0} damage";
                             vbox.AddChild(label);
                         }
                     }
