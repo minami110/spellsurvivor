@@ -28,6 +28,7 @@ _onDeadParticle = ExtResource("6_q38e6")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 unique_name_in_owner = true
+light_mask = 2
 material = SubResource("ShaderMaterial_guyc4")
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("4_b3fk7")

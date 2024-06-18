@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bk4lqg74pvkki"]
+
+[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Template) EnemyBase.tscn" id="1_hmpv4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t1pxo"]
+resource_local_to_scene = true
+radius = 20.0
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f7tib"]
+polygon = PackedVector2Array(93.3333, -133.333, 113.333, -100, 113.333, -60, 133.333, -33.3333, 133, -21.4, 114, -9.3, 105, 35, 80, 83.1, 94, 99.7, 91.2, 131, 66.6667, 126.667, 34.7, 143, 5, 129.3, 0, 100, -26.6667, 73.3333, -93.3333, 100, -133, 63.3, -115.9, 18, -74, 6.3, -51, -41.3, -46.6667, -86.6667, -11.3, -141, 33.3333, -146.667)
+
+[node name="Enemy" instance=ExtResource("1_hmpv4")]
+
+[node name="CollisionForDamage" parent="DamageArea" index="0"]
+shape = SubResource("CircleShape2D_t1pxo")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="." index="4"]
+scale = Vector2(0.15, 0.15)
+occluder = SubResource("OccluderPolygon2D_f7tib")
