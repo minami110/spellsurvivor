@@ -172,7 +172,7 @@ public partial class Enemy : RigidBody2D
 
     private void UpdateShaderParameter(float value)
     {
-        if (GetNode<TextureRect>("Sprite").Material is not ShaderMaterial sm)
+        if (GetNode<CanvasItem>("%Sprite").Material is not ShaderMaterial sm)
         {
             return;
         }
