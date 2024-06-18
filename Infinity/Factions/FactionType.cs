@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Godot;
 
 namespace fms.Faction;
 
@@ -15,7 +16,9 @@ public enum FactionType
     Trickshot = 1 << 2,
     Invoker = 1 << 3,
 
-    Healer = 1 << 4
+    Healer = 1 << 4,
+    Scrap = 1 << 5
+        
     // Note: ↓ に新しい Faction を追加していく
 }
 
@@ -30,6 +33,7 @@ public static class FactionUtil
             FactionType.Trickshot => new Trickshot(),
             FactionType.Invoker => new Invoker(),
             FactionType.Healer => new Healer(),
+            FactionType.Scrap => new Scrap(),
             // Note: ↓ に新しい Faction を追加していく
 
             _ => throw new ArgumentException($"Unsupported faction type: {faction}", nameof(faction))
