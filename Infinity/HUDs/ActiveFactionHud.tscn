@@ -57,3 +57,13 @@ ToolTipText = "Healer
 Lv2: 敵が 10% の確率で体力を 10 回復するアイテムをドロップする
 Lv4: 敵が 30% の確率で体力を 10 回復するアイテムをドロップする
 Lv6: 敵が 50% の確率で体力を 10 回復するアイテムをドロップする "
+
+[node name="Scrap" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Scrap: N/A"
+script = ExtResource("2_7e8q8")
+ToolTipText = "Healer
+Lv2: 敵が 10% の確率で体力を 10 回復するアイテムをドロップする
+Lv4: 敵が 30% の確率で体力を 10 回復するアイテムをドロップする
+Lv6: 敵が 50% の確率で体力を 10 回復するアイテムをドロップする "

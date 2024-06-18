@@ -1,31 +1,70 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+using Godot;
+using R3;
+using System;
 
 namespace fms.Faction;
 
 /// <summary>
-///     Lv2: Player の最大体力を 50 上げる (100 => 150)
-///     Lv4: Player の最大体力 150 上げる (100 => 250)
-///     Lv6: Player の最大体力 450 上げる (100 => 500)
+///     Lv3: ショップフェイズ開始時、スクラップ を持つミニオンのレベルを 1 上げる
+///     Lv5: レベルが最大のウェポンの攻撃力を上げる
 /// </summary>
 [GlobalClass]
 public partial class Scrap : FactionBase
 {
-    private protected override void OnLevelChanged(uint level)
+    public override void _Ready()
     {
-        var value = level switch
+        Main.WaveState.Phase.Skip(1).Subscribe(phase =>
         {
-            >= 6 => 450,
-            >= 4 => 150,
-            >= 2 => 50,
-            _ => 0
-        };
+            if (phase != WavePhase.Shop)
+            {
+                return;
+            }
 
-        if (value == 0)
-        {
-            return;
-        }
+            // 発動していない場合はリターンする
+            if (this.Level < 1)
+            {
+                return;
+            }
+            
+            var list = new List<Minion>();
+            var nodes = this.GetSiblings();
+            foreach (var node in nodes)
+            {
+                if (node is not Minion minion)
+                {
+                    continue;
+                }
 
-        var effect = new AddMaxHealthEffect { Value = value };
-        AddEffactToPlayer(effect);
+                if (minion.IsBelongTo(FactionType.Scrap))
+                {
+                    if(minion.IsMaxLevel)
+                    {
+                        continue;
+                    }
+                    
+                    list.Add(minion);
+                }
+            }
+            
+            Random rand = new Random();
+
+            // レベルアップ対象がいない場合はリターン
+            if (list.Count == 0)
+            {
+                return;
+            }
+            
+            // スクラップを持つミニオンの中からランダムに選択
+            int randomIndex = rand.Next(0, list.Count); // 0 以上 numbers.Count 未満の乱数を生成
+            Minion target = list[randomIndex];
+            
+            // レベルを上げる
+            var currentLevel = target.Level.CurrentValue;
+            target.SetLevel(currentLevel + 1);            
+
+        }).AddTo(this);
     }
+
+    public override bool IsActiveAnyEffect => Level >= 1;
 }
