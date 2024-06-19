@@ -1,20 +1,29 @@
-[gd_scene load_steps=5 format=3 uid="uid://b4i1jhq1jsnm5"]
+[gd_scene load_steps=7 format=3 uid="uid://b4i1jhq1jsnm5"]
 
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Template) EnemyBase.tscn" id="1_phgd3"]
+[ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_5m6e7"]
 [ext_resource type="Texture2D" uid="uid://brwirwby2n6nh" path="res://Infinity/Enemy/obake_tall.png" id="3_dxc77"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rawun"]
+resource_local_to_scene = true
+shader = ExtResource("2_5m6e7")
+shader_parameter/hit = 0.0
+shader_parameter/offset = Vector2(30, 30)
+shader_parameter/modulate = Color(0, 0, 1, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xpoys"]
 resource_local_to_scene = true
 radius = 30.0
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_0ow7h"]
-polygon = PackedVector2Array(78.5, -164.4, 91.5, -124.3, 99.2, -34.9, 113.5, -16.2, 123.5, 28.3, 123.5, 78.4, 123.5, 131.6, 123.5, 132.5, 82.1, 172.5, 16.8, 184.5, -14.8, 138.5, -69.5, 120.5, -77.5, 83.5, -79.3, 45.4, -123.5, 16.6, -112.8, -32.5, -82.5, -67.4, -50, -156.5, -11.7647, -188.235, 48.7, -184.5)
+polygon = PackedVector2Array(76.4706, -129.412, 88.2353, -29.4118, 105.882, 29.4118, 94.1176, 94.1176, 41.1765, 135.294, -17.6471, 123.529, -58.8235, 52.9412, -100, 0, -82.5, -67.4, -35.2941, -147.059, 35.2941, -170.588)
 
 [node name="Enemy" instance=ExtResource("1_phgd3")]
 _defaultMoveSpeed = 25.0
 _defaultHealth = 300.0
 
 [node name="Sprite" parent="." index="0"]
+material = SubResource("ShaderMaterial_rawun")
 scale = Vector2(0.17, 0.17)
 texture = ExtResource("3_dxc77")
 
