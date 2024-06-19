@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bt6mvjcjkcp32"
-path="res://.godot/imported/torso.png-16260fa94f88dba35c8861f59a4938d6.ctex"
+uid="uid://fxms0jyc10sf"
+path="res://.godot/imported/feet.png-93282ac5fabced7ecfc955808dd15c41.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/torso.png"
-dest_files=["res://.godot/imported/torso.png-16260fa94f88dba35c8861f59a4938d6.ctex"]
+source_file="res://Infinity/Player/MeMe/feet.png"
+dest_files=["res://.godot/imported/feet.png-93282ac5fabced7ecfc955808dd15c41.ctex"]
 
 [params]
 

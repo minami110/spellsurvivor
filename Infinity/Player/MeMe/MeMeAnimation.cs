@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class PlayerAnimationController : Node
+public partial class MeMeAnimation : Node
 {
     [Export]
     private Sprite2D _body = null!;

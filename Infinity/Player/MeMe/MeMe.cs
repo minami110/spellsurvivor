@@ -61,7 +61,7 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     public override void _PhysicsProcess(double delta)
     {
-        var controller = GetNode<PlayerAnimationController>("AnimationController");
+        var controller = GetNode<MeMeAnimation>("AnimationController");
 
         if (NextMoveDirection.LengthSquared() <= 0f)
         {
