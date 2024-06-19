@@ -25,7 +25,7 @@ editor_draw_screen = false
 unique_name_in_owner = true
 script = ExtResource("2_ynkku")
 
-[node name="AnimationController" type="Node" parent="." node_paths=PackedStringArray("_body", "_head", "_footL", "_footR")]
+[node name="MeMeAnimation" type="Node" parent="." node_paths=PackedStringArray("_body", "_head", "_footL", "_footR")]
 script = ExtResource("3_cjqe6")
 _body = NodePath("../Body")
 _head = NodePath("../Body/Head")
