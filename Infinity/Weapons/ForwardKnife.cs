@@ -95,7 +95,7 @@ public partial class ForwardKnife : WeaponBase
         var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
 
         // Get Player's aim direction
-        var direction = GetParent<MeMe>().LatestMoveDirection;
+        var direction = GetParent<BasePlayerPawn>().LatestMoveDirection;
         AddProjectile(prj1, spawnPos, direction);
     }
 }

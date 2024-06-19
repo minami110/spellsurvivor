@@ -17,7 +17,7 @@ radius = 20.0
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f7tib"]
 polygon = PackedVector2Array(73.3333, -120, 106.667, -66.6667, 106.667, -20, 80, 60, 53.3333, 100, 6.66667, 93.3333, -26.6667, 66.6667, -53.3333, 46.6667, -40, -6.66667, -13.3333, -86.6667, 20, -120)
 
-[node name="Enemy" instance=ExtResource("1_hmpv4")]
+[node name="ObakeTori" instance=ExtResource("1_hmpv4")]
 
 [node name="Sprite" parent="." index="0"]
 material = SubResource("ShaderMaterial_8qmw2")

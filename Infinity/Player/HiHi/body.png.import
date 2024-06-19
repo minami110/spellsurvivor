@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bv2i2oqp72cwk"
-path="res://.godot/imported/chara-a.png-dbeb350828f25d8edbd862539cc58c23.ctex"
+uid="uid://bi7skgsgexdg1"
+path="res://.godot/imported/body.png-395cbef9ebdc14f734c176edbb326a64.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/chara-a.png"
-dest_files=["res://.godot/imported/chara-a.png-dbeb350828f25d8edbd862539cc58c23.ctex"]
+source_file="res://Infinity/Player/HiHi/body.png"
+dest_files=["res://.godot/imported/body.png-395cbef9ebdc14f734c176edbb326a64.ctex"]
 
 [params]
 

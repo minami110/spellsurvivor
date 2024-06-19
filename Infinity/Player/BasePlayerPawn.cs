@@ -9,7 +9,7 @@ public enum PawnFaceDirection
     Left
 }
 
-public partial class MeMe : CharacterBody2D, IPawn
+public partial class BasePlayerPawn : CharacterBody2D, IPawn
 {
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _health = 100f;
@@ -61,14 +61,13 @@ public partial class MeMe : CharacterBody2D, IPawn
 
     public override void _PhysicsProcess(double delta)
     {
-        var controller = GetNode<PlayerAnimationController>("AnimationController");
+        var controller = GetNode<BasePlayerAnimator>("%Animator");
 
         if (NextMoveDirection.LengthSquared() <= 0f)
         {
             controller.SendSignalStop();
             return;
         }
-
 
         LatestMoveDirection = NextMoveDirection;
         var motion = LatestMoveDirection * (float)delta * _moveSpeed;

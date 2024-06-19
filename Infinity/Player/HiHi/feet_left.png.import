@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fxms0jyc10sf"
-path="res://.godot/imported/feet.png-242fb0dc59a6e7282da9afd6e4177853.ctex"
+uid="uid://cti10mr7pt1xb"
+path="res://.godot/imported/feet_left.png-8665a6115dfcd524f0f03fa9836042d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/feet.png"
-dest_files=["res://.godot/imported/feet.png-242fb0dc59a6e7282da9afd6e4177853.ctex"]
+source_file="res://Infinity/Player/HiHi/feet_left.png"
+dest_files=["res://.godot/imported/feet_left.png-8665a6115dfcd524f0f03fa9836042d3.ctex"]
 
 [params]
 
