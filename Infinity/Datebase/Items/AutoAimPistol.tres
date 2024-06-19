@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("3_liksq")
 WeaponPackedScene = ExtResource("1_itvs5")
-Faction = 15
+Faction = 47
 Tier = 1
 Price = 10
 Name = "魔法の杖"

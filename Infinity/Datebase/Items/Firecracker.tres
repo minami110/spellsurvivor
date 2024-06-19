@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("3_jy11s")
 WeaponPackedScene = ExtResource("2_vil2p")
-Faction = 4
+Faction = 36
 Tier = 1
 Price = 10
 Name = "爆竹"
