@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bali3cj5bhs2q"]
+[gd_scene load_steps=10 format=3 uid="uid://bali3cj5bhs2q"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/InGameHUD.cs" id="1_6o03e"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="2_l31n5"]
@@ -8,10 +8,21 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_ntlvd"]
 font = ExtResource("4_hsb5i")
-font_size = 24
+font_size = 14
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_qpi0u"]
+outline_size = 20
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_iyokw"]
 font_size = 40
+outline_size = 20
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gyady"]
+bg_color = Color(0.427493, 0.427493, 0.427493, 1)
 
 [node name="InGameHUD" type="CanvasLayer" node_paths=PackedStringArray("_healthBar", "_healthText", "_currentWaveLabel", "_waveTimerLabel", "_equipmentContainer")]
 script = ExtResource("1_6o03e")
@@ -19,7 +30,7 @@ _healthBar = NodePath("Container/HBox Health HUD/HealthBar")
 _healthText = NodePath("Container/HBox Health HUD/Label Health_MaxHealth")
 _currentWaveLabel = NodePath("Container/Top VBoxContainer/Label Wave Info")
 _waveTimerLabel = NodePath("Container/Top VBoxContainer/Label Wave Timer")
-_equipmentContainer = NodePath("Container/CurrentEquipment HUD Parent")
+_equipmentContainer = NodePath("Container/Panel/CurrentEquipment HUD Parent")
 _equipmentPackedScene = ExtResource("4_1mss2")
 
 [node name="Container" type="Control" parent="."]
@@ -34,34 +45,46 @@ offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBox Health HUD" type="HBoxContainer" parent="Container"]
+[node name="HBox Health HUD" type="Control" parent="Container"]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -191.0
-offset_top = -166.0
-offset_right = 192.0
-offset_bottom = -135.0
-grow_horizontal = 2
-grow_vertical = 0
-alignment = 1
+anchors_preset = 0
+offset_left = 49.0
+offset_top = 58.0
+offset_right = 49.0
+offset_bottom = 58.0
 
 [node name="HealthBar" type="TextureProgressBar" parent="Container/HBox Health HUD"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+offset_right = 300.0
+offset_bottom = 8.0
 size_flags_horizontal = 2
 value = 50.0
 nine_patch_stretch = true
 texture_under = ExtResource("2_l31n5")
 texture_progress = ExtResource("2_l31n5")
 tint_under = Color(0, 0, 0, 1)
-tint_progress = Color(0, 1, 0, 1)
+tint_progress = Color(0.00989999, 0.99, 0.646965, 1)
+
+[node name="ManaBar (Mock)" type="TextureProgressBar" parent="Container/HBox Health HUD"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+offset_top = 11.0
+offset_right = 300.0
+offset_bottom = 14.0
+size_flags_horizontal = 2
+value = 100.0
+nine_patch_stretch = true
+texture_under = ExtResource("2_l31n5")
+texture_progress = ExtResource("2_l31n5")
+tint_under = Color(0, 0, 0, 1)
+tint_progress = Color(0.58, 0.58, 0.58, 1)
 
 [node name="Label Health_MaxHealth" type="Label" parent="Container/HBox Health HUD"]
 layout_mode = 2
+offset_top = -24.0
+offset_right = 54.0
+offset_bottom = -3.0
 size_flags_horizontal = 8
 text = "NA/NA"
 label_settings = SubResource("LabelSettings_ntlvd")
@@ -72,13 +95,15 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -150.0
+offset_top = 52.0
 offset_right = 150.0
-offset_bottom = 102.0
+offset_bottom = 154.0
 grow_horizontal = 2
 
 [node name="Label Wave Info" type="Label" parent="Container/Top VBoxContainer"]
 layout_mode = 2
 text = "Wave: 1"
+label_settings = SubResource("LabelSettings_qpi0u")
 horizontal_alignment = 1
 
 [node name="Label Wave Timer" type="Label" parent="Container/Top VBoxContainer"]
@@ -86,20 +111,6 @@ layout_mode = 2
 text = "00:00"
 label_settings = SubResource("LabelSettings_iyokw")
 horizontal_alignment = 1
-
-[node name="CurrentEquipment HUD Parent" type="HBoxContainer" parent="Container"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -247.0
-offset_top = -125.0
-offset_right = 247.0
-grow_horizontal = 2
-grow_vertical = 0
-alignment = 1
 
 [node name="ActiveFactionsHud" parent="Container" instance=ExtResource("5_26dji")]
 layout_mode = 1
@@ -109,3 +120,20 @@ anchor_bottom = 0.5
 offset_top = -52.0
 offset_bottom = 52.0
 grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -67.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_gyady")
+
+[node name="CurrentEquipment HUD Parent" type="HBoxContainer" parent="Container/Panel"]
+layout_mode = 2
+alignment = 1

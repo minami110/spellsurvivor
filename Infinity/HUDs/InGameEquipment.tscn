@@ -1,38 +1,74 @@
-[gd_scene load_steps=3 format=3 uid="uid://bycglxvkrnadg"]
+[gd_scene load_steps=7 format=3 uid="uid://bycglxvkrnadg"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/InGameEquipment.cs" id="1_b1fms"]
+[ext_resource type="Texture2D" uid="uid://cqc7i4vktg7s" path="res://Common/Resources/Textures/Emoji/fist.png" id="2_lywem"]
+[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="3_7posd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dadic"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7gpgk"]
+bg_color = Color(0.678944, 0.678944, 0.678944, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_wfcxv"]
-font_size = 10
+font_size = 9
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
 
-[node name="InGameEquipment" type="VBoxContainer" node_paths=PackedStringArray("_icon", "_name", "_levelLabel", "_progress")]
-custom_minimum_size = Vector2(90, 120)
+[node name="InGameEquipment" type="VBoxContainer" node_paths=PackedStringArray("_icon", "_name", "_levelLabel")]
 size_flags_vertical = 4
 script = ExtResource("1_b1fms")
-_icon = NodePath("Icon")
-_name = NodePath("HBoxContainer/Name")
-_levelLabel = NodePath("HBoxContainer/Level")
-_progress = NodePath("ProgressBar CoolDown")
+_icon = NodePath("PanelContainer_2/PanelContainer/VBoxContainer/Icon")
+_name = NodePath("PanelContainer_2/PanelContainer/VBoxContainer/HBoxContainer/Name")
+_levelLabel = NodePath("PanelContainer_2/PanelContainer/VBoxContainer/HBoxContainer/Level")
 
-[node name="Icon" type="TextureRect" parent="."]
-custom_minimum_size = Vector2(80, 80)
+[node name="PanelContainer_2" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(85, 95)
 layout_mode = 2
-expand_mode = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_dadic")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer_2"]
+custom_minimum_size = Vector2(80, 90)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_7gpgk")
 
-[node name="Name" type="Label" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer_2/PanelContainer"]
 layout_mode = 2
-text = "AutoAimPistol"
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="Icon" type="TextureRect" parent="PanelContainer_2/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+texture = ExtResource("2_lywem")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer_2/PanelContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Name" type="Label" parent="PanelContainer_2/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "N/A"
 label_settings = SubResource("LabelSettings_wfcxv")
 horizontal_alignment = 1
 
-[node name="Level" type="Label" parent="HBoxContainer"]
+[node name="Level" type="Label" parent="PanelContainer_2/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Lv.0"
 label_settings = SubResource("LabelSettings_wfcxv")
 horizontal_alignment = 1
 
-[node name="ProgressBar CoolDown" type="ProgressBar" parent="."]
+[node name="CoolDownProgressBar" type="TextureProgressBar" parent="PanelContainer_2/PanelContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
+size_flags_vertical = 8
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("3_7posd")
+texture_progress = ExtResource("3_7posd")
+tint_under = Color(0, 0, 0, 1)
+tint_progress = Color(0.449566, 0.480518, 0.705532, 1)
