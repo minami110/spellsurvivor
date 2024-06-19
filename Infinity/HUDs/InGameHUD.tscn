@@ -13,7 +13,7 @@ font_size = 24
 [sub_resource type="LabelSettings" id="LabelSettings_iyokw"]
 font_size = 40
 
-[node name="InGameHUD (Layer 2)" type="CanvasLayer" node_paths=PackedStringArray("_healthBar", "_healthText", "_currentWaveLabel", "_waveTimerLabel", "_equipmentContainer")]
+[node name="InGameHUD" type="CanvasLayer" node_paths=PackedStringArray("_healthBar", "_healthText", "_currentWaveLabel", "_waveTimerLabel", "_equipmentContainer")]
 script = ExtResource("1_6o03e")
 _healthBar = NodePath("Container/HBox Health HUD/HealthBar")
 _healthText = NodePath("Container/HBox Health HUD/Label Health_MaxHealth")
