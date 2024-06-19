@@ -1,0 +1,99 @@
+[gd_scene load_steps=14 format=3 uid="uid://cyy8ynm6ig6cq"]
+
+[ext_resource type="Script" path="res://Infinity/Player/BasePlayerPawn.cs" id="1_vdmmf"]
+[ext_resource type="Script" path="res://Infinity/Core/PlayerState.cs" id="2_2yr66"]
+[ext_resource type="Script" path="res://Infinity/Player/HiHi/HiHiAnimator.cs" id="3_tw7gc"]
+[ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="4_xlwt1"]
+[ext_resource type="Shader" path="res://Infinity/Player/HiHi/HiHi.gdshader" id="5_2qhgr"]
+[ext_resource type="Texture2D" uid="uid://bi7skgsgexdg1" path="res://Infinity/Player/HiHi/body.png" id="5_ahrqe"]
+[ext_resource type="Texture2D" uid="uid://dhdcsdvikhman" path="res://Infinity/Player/HiHi/head.png" id="6_wkjqe"]
+[ext_resource type="Texture2D" uid="uid://cti10mr7pt1xb" path="res://Infinity/Player/HiHi/feet_left.png" id="8_njk1h"]
+[ext_resource type="Texture2D" uid="uid://87tw8wnnw2d2" path="res://Infinity/Player/HiHi/feet_right.png" id="8_uqvcs"]
+[ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="8_vwcq4"]
+[ext_resource type="Texture2D" uid="uid://qao6il7sl0c" path="res://Infinity/Player/HiHi/arm.png" id="9_3tai8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k2kdc"]
+shader = ExtResource("5_2qhgr")
+shader_parameter/offset = Vector2(10, 8)
+shader_parameter/modulate = Color(0, 0, 0, 1)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
+radius = 20.0
+
+[node name="HiHi" type="CharacterBody2D"]
+collision_mask = 16
+script = ExtResource("1_vdmmf")
+
+[node name="MainCamera" type="Camera2D" parent="."]
+unique_name_in_owner = true
+zoom = Vector2(1.5, 1.5)
+editor_draw_screen = false
+
+[node name="PlayerState" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_2yr66")
+
+[node name="Animator" type="Node" parent="." node_paths=PackedStringArray("_body", "_head", "_footL", "_footR", "_arm")]
+unique_name_in_owner = true
+script = ExtResource("3_tw7gc")
+_body = NodePath("../Body")
+_head = NodePath("../Body/Head")
+_footL = NodePath("../Body/FeetLeftRoot")
+_footR = NodePath("../Body/FeetRightRoot")
+_arm = NodePath("../Body/Arm")
+
+[node name="WeaponPositionAnimator" type="Node" parent="."]
+script = ExtResource("4_xlwt1")
+
+[node name="Body" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_k2kdc")
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("5_ahrqe")
+
+[node name="Head" type="Sprite2D" parent="Body"]
+use_parent_material = true
+position = Vector2(10, -106.667)
+texture = ExtResource("6_wkjqe")
+
+[node name="Arm" type="Sprite2D" parent="Body"]
+use_parent_material = true
+position = Vector2(-3.33333, -6.66667)
+texture = ExtResource("9_3tai8")
+
+[node name="FeetRightRoot" type="Node2D" parent="Body"]
+use_parent_material = true
+
+[node name="FeetRight" type="Sprite2D" parent="Body/FeetRightRoot"]
+z_index = -3
+use_parent_material = true
+position = Vector2(-35, -10)
+rotation = 0.426409
+scale = Vector2(1, 1)
+texture = ExtResource("8_uqvcs")
+centered = false
+
+[node name="FeetLeftRoot" type="Node2D" parent="Body"]
+use_parent_material = true
+position = Vector2(10, 0)
+
+[node name="FeetLeft" type="Sprite2D" parent="Body/FeetLeftRoot"]
+z_index = -3
+use_parent_material = true
+position = Vector2(-20, 20)
+rotation = -0.460527
+scale = Vector2(1, 1)
+texture = ExtResource("8_njk1h")
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_awajj")
+debug_color = Color(0, 0.365, 0.702, 0)
+
+[node name="PointLightForEnemyShadow" type="PointLight2D" parent="."]
+blend_mode = 1
+range_layer_min = -5
+range_item_cull_mask = 2
+shadow_enabled = true
+shadow_color = Color(1, 1, 1, 1)
+texture = ExtResource("8_vwcq4")
+texture_scale = 2.0
