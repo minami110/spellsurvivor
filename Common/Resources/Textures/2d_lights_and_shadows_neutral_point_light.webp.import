@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://coqfq8jdjvxb4"
-path="res://.godot/imported/2d_lights_and_shadows_neutral_point_light.webp-f60aa13beb920622f36d439b96b82a34.ctex"
+path="res://.godot/imported/2d_lights_and_shadows_neutral_point_light.webp-1793cd62b56e410d707e59d9af36da29.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/2d_lights_and_shadows_neutral_point_light.webp"
-dest_files=["res://.godot/imported/2d_lights_and_shadows_neutral_point_light.webp-f60aa13beb920622f36d439b96b82a34.ctex"]
+source_file="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp"
+dest_files=["res://.godot/imported/2d_lights_and_shadows_neutral_point_light.webp-1793cd62b56e410d707e59d9af36da29.ctex"]
 
 [params]
 

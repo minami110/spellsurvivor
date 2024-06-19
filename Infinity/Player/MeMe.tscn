@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cup57j01kq1r7" path="res://Infinity/Player/head.png" id="4_a5xpj"]
 [ext_resource type="Texture2D" uid="uid://fxms0jyc10sf" path="res://Infinity/Player/feet.png" id="5_6j3or"]
 [ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="7_vvk78"]
-[ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Infinity/Player/2d_lights_and_shadows_neutral_point_light.webp" id="11_6vm5x"]
+[ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="11_6vm5x"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
 radius = 20.0
