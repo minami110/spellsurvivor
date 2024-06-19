@@ -131,7 +131,7 @@ public partial class Enemy : RigidBody2D
 
         foreach (var node in overlappingBodies)
         {
-            if (node is MeMe player)
+            if (node is BasePlayerPawn player)
             {
                 player.TakeDamage(_power, this);
             }

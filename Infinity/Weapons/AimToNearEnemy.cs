@@ -22,7 +22,7 @@ public partial class AimToNearEnemy : Area2D
     public override void _EnterTree()
     {
         // Subscribe to parent player's face direction
-        var parent = GetParent().GetParent<MeMe>(); // ToDo: Hardcoded
+        var parent = GetParent().GetParent<BasePlayerPawn>(); // ToDo: Hardcoded
         parent.FaceDirection
             .Subscribe(x => { _restAngle = x == PawnFaceDirection.Right ? Mathf.Atan2(0, 1) : Mathf.Atan2(0, -1); })
             .AddTo(this);

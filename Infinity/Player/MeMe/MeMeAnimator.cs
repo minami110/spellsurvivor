@@ -1,6 +1,8 @@
 using Godot;
 
-public partial class MeMeAnimation : Node
+namespace fms;
+
+public partial class MeMeAnimator : BasePlayerAnimator
 {
     [Export]
     private Sprite2D _body = null!;
@@ -36,24 +38,24 @@ public partial class MeMeAnimation : Node
         _movingFootTween.Stop();
     }
 
-    public void SendSignalMoveLeft()
+    public override void SendSignalMoveLeft()
     {
         _body.Scale = new Vector2(-3, 3);
     }
 
-    public void SendSignalMoveRight()
+    public override void SendSignalMoveRight()
     {
         _body.Scale = new Vector2(3, 3);
     }
 
-    public void SendSignalStop()
+    public override void SendSignalStop()
     {
         _movingFootTween.Stop();
         _footR.Position = new Vector2(0, 0);
         _footL.Position = new Vector2(3, 0);
     }
 
-    public void SendSignelMove()
+    public override void SendSignelMove()
     {
         _movingFootTween.Play();
     }
