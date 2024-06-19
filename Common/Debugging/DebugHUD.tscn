@@ -10,9 +10,8 @@ font_size = 12
 outline_size = 3
 outline_color = Color(0, 0, 0, 1)
 
-[node name="DebugHUD (Layer 20)" type="CanvasLayer"]
+[node name="DebugHUD" type="CanvasLayer"]
 process_mode = 3
-layer = 20
 script = ExtResource("1_2o3st")
 
 [node name="DictionaryLabel" type="Label" parent="."]

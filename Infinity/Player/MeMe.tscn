@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bfke7q0b0owyb"]
+[gd_scene load_steps=10 format=3 uid="uid://bfke7q0b0owyb"]
 
 [ext_resource type="Script" path="res://Infinity/Player/MeMe.cs" id="1_xi18f"]
 [ext_resource type="Script" path="res://Infinity/Core/PlayerState.cs" id="2_ynkku"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cup57j01kq1r7" path="res://Infinity/Player/head.png" id="4_a5xpj"]
 [ext_resource type="Texture2D" uid="uid://fxms0jyc10sf" path="res://Infinity/Player/feet.png" id="5_6j3or"]
 [ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="7_vvk78"]
+[ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="11_6vm5x"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
 radius = 20.0
@@ -18,6 +19,7 @@ script = ExtResource("1_xi18f")
 [node name="MainCamera" type="Camera2D" parent="."]
 unique_name_in_owner = true
 zoom = Vector2(1.5, 1.5)
+editor_draw_screen = false
 
 [node name="PlayerState" type="Node" parent="."]
 unique_name_in_owner = true
@@ -55,3 +57,12 @@ texture = ExtResource("5_6j3or")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_awajj")
 debug_color = Color(0, 0.365, 0.702, 0)
+
+[node name="PointLightForEnemyShadow" type="PointLight2D" parent="."]
+blend_mode = 1
+range_layer_min = -5
+range_item_cull_mask = 2
+shadow_enabled = true
+shadow_color = Color(1, 1, 1, 1)
+texture = ExtResource("11_6vm5x")
+texture_scale = 2.0

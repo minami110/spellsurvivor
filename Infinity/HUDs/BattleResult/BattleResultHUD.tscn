@@ -2,8 +2,7 @@
 
 [ext_resource type="Script" path="res://Infinity/HUDs/BattleResult/BattleResultHudController.cs" id="1_puswr"]
 
-[node name="BattleResult HUD (Layer 2)" type="CanvasLayer"]
-layer = 2
+[node name="BattleResult HUD" type="CanvasLayer"]
 
 [node name="BattleResultHudController" type="Node" parent="." node_paths=PackedStringArray("_acceptButton", "_titleLabel", "_rewardLabel")]
 script = ExtResource("1_puswr")

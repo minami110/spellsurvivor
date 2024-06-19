@@ -2,6 +2,7 @@ using System;
 using fms.Weapon;
 using Godot;
 using R3;
+using Range = Godot.Range;
 
 namespace fms;
 
@@ -15,9 +16,6 @@ public partial class InGameEquipment : VBoxContainer
 
     [Export]
     private Label _levelLabel = null!;
-
-    [Export]
-    private ProgressBar _progress = null!;
 
     public WeaponBase Weapon { get; set; } = null!;
 
@@ -52,8 +50,9 @@ public partial class InGameEquipment : VBoxContainer
 
         var d1 = Weapon.CoolDownLeft.Subscribe(this, (x, s) =>
         {
-            s._progress.MaxValue = Weapon.SolvedCoolDownFrame;
-            s._progress.Value = x;
+            var progress = s.GetNode<Range>("%CoolDownProgressBar");
+            progress.MaxValue = Weapon.SolvedCoolDownFrame;
+            progress.Value = x;
         });
 
         Disposable.Combine(d1).AddTo(this);

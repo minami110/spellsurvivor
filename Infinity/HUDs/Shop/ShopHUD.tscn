@@ -6,8 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/ActiveFactionHud.tscn" id="5_jthwe"]
 [ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/OwnedMinionPanel.tscn" id="6_dux5n"]
 
-[node name="ShopHUD (Layer 2)" type="CanvasLayer"]
-layer = 2
+[node name="ShopHUD" type="CanvasLayer"]
 
 [node name="ShopHudController" type="Node" parent="." node_paths=PackedStringArray("_container", "_shopItemSpawnParent", "_equipItemSpawnParent", "_upgradeButton", "_rerollButton", "_lockButton", "_addSlotButton", "_quitShopButton", "_playerMoneyLabel", "_shopLevelLabel")]
 script = ExtResource("1_5xunh")
