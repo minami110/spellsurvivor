@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://dgs24h2qo4gyf"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/WideShotShotgun.cs" id="1_c565q"]
+[ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(projectile) WideShotShotgun.tscn" id="2_i1r1w"]
+[ext_resource type="Script" path="res://Infinity/Weapons/AimToNearEnemy.cs" id="3_qrn4t"]
+[ext_resource type="Texture2D" uid="uid://c2wpoue220kop" path="res://Common/Resources/Textures/Nakagiri/WideShotShotgun.png" id="4_58v3b"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wvmsi"]
+radius = 100.0
+
+[node name="WideShotShotgun" type="Node2D"]
+position = Vector2(-4, 4)
+script = ExtResource("1_c565q")
+_projectile = ExtResource("2_i1r1w")
+BaseCoolDownFrame = 60
+metadata/_edit_group_ = true
+
+[node name="AimToNearEnemy" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("3_qrn4t")
+
+[node name="SpriteRoot" type="Node2D" parent="AimToNearEnemy"]
+unique_name_in_owner = true
+
+[node name="Sprite" type="Sprite2D" parent="AimToNearEnemy/SpriteRoot"]
+unique_name_in_owner = true
+position = Vector2(23, 0)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_58v3b")
+
+[node name="MazzlePoint" type="Node2D" parent="AimToNearEnemy/SpriteRoot"]
+position = Vector2(50, -7)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AimToNearEnemy"]
+scale = Vector2(2, 2)
+shape = SubResource("CircleShape2D_wvmsi")
+debug_color = Color(0.756, 0.432, 0.397, 0)
