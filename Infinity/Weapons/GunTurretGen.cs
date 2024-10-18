@@ -17,8 +17,10 @@ public partial class GunTurretGen : WeaponBase
     private protected override void SpawnProjectile(uint level)
     {
         // GunTurretを生成する。
-        // 今、味方のNPCを呼び出す共通機構がないためとりあえず個別実装で対応
-        var turret = _turret.Instantiate<GunTurret>();
-        //turret.AddChild();
+        // 暫定的にturretはprojectileとして実装している  
+        var prj = _turret.Instantiate<BaseProjectile>();
+       
+        // プレイヤーの位置にスポーンさせる
+        AddProjectile(prj, GlobalPosition);
     }
 }

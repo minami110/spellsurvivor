@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://b7p20xw3fushu"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/GunTurret.cs" id="1_ecbjb"]
+[ext_resource type="PackedScene" uid="uid://bvsiy5tfp6e0r" path="res://Infinity/Projectiles/(projectile) GunTurret.tscn" id="2_4nkup"]
+[ext_resource type="Texture2D" uid="uid://c2wpoue220kop" path="res://Common/Resources/Textures/Nakagiri/WideShotShotgun.png" id="3_wbxf7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wvmsi"]
+radius = 100.0
+
+[node name="GunTurret" type="Area2D"]
+position = Vector2(-4, 4)
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_ecbjb")
+_projectileScene = ExtResource("2_4nkup")
+LifeFrame = 600
+OnCollisionDie = false
+DamageEveryXFrames = 60
+
+[node name="Sprite" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(23, 0)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_wbxf7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(2, 2)
+shape = SubResource("CircleShape2D_wvmsi")
+debug_color = Color(0.756, 0.432, 0.397, 0)
