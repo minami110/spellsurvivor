@@ -5,11 +5,11 @@ using Godot;
 namespace fms.Weapon;
 /// <summary>
 ///     GunTurretのクラス
+///     Weaponからこのクラスを生成し、このクラスから弾を生成する
 /// </summary>
 
 public partial class GunTurret : BaseProjectile
-{
-    // クラス名的にProjectileだが、実際はタレットのクラス
+{ 
     // タレットが発射する弾
     [Export]
     private PackedScene _projectileScene = null!;
