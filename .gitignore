@@ -19,3 +19,6 @@ mono_crash.*.json
 /Developments/
 /Build/
 /Builds/
+
+# Backup files
+*.csproj.old
