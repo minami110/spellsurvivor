@@ -1,5 +1,4 @@
-﻿using System.Data.SqlTypes;
-using fms.Projectile;
+﻿using fms.Projectile;
 using Godot;
 
 namespace fms.Weapon;
