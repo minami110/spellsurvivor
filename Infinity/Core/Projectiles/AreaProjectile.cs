@@ -13,17 +13,18 @@ public partial class AreaProjectile : BaseProjectile
 
     private bool _attackLock;
 
-    public override void _Process(double delta)
+    public override void _Notification(int what)
     {
-        if (_attackLock)
-        {
-            return;
-        }
+        base._Notification(what);
 
-        // ダメージ処理を実行
-        if (Age >= FirstSleepFrames)
+        if (what == NotificationProcess)
         {
-            if(DamageEveryXFrames == 0)
+            if (IsDead ||_attackLock || Age < _SLEEP_FRAME)
+            {
+                return;
+            }
+
+            if (DamageEveryXFrames == 0)
             {
                 _attackLock = true;
                 Attack();
@@ -34,13 +35,7 @@ public partial class AreaProjectile : BaseProjectile
             }
         }
     }
-
-    private protected override void OnBodyEntered(Node2D body)
-    {
-        // 親の衝突時のダメージ処理もろもろの処理を無効化する
-        return;
-    }
-
+    
     /// <summary>
     /// ダメージを与える処理
     /// </summary>

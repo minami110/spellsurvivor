@@ -33,21 +33,18 @@ public partial class BaseProjectile : Area2D
     [Export]
     public uint Speed { get; set; }
 
+    private const uint _FORCED_LIFETIME = 7200u;
+
     /// <summary>
-    ///     生成直後ダメージを与えない猶予時間 (連続ヒットなどの防止)
+    /// 生成直後ダメージを与えない猶予期間, この期間はチラツキ防止で描写も行われない
+    /// Note: 1F 目は Position の解決, 2F 目は Mod による位置の解決 でなんか丁度いい値
+    ///       const ではなくてメンバにしたほうが柔軟かも
     /// </summary>
-    [Export]
-    public uint FirstSleepFrames = 2u;
-
-    [ExportGroup("Sounds")]
-    [Export]
-    private AudioStream? _hitSound;
-
-    private const uint _FORCED_LIFETIME = 7200;
+    private protected const uint _SLEEP_FRAME = 2u;
 
     private readonly Subject<WhyDead> _deadSubject = new();
 
-    private readonly Subject<ProjectileHitInfo> _hitSubject = new();
+    private protected readonly Subject<ProjectileHitInfo> _hitSubject = new();
 
     public ProjectileHitInfo HitInfo { get; internal set; }
 
@@ -72,6 +69,8 @@ public partial class BaseProjectile : Area2D
     /// この Projectile を発射した Weapon (OnReady で自動で取得)
     /// </summary>
     public WeaponBase Weapon { get; private set; } = null!;
+    
+    public bool IsDead => _deadSubject.IsDisposed;
 
     public override void _Notification(int what)
     {
@@ -84,14 +83,12 @@ public partial class BaseProjectile : Area2D
             }
             case NotificationReady:
             {
-                if (FirstSleepFrames > 0)
+                // Note: スポーン, 位置補正 Mod などのチラツキ防止もあり, Sleep 中は非表示にしておく
+                if (_SLEEP_FRAME > 0)
                 {
                     Hide();
                 }
 
-                this.BodyEnteredAsObservable()
-                    .Subscribe(this, (x, s) => s.OnBodyEntered(x))
-                    .AddTo(this);
                 _deadSubject.AddTo(this);
                 _hitSubject.AddTo(this);
                 SetProcess(true);
@@ -114,7 +111,7 @@ public partial class BaseProjectile : Area2D
                 // 寿命を増加させる
                 Age++;
 
-                if (Age > FirstSleepFrames)
+                if (Age > _SLEEP_FRAME)
                 {
                     Show();
                 }
@@ -143,59 +140,22 @@ public partial class BaseProjectile : Area2D
         }
     }
 
-    public void Kill(WhyDead reason)
+    public virtual void Kill(WhyDead reason)
     {
         OnDead(reason);
     }
 
-    private protected virtual void OnDead(WhyDead reason)
+    private void OnDead(WhyDead reason)
     {
+        if (IsDead)
+        {
+            return;
+        }
+
         _deadSubject.OnNext(reason);
         _deadSubject.OnCompleted();
 
         // Physics Process から呼ばれる (衝突時死亡) ことがあるので CallDeferred で
         CallDeferred(Node.MethodName.QueueFree);
-    }
-
-    private protected virtual void OnBodyEntered(Node2D body)
-    {
-        if (Age < FirstSleepFrames)
-        {
-            return;
-        }
-
-        // 最新の HitInfo を更新
-        // Note: すべての当たり判定が Sphere という決め打ちで法線を計算しています
-        HitInfo = new ProjectileHitInfo
-        {
-            HitNode = body,
-            Position = GlobalPosition,
-            Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
-            Velocity = Direction.Normalized() * Speed
-        };
-
-        _hitSubject.OnNext(HitInfo);
-
-        // 壁など静的なオブジェクトとの衝突時の処理
-        // デフォルトでは壁と衝突したら自身も消滅する
-        if (body is StaticBody2D staticBody)
-        {
-            OnDead(WhyDead.CollidedWithWall);
-            return;
-        }
-
-        // 敵との衝突時の処理
-        // デフォルトでは敵にダメージを与えて自身も消滅する
-        if (body is Enemy enemy)
-        {
-            enemy.TakeDamage(Damage, Weapon);
-
-            if (_hitSound != null)
-            {
-                SoundManager.PlaySoundEffect(_hitSound);
-            }
-
-            OnDead(WhyDead.CollidedWithEnemy);
-        }
     }
 }
