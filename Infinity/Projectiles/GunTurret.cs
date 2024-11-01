@@ -13,6 +13,9 @@ public partial class GunTurret : BaseProjectile
     [Export]
     private PackedScene _projectileScene = null!;
 
+    /// <summary>
+    /// Projectile のダメージ処理をオーバーライドして新しい弾を生成する
+    /// </summary>
     private protected override void OnDamageEveryXFrames()
     {
         var bodies = GetOverlappingBodies();
@@ -22,7 +25,10 @@ public partial class GunTurret : BaseProjectile
 
         if (target is Enemy enemy)
         {
+            // タレットが発射する弾を生成
             var prj = _projectileScene.Instantiate<BaseProjectile>();
+
+            // 一番近い敵に向かっていく
             prj.AddChild(new AutoAim
             {
                 Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
@@ -30,7 +36,6 @@ public partial class GunTurret : BaseProjectile
             });
             
             // BaseWeapon 系の処理を追加でかく
-            prj.Weapon = this.Weapon;
             prj.Position = GlobalPosition;
             AddSibling(prj);
         }

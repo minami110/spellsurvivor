@@ -1,4 +1,5 @@
-﻿using fms.Weapon;
+﻿using System;
+using fms.Weapon;
 using Godot;
 using R3;
 
@@ -82,7 +83,7 @@ public partial class BaseProjectile : Area2D
     /// <summary>
     /// この Projectile を発射した Weapon
     /// </summary>
-    public WeaponBase Weapon { get; set; } = null!;
+    public WeaponBase Weapon { get; private set; } = null!;
 
     public override void _Notification(int what)
     {
@@ -106,6 +107,18 @@ public partial class BaseProjectile : Area2D
                 _deadSubject.AddTo(this);
                 _hitSubject.AddTo(this);
                 SetProcess(true);
+
+                // ToDo: 厳密な型で Weapon を取得する方法を考える
+                // Projectile の先祖のどこかに自分を生成した Weapon がいるのでそれをキャッシュしておく
+                try
+                {
+                    Weapon = GetNode<WeaponBase>("../.."); 
+                }
+                catch (InvalidCastException e)
+                {
+                    throw new InvalidProgramException("Projectile の2つ親が WeaponBase ではありません", e);
+                }
+
                 break;
             }
             case NotificationProcess:

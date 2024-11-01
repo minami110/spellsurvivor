@@ -165,7 +165,6 @@ public partial class WeaponBase : Node2D
 
     public void AddProjectile(BaseProjectile projectile)
     {
-        projectile.Weapon = this;
         // Note: FrameTimer が Node 継承 (座標がない) かつ必ず存在しているのでその子にスポーンする
         FrameTimer.AddChild(projectile);
     }

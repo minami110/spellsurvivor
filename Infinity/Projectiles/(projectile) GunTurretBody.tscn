@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b7p20xw3fushu"]
 
-[ext_resource type="Script" path="res://Infinity/Weapons/GunTurret.cs" id="1_ecbjb"]
+[ext_resource type="Script" path="res://Infinity/Projectiles/GunTurret.cs" id="1_ecbjb"]
 [ext_resource type="PackedScene" uid="uid://bvsiy5tfp6e0r" path="res://Infinity/Projectiles/(projectile) GunTurret.tscn" id="2_4nkup"]
 [ext_resource type="Texture2D" uid="uid://4ld76y2twnn7" path="res://Common/Resources/Textures/Emoji/flying_saucer.png" id="3_ifnmi"]
 
