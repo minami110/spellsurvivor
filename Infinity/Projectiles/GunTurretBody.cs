@@ -7,7 +7,7 @@ namespace fms.Weapon;
 ///     Weaponからこのクラスを生成し、このクラスから弾を生成する
 /// </summary>
 
-public partial class GunTurret : BaseProjectile
+public partial class GunTurretBody : BaseProjectile
 { 
     // タレットが発射する弾
     [Export]

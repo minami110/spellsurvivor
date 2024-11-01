@@ -1,17 +1,17 @@
 [gd_scene load_steps=5 format=3 uid="uid://b7p20xw3fushu"]
 
-[ext_resource type="Script" path="res://Infinity/Projectiles/GunTurret.cs" id="1_ecbjb"]
-[ext_resource type="PackedScene" uid="uid://bvsiy5tfp6e0r" path="res://Infinity/Projectiles/(projectile) GunTurret.tscn" id="2_4nkup"]
-[ext_resource type="Texture2D" uid="uid://4ld76y2twnn7" path="res://Common/Resources/Textures/Emoji/flying_saucer.png" id="3_ifnmi"]
+[ext_resource type="Script" path="res://Infinity/Projectiles/GunTurretBody.cs" id="1_6oiqo"]
+[ext_resource type="PackedScene" uid="uid://bvsiy5tfp6e0r" path="res://Infinity/Projectiles/(projectile) GunTurret.tscn" id="2_25777"]
+[ext_resource type="Texture2D" uid="uid://4ld76y2twnn7" path="res://Common/Resources/Textures/Emoji/flying_saucer.png" id="3_jfrwd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wvmsi"]
 radius = 100.0
 
-[node name="GunTurret" type="Area2D"]
+[node name="GunTurretBody" type="Area2D"]
 collision_layer = 0
 collision_mask = 4
-script = ExtResource("1_ecbjb")
-_projectileScene = ExtResource("2_4nkup")
+script = ExtResource("1_6oiqo")
+_projectileScene = ExtResource("2_25777")
 LifeFrame = 600
 OnCollisionDie = false
 DamageEveryXFrames = 60
@@ -19,7 +19,7 @@ DamageEveryXFrames = 60
 [node name="Sprite" type="Sprite2D" parent="."]
 unique_name_in_owner = true
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_ifnmi")
+texture = ExtResource("3_jfrwd")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(2, 2)
