@@ -1,4 +1,5 @@
-﻿using fms.Weapon;
+﻿using System;
+using fms.Weapon;
 using Godot;
 using R3;
 
@@ -32,33 +33,18 @@ public partial class BaseProjectile : Area2D
     [Export]
     public uint Speed { get; set; }
 
-    /// <summary>
-    ///     衝突時に消滅するかどうか
-    /// </summary>
-    [Export]
-    public bool OnCollisionDie { get; set; } = true;
+    private const uint _FORCED_LIFETIME = 7200u;
 
     /// <summary>
-    ///     継続ダメージの場合何秒に一度攻撃するか
+    /// 生成直後ダメージを与えない猶予期間, この期間はチラツキ防止で描写も行われない
+    /// Note: 1F 目は Position の解決, 2F 目は Mod による位置の解決 でなんか丁度いい値
+    ///       const ではなくてメンバにしたほうが柔軟かも
     /// </summary>
-    [Export]
-    public uint DamageEveryXFrames;
-
-    /// <summary>
-    ///     生成直後ダメージを与えない猶予時間 (連続ヒットなどの防止)
-    /// </summary>
-    [Export]
-    public uint FirstSleepFrames = 2;
-
-    [ExportGroup("Sounds")]
-    [Export]
-    private AudioStream? _hitSound;
-
-    private const uint _FORCED_LIFETIME = 7200;
+    private protected const uint _SLEEP_FRAME = 2u;
 
     private readonly Subject<WhyDead> _deadSubject = new();
 
-    private readonly Subject<ProjectileHitInfo> _hitSubject = new();
+    private protected readonly Subject<ProjectileHitInfo> _hitSubject = new();
 
     public ProjectileHitInfo HitInfo { get; internal set; }
 
@@ -70,9 +56,9 @@ public partial class BaseProjectile : Area2D
     public Observable<ProjectileHitInfo> Hit => _hitSubject;
 
     /// <summary>
-    ///     現在の寿命 (フレーム数)
+    /// 現在の寿命 (フレーム数)
     /// </summary>
-    private uint Age { get; set; }
+    public uint Age { get; private set; }
 
     /// <summary>
     /// 現在進む方向
@@ -80,9 +66,11 @@ public partial class BaseProjectile : Area2D
     public Vector2 Direction { get; set; }
 
     /// <summary>
-    /// この Projectile を発射した Weapon
+    /// この Projectile を発射した Weapon (OnReady で自動で取得)
     /// </summary>
-    public WeaponBase Weapon { get; set; } = null!;
+    public WeaponBase Weapon { get; private set; } = null!;
+    
+    public bool IsDead => _deadSubject.IsDisposed;
 
     public override void _Notification(int what)
     {
@@ -95,17 +83,27 @@ public partial class BaseProjectile : Area2D
             }
             case NotificationReady:
             {
-                if (FirstSleepFrames > 0)
+                // Note: スポーン, 位置補正 Mod などのチラツキ防止もあり, Sleep 中は非表示にしておく
+                if (_SLEEP_FRAME > 0)
                 {
                     Hide();
                 }
 
-                this.BodyEnteredAsObservable()
-                    .Subscribe(this, (x, s) => s.OnBodyEntered(x))
-                    .AddTo(this);
                 _deadSubject.AddTo(this);
                 _hitSubject.AddTo(this);
                 SetProcess(true);
+
+                // ToDo: 厳密な型で Weapon を取得する方法を考える
+                // Projectile の先祖のどこかに自分を生成した Weapon がいるのでそれをキャッシュしておく
+                try
+                {
+                    Weapon = GetNode<WeaponBase>("../.."); 
+                }
+                catch (InvalidCastException e)
+                {
+                    throw new InvalidProgramException("Projectile の2つ親が WeaponBase ではありません", e);
+                }
+
                 break;
             }
             case NotificationProcess:
@@ -113,7 +111,7 @@ public partial class BaseProjectile : Area2D
                 // 寿命を増加させる
                 Age++;
 
-                if (Age > FirstSleepFrames)
+                if (Age > _SLEEP_FRAME)
                 {
                     Show();
                 }
@@ -127,15 +125,10 @@ public partial class BaseProjectile : Area2D
                     GlobalRotation = velocity.Angle();
                 }
 
-                // 継続ダメージ処理
-                if (Age >= FirstSleepFrames && DamageEveryXFrames > 0 && Age % DamageEveryXFrames == 0)
-                {
-                    OnDamageEveryXFrames();
-                }
-
-                // 寿命が 0 の場合は無限に生存するとする
+                // 寿命が 0 の場合は無限に生存する
                 if (LifeFrame > 0)
                 {
+                    // 寿命が来たら消滅
                     if (Age > LifeFrame)
                     {
                         OnDead(WhyDead.Life);
@@ -147,76 +140,22 @@ public partial class BaseProjectile : Area2D
         }
     }
 
-    public virtual void OnDead(WhyDead reason)
+    public virtual void Kill(WhyDead reason)
     {
+        OnDead(reason);
+    }
+
+    private void OnDead(WhyDead reason)
+    {
+        if (IsDead)
+        {
+            return;
+        }
+
         _deadSubject.OnNext(reason);
         _deadSubject.OnCompleted();
 
         // Physics Process から呼ばれる (衝突時死亡) ことがあるので CallDeferred で
         CallDeferred(Node.MethodName.QueueFree);
-    }
-
-    private protected virtual void OnBodyEntered(Node2D body)
-    {
-        if (Age < FirstSleepFrames)
-        {
-            return;
-        }
-
-        // 最新の HitInfo を更新
-        // Note: すべての当たり判定が Sphere という決め打ちで法線を計算しています
-        HitInfo = new ProjectileHitInfo
-        {
-            HitNode = body,
-            Position = GlobalPosition,
-            Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
-            Velocity = Direction.Normalized() * Speed
-        };
-
-        _hitSubject.OnNext(HitInfo);
-
-        if (body is StaticBody2D staticBody)
-        {
-            // 壁など静的なオブジェクトとの衝突時の処理
-            if (OnCollisionDie)
-            {
-                OnDead(WhyDead.CollidedWithWall);
-            }
-
-            return;
-        }
-
-        if (body is Enemy enemy)
-        {
-            enemy.TakeDamage(Damage, Weapon);
-
-            if (_hitSound != null)
-            {
-                SoundManager.PlaySoundEffect(_hitSound);
-            }
-
-            if (OnCollisionDie)
-            {
-                OnDead(WhyDead.CollidedWithEnemy);
-            }
-        }
-    }
-
-    private protected virtual void OnDamageEveryXFrames()
-    {
-        var bodies = GetOverlappingBodies();
-
-        if (bodies.Count == 0)
-        {
-            return;
-        }
-
-        foreach (var body in bodies)
-        {
-            if (body is Enemy enemy)
-            {
-                enemy.TakeDamage(Damage, Weapon);
-            }
-        }
     }
 }

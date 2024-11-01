@@ -28,6 +28,11 @@ public partial class WideShotShotgun : WeaponBase
         for (var i = 0; i < _numberOfProjectiles; i++)
         {
             var prj = _projectile.Instantiate<BaseProjectile>();
+
+            prj.Damage = 12;
+            prj.LifeFrame = 120;
+            prj.Speed = 500;
+
             var angle = _spreadAngle * (i - _numberOfProjectiles / 2f) / _numberOfProjectiles;
             var dir = mazzle.GlobalTransform.X.Rotated(Mathf.DegToRad(angle));
             AddProjectile(prj, mazzle.GlobalPosition, dir);

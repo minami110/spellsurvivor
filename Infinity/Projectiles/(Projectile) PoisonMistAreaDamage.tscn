@@ -1,19 +1,18 @@
 [gd_scene load_steps=4 format=3 uid="uid://drlxhju6fmftd"]
 
-[ext_resource type="Script" path="res://Infinity/Core/Projectiles/BaseProjectile.cs" id="1_uc8hh"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/AreaProjectile.cs" id="1_kt4vq"]
 [ext_resource type="Texture2D" uid="uid://cg4pdl81tg8pq" path="res://Common/Resources/Textures/Emoji/snake.png" id="2_x80vo"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
 radius = 100.0
 
-[node name="PoisonMistArea" type="Area2D" groups=["Projectile"]]
+[node name="PoisonMistAreaDamage" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 4
-script = ExtResource("1_uc8hh")
+script = ExtResource("1_kt4vq")
+DamageEveryXFrames = 10
 Damage = 10.0
 LifeFrame = 300
-OnCollisionDie = false
-DamageEveryXFrames = 10
 
 [node name="Sprite" type="TextureRect" parent="."]
 self_modulate = Color(1, 1, 1, 0.141176)

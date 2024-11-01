@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://cubwkx8q450el"]
+
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/AreaProjectile.cs" id="1_y845h"]
+[ext_resource type="Texture2D" uid="uid://b7qsm3wpjrqd8" path="res://Common/Resources/Textures/Noita/Spell_bouncy_orb.webp" id="2_i05ya"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g3axp"]
+size = Vector2(50, 80)
+
+[node name="ClawAreaDamage" type="Area2D" groups=["Projectile"]]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("1_y845h")
+DamageEveryXFrames = 0
+Damage = 10.0
+LifeFrame = 30
+metadata/_edit_group_ = true
+
+[node name="Sprite" type="TextureRect" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_i05ya")
+expand_mode = 1
+
+[node name="DamageCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_g3axp")
+debug_color = Color(1, 0, 0, 0)

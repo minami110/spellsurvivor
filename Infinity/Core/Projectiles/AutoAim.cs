@@ -105,7 +105,7 @@ public partial class AutoAim : Area2D
         {
             if (Mode.HasFlag(AutoAimMode.KillPrjWhenSearchFailed))
             {
-                parent.OnDead(WhyDead.Short);
+                parent.Kill(WhyDead.Short);
             }
         }
     }

@@ -42,7 +42,7 @@ public partial class WeaponBase : Node2D
     }
 
     /// <summary>
-    /// Tree に入った時に自動で Start するかどうか
+    /// Tree に入った時に自動で Start するかどうか (Debug 用のパラメーター, 通常は Wave に操作されるが)
     /// </summary>
     [ExportGroup("For Debugging")]
     [Export]
@@ -165,7 +165,6 @@ public partial class WeaponBase : Node2D
 
     public void AddProjectile(BaseProjectile projectile)
     {
-        projectile.Weapon = this;
         // Note: FrameTimer が Node 継承 (座標がない) かつ必ず存在しているのでその子にスポーンする
         FrameTimer.AddChild(projectile);
     }
@@ -180,6 +179,13 @@ public partial class WeaponBase : Node2D
     {
         projectile.Position = position;
         projectile.Direction = direction;
+        AddProjectile(projectile);
+    }
+
+    public void AddProjectile(BaseProjectile projectile, Vector2 position, float rotation)
+    {
+        projectile.Position = position;
+        projectile.Rotation = rotation;
         AddProjectile(projectile);
     }
 
@@ -203,6 +209,10 @@ public partial class WeaponBase : Node2D
     {
     }
 
+    /// <summary>
+    /// 武器のクールダウンが終了した時に呼び出されるメソッド
+    /// </summary>
+    /// <param name="level">現在の武器のレベル</param>
     private protected virtual void SpawnProjectile(uint level)
     {
     }

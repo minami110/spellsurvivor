@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cxr8k5llwgbsg"]
 
-[ext_resource type="Script" path="res://Infinity/Core/Projectiles/BaseProjectile.cs" id="1_uaj8p"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/BulletProjectile.cs" id="1_buit2"]
 [ext_resource type="Texture2D" uid="uid://cdn2i4gg7kqjg" path="res://Common/Resources/Textures/Noita/Spell_arrow.webp" id="2_7rfok"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
@@ -9,7 +9,7 @@ radius = 5.0
 [node name="Arrow" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 20
-script = ExtResource("1_uaj8p")
+script = ExtResource("1_buit2")
 Damage = 34.0
 LifeFrame = 120
 Speed = 500

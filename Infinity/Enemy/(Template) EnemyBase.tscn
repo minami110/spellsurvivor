@@ -61,6 +61,7 @@ debug_color = Color(0.356736, 0.551066, 1, 0.0705882)
 
 [node name="DamageArea" type="Area2D" parent="."]
 collision_layer = 0
+monitorable = false
 
 [node name="CollisionForDamage" type="CollisionShape2D" parent="DamageArea"]
 shape = SubResource("CircleShape2D_ben2b")

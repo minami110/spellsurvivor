@@ -1,17 +1,18 @@
 [gd_scene load_steps=3 format=3 uid="uid://da2c5k7fw1lgl"]
 
-[ext_resource type="Script" path="res://Infinity/Core/Projectiles/BaseProjectile.cs" id="1_oq4gk"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/AreaProjectile.cs" id="1_2iyhv"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2sex2"]
+size = Vector2(60, 10)
 
-[node name="HochoPrj" type="Area2D" groups=["Projectile"]]
+[node name="HochoAreaDamage" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 4
-script = ExtResource("1_oq4gk")
+monitorable = false
+script = ExtResource("1_2iyhv")
+DamageEveryXFrames = 0
 Damage = 20.0
-LifeFrame = 6
-Speed = 1000
-OnCollisionDie = false
+LifeFrame = 30
 
 [node name="Sprite" type="TextureRect" parent="."]
 visible = false
@@ -30,5 +31,5 @@ pivot_offset = Vector2(10, 10)
 expand_mode = 1
 
 [node name="DamageCollision" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_jrj0e")
+shape = SubResource("RectangleShape2D_2sex2")
 debug_color = Color(1, 0, 0, 0)

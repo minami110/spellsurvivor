@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://x3av84ap24no"
-path="res://.godot/imported/hocho.png-c1400aa14860883df723c4ac51f6c0f7.ctex"
+uid="uid://4ld76y2twnn7"
+path="res://.godot/imported/flying_saucer.png-881d177dc23b5732b204ae265e8190f2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/hocho.png"
-dest_files=["res://.godot/imported/hocho.png-c1400aa14860883df723c4ac51f6c0f7.ctex"]
+source_file="res://Common/Resources/Textures/Emoji/flying_saucer.png"
+dest_files=["res://.godot/imported/flying_saucer.png-881d177dc23b5732b204ae265e8190f2.ctex"]
 
 [params]
 

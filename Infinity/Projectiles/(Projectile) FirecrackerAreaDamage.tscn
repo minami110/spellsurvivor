@@ -1,18 +1,17 @@
 [gd_scene load_steps=3 format=3 uid="uid://rjw7gc5oxitd"]
 
-[ext_resource type="Script" path="res://Infinity/Core/Projectiles/BaseProjectile.cs" id="1_cjf46"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/AreaProjectile.cs" id="1_0krh2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
 radius = 30.0
 
-[node name="SmallSparks" type="Area2D" groups=["Projectile"]]
+[node name="FirecrackerAreaDamage" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 4
-script = ExtResource("1_cjf46")
+script = ExtResource("1_0krh2")
+DamageEveryXFrames = 10
 Damage = 5.0
 LifeFrame = 90
-OnCollisionDie = false
-DamageEveryXFrames = 10
 
 [node name="Sprite" type="TextureRect" parent="."]
 self_modulate = Color(1, 1, 1, 0.141176)

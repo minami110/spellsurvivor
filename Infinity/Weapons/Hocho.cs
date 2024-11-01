@@ -33,13 +33,23 @@ public partial class Hocho : WeaponBase
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.08d);
         t.TweenCallback(Callable.From(B));
 
-        // ToDo: アニメ の最初の タメ を待って 弾を打っている
-        await this.WaitForSecondsAsync(0.2d);
+        // Note: ダメージ発生の手触り感の秒数
+        await this.WaitForSecondsAsync(0.12d);
 
         if (IsInstanceValid(enemy))
         {
+            // アニメーションに合うようにエリア攻撃の弾を生成する
             var prj = _projectile.Instantiate<BaseProjectile>();
-            AddProjectile(prj, GlobalPosition, enemy!.GlobalPosition - GlobalPosition);
+
+            // 敵の方向を向くような rotation を計算する
+            var dir = enemy!.GlobalPosition - GlobalPosition;
+            var angle = dir.Angle();
+
+            // 自分の位置から angle 方向に 90 伸ばした位置を計算する
+            // Note: プレイ間確かめながらスポーン位置のピクセル数は調整する
+            var pos = GlobalPosition + dir.Normalized() * 90;
+
+            AddProjectile(prj, pos, angle);
         }
     }
 
