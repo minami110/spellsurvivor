@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dc8rn6v6qs5uy"]
 
-[ext_resource type="Script" path="res://Infinity/Core/Projectiles/BaseProjectile.cs" id="1_regke"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/BulletProjectile.cs" id="1_i5hda"]
 [ext_resource type="Texture2D" uid="uid://dsn4catskks3m" path="res://Common/Resources/Textures/Noita/Spell_disc_bullet_big.webp" id="2_s8oem"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
@@ -8,11 +8,13 @@
 [node name="Disk" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 4
-script = ExtResource("1_regke")
+monitorable = false
+script = ExtResource("1_i5hda")
+PenetrateEnemy = true
+PenetrateWall = true
 Damage = 50.0
 LifeFrame = 300
 Speed = 100
-OnCollisionDie = false
 
 [node name="Sprite" type="TextureRect" parent="."]
 anchors_preset = 8
