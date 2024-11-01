@@ -1,20 +1,20 @@
 [gd_scene load_steps=3 format=3 uid="uid://da2c5k7fw1lgl"]
 
-[ext_resource type="Script" path="res://Infinity/Core/Projectiles/AreaProjectile.cs" id="1_upuqh"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/AreaProjectile.cs" id="1_2iyhv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2sex2"]
 size = Vector2(60, 10)
 
-[node name="HochoPrj" type="Area2D" groups=["Projectile"]]
+[node name="HochoAreaDamage" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 4
-script = ExtResource("1_upuqh")
+script = ExtResource("1_2iyhv")
 DamageEveryXFrames = 0
 Damage = 20.0
 LifeFrame = 30
-FirstSleepFrames = 10
 
 [node name="Sprite" type="TextureRect" parent="."]
+visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

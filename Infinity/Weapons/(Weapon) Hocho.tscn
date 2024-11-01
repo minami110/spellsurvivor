@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://donsa3j8b5ra4"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Hocho.cs" id="1_3f756"]
-[ext_resource type="PackedScene" uid="uid://da2c5k7fw1lgl" path="res://Infinity/Projectiles/(Projectile) HochoPrj.tscn" id="2_p60ny"]
+[ext_resource type="PackedScene" uid="uid://da2c5k7fw1lgl" path="res://Infinity/Projectiles/(Projectile) HochoAreaDamage.tscn" id="2_p60ny"]
 [ext_resource type="Texture2D" uid="uid://c2edxtyae4q6n" path="res://Common/Resources/Textures/Emoji/hocho.png" id="3_ynyre"]
 [ext_resource type="Script" path="res://Infinity/Weapons/AimToNearEnemy.cs" id="3_yvvuh"]
 

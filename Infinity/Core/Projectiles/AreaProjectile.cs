@@ -43,13 +43,35 @@ public partial class AreaProjectile : BaseProjectile
     {
         var bodies = GetOverlappingBodies();
 
-        if (bodies.Count > 0)
+        if (bodies.Count == 0)
         {
-            foreach (var body in bodies)
+            return;
+        }
+
+        // Hit Info を生成する
+        // ToDo: 複数の敵にダメージを与えたため, 法線などが正しく計算できない
+        // そのため, 最初の敵に対してのみ HitInfo を生成する
+        var isHitInfoGenerated = false;
+
+        // 範囲内すべての敵にダメージを与える
+        foreach (var body in bodies)
+        {
+            if (body is Enemy enemy)
             {
-                if (body is Enemy enemy)
+                enemy.TakeDamage(Damage, Weapon);
+
+                if (!isHitInfoGenerated)
                 {
-                    enemy.TakeDamage(Damage, Weapon);
+                    isHitInfoGenerated = true;
+                    HitInfo = new ProjectileHitInfo
+                    {
+                        HitNode = body,
+                        Position = GlobalPosition,
+                        Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
+                        Velocity = Direction.Normalized() * Speed
+                    };
+
+                    _hitSubject.OnNext(HitInfo);
                 }
             }
         }
