@@ -6,7 +6,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
 radius = 100.0
 
-[node name="PoisonMistArea" type="Area2D" groups=["Projectile"]]
+[node name="PoisonMistAreaDamage" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 4
 script = ExtResource("1_kt4vq")

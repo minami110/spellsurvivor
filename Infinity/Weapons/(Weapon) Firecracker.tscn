@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Infinity/Weapons/FirecrackerGen.cs" id="1_j7148"]
 [ext_resource type="PackedScene" uid="uid://c03ya53oowgc4" path="res://Infinity/Projectiles/(Projectile) Bomb.tscn" id="2_graak"]
-[ext_resource type="PackedScene" uid="uid://rjw7gc5oxitd" path="res://Infinity/Projectiles/(Projectile) SmallSparks.tscn" id="3_n2427"]
+[ext_resource type="PackedScene" uid="uid://rjw7gc5oxitd" path="res://Infinity/Projectiles/(Projectile) FirecrackerAreaDamage.tscn" id="3_n2427"]
 [ext_resource type="Texture2D" uid="uid://bufla4g8aocx6" path="res://Common/Resources/Textures/2dgizmo_8x8.png" id="4_i2en4"]
 
 [node name="Firecracker" type="Node2D"]

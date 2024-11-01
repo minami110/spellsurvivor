@@ -8,6 +8,7 @@ size = Vector2(60, 10)
 [node name="HochoAreaDamage" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 4
+monitorable = false
 script = ExtResource("1_2iyhv")
 DamageEveryXFrames = 0
 Damage = 20.0
