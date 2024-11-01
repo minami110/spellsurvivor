@@ -34,22 +34,10 @@ public partial class BaseProjectile : Area2D
     public uint Speed { get; set; }
 
     /// <summary>
-    ///     衝突時に消滅するかどうか
-    /// </summary>
-    [Export]
-    public bool OnCollisionDie { get; set; } = true;
-
-    /// <summary>
-    ///     継続ダメージの場合何秒に一度攻撃するか
-    /// </summary>
-    [Export]
-    public uint DamageEveryXFrames;
-
-    /// <summary>
     ///     生成直後ダメージを与えない猶予時間 (連続ヒットなどの防止)
     /// </summary>
     [Export]
-    public uint FirstSleepFrames = 2;
+    public uint FirstSleepFrames = 2u;
 
     [ExportGroup("Sounds")]
     [Export]
@@ -71,9 +59,9 @@ public partial class BaseProjectile : Area2D
     public Observable<ProjectileHitInfo> Hit => _hitSubject;
 
     /// <summary>
-    ///     現在の寿命 (フレーム数)
+    /// 現在の寿命 (フレーム数)
     /// </summary>
-    private uint Age { get; set; }
+    public uint Age { get; private set; }
 
     /// <summary>
     /// 現在進む方向
@@ -81,7 +69,7 @@ public partial class BaseProjectile : Area2D
     public Vector2 Direction { get; set; }
 
     /// <summary>
-    /// この Projectile を発射した Weapon
+    /// この Projectile を発射した Weapon (OnReady で自動で取得)
     /// </summary>
     public WeaponBase Weapon { get; private set; } = null!;
 
@@ -140,15 +128,10 @@ public partial class BaseProjectile : Area2D
                     GlobalRotation = velocity.Angle();
                 }
 
-                // 継続ダメージ処理
-                if (Age >= FirstSleepFrames && DamageEveryXFrames > 0 && Age % DamageEveryXFrames == 0)
-                {
-                    OnDamageEveryXFrames();
-                }
-
-                // 寿命が 0 の場合は無限に生存するとする
+                // 寿命が 0 の場合は無限に生存する
                 if (LifeFrame > 0)
                 {
+                    // 寿命が来たら消滅
                     if (Age > LifeFrame)
                     {
                         OnDead(WhyDead.Life);
@@ -160,7 +143,12 @@ public partial class BaseProjectile : Area2D
         }
     }
 
-    public virtual void OnDead(WhyDead reason)
+    public void Kill(WhyDead reason)
+    {
+        OnDead(reason);
+    }
+
+    private protected virtual void OnDead(WhyDead reason)
     {
         _deadSubject.OnNext(reason);
         _deadSubject.OnCompleted();
@@ -188,17 +176,16 @@ public partial class BaseProjectile : Area2D
 
         _hitSubject.OnNext(HitInfo);
 
+        // 壁など静的なオブジェクトとの衝突時の処理
+        // デフォルトでは壁と衝突したら自身も消滅する
         if (body is StaticBody2D staticBody)
         {
-            // 壁など静的なオブジェクトとの衝突時の処理
-            if (OnCollisionDie)
-            {
-                OnDead(WhyDead.CollidedWithWall);
-            }
-
+            OnDead(WhyDead.CollidedWithWall);
             return;
         }
 
+        // 敵との衝突時の処理
+        // デフォルトでは敵にダメージを与えて自身も消滅する
         if (body is Enemy enemy)
         {
             enemy.TakeDamage(Damage, Weapon);
@@ -208,28 +195,7 @@ public partial class BaseProjectile : Area2D
                 SoundManager.PlaySoundEffect(_hitSound);
             }
 
-            if (OnCollisionDie)
-            {
-                OnDead(WhyDead.CollidedWithEnemy);
-            }
-        }
-    }
-
-    private protected virtual void OnDamageEveryXFrames()
-    {
-        var bodies = GetOverlappingBodies();
-
-        if (bodies.Count == 0)
-        {
-            return;
-        }
-
-        foreach (var body in bodies)
-        {
-            if (body is Enemy enemy)
-            {
-                enemy.TakeDamage(Damage, Weapon);
-            }
+            OnDead(WhyDead.CollidedWithEnemy);
         }
     }
 }

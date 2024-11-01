@@ -42,7 +42,7 @@ public partial class WeaponBase : Node2D
     }
 
     /// <summary>
-    /// Tree に入った時に自動で Start するかどうか
+    /// Tree に入った時に自動で Start するかどうか (Debug 用のパラメーター, 通常は Wave に操作されるが)
     /// </summary>
     [ExportGroup("For Debugging")]
     [Export]
@@ -182,6 +182,13 @@ public partial class WeaponBase : Node2D
         AddProjectile(projectile);
     }
 
+    public void AddProjectile(BaseProjectile projectile, Vector2 position, float rotation)
+    {
+        projectile.Position = position;
+        projectile.Rotation = rotation;
+        AddProjectile(projectile);
+    }
+
     public bool IsBelongTo(FactionType factionType)
     {
         return Faction.HasFlag(factionType);
@@ -202,6 +209,10 @@ public partial class WeaponBase : Node2D
     {
     }
 
+    /// <summary>
+    /// 武器のクールダウンが終了した時に呼び出されるメソッド
+    /// </summary>
+    /// <param name="level">現在の武器のレベル</param>
     private protected virtual void SpawnProjectile(uint level)
     {
     }
