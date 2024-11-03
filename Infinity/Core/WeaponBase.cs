@@ -16,10 +16,6 @@ public partial class WeaponBase : Node2D
     /// <summary>
     /// 武器の Cooldown にかかるフレーム数 (ベース値)
     /// </summary>
-    /// <remarks>
-    /// Note: .tscn 側で設定した値を取得します, レベルなどに応じて変更しても問題ありません
-    /// 
-    /// </remarks>
     [Export(PropertyHint.Range, "1,9999,1")]
     public uint BaseCoolDownFrame
     {
@@ -198,6 +194,7 @@ public partial class WeaponBase : Node2D
     {
         FrameTimer.WaitFrame = SolvedCoolDownFrame;
         FrameTimer.Start();
+        OnStartAttack();
     }
 
     public void StopAttack()
@@ -206,6 +203,13 @@ public partial class WeaponBase : Node2D
     }
 
     private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    {
+    }
+
+    /// <summary>
+    /// 武器が起動したときに呼び出されるメソッド, 通常はバトルウェーブ開始時に呼ばれる
+    /// </summary>
+    private protected virtual void OnStartAttack()
     {
     }
 
