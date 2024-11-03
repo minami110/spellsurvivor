@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using R3;
 
@@ -11,9 +12,15 @@ public partial class AimToNearEnemy : Area2D
         Farthest
     }
 
+    /// <summary>
+    /// 対象とするターゲットのタイプ
+    /// </summary>
     [Export]
     private AimTarget Target { get; set; } = AimTarget.Nearest;
 
+    /// <summary>
+    /// 自身を回転するかどうか
+    /// </summary>
     [Export]
     private bool UpdateRotation { get; set; } = true;
 
@@ -24,11 +31,25 @@ public partial class AimToNearEnemy : Area2D
 
     private float _targetAngle;
 
+    /// <summary>
+    /// 現在狙っている(有効な敵が存在する)かどうか
+    /// </summary>
     public bool IsAiming { get; private set; }
 
+    /// <summary>
+    /// 範囲内の最も近い敵, 存在しない場合は null
+    /// </summary>
     public Enemy? NearestEnemy { get; private set; }
 
+    /// <summary>
+    /// 範囲内の最も遠い敵, 存在しない場合は null
+    /// </summary>
     public Enemy? FarthestEnemy { get; private set; }
+
+    /// <summary>
+    /// 範囲内に存在する敵のリスト
+    /// </summary>
+    public readonly List<Enemy> Enemies = new();
 
     public override void _EnterTree()
     {
@@ -106,6 +127,7 @@ public partial class AimToNearEnemy : Area2D
     {
         NearestEnemy = null;
         FarthestEnemy = null;
+        Enemies.Clear();
 
         var bodies = GetOverlappingBodies();
         var centerPosition = GlobalPosition;
@@ -119,6 +141,8 @@ public partial class AimToNearEnemy : Area2D
             {
                 continue;
             }
+
+            Enemies.Add(e);
 
             var distance = centerPosition.DistanceSquaredTo(e.GlobalPosition);
             if (distance < minLen)
