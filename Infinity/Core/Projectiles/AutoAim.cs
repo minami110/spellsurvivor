@@ -66,7 +66,7 @@ public partial class AutoAim : Area2D
         }
 
         // 最も近い敵を検索する
-        var distance = 999999f;
+        var distance = float.MaxValue;
         Enemy? nearest = null;
         var bodies = GetOverlappingBodies();
 
@@ -87,7 +87,7 @@ public partial class AutoAim : Area2D
                 continue;
             }
 
-            var d = GlobalPosition.DistanceTo(enemy.GlobalPosition);
+            var d = GlobalPosition.DistanceSquaredTo(enemy.GlobalPosition);
             if (d < distance)
             {
                 distance = d;
@@ -95,12 +95,14 @@ public partial class AutoAim : Area2D
             }
         }
 
+        // 最も近い追従する敵が見つかった
         if (nearest is not null)
         {
             // Parent (Projectile) の向きを変更する
             var direction = (nearest.GlobalPosition - GlobalPosition).Normalized();
             parent.Direction = direction;
         }
+        // 敵が見つかっていない
         else
         {
             if (Mode.HasFlag(AutoAimMode.KillPrjWhenSearchFailed))

@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://b3nnqfmo1iq51"]
+
+[ext_resource type="Script" path="res://Infinity/Projectiles/ParasiteAreaDamage.cs" id="1_ltqpd"]
+[ext_resource type="Texture2D" uid="uid://5mgf28e054d7" path="res://Common/Resources/Textures/Emoji/japanese_ogre.png" id="2_imyyw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_j4vjk"]
+radius = 30.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sg7k6"]
+radius = 150.0
+
+[node name="ParasiteAreaDamage" type="Area2D" groups=["Projectile"]]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("1_ltqpd")
+Damage = 20.0
+Speed = 100
+
+[node name="Sprite" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_imyyw")
+expand_mode = 1
+
+[node name="DamageCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_j4vjk")
+debug_color = Color(1, 0, 0, 0)
+
+[node name="EnemySearchField" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySearchField"]
+shape = SubResource("CircleShape2D_sg7k6")
+debug_color = Color(0, 0.6, 0.701961, 0)
