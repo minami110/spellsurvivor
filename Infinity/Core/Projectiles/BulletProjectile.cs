@@ -6,10 +6,10 @@ namespace fms.Projectile;
 public partial class BulletProjectile : BaseProjectile
 {
     [Export]
-    private protected bool PenetrateEnemy {get; private set;}
+    public bool PenetrateEnemy { get; set; }
 
     [Export]
-    private protected bool PenetrateWall {get; private set;}
+    public bool PenetrateWall { get; set; }
 
     public override void _Notification(int what)
     {
@@ -29,18 +29,6 @@ public partial class BulletProjectile : BaseProjectile
         {
             return;
         }
-
-        // 最新の HitInfo を更新
-        // Note: すべての当たり判定が Sphere という決め打ちで法線を計算しています
-        HitInfo = new ProjectileHitInfo
-        {
-            HitNode = body,
-            Position = GlobalPosition,
-            Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
-            Velocity = Direction.Normalized() * Speed
-        };
-
-        _hitSubject.OnNext(HitInfo);
 
         // 壁など静的なオブジェクトとの衝突時の処理
         // デフォルトでは壁と衝突したら常に自身は消滅する
@@ -69,5 +57,22 @@ public partial class BulletProjectile : BaseProjectile
                 Kill(WhyDead.CollidedWithEnemy);
             }
         }
+
+        if (IsDead)
+        {
+            return;
+        }
+
+        // 最新の HitInfo を更新 (ダメージ処理のあとにやること)
+        // Note: すべての当たり判定が Sphere という決め打ちで法線を計算しています
+        HitInfo = new ProjectileHitInfo
+        {
+            HitNode = body,
+            Position = GlobalPosition,
+            Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
+            Velocity = Direction.Normalized() * Speed
+        };
+
+        _hitSubject.OnNext(HitInfo);
     }
 }

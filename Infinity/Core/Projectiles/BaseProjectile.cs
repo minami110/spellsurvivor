@@ -52,6 +52,7 @@ public partial class BaseProjectile : Area2D
 
     /// <summary>
     /// 敵/壁 を問わずなにかにヒットしたときに通知
+    /// ダメージ処理の後に呼ばれる, Projectile 自身が消滅した場合は呼ばれない
     /// </summary>
     public Observable<ProjectileHitInfo> Hit => _hitSubject;
 
@@ -154,6 +155,7 @@ public partial class BaseProjectile : Area2D
 
         _deadSubject.OnNext(reason);
         _deadSubject.OnCompleted();
+        _hitSubject.OnCompleted();
 
         // Physics Process から呼ばれる (衝突時死亡) ことがあるので CallDeferred で
         CallDeferred(Node.MethodName.QueueFree);
