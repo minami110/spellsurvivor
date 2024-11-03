@@ -1,11 +1,19 @@
 using Godot;
-using Godot.Collections;
 using R3;
 
 namespace fms;
 
 public partial class AimToNearEnemy : Area2D
 {
+    public enum AimTarget
+    {
+        Nearest,
+        Farthest
+    }
+
+    [Export]
+    private AimTarget Target { get; set; } = AimTarget.Nearest;
+
     [Export]
     private bool UpdateRotation { get; set; } = true;
 
@@ -17,52 +25,93 @@ public partial class AimToNearEnemy : Area2D
     private float _targetAngle;
 
     public bool IsAiming { get; private set; }
+
     public Enemy? NearestEnemy { get; private set; }
+
+    public Enemy? FarthestEnemy { get; private set; }
 
     public override void _EnterTree()
     {
         // Subscribe to parent player's face direction
-        var parent = GetParent().GetParent<BasePlayerPawn>(); // ToDo: Hardcoded
-        parent.FaceDirection
+        var player = GetNode<BasePlayerPawn>("../.."); // ToDo: Hardcoded
+        player.FaceDirection
             .Subscribe(x => { _restAngle = x == PawnFaceDirection.Right ? Mathf.Atan2(0, 1) : Mathf.Atan2(0, -1); })
             .AddTo(this);
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (FindNearestEnemy(GetOverlappingBodies(), out var nearestEnemy))
+        UpdateNearAndFarEnemy();
+
+        if (Target == AimTarget.Nearest)
         {
-            IsAiming = true;
-            NearestEnemy = nearestEnemy;
-
-            if (!UpdateRotation)
+            if (NearestEnemy is not null)
             {
-                return;
-            }
+                IsAiming = true;
 
-            var targetAngle = Mathf.Atan2(nearestEnemy!.GlobalPosition.Y - GlobalPosition.Y,
-                nearestEnemy.GlobalPosition.X - GlobalPosition.X);
-            Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotateSensitivity);
+                if (!UpdateRotation)
+                {
+                    return;
+                }
+
+                var targetPosition = NearestEnemy.GlobalPosition;
+                var targetAngle = Mathf.Atan2(targetPosition.Y - GlobalPosition.Y, targetPosition.X - GlobalPosition.X);
+                Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotateSensitivity);
+            }
+            else
+            {
+                IsAiming = false;
+
+                if (!UpdateRotation)
+                {
+                    return;
+                }
+
+                // Update Rotation
+                Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
+            }
         }
-        else
+        else if (Target == AimTarget.Farthest)
         {
-            IsAiming = false;
-            NearestEnemy = null;
-
-            if (!UpdateRotation)
+            if (FarthestEnemy is not null)
             {
-                return;
-            }
+                IsAiming = true;
 
-            // Update Rotation
-            Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
+                if (!UpdateRotation)
+                {
+                    return;
+                }
+
+                var targetPosition = FarthestEnemy.GlobalPosition;
+                var targetAngle = Mathf.Atan2(targetPosition.Y - GlobalPosition.Y, targetPosition.X - GlobalPosition.X);
+                Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotateSensitivity);
+            }
+            else
+            {
+                IsAiming = false;
+
+                if (!UpdateRotation)
+                {
+                    return;
+                }
+
+                // Update Rotation
+                Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
+            }
         }
+
     }
 
-    private bool FindNearestEnemy(Array<Node2D> bodies, out Enemy? enemy)
+    private void UpdateNearAndFarEnemy()
     {
-        var len = float.MaxValue;
-        enemy = null;
+        NearestEnemy = null;
+        FarthestEnemy = null;
+
+        var bodies = GetOverlappingBodies();
+        var centerPosition = GlobalPosition;
+
+        var minLen = float.MaxValue;
+        var maxLen = float.MinValue;
 
         foreach (var o in bodies)
         {
@@ -71,14 +120,17 @@ public partial class AimToNearEnemy : Area2D
                 continue;
             }
 
-            var distance = GlobalPosition.DistanceSquaredTo(e.GlobalPosition);
-            if (distance < len)
+            var distance = centerPosition.DistanceSquaredTo(e.GlobalPosition);
+            if (distance < minLen)
             {
-                len = distance;
-                enemy = e;
+                minLen = distance;
+                NearestEnemy = e;
+            }
+            if (distance > maxLen)
+            {
+                maxLen = distance;
+                FarthestEnemy = e;
             }
         }
-
-        return enemy is not null;
     }
 }
