@@ -15,6 +15,7 @@ radius = 20.0
 [node name="MeMe" type="CharacterBody2D"]
 collision_mask = 16
 script = ExtResource("1_petec")
+_moveSpeed = 175.0
 
 [node name="MainCamera" type="Camera2D" parent="."]
 unique_name_in_owner = true
