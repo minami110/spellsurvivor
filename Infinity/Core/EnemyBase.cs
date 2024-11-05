@@ -3,7 +3,7 @@ using R3;
 
 namespace fms;
 
-public partial class EnemyBase : RigidBody2D
+public partial class EnemyBase : RigidBody2D, IEntity
 {
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _defaultMoveSpeed = 50f;
@@ -83,9 +83,7 @@ public partial class EnemyBase : RigidBody2D
     /// <summary>
     /// プレイヤーなどからダメージを受けるときの処理
     /// </summary>
-    /// <param name="amount"></param>
-    /// <param name="instigator"></param>
-    public void TakeDamage(float amount, Node instigator)
+    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
         if (amount.Equals(0f))
         {
@@ -101,6 +99,7 @@ public partial class EnemyBase : RigidBody2D
             var report = new DamageReport
             {
                 Instigator = instigator,
+                Causer = causer,
                 Victim = this,
                 Amount = amount,
                 Position = GlobalPosition,
@@ -114,6 +113,7 @@ public partial class EnemyBase : RigidBody2D
             var report = new DamageReport
             {
                 Instigator = instigator,
+                Causer = causer,
                 Victim = this,
                 Amount = amount,
                 Position = GlobalPosition,

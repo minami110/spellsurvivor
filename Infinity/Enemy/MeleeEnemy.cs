@@ -3,7 +3,7 @@ using Godot;
 namespace fms.Enemy;
 
 /// <summary>
-/// 遠距離からプレイヤーに射撃を行う敵
+/// 近距離 (接触) ダメージを与える敵のベースクラス
 /// </summary>
 public partial class MeleeEnemy : EnemyBase
 {
@@ -18,9 +18,9 @@ public partial class MeleeEnemy : EnemyBase
 
         foreach (var node in overlappingBodies)
         {
-            if (node is BasePlayerPawn player)
+            if (node is IEntity entity)
             {
-                player.TakeDamage(_power, this);
+                entity.ApplayDamage(_power, this, this);
             }
         }
     }

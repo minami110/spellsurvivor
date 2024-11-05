@@ -9,7 +9,7 @@ public enum PawnFaceDirection
     Left
 }
 
-public partial class BasePlayerPawn : CharacterBody2D, IPawn
+public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
 {
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _health = 100f;
@@ -95,13 +95,14 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn
             Amount = -amount,
             Victim = this,
             Instigator = this, // 自分自身で回復ということに..
+            Causer = this,
             Position = GlobalPosition,
             IsDead = false
         };
         StaticsManager.CommitDamage(info);
     }
 
-    public void TakeDamage(float amount, Node instigator)
+    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
         AddEffect(new PhysicalDamageEffect { Value = amount });
         var info = new DamageReport
@@ -109,6 +110,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn
             Amount = amount,
             Victim = this,
             Instigator = instigator,
+            Causer = causer,
             Position = GlobalPosition,
             IsDead = false
         };

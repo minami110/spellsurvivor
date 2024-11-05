@@ -50,16 +50,18 @@ public partial class AreaProjectile : BaseProjectile
 
         // Hit Info を生成する
         // ToDo: 複数の敵にダメージを与えたため, 法線などが正しく計算できない
-        // そのため, 最初の敵に対してのみ HitInfo を生成する
         var isHitInfoGenerated = false;
 
-        // 範囲内すべての敵にダメージを与える
+        // 範囲内すべての Entity にダメージを与える, Entity のフィルタはレイヤー設定で行う
         foreach (var body in bodies)
         {
-            if (body is EnemyBase enemy)
+            if (body is IEntity entity)
             {
-                enemy.TakeDamage(Damage, Weapon);
+                entity.ApplayDamage(Damage, Weapon.GetParent<IEntity>(), Weapon);
 
+                // 複数の敵にヒットするため, HitInfo は最初の敵に対してのみ生成する
+                // Note: Hit 通知に依存した武器の Stack 処理などがあるため, Hit したかどうかは 1回の攻撃で1回まで
+                //       という仕様にしています
                 if (!isHitInfoGenerated)
                 {
                     isHitInfoGenerated = true;
