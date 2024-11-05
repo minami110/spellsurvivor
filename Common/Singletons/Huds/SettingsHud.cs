@@ -6,7 +6,7 @@ public partial class SettingsHud : CanvasLayer
 
     /// <summary>
     /// </summary>
-    public static bool IsVisible => _instance is not null && _instance.Visible;
+    public static bool IsOpen => _instance is not null && _instance.Visible;
 
     public override void _EnterTree()
     {

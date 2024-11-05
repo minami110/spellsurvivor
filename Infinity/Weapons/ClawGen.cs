@@ -85,7 +85,7 @@ public partial class ClawGen : WeaponBase
         // Note: AddTo はシーンに入れたあとしかできないので
         // Projectile が Enemy にヒットしたら Stack を一つ貯める
         // Prj は貫通するが, 一つの Prj につき 1回だけ Stack を貯められるので Take(1) を入れている
-        prj.Hit.Where(x => x.HitNode is Enemy)
+        prj.Hit.Where(x => x.HitNode is EnemyBase)
             .Take(1)
             .Subscribe(hitInfo =>
             {

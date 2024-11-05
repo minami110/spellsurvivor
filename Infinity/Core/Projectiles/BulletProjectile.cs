@@ -41,9 +41,10 @@ public partial class BulletProjectile : BaseProjectile
         }
 
         // 敵との衝突時の処理
-        else if (body is Enemy enemy)
+        else if (body is IEntity entity)
         {
-            enemy.TakeDamage(Damage, Weapon);
+            // ToDo: Player / Enemy ともに Weapon が必ず直下に存在している という前提で実装してます
+            entity.ApplayDamage(Damage, Weapon.GetParent<IEntity>(), Weapon);
 
             /*
             if (_hitSound != null)

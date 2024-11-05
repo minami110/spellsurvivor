@@ -38,7 +38,7 @@ public partial class WeaponBase : Node2D
     }
 
     /// <summary>
-    /// Tree に入った時に自動で Start するかどうか (Debug 用のパラメーター, 通常は Wave に操作されるが)
+    /// Tree に入った時に自動で Start するかどうか (Debug 用のパラメーター, 通常は Wave 開始時に勝手に操作される)
     /// </summary>
     [ExportGroup("For Debugging")]
     [Export]
@@ -63,7 +63,6 @@ public partial class WeaponBase : Node2D
     /// </summary>
     [Export]
     public float Mana { get; private set; }
-
 
     private static readonly NodePath FrameTimerPath = new("FrameTimer");
 
@@ -120,7 +119,7 @@ public partial class WeaponBase : Node2D
             // Weapon group に所属する
             AddToGroup(Constant.GroupNameWeapon);
 
-            // Add FrameTimer
+            // FrameTimer が存在していなかったら作成する
             if (GetNodeOrNull<FrameTimer>(FrameTimerPath) == null)
             {
                 var frameTimer = new FrameTimer();

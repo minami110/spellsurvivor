@@ -94,11 +94,9 @@ public partial class BaseProjectile : Area2D
                 _hitSubject.AddTo(this);
                 SetProcess(true);
 
-                // ToDo: 厳密な型で Weapon を取得する方法を考える
-                // Projectile の先祖のどこかに自分を生成した Weapon がいるのでそれをキャッシュしておく
                 try
                 {
-                    Weapon = GetNode<WeaponBase>("../.."); 
+                    Weapon = GetWeaponInParent();
                 }
                 catch (InvalidCastException e)
                 {
@@ -139,6 +137,28 @@ public partial class BaseProjectile : Area2D
                 break;
             }
         }
+    }
+
+    /// <summary>
+    /// Projectile を生成した Weapon を取得する, 先祖の何処かにいるはずなので再帰的に検索する
+    /// </summary>
+    /// <returns></returns>
+    private WeaponBase GetWeaponInParent()
+    {
+        Node? parent = GetParent();
+
+        while (parent is not null)
+        {
+            if (parent is WeaponBase weapon)
+            {
+                return weapon;
+            }
+
+            parent = parent.GetParent();
+            parent.GetParentOrNull<WeaponBase>();
+        }
+
+        throw new InvalidProgramException("Failed to find WeaponBase");
     }
 
     public virtual void Kill(WhyDead reason)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qn3macr8gp12"
-path="res://.godot/imported/clown_face.png-01f6460ff126b6e2416fdc4a3dc3d017.ctex"
+uid="uid://dxm3tr4es72kd"
+path="res://.godot/imported/hornet.png-2defd4b69ec2f7a95e83787194f1d130.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Enemy/clown_face.png"
-dest_files=["res://.godot/imported/clown_face.png-01f6460ff126b6e2416fdc4a3dc3d017.ctex"]
+source_file="res://Infinity/Enemy/hornet.png"
+dest_files=["res://.godot/imported/hornet.png-2defd4b69ec2f7a95e83787194f1d130.ctex"]
 
 [params]
 

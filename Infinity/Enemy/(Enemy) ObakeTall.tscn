@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://b4i1jhq1jsnm5"]
 
-[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Template) EnemyBase.tscn" id="1_phgd3"]
+[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Template) MeleeEnemy.tscn" id="1_phgd3"]
 [ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_5m6e7"]
 [ext_resource type="Texture2D" uid="uid://brwirwby2n6nh" path="res://Infinity/Enemy/obake_tall.png" id="3_dxc77"]
 

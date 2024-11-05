@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://ch6itnrhotsfi"]
 
-[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Template) EnemyBase.tscn" id="1_pfb5x"]
+[ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Template) MeleeEnemy.tscn" id="1_pfb5x"]
 [ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_jktux"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1u0w2"]

@@ -9,7 +9,8 @@ public readonly struct DamageReport
 {
     public required float Amount { get; init; }
     public required Node Victim { get; init; }
-    public required Node Instigator { get; init; }
+    public required IEntity Instigator { get; init; }
+    public required Node Causer { get; init; }
     public required Vector2 Position { get; init; }
     public required bool IsDead { get; init; }
 }
@@ -34,7 +35,7 @@ public partial class StaticsManager : CanvasLayer
 
     private static StaticsManager? _instance;
 
-    private readonly Dictionary<ulong, List<DamageReport>> _damageInfoByInsitigator = new();
+    private readonly Dictionary<ulong, List<DamageReport>> _damageInfoByCauser = new();
 
     private readonly Subject<DamageReport> _enemyDamageOccurred = new();
 
@@ -44,7 +45,7 @@ public partial class StaticsManager : CanvasLayer
         {
             if (_instance is not null)
             {
-                return _instance._damageInfoByInsitigator;
+                return _instance._damageInfoByCauser;
             }
 
             return ImmutableDictionary<ulong, List<DamageReport>>.Empty;
@@ -71,7 +72,7 @@ public partial class StaticsManager : CanvasLayer
 
     public static void ClearDamageInfoTable()
     {
-        _instance?._damageInfoByInsitigator.Clear();
+        _instance?._damageInfoByCauser.Clear();
     }
 
     /// <summary>
@@ -88,22 +89,25 @@ public partial class StaticsManager : CanvasLayer
             return;
         }
 
-        // ダメージを与えたもの (Instigator) ごとにダメージ情報を保存する
-        var id = report.Instigator.GetInstanceId();
-        if (!_instance._damageInfoByInsitigator.TryGetValue(id, out var damageInfos))
+        // ダメージを与えたもの (Causer) ごとにダメージ情報を保存する
+        var causerId = report.Causer.GetInstanceId();
+        if (!_instance._damageInfoByCauser.TryGetValue(causerId, out var damageInfos))
         {
             damageInfos = new List<DamageReport>();
-            _instance._damageInfoByInsitigator[id] = damageInfos;
+            _instance._damageInfoByCauser[causerId] = damageInfos;
         }
 
         damageInfos.Add(report);
 
 
         var victim = report.Victim;
+
+        // プレイヤーがダメージを受けた場合 
         if (victim.IsInGroup(Constant.GroupNamePlayer))
         {
             _instance.PopUpDamageHud(DamageTakeOwner.Player, report.Amount, report.Position, report.IsDead);
         }
+        // 敵がダメージを受けた場合
         else if (victim.IsInGroup(Constant.GroupNameEnemy))
         {
             _instance.PopUpDamageHud(DamageTakeOwner.Enemy, report.Amount, report.Position, report.IsDead);
