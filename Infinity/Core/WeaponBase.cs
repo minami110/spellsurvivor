@@ -64,7 +64,6 @@ public partial class WeaponBase : Node2D
     [Export]
     public float Mana { get; private set; }
 
-
     private static readonly NodePath FrameTimerPath = new("FrameTimer");
 
     // 現在武器に付与されている Effect
@@ -120,7 +119,7 @@ public partial class WeaponBase : Node2D
             // Weapon group に所属する
             AddToGroup(Constant.GroupNameWeapon);
 
-            // Add FrameTimer
+            // FrameTimer が存在していなかったら作成する
             if (GetNodeOrNull<FrameTimer>(FrameTimerPath) == null)
             {
                 var frameTimer = new FrameTimer();
