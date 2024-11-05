@@ -38,7 +38,7 @@ public partial class WeaponBase : Node2D
     }
 
     /// <summary>
-    /// Tree に入った時に自動で Start するかどうか (Debug 用のパラメーター, 通常は Wave に操作されるが)
+    /// Tree に入った時に自動で Start するかどうか (Debug 用のパラメーター, 通常は Wave 開始時に勝手に操作される)
     /// </summary>
     [ExportGroup("For Debugging")]
     [Export]
