@@ -15,7 +15,7 @@ public partial class EnemyBase : RigidBody2D
     ///     プレイヤーに与えるダメージ
     /// </summary>
     [Export(PropertyHint.Range, "0,1000,1")]
-    private float _power = 10f;
+    private protected float _power = 10f;
 
     /// <summary>
     ///     プレイヤーと重なっている時攻撃を発生させるクールダウン
@@ -26,9 +26,9 @@ public partial class EnemyBase : RigidBody2D
     [Export]
     private PackedScene _onDeadParticle = null!;
 
-    private readonly EnemyState _state = new();
+    private protected readonly EnemyState _state = new();
 
-    private Node2D? _targetNode;
+    private protected Node2D? _playerNode;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -36,7 +36,7 @@ public partial class EnemyBase : RigidBody2D
         // Gets the player's position
         if (GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer) is Node2D player)
         {
-            _targetNode = player;
+            _playerNode = player;
         }
         else
         {
@@ -67,7 +67,7 @@ public partial class EnemyBase : RigidBody2D
 
     public override void _PhysicsProcess(double _)
     {
-        var delta = _targetNode!.GlobalPosition - GlobalPosition;
+        var delta = _playerNode!.GlobalPosition - GlobalPosition;
         // 20 px 以内に近づいたら移動を停止する
         if (delta.LengthSquared() < 400)
         {
@@ -125,22 +125,11 @@ public partial class EnemyBase : RigidBody2D
         }
     }
 
-    private void Attack()
+    /// <summary>
+    /// クールダウンが完了したときに呼ばれる攻撃実行のコールバック
+    /// </summary>
+    private protected virtual void Attack()
     {
-        var damageArea = GetNode<Area2D>("DamageArea");
-        var overlappingBodies = damageArea.GetOverlappingBodies();
-        if (overlappingBodies.Count <= 0)
-        {
-            return;
-        }
-
-        foreach (var node in overlappingBodies)
-        {
-            if (node is BasePlayerPawn player)
-            {
-                player.TakeDamage(_power, this);
-            }
-        }
     }
 
     private void KillByDamage()

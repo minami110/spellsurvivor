@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://dfjwy1udqlp80"]
 
-[ext_resource type="Script" path="res://Infinity/Core/EnemyBase.cs" id="1_cjt84"]
+[ext_resource type="Script" path="res://Infinity/Enemy/MeleeEnemy.cs" id="1_icawc"]
 [ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_2u1e8"]
 [ext_resource type="Texture2D" uid="uid://cvsiafcid851k" path="res://Infinity/Enemy/obake_tori.png" id="4_b3fk7"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="4_vrebk"]
@@ -20,13 +20,12 @@ radius = 13.0384
 resource_local_to_scene = true
 radius = 20.0
 
-[node name="EnemyBase" type="RigidBody2D" groups=["Enemy"]]
+[node name="MeleeEnemy" type="RigidBody2D" groups=["Enemy"]]
 collision_layer = 4
 collision_mask = 4
 gravity_scale = 0.0
 lock_rotation = true
-script = ExtResource("1_cjt84")
-_defaultMoveSpeed = 80.0
+script = ExtResource("1_icawc")
 _onDeadParticle = ExtResource("6_q38e6")
 
 [node name="Sprite" type="Sprite2D" parent="."]
