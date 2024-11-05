@@ -109,14 +109,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
             UpdateHealthBar();
         }
     }
-
-    /// <summary>
-    /// クールダウンが完了したときに呼ばれる攻撃実行のコールバック
-    /// </summary>
-    private protected virtual void Attack()
-    {
-    }
-
+    
     private void KillByDamage()
     {
         // Emit Dead Particle

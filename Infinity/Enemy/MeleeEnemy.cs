@@ -42,7 +42,7 @@ public partial class MeleeEnemy : EnemyBase
     }
 
 
-    private protected override void Attack()
+    private protected virtual void Attack()
     {
         var damageArea = GetNode<Area2D>("DamageArea");
         var overlappingBodies = damageArea.GetOverlappingBodies();
