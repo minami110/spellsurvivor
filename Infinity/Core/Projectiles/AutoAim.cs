@@ -67,7 +67,7 @@ public partial class AutoAim : Area2D
 
         // 最も近い敵を検索する
         var distance = float.MaxValue;
-        Enemy? nearest = null;
+        EnemyBase? nearest = null;
         var bodies = GetOverlappingBodies();
 
         var parent = GetParent<BaseProjectile>();
@@ -77,7 +77,7 @@ public partial class AutoAim : Area2D
 
         foreach (var body in bodies)
         {
-            if (body is not Enemy enemy)
+            if (body is not EnemyBase enemy)
             {
                 continue;
             }

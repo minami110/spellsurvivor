@@ -3,7 +3,7 @@ using R3;
 
 namespace fms;
 
-public partial class Enemy : RigidBody2D
+public partial class EnemyBase : RigidBody2D
 {
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _defaultMoveSpeed = 50f;
@@ -40,7 +40,7 @@ public partial class Enemy : RigidBody2D
         }
         else
         {
-            GD.PrintErr($"[{nameof(Enemy)}] Player node is not found");
+            GD.PrintErr($"[{nameof(EnemyBase)}] Player node is not found");
             SetProcess(false);
             SetPhysicsProcess(false);
             return;
@@ -68,7 +68,7 @@ public partial class Enemy : RigidBody2D
     public override void _PhysicsProcess(double _)
     {
         var delta = _targetNode!.GlobalPosition - GlobalPosition;
-        // 2opx 以内に近づいたら移動を停止する
+        // 20 px 以内に近づいたら移動を停止する
         if (delta.LengthSquared() < 400)
         {
             LinearVelocity = Vector2.Zero;
@@ -80,6 +80,11 @@ public partial class Enemy : RigidBody2D
         LinearVelocity = force;
     }
 
+    /// <summary>
+    /// プレイヤーなどからダメージを受けるときの処理
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <param name="instigator"></param>
     public void TakeDamage(float amount, Node instigator)
     {
         if (amount.Equals(0f))

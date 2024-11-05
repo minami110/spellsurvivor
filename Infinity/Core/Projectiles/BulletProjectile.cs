@@ -41,7 +41,7 @@ public partial class BulletProjectile : BaseProjectile
         }
 
         // 敵との衝突時の処理
-        else if (body is Enemy enemy)
+        else if (body is EnemyBase enemy)
         {
             enemy.TakeDamage(Damage, Weapon);
 

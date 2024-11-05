@@ -26,7 +26,7 @@ public partial class TentacleBody : AreaProjectile
         // ToDo: 一番近い敵を選択する 
         var target = bodies[0];
 
-        if (target is Enemy enemy)
+        if (target is EnemyBase enemy)
         {
             // タレットが発射する弾を生成
             var prj = _projectile.Instantiate<BaseProjectile>();

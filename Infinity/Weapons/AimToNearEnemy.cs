@@ -39,17 +39,17 @@ public partial class AimToNearEnemy : Area2D
     /// <summary>
     /// 範囲内の最も近い敵, 存在しない場合は null
     /// </summary>
-    public Enemy? NearestEnemy { get; private set; }
+    public EnemyBase? NearestEnemy { get; private set; }
 
     /// <summary>
     /// 範囲内の最も遠い敵, 存在しない場合は null
     /// </summary>
-    public Enemy? FarthestEnemy { get; private set; }
+    public EnemyBase? FarthestEnemy { get; private set; }
 
     /// <summary>
     /// 範囲内に存在する敵のリスト
     /// </summary>
-    public readonly List<Enemy> Enemies = new();
+    public readonly List<EnemyBase> Enemies = new();
 
     public override void _EnterTree()
     {
@@ -137,7 +137,7 @@ public partial class AimToNearEnemy : Area2D
 
         foreach (var o in bodies)
         {
-            if (o is not Enemy e)
+            if (o is not EnemyBase e)
             {
                 continue;
             }

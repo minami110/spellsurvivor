@@ -56,7 +56,7 @@ public partial class AreaProjectile : BaseProjectile
         // 範囲内すべての敵にダメージを与える
         foreach (var body in bodies)
         {
-            if (body is Enemy enemy)
+            if (body is EnemyBase enemy)
             {
                 enemy.TakeDamage(Damage, Weapon);
 

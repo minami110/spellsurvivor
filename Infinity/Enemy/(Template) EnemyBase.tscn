@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://dfjwy1udqlp80"]
 
-[ext_resource type="Script" path="res://Infinity/Enemy/Enemy.cs" id="1_cjt84"]
+[ext_resource type="Script" path="res://Infinity/Core/EnemyBase.cs" id="1_cjt84"]
 [ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_2u1e8"]
 [ext_resource type="Texture2D" uid="uid://cvsiafcid851k" path="res://Infinity/Enemy/obake_tori.png" id="4_b3fk7"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="4_vrebk"]

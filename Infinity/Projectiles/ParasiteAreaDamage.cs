@@ -15,7 +15,7 @@ public partial class ParasiteAreaDamage : AreaProjectile
 
     private State _state = State.SearchEnemy;
 
-    private Enemy? _targetEnemy = null;
+    private EnemyBase? _targetEnemy = null;
 
     public override void _PhysicsProcess(double delta)
     {
@@ -23,11 +23,11 @@ public partial class ParasiteAreaDamage : AreaProjectile
         {
             // 最も近い敵を検索する
             var distance = float.MaxValue;
-            Enemy? nearest = null;
+            EnemyBase? nearest = null;
             var bodies = GetNode<Area2D>("EnemySearchField").GetOverlappingBodies();
             foreach (var body in bodies)
             {
-                if (body is not Enemy enemy)
+                if (body is not EnemyBase enemy)
                 {
                     continue;
                 }
