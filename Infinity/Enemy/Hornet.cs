@@ -22,10 +22,10 @@ public partial class Hornet : EnemyBase
     private int _minAttackDistance = 180;
 
     [Export(PropertyHint.Range, "0,10000,1")]
-    private int _maxAttackDistance = 350;
+    private int _maxAttackDistance = 400;
 
     [Export(PropertyHint.Range, "1,9999,1")]
-    public uint _baseCoolDownFrame = 45u;
+    public uint _baseCoolDownFrame = 40u;
 
     [Export]
     private PackedScene _projectile = null!;
@@ -69,12 +69,12 @@ public partial class Hornet : EnemyBase
         // プレイヤーとの距離を計算する
         var delta = _playerNode!.GlobalPosition - GlobalPosition;
         var lengthSqr = delta.LengthSquared();
-        var softLength = 50; // 移動ばっかにならないようにするためのソフトな距離
+        var softLength = 25; // 移動ばっかにならないようにするためのソフトな距離
 
         // 追跡モードのとき
         if (_moveState == MovementState.FollowPlayer)
         {
-            // 最大距離 -20px 以内に来たら攻撃モードに移行する
+            // 最大距離 - ソフト距離 以内に来たら攻撃モードに移行する
             if (lengthSqr <= Math.Pow(_maxAttackDistance - softLength, 2))
             {
                 _moveState = MovementState.AttackPlayer;
@@ -84,7 +84,7 @@ public partial class Hornet : EnemyBase
         // 逃走モードの時
         else if (_moveState == MovementState.AwayPlayer)
         {
-            // 最大距離 -20px まで離れる
+            // 最大距離 - ソフト距離 まで離れる
             if (lengthSqr >= Math.Pow(_maxAttackDistance - softLength, 2))
             {
                 _moveState = MovementState.FollowPlayer;
