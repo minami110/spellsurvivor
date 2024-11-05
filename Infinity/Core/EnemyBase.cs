@@ -18,11 +18,8 @@ public partial class EnemyBase : RigidBody2D, IEntity
     private protected float _power = 10f;
 
     /// <summary>
-    ///     プレイヤーと重なっている時攻撃を発生させるクールダウン
+    /// 死亡時に発生させるパーティクル
     /// </summary>
-    [Export(PropertyHint.Range, "1,9999,1")]
-    private uint _coolDownFrame = 20;
-
     [Export]
     private PackedScene _onDeadParticle = null!;
 
@@ -30,54 +27,42 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
     private protected Node2D? _playerNode;
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+    public override void _Notification(int what)
     {
-        // Gets the player's position
-        if (GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer) is Node2D player)
+        switch ((long)what)
         {
-            _playerNode = player;
+            case NotificationEnterTree:
+            {
+                AddToGroup(Constant.GroupNameEnemy);
+                break;
+            }
+            case NotificationReady:
+            {
+                // Player の Node をキャッシュする
+                if (GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer) is Node2D player)
+                {
+                    _playerNode = player;
+                }
+                else
+                {
+                    GD.PrintErr($"[{nameof(EnemyBase)}] Player node is not found");
+                    SetProcess(false);
+                    SetPhysicsProcess(false);
+                    return;
+                }
+
+                // Init state
+                _state.AddEffect(new AddMaxHealthEffect { Value = _defaultHealth });
+                _state.AddEffect(new AddHealthEffect { Value = _defaultHealth });
+                _state.AddEffect(new AddMoveSpeedEffect { Value = _defaultMoveSpeed });
+                _state.SolveEffect();
+
+                // Refresh HUD
+                UpdateHealthBar();
+
+                break;
+            }
         }
-        else
-        {
-            GD.PrintErr($"[{nameof(EnemyBase)}] Player node is not found");
-            SetProcess(false);
-            SetPhysicsProcess(false);
-            return;
-        }
-
-        // Init state
-        _state.AddEffect(new AddMaxHealthEffect { Value = _defaultHealth });
-        _state.AddEffect(new AddHealthEffect { Value = _defaultHealth });
-        _state.AddEffect(new AddMoveSpeedEffect { Value = _defaultMoveSpeed });
-        _state.SolveEffect();
-
-        // Refresh HUD
-        UpdateHealthBar();
-
-        // Subscribe and start FrameTimer
-        var timer = new FrameTimer();
-        AddChild(timer);
-        var d1 = timer.TimeOut.Subscribe(_ => Attack()).AddTo(this);
-        timer.WaitFrame = _coolDownFrame;
-        timer.Start();
-
-        Disposable.Combine(_state, d1).AddTo(this);
-    }
-
-    public override void _PhysicsProcess(double _)
-    {
-        var delta = _playerNode!.GlobalPosition - GlobalPosition;
-        // 20 px 以内に近づいたら移動を停止する
-        if (delta.LengthSquared() < 400)
-        {
-            LinearVelocity = Vector2.Zero;
-            return;
-        }
-
-        var direction = delta.Normalized();
-        var force = direction * _state.MoveSpeed.CurrentValue;
-        LinearVelocity = force;
     }
 
     /// <summary>
