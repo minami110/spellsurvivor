@@ -1,4 +1,5 @@
 using Godot;
+using R3;
 
 namespace fms;
 
@@ -33,7 +34,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
     private protected readonly EnemyState _state = new();
 
-    private protected Node2D? _playerNode;
+    private protected Node2D _playerNode = null!;
 
     public override void _Notification(int what)
     {
@@ -46,6 +47,9 @@ public partial class EnemyBase : RigidBody2D, IEntity
             }
             case NotificationReady:
             {
+                // Disposable 関係
+                _state.AddTo(this);
+
                 // Player の Node をキャッシュする
                 if (GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer) is Node2D player)
                 {

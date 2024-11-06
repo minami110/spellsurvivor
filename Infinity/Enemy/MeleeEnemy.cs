@@ -22,8 +22,6 @@ public partial class MeleeEnemy : EnemyBase
         var d1 = timer.TimeOut.Subscribe(_ => Attack()).AddTo(this);
         timer.WaitFrame = _coolDownFrame;
         timer.Start();
-
-        Disposable.Combine(_state, d1).AddTo(this);
     }
 
     public override void _PhysicsProcess(double _)
