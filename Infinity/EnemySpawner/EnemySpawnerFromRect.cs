@@ -74,9 +74,9 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
         var marker = _emepySpawnMarkerPackScene.Instantiate<EnemySpawnMarker>();
         {
             marker.GlobalPosition = samplePosition;
+            marker.LifeTime = 90;
             marker.EnemyScene = packedScene;
             marker.EnemyLevel = level;
-            marker.LifeTime = 90;
             marker.EnemeySpawnParent = this;
         }
         AddChild(marker);
