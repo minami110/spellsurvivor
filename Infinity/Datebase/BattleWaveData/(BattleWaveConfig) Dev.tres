@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfigRaw.cs" id="2_w0xua"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfig.cs" id="3_a71e0"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfigRaw.cs" id="4_7oht8"]
-[ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) ObakeTall.tscn" id="5_top6o"]
+[ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) Obake.tscn" id="5_top6o"]
 [ext_resource type="PackedScene" uid="uid://ctsnxp14rpk1l" path="res://Infinity/Enemy/(Enemy) Hornet.tscn" id="6_7xseb"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfig.cs" id="7_xvddx"]
 
