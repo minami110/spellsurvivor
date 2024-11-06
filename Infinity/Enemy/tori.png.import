@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cvsiafcid851k"
-path="res://.godot/imported/obake_tori.png-d12db01c7e8adc89d8c4f5bb96070d86.ctex"
+path="res://.godot/imported/tori.png-cdf895295700107b74c4dfef41e778ee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Enemy/obake_tori.png"
-dest_files=["res://.godot/imported/obake_tori.png-d12db01c7e8adc89d8c4f5bb96070d86.ctex"]
+source_file="res://Infinity/Enemy/tori.png"
+dest_files=["res://.godot/imported/tori.png-cdf895295700107b74c4dfef41e778ee.ctex"]
 
 [params]
 

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Infinity/Core/Main.cs" id="1_tk8vx"]
 [ext_resource type="Resource" uid="uid://cc2mm30mcw05i" path="res://Infinity/Datebase/Shop/(ShopConfig) Version1.tres" id="2_gfx80"]
-[ext_resource type="PackedScene" uid="uid://bk4lqg74pvkki" path="res://Infinity/Enemy/(Enemy) ObakeTori.tscn" id="3_ij2xu"]
+[ext_resource type="PackedScene" uid="uid://bk4lqg74pvkki" path="res://Infinity/Enemy/(Enemy) Tori.tscn" id="3_ij2xu"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfigRaw.cs" id="3_rspfj"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfig.cs" id="4_p7g23"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/InfinityGameSettings.cs" id="5_g1fii"]
