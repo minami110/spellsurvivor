@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="BattleWaveConfig" load_steps=24 format=3 uid="uid://be2x0iah5qoa3"]
+[gd_resource type="Resource" script_class="BattleWaveConfig" load_steps=27 format=3 uid="uid://be2x0iah5qoa3"]
 
 [ext_resource type="PackedScene" uid="uid://bk4lqg74pvkki" path="res://Infinity/Enemy/(Enemy) Tori.tscn" id="1_o064c"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfigRaw.cs" id="2_w0xua"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dmpddu2xgoy8a" path="res://Infinity/Enemy/(Enemy) SlimeLarge.tscn" id="7_eny5l"]
 [ext_resource type="PackedScene" uid="uid://ctawro6qd37ym" path="res://Infinity/Enemy/(Enemy) SlimeMiddle.tscn" id="7_gqufv"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfig.cs" id="7_xvddx"]
+[ext_resource type="PackedScene" uid="uid://dds6a2ry211qk" path="res://Infinity/Enemy/(Enemy) Charger.tscn" id="8_81kj1"]
 
 [sub_resource type="Resource" id="Resource_6njts"]
 script = ExtResource("2_w0xua")
@@ -46,9 +47,14 @@ script = ExtResource("2_w0xua")
 EnemyPackedScene = ExtResource("7_gqufv")
 SpawnIntervalFrame = 120
 
+[sub_resource type="Resource" id="Resource_qyukd"]
+script = ExtResource("2_w0xua")
+EnemyPackedScene = ExtResource("8_81kj1")
+SpawnIntervalFrame = 360
+
 [sub_resource type="Resource" id="Resource_ftsoj"]
 script = ExtResource("3_a71e0")
-EnemySpawnConfigRaws = [SubResource("Resource_id1hb"), SubResource("Resource_ygrwl"), SubResource("Resource_nvstq"), SubResource("Resource_1utmb")]
+EnemySpawnConfigRaws = [SubResource("Resource_id1hb"), SubResource("Resource_ygrwl"), SubResource("Resource_nvstq"), SubResource("Resource_1utmb"), SubResource("Resource_qyukd")]
 
 [sub_resource type="Resource" id="Resource_vs0s4"]
 script = ExtResource("4_7oht8")
@@ -72,9 +78,14 @@ script = ExtResource("2_w0xua")
 EnemyPackedScene = ExtResource("6_7xseb")
 SpawnIntervalFrame = 240
 
+[sub_resource type="Resource" id="Resource_8p3k8"]
+script = ExtResource("2_w0xua")
+EnemyPackedScene = ExtResource("6_7xseb")
+SpawnIntervalFrame = 240
+
 [sub_resource type="Resource" id="Resource_46j7w"]
 script = ExtResource("3_a71e0")
-EnemySpawnConfigRaws = [SubResource("Resource_kos8r"), SubResource("Resource_slmmi"), SubResource("Resource_6bbto")]
+EnemySpawnConfigRaws = [SubResource("Resource_kos8r"), SubResource("Resource_slmmi"), SubResource("Resource_6bbto"), SubResource("Resource_8p3k8")]
 
 [sub_resource type="Resource" id="Resource_ldtyk"]
 script = ExtResource("4_7oht8")
