@@ -3,7 +3,7 @@ using Godot;
 namespace fms;
 
 /// <summary>
-///     画面端のランダムな位置に Enemy をスポーsんする
+///     画面端のランダムな位置に Enemy をスポーンする
 /// </summary>
 public partial class EnemySpawnerBase : Node2D
 {

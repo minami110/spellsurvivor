@@ -1,7 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bk4lqg74pvkki"]
+[gd_scene load_steps=7 format=3 uid="uid://bk4lqg74pvkki"]
 
 [ext_resource type="PackedScene" uid="uid://dfjwy1udqlp80" path="res://Infinity/Enemy/(Template) MeleeEnemy.tscn" id="1_hmpv4"]
 [ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_ymjyc"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_byesr"]
+friction = 0.01
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8qmw2"]
 resource_local_to_scene = true
@@ -17,7 +20,13 @@ radius = 20.0
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f7tib"]
 polygon = PackedVector2Array(73.3333, -120, 106.667, -66.6667, 106.667, -20, 80, 60, 53.3333, 100, 6.66667, 93.3333, -26.6667, 66.6667, -53.3333, 46.6667, -40, -6.66667, -13.3333, -86.6667, 20, -120)
 
-[node name="ObakeTori" instance=ExtResource("1_hmpv4")]
+[node name="Tori" instance=ExtResource("1_hmpv4")]
+position = Vector2(0, 3)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_byesr")
+_defaultMoveSpeed = 100.0
+_randomSpeed = 15.0
+_defaultHealth = 10.0
 
 [node name="Sprite" parent="." index="0"]
 material = SubResource("ShaderMaterial_8qmw2")

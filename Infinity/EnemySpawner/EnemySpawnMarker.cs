@@ -11,9 +11,11 @@ public partial class EnemySpawnMarker : Node2D
 
     private uint _timer;
 
+    public uint LifeTime { get; set; }
+
     public PackedScene EnemyScene { get; set; } = null!;
 
-    public uint LifeTime { get; set; }
+    public uint EnemyLevel { get; set; } = 1u;
 
     public Node EnemeySpawnParent { get; set; } = null!;
 
@@ -39,7 +41,8 @@ public partial class EnemySpawnMarker : Node2D
 
         if (_timer >= LifeTime)
         {
-            var enemy = EnemyScene.Instantiate<Node2D>();
+            var enemy = EnemyScene.Instantiate<EnemyBase>();
+            enemy.Level = EnemyLevel;
             enemy.GlobalPosition = GlobalPosition;
             EnemeySpawnParent.AddChild(enemy);
 

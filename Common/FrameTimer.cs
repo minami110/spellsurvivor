@@ -41,6 +41,7 @@ public partial class FrameTimer : Node
     private readonly ReactiveProperty<uint> _frameLeft = new(0);
     private readonly Subject<Unit> _timeOut = new();
     private uint _waitFrame = 20u;
+    private bool _paused;
 
     /// <summary>
     /// タイマーがタイムアウトした時に発行されるイベント
@@ -52,10 +53,17 @@ public partial class FrameTimer : Node
     /// </summary>
     public ReadOnlyReactiveProperty<uint> FrameLeft => _frameLeft;
 
-    /// <summary>
-    /// 現在タイマーが停止しているかどうか
-    /// </summary>
-    public bool IsStopped => _frameLeft.Value == 0;
+    public bool Paused {
+        get => _paused;
+        set
+        {
+            if (_paused == value)
+                return;
+
+            _paused = value;
+            SetPhysicsProcess(!_paused);
+        }
+    }
 
     public override void _Notification(int what)
     {

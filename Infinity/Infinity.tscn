@@ -1,70 +1,18 @@
-[gd_scene load_steps=26 format=3 uid="uid://c8nr5w2kj67dx"]
+[gd_scene load_steps=11 format=3 uid="uid://c8nr5w2kj67dx"]
 
 [ext_resource type="Script" path="res://Infinity/Core/Main.cs" id="1_tk8vx"]
 [ext_resource type="Resource" uid="uid://cc2mm30mcw05i" path="res://Infinity/Datebase/Shop/(ShopConfig) Version1.tres" id="2_gfx80"]
-[ext_resource type="PackedScene" uid="uid://bk4lqg74pvkki" path="res://Infinity/Enemy/(Enemy) ObakeTori.tscn" id="3_ij2xu"]
-[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfigRaw.cs" id="3_rspfj"]
-[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfig.cs" id="4_p7g23"]
+[ext_resource type="Resource" uid="uid://be2x0iah5qoa3" path="res://Infinity/Datebase/BattleWaveData/(BattleWaveConfig) Dev.tres" id="3_n6vl4"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/InfinityGameSettings.cs" id="5_g1fii"]
-[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfigRaw.cs" id="7_pnyu1"]
-[ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfig.cs" id="8_joqf5"]
-[ext_resource type="PackedScene" uid="uid://ctsnxp14rpk1l" path="res://Infinity/Enemy/(Enemy) Hornet.tscn" id="8_vh3dy"]
 [ext_resource type="PackedScene" uid="uid://cyy8ynm6ig6cq" path="res://Infinity/Player/HiHi/HiHi.tscn" id="10_74vvk"]
-[ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) ObakeTall.tscn" id="10_t3ivl"]
 [ext_resource type="PackedScene" uid="uid://flhgl4ot2gv2" path="res://Infinity/EnemySpawner/EnemySpawnerRandomArea.tscn" id="11_mwu1c"]
 [ext_resource type="PackedScene" uid="uid://dndrw60tkxjwx" path="res://Infinity/HUDs/InfinityHud.tscn" id="12_e5x4t"]
-
-[sub_resource type="Resource" id="Resource_6njts"]
-script = ExtResource("7_pnyu1")
-EnemyPackedScene = ExtResource("3_ij2xu")
-SpawnIntervalFrame = 60
-
-[sub_resource type="Resource" id="Resource_e6gld"]
-script = ExtResource("8_joqf5")
-EnemySpawnConfigRaws = [SubResource("Resource_6njts")]
-
-[sub_resource type="Resource" id="Resource_72qcm"]
-script = ExtResource("3_rspfj")
-Mode = 0
-WaveTimeSeconds = 30.0
-Reward = 10
-EnemySpawnConfig = SubResource("Resource_e6gld")
-
-[sub_resource type="Resource" id="Resource_id1hb"]
-script = ExtResource("7_pnyu1")
-EnemyPackedScene = ExtResource("3_ij2xu")
-SpawnIntervalFrame = 60
-
-[sub_resource type="Resource" id="Resource_ygrwl"]
-script = ExtResource("7_pnyu1")
-EnemyPackedScene = ExtResource("10_t3ivl")
-SpawnIntervalFrame = 600
-
-[sub_resource type="Resource" id="Resource_nvstq"]
-script = ExtResource("7_pnyu1")
-EnemyPackedScene = ExtResource("8_vh3dy")
-SpawnIntervalFrame = 600
-
-[sub_resource type="Resource" id="Resource_ftsoj"]
-script = ExtResource("8_joqf5")
-EnemySpawnConfigRaws = [SubResource("Resource_id1hb"), SubResource("Resource_ygrwl"), SubResource("Resource_nvstq")]
-
-[sub_resource type="Resource" id="Resource_vs0s4"]
-script = ExtResource("3_rspfj")
-Mode = 0
-WaveTimeSeconds = 40.0
-Reward = 10
-EnemySpawnConfig = SubResource("Resource_ftsoj")
-
-[sub_resource type="Resource" id="Resource_t4uxh"]
-script = ExtResource("4_p7g23")
-Waves = [SubResource("Resource_72qcm"), SubResource("Resource_vs0s4")]
 
 [sub_resource type="Resource" id="Resource_pdcir"]
 script = ExtResource("5_g1fii")
 StartMoney = 10
 ShopConfig = ExtResource("2_gfx80")
-WaveConfig = SubResource("Resource_t4uxh")
+WaveConfig = ExtResource("3_n6vl4")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2x8fi"]
 size = Vector2(100, 1200)
