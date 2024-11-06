@@ -4,6 +4,9 @@ namespace fms;
 
 public partial class EnemyBase : RigidBody2D, IEntity
 {
+    [Export(PropertyHint.Range, "1,100,1")]
+    public uint Level {get; set;} = 1u;
+
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _defaultMoveSpeed = 50f;
 
@@ -57,10 +60,16 @@ public partial class EnemyBase : RigidBody2D, IEntity
                 }
 
                 // Init state
-                _state.AddEffect(new AddMaxHealthEffect { Value = _defaultHealth });
-                _state.AddEffect(new AddHealthEffect { Value = _defaultHealth });
+                // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
+                //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
+                var health = _defaultHealth + (Level - 1) * 5f;
+
+                _state.AddEffect(new AddMaxHealthEffect { Value = health });
+                _state.AddEffect(new AddHealthEffect { Value = health });
                 _state.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(_defaultMoveSpeed, _randomSpeed) });
                 _state.SolveEffect();
+
+                GD.Print($"[{nameof(EnemyBase)}] Level: {Level}, Health: {_state.Health.CurrentValue}, MoveSpeed: {_state.MoveSpeed.CurrentValue}");
 
                 // Refresh HUD
                 UpdateHealthBar();

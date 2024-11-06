@@ -16,6 +16,9 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
 
     private int _frameCounter;
 
+    // ToDo: 現在メインゲームの Wave のほうが色々仮実装なので, こっち側でスポーンする敵のレベルを管理するカウンターを独自に実装しています
+    private uint _enemyLevelCounter = 1u;
+
     public override void _Ready()
     {
         Main.WaveState.Phase.Subscribe(x =>
@@ -29,6 +32,7 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
             {
                 SetProcess(false);
                 KillAllEnemies();
+                _enemyLevelCounter += 1u;
             }
         }).AddTo(this);
     }
@@ -46,7 +50,7 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
         {
             if (_frameCounter % c.SpawnIntervalFrame == 0)
             {
-                SpawnEnemy(c.EnemyPackedScene);
+                SpawnEnemy(c.EnemyPackedScene, _enemyLevelCounter);
             }
         }
     }
@@ -59,7 +63,7 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
         }
     }
 
-    private void SpawnEnemy(PackedScene packedScene)
+    private void SpawnEnemy(PackedScene packedScene, uint level)
     {
         // pick random point from rect
         var samplePosition = new Vector2(
@@ -71,6 +75,7 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
         {
             marker.GlobalPosition = samplePosition;
             marker.EnemyScene = packedScene;
+            marker.EnemyLevel = level;
             marker.LifeTime = 90;
             marker.EnemeySpawnParent = this;
         }

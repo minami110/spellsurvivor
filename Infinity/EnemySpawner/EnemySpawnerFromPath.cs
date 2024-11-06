@@ -1,10 +1,11 @@
+using System;
 using Godot;
 using R3;
 
 namespace fms;
 
 /// <summary>
-///     画面端のランダムな位置に Enemy をスポーsんする
+///     画面端のランダムな位置に Enemy をスポーンする
 /// </summary>
 public partial class EnemySpawnerFromPath : EnemySpawnerBase
 {
@@ -16,6 +17,9 @@ public partial class EnemySpawnerFromPath : EnemySpawnerBase
     private PathFollow2D _spawnPath = null!;
 
     private int _frameCounter;
+
+    // ToDo: 現在メインゲームの Wave のほうが色々仮実装なので, こっち側でスポーンする敵のレベルを管理するカウンターを独自に実装しています
+    private uint _enemyLevelCounter = 1u;
 
     public override void _Ready()
     {
@@ -30,6 +34,7 @@ public partial class EnemySpawnerFromPath : EnemySpawnerBase
             {
                 SetProcess(false);
                 KillAllEnemies();
+                _enemyLevelCounter += 1u;
             }
         }).AddTo(this);
     }
@@ -47,7 +52,7 @@ public partial class EnemySpawnerFromPath : EnemySpawnerBase
         {
             if (_frameCounter % c.SpawnIntervalFrame == 0)
             {
-                SpawnEnemy(c.EnemyPackedScene);
+                SpawnEnemy(c.EnemyPackedScene, _enemyLevelCounter);
             }
         }
     }
@@ -57,7 +62,7 @@ public partial class EnemySpawnerFromPath : EnemySpawnerBase
         GetTree().CallGroup("Enemy", "KillByWaveEnd");
     }
 
-    private void SpawnEnemy(PackedScene packedScene)
+    private void SpawnEnemy(PackedScene packedScene, uint level)
     {
         // pick random point on path
         _spawnPath.ProgressRatio = GD.Randf();
@@ -65,6 +70,8 @@ public partial class EnemySpawnerFromPath : EnemySpawnerBase
 
         // Add scene
         var enemy = packedScene.Instantiate<EnemyBase>();
+        enemy.Level = level;
+
         _enemySpawnRoot.AddChild(enemy);
         enemy.GlobalPosition = samplePosition;
     }
