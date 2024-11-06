@@ -14,7 +14,6 @@ shader_parameter/offset = Vector2(30, 30)
 shader_parameter/modulate = Color(0, 0, 1, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4ld33"]
-radius = 13.0384
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ben2b"]
 resource_local_to_scene = true
