@@ -4,10 +4,11 @@ namespace fms;
 
 public static class Constant
 {
-    public const int LAYER_PLAYER = 1 << 0;
-    public const int LAYER_DAMAGE = 1 << 1;
-    public const int LAYER_MOB = 1 << 2;
-    public const int LAYER_WALL = 1 << 4;
+    public const uint LAYER_NONE = 0u;
+    public const uint LAYER_PLAYER = 1u << 0;
+    public const uint LAYER_DAMAGE = 1u << 1;
+    public const uint LAYER_MOB = 1u << 2;
+    public const uint LAYER_WALL = 1u << 4;
 
     public const uint MINION_MIN_LEVEL = 1u;
     public const uint MINION_MAX_LEVEL = 5u;

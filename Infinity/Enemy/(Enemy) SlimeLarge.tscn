@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://dmpddu2xgoy8a"]
+
+[ext_resource type="PackedScene" uid="uid://32462tqdb2ax" path="res://Infinity/Enemy/(Template) SplitEnemy.tscn" id="1_qcxnr"]
+[ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_uxb4v"]
+[ext_resource type="PackedScene" uid="uid://ctawro6qd37ym" path="res://Infinity/Enemy/(Enemy) SlimeMiddle.tscn" id="3_x2tly"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wasxr"]
+resource_local_to_scene = true
+shader = ExtResource("2_uxb4v")
+shader_parameter/hit = 0.0
+shader_parameter/offset = Vector2(30, 30)
+shader_parameter/modulate = Color(0, 0, 1, 1)
+
+[node name="SlimeLarge" instance=ExtResource("1_qcxnr")]
+_splitScene = ExtResource("3_x2tly")
+
+[node name="Sprite" parent="." index="0"]
+material = SubResource("ShaderMaterial_wasxr")
