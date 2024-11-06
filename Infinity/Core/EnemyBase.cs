@@ -121,7 +121,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
         }
     }
     
-    private void KillByDamage()
+    private protected virtual void KillByDamage()
     {
         // Emit Dead Particle
         var onDeadParticle = _onDeadParticle.Instantiate<GpuParticles2D>();
