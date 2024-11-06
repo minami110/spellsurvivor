@@ -1,5 +1,4 @@
 using Godot;
-using R3;
 
 namespace fms;
 
@@ -7,6 +6,12 @@ public partial class EnemyBase : RigidBody2D, IEntity
 {
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _defaultMoveSpeed = 50f;
+
+    /// <summary>
+    /// 設定した速度 ± ランダム値 の振れ幅の値. 計算には正規分布を使用する
+    /// </summary>
+    [Export(PropertyHint.Range, "0,1000,1")]
+    private float _randomSpeed = 0f;
 
     [Export(PropertyHint.Range, "0,10000,1")]
     private float _defaultHealth = 100f;
@@ -54,7 +59,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
                 // Init state
                 _state.AddEffect(new AddMaxHealthEffect { Value = _defaultHealth });
                 _state.AddEffect(new AddHealthEffect { Value = _defaultHealth });
-                _state.AddEffect(new AddMoveSpeedEffect { Value = _defaultMoveSpeed });
+                _state.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(_defaultMoveSpeed, _randomSpeed) });
                 _state.SolveEffect();
 
                 // Refresh HUD
@@ -137,7 +142,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
     private void UpdateHealthBar()
     {
-        var healthBar = GetNode<Range>("HealthBar");
+        var healthBar = GetNode<Godot.Range>("HealthBar");
         healthBar.MaxValue = _state.MaxHealth.CurrentValue;
         healthBar.SetValueNoSignal(_state.Health.CurrentValue);
     }
