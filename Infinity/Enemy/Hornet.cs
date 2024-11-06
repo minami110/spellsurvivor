@@ -132,7 +132,7 @@ public partial class Hornet : EnemyBase
         {
             // ToDo: 仮実装
             // プレイヤー / 敵(味方) / 壁 に当たるようにする
-            prj.CollisionMask = Constant.LAYER_PLAYER | Constant.LAYER_MOB | Constant.LAYER_WALL;
+            prj.CollisionMask = Constant.LAYER_PLAYER | Constant.LAYER_WALL;
             prj.Damage = _power;
             prj.Speed = 180;
             prj.LifeFrame = 300;
