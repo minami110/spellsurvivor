@@ -32,8 +32,8 @@ public partial class AutoAim : Area2D
     public override void _EnterTree()
     {
         // Collision Layer の設定
-        CollisionLayer = 0;
-        CollisionMask = 1u << 2; // Node: Mob
+        CollisionLayer = Constant.LAYER_NONE;
+        CollisionMask = Constant.LAYER_MOB;
 
         // CircleShape2D を作る
         var shape = new CircleShape2D();
