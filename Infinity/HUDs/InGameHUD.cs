@@ -25,6 +25,9 @@ public sealed partial class InGameHUD : CanvasLayer
     [Export]
     private PackedScene _equipmentPackedScene = null!;
 
+    // ToDo: 現在 Main 側の Wave 実装が適当なためこっちで管理する
+    private uint _currentWave = 0u;
+
     public override void _Ready()
     {
         var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
@@ -35,12 +38,13 @@ public sealed partial class InGameHUD : CanvasLayer
 
         // Subscribe wave info
         var ws = Main.WaveState;
-        var d3 = ws.Wave.Subscribe(x => _currentWaveLabel.Text = $"Wave {x}");
         var d4 = ws.BattlePhaseTimeLeft.Subscribe(x => _waveTimerLabel.Text = $"{x:000}");
         var d5 = ws.Phase.Subscribe(p =>
         {
             if (p == WavePhase.Battle)
             {
+                _currentWave++;
+                _currentWaveLabel.Text = $"Wave {_currentWave}";
                 OnBattleWaveStarted();
             }
             else
@@ -50,7 +54,7 @@ public sealed partial class InGameHUD : CanvasLayer
         });
 
         // Add disposables when this node is exited tree
-        Disposable.Combine(d1, d2, d3, d4, d5).AddTo(this);
+        Disposable.Combine(d1, d2, d4, d5).AddTo(this);
     }
 
     private void OnBattleWaveEnded()
