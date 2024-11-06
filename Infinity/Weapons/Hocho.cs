@@ -10,7 +10,7 @@ public partial class Hocho : WeaponBase
     [Export]
     private PackedScene _projectile = null!;
 
-    private protected override async void SpawnProjectile(uint level)
+    private protected override void SpawnProjectile(uint level)
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
         if (!aim.IsAiming)
@@ -18,7 +18,6 @@ public partial class Hocho : WeaponBase
             return;
         }
 
-        var enemy = aim.NearestEnemy;
 
         // ToDo: BaseCoolDown = 30f 決め打ちのアニメ を再生している
         var sprite = GetNode<Node2D>("%SpriteRoot");
@@ -32,10 +31,18 @@ public partial class Hocho : WeaponBase
             .SetEase(Tween.EaseType.Out);
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.08d);
         t.TweenCallback(Callable.From(B));
+    }
 
-        // Note: ダメージ発生の手触り感の秒数
-        await this.WaitForSecondsAsync(0.12d);
+    // アニメーションの最初のタメ が終わったタイミングで呼ばれるコールバック
+    private void A()
+    {
+        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
+        
+        // この時点で狙う方向が確定する
+        // 敵を殺したときに変な回転をしないように physics_process を止める 
+        aim.SetPhysicsProcess(false);
 
+        var enemy = aim.NearestEnemy;
         if (IsInstanceValid(enemy))
         {
             // アニメーションに合うようにエリア攻撃の弾を生成する
@@ -53,12 +60,7 @@ public partial class Hocho : WeaponBase
         }
     }
 
-    private void A()
-    {
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        aim.SetPhysicsProcess(false);
-    }
-
+    // アニメーションの終了時に呼ばれるコールバック
     private void B()
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
