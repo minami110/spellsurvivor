@@ -55,12 +55,10 @@ public partial class ParasiteAreaDamage : AreaProjectile
 
         }
 
-        // プレイヤー追従
         if (_state == State.FollowPlayer)
         {
-            // ToDo: Player/Weapon/FrameTimer/Projectile という前提での Player アクセスを行っている
-            var player = GetNode<Node2D>("../../..");
-            var pos = player.GlobalPosition;
+            // Weapon の位置に戻る
+            var pos = Weapon.GlobalPosition;
             // 向きを変更する
             Direction = (pos - GlobalPosition).Normalized();
 
