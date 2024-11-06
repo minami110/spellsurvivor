@@ -130,8 +130,8 @@ public partial class Hornet : EnemyBase
         // 弾生成
         var prj = _projectile.Instantiate<BulletProjectile>();
         {
-            // ToDo: 仮実装
-            // プレイヤー / 敵(味方) / 壁 に当たるようにする
+            // ToDo: 発射する弾の仕様 (仮実装)
+            // プレイヤー / 壁 に当たるようにする
             prj.CollisionMask = Constant.LAYER_PLAYER | Constant.LAYER_WALL;
             prj.Damage = _power;
             prj.Speed = 180;

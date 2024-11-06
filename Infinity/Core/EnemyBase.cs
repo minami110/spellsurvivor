@@ -59,7 +59,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
                     return;
                 }
 
-                // Init state
                 // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
                 //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
                 var health = _defaultHealth + (Level - 1) * 5f;
@@ -68,8 +67,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
                 _state.AddEffect(new AddHealthEffect { Value = health });
                 _state.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(_defaultMoveSpeed, _randomSpeed) });
                 _state.SolveEffect();
-
-                GD.Print($"[{nameof(EnemyBase)}] Level: {Level}, Health: {_state.Health.CurrentValue}, MoveSpeed: {_state.MoveSpeed.CurrentValue}");
 
                 // Refresh HUD
                 UpdateHealthBar();
