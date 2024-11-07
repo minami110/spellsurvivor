@@ -105,23 +105,28 @@ public partial class Hornet : EnemyBase
                 frameTimer.Stop();
             }
         }
+    }
+
+    public override void _IntegrateForces(PhysicsDirectBodyState2D state)
+    {
+        var delta = _playerNode!.GlobalPosition - GlobalPosition;
 
         // 追跡モードのときはプレイヤーに近づいていく
         if (_moveState == MovementState.FollowPlayer)
         {
             var direction = delta.Normalized();
-            var force = direction * _state.MoveSpeed.CurrentValue;
-            LinearVelocity = force;
+            var vel = direction * _state.MoveSpeed.CurrentValue;
+            state.LinearVelocity = vel;
         }
         else if (_moveState == MovementState.AwayPlayer)
         {
             var direction = -delta.Normalized();
-            var force = direction * _state.MoveSpeed.CurrentValue;
-            LinearVelocity = force;
+            var vel = direction * _state.MoveSpeed.CurrentValue;
+            state.LinearVelocity = vel;
         }
         else if (_moveState == MovementState.AttackPlayer)
         {
-            LinearVelocity = Vector2.Zero;
+            state.LinearVelocity = Vector2.Zero;
         }
     }
 

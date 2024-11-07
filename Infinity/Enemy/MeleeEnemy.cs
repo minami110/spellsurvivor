@@ -11,7 +11,7 @@ public partial class MeleeEnemy : EnemyBase
     /// <summary>
     ///     プレイヤーと重なっている時攻撃を発生させるクールダウン
     /// </summary>
-    [Export(PropertyHint.Range, "1,9999,1")]
+    [Export(PropertyHint.Range, "1,9999,1,suffix:frames")]
     private uint _coolDownFrame = 20;
 
     public override void _Ready()
@@ -24,21 +24,22 @@ public partial class MeleeEnemy : EnemyBase
         timer.Start();
     }
 
-    public override void _PhysicsProcess(double _)
+    public override void _IntegrateForces(PhysicsDirectBodyState2D state)
     {
         var delta = _playerNode!.GlobalPosition - GlobalPosition;
+
         // 20 px 以内に近づいたら移動を停止する
         if (delta.LengthSquared() < 400)
         {
-            LinearVelocity = Vector2.Zero;
+            state.LinearVelocity = Vector2.Zero;
             return;
         }
 
+        // プレイヤーに指定した速度で近づく Velocity を設定する
         var direction = delta.Normalized();
-        var force = direction * _state.MoveSpeed.CurrentValue;
-        LinearVelocity = force;
+        var vel = direction * _state.MoveSpeed.CurrentValue;
+        state.LinearVelocity = vel;
     }
-
 
     private protected virtual void Attack()
     {
