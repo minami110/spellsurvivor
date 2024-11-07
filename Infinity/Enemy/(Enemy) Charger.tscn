@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://dds6a2ry211qk"]
+[gd_scene load_steps=9 format=3 uid="uid://dds6a2ry211qk"]
 
 [ext_resource type="Script" path="res://Infinity/Enemy/Charger.cs" id="1_4glwd"]
 [ext_resource type="PackedScene" uid="uid://celvufqqj3boe" path="res://Infinity/VFX/BloodSplat.tscn" id="2_6xqen"]
 [ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="3_addbl"]
+[ext_resource type="Script" path="res://Infinity/Enemy/EnemyAnimator.cs" id="3_rgkxf"]
 [ext_resource type="Texture2D" uid="uid://c3qrmtus12c8g" path="res://Infinity/Enemy/elk.png" id="4_4pocc"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="5_01pjo"]
 
@@ -26,6 +27,9 @@ script = ExtResource("1_4glwd")
 _defaultMoveSpeed = 250.0
 _power = 30.0
 _onDeadParticle = ExtResource("2_6xqen")
+
+[node name="EnemyAnimator" type="Node" parent="."]
+script = ExtResource("3_rgkxf")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 unique_name_in_owner = true

@@ -48,7 +48,7 @@ public partial class Charger : EnemyBase
                 var v = _playerNode!.GlobalPosition - GlobalPosition;
 
                 // Note: Impulse は 1/mass がかかるので, Mass を事前にかけてスケーリングしておく (一様に px/s の Speed で調整したいため)
-                var impulse = v.Normalized() * _state.MoveSpeed.CurrentValue * Mass;
+                var impulse = v.Normalized() * State.MoveSpeed.CurrentValue * Mass;
                 ApplyCentralImpulse(impulse);
             }
         }

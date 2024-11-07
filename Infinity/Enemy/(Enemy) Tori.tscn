@@ -13,14 +13,15 @@ shader_parameter/hit = 0.0
 shader_parameter/offset = Vector2(30, 30)
 shader_parameter/modulate = Color(0, 0, 1, 1)
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f7tib"]
+polygon = PackedVector2Array(73.3333, -120, 106.667, -66.6667, 106.667, -20, 80, 60, 53.3333, 100, 6.66667, 93.3333, -26.6667, 66.6667, -53.3333, 46.6667, -40, -6.66667, -13.3333, -86.6667, 20, -120)
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_t1pxo"]
 resource_local_to_scene = true
 radius = 20.0
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f7tib"]
-polygon = PackedVector2Array(73.3333, -120, 106.667, -66.6667, 106.667, -20, 80, 60, 53.3333, 100, 6.66667, 93.3333, -26.6667, 66.6667, -53.3333, 46.6667, -40, -6.66667, -13.3333, -86.6667, 20, -120)
-
 [node name="Tori" instance=ExtResource("1_hmpv4")]
+z_index = -1
 position = Vector2(0, 3)
 mass = 0.1
 physics_material_override = SubResource("PhysicsMaterial_byesr")
@@ -28,12 +29,12 @@ _defaultMoveSpeed = 100.0
 _randomSpeed = 15.0
 _defaultHealth = 10.0
 
-[node name="Sprite" parent="." index="0"]
+[node name="Sprite" parent="." index="1"]
 material = SubResource("ShaderMaterial_8qmw2")
-
-[node name="CollisionForDamage" parent="DamageArea" index="0"]
-shape = SubResource("CircleShape2D_t1pxo")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="." index="4"]
 scale = Vector2(0.15, 0.15)
 occluder = SubResource("OccluderPolygon2D_f7tib")
+
+[node name="CollisionForDamage" parent="DamageArea" index="0"]
+shape = SubResource("CircleShape2D_t1pxo")
