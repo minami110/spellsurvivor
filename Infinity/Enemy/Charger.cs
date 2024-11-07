@@ -16,10 +16,10 @@ public partial class Charger : EnemyBase
     /// <summary>
     ///   突進後のクールダウン
     /// </summary>
-    [Export(PropertyHint.Range, "1,9999,1")]
+    [Export(PropertyHint.Range, "1,9999,1,suffix:frames")]
     private uint _chargeFrame = 60;
 
-    [Export(PropertyHint.Range, "1,9999,1")]
+    [Export(PropertyHint.Range, "1,9999,1,suffix:frames")]
     private uint _maxAttackFrame = 120;
 
 
@@ -46,8 +46,10 @@ public partial class Charger : EnemyBase
                 _chargerState = ChargerState.AttackToPlayer;
                 _frameTimer = 0;
                 var v = _playerNode!.GlobalPosition - GlobalPosition;
-                var force = v.Normalized() * _state.MoveSpeed.CurrentValue * 60;
-                ApplyCentralImpulse(force);
+
+                // Note: Impulse は 1/mass がかかるので, Mass を事前にかけてスケーリングしておく (一様に px/s の Speed で調整したいため)
+                var impulse = v.Normalized() * _state.MoveSpeed.CurrentValue * Mass;
+                ApplyCentralImpulse(impulse);
             }
         }
         else if (_chargerState == ChargerState.AttackToPlayer)

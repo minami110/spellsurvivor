@@ -14,7 +14,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _health = 100f;
 
-    [Export(PropertyHint.Range, "0,1000,1")]
+    [Export(PropertyHint.Range, "0,1000,1,suffix:px/s")]
     private float _moveSpeed = 100f;
 
     [Export]

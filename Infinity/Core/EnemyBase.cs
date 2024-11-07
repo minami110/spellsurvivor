@@ -8,13 +8,13 @@ public partial class EnemyBase : RigidBody2D, IEntity
     [Export(PropertyHint.Range, "1,100,1")]
     public uint Level {get; set;} = 1u;
 
-    [Export(PropertyHint.Range, "0,1000,1")]
+    [Export(PropertyHint.Range, "0,1000,1,suffix:px/s")]
     private float _defaultMoveSpeed = 50f;
 
     /// <summary>
     /// 設定した速度 ± ランダム値 の振れ幅の値. 計算には正規分布を使用する
     /// </summary>
-    [Export(PropertyHint.Range, "0,1000,1")]
+    [Export(PropertyHint.Range, "0,1000,1,suffix:px/s")]
     private float _randomSpeed = 0f;
 
     [Export(PropertyHint.Range, "0,10000,1")]

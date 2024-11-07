@@ -14,6 +14,7 @@ shader_parameter/offset = Vector2(5, 5)
 shader_parameter/modulate = Color(0, 0, 1, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4ld33"]
+radius = 25.0
 
 [node name="Charger" type="RigidBody2D"]
 collision_layer = 4
