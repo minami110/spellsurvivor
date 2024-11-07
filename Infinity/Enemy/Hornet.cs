@@ -115,13 +115,13 @@ public partial class Hornet : EnemyBase
         if (_moveState == MovementState.FollowPlayer)
         {
             var direction = delta.Normalized();
-            var vel = direction * _state.MoveSpeed.CurrentValue;
+            var vel = direction * State.MoveSpeed.CurrentValue;
             state.LinearVelocity = vel;
         }
         else if (_moveState == MovementState.AwayPlayer)
         {
             var direction = -delta.Normalized();
-            var vel = direction * _state.MoveSpeed.CurrentValue;
+            var vel = direction * State.MoveSpeed.CurrentValue;
             state.LinearVelocity = vel;
         }
         else if (_moveState == MovementState.AttackPlayer)

@@ -32,7 +32,15 @@ public partial class EnemyBase : RigidBody2D, IEntity
     [Export]
     private PackedScene _onDeadParticle = null!;
 
-    private protected readonly EnemyState _state = new();
+    /// <summary>
+    /// 現在の State
+    /// </summary>
+    internal readonly EnemyState State = new();
+
+    /// <summary>
+    /// スポーンしてからの経過フレーム数
+    /// </summary>
+    internal uint Age { get; private set; }
 
     private protected Node2D _playerNode = null!;
 
@@ -48,18 +56,23 @@ public partial class EnemyBase : RigidBody2D, IEntity
             case NotificationReady:
             {
                 // Disposable 関係
-                _state.AddTo(this);
+                State.AddTo(this);
 
                 // Player の Node をキャッシュする
                 if (GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer) is Node2D player)
                 {
                     _playerNode = player;
+
+                    // Note: Godot の仕様で Override してるメソッドがないと動かないので
+                    //       Age の管理のためだけに手動で有効化
+                    // SetProcess(true);
+                    SetPhysicsProcess(true);
                 }
                 else
                 {
-                    GD.PrintErr($"[{nameof(EnemyBase)}] Player node is not found");
                     SetProcess(false);
                     SetPhysicsProcess(false);
+                    GD.PrintErr($"[{nameof(EnemyBase)}] Player node is not found");
                     return;
                 }
 
@@ -67,14 +80,19 @@ public partial class EnemyBase : RigidBody2D, IEntity
                 //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
                 var health = _defaultHealth + (Level - 1) * 5f;
 
-                _state.AddEffect(new AddMaxHealthEffect { Value = health });
-                _state.AddEffect(new AddHealthEffect { Value = health });
-                _state.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(_defaultMoveSpeed, _randomSpeed) });
-                _state.SolveEffect();
+                State.AddEffect(new AddMaxHealthEffect { Value = health });
+                State.AddEffect(new AddHealthEffect { Value = health });
+                State.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(_defaultMoveSpeed, _randomSpeed) });
+                State.SolveEffect();
 
                 // Refresh HUD
                 UpdateHealthBar();
 
+                break;
+            }
+            case NotificationPhysicsProcess:
+            {
+                Age++;
                 break;
             }
         }
@@ -90,10 +108,10 @@ public partial class EnemyBase : RigidBody2D, IEntity
             return;
         }
 
-        _state.AddEffect(new PhysicalDamageEffect { Value = amount });
-        _state.SolveEffect();
+        State.AddEffect(new PhysicalDamageEffect { Value = amount });
+        State.SolveEffect();
 
-        if (_state.Health.CurrentValue <= 0)
+        if (State.Health.CurrentValue <= 0)
         {
             // Dead
             var report = new DamageReport
@@ -153,8 +171,8 @@ public partial class EnemyBase : RigidBody2D, IEntity
     private void UpdateHealthBar()
     {
         var healthBar = GetNode<Godot.Range>("HealthBar");
-        healthBar.MaxValue = _state.MaxHealth.CurrentValue;
-        healthBar.SetValueNoSignal(_state.Health.CurrentValue);
+        healthBar.MaxValue = State.MaxHealth.CurrentValue;
+        healthBar.SetValueNoSignal(State.Health.CurrentValue);
     }
 
     private void UpdateShaderParameter(float value)
