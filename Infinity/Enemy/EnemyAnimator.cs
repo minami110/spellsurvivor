@@ -14,10 +14,10 @@ public partial class EnemyAnimator : Node
     private float _puniSpeed = 1.0f;
 
     /// <summary>
-    /// ぷにぷにする深さの Scale, もとの Sprite の y 方向の Scale に加算される
+    /// ぷにぷにする深さの Scaling, 元 Sprite の相対な大きさになる
     /// </summary>
     [Export(PropertyHint.Range, "0.0,2.0")]
-    private float _puniDepth = 0.01f;
+    private float _puniDepth = 0.06f;
 
     [Export]
     private bool _invertFlipDirection = false;
@@ -30,6 +30,13 @@ public partial class EnemyAnimator : Node
 
     public override void _Ready()
     {
+        if (_puniDepth <= 0 || _puniSpeed <= 0)
+        {
+            SetProcess(false);
+            SetPhysicsProcess(false);
+            return;
+        }
+
         var enemy = GetParentOrNull<EnemyBase>();
         if (enemy is null)
         {
@@ -78,7 +85,7 @@ public partial class EnemyAnimator : Node
         _puniLocation += speed * _puniSpeed * (float)delta * 0.1f;
 
         // Sprite を変形させる
-        var scaleY = MathF.Sin(_puniLocation) * _puniDepth;
-        _sprite.Scale = _defaultScale + new Vector2(0, scaleY);
+        var scaleY = 1f + MathF.Sin(_puniLocation) * _puniDepth;
+        _sprite.Scale = _defaultScale * new Vector2(1f, scaleY);
     }
 }

@@ -30,7 +30,6 @@ _onDeadParticle = ExtResource("2_6xqen")
 
 [node name="EnemyAnimator" type="Node" parent="."]
 script = ExtResource("3_rgkxf")
-_puniDepth = 0.02
 
 [node name="Sprite" type="Sprite2D" parent="."]
 unique_name_in_owner = true

@@ -21,6 +21,7 @@ resource_local_to_scene = true
 radius = 20.0
 
 [node name="Tori" instance=ExtResource("1_hmpv4")]
+z_index = -1
 position = Vector2(0, 3)
 mass = 0.1
 physics_material_override = SubResource("PhysicsMaterial_byesr")
