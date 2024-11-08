@@ -18,7 +18,6 @@ resource_local_to_scene = true
 radius = 12.0
 
 [node name="SlimeMiddle" instance=ExtResource("1_kv0ec")]
-z_index = -1
 mass = 0.25
 _splitCount = 0
 _coolDownFrame = 30
