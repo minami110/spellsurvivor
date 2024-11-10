@@ -4,5 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://815dg6ll0tvk" path="res://Infinity/EnemySpawner/EnemySpawnMarker.tscn" id="2_dxw2u"]
 
 [node name="EnemySpawner (RandomRect)" type="Node2D" groups=["EnemySpawner"]]
+y_sort_enabled = true
 script = ExtResource("1_t0mhe")
 _emepySpawnMarkerPackScene = ExtResource("2_dxw2u")
