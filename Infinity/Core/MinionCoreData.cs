@@ -30,13 +30,22 @@ public partial class MinionCoreData : Resource
     [Export(PropertyHint.Range, "0,100,1")]
     public uint Price { get; private set; } = 10;
 
+    /// <summary>
+    /// ユーザーに表示する名称 (ToDo: 要 Localize)
+    /// </summary>
     [ExportGroup("For User Information")]
     [Export]
     public string Name { get; private set; } = string.Empty;
 
+    /// <summary>
+    /// ユーザーに表示する武器の説明 (ToDo: 要 Localize)
+    /// </summary>
     [Export(PropertyHint.MultilineText)]
     public string Description { get; private set; } = string.Empty;
 
+    /// <summary>
+    /// Shop 画面などで表示するアイコン
+    /// </summary>
     [Export]
     public Texture2D Sprite { get; private set; } = null!;
 
