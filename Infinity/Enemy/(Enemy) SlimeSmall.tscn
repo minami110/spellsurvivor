@@ -21,9 +21,10 @@ radius = 12.0
 mass = 0.25
 _splitCount = 0
 _coolDownFrame = 30
-_defaultMoveSpeed = 140.0
-_defaultHealth = 10.0
-_power = 2.0
+BaseHealth = 10.0
+BaseSpeed = 140.0
+_randomSpeed = 10.0
+BaseDamage = 2.0
 
 [node name="Sprite" parent="." index="1"]
 material = SubResource("ShaderMaterial_wasxr")

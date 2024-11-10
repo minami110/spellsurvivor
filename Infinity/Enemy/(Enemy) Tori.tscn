@@ -24,9 +24,9 @@ radius = 20.0
 position = Vector2(0, 3)
 mass = 0.1
 physics_material_override = SubResource("PhysicsMaterial_byesr")
-_defaultMoveSpeed = 100.0
+BaseHealth = 10.0
+BaseSpeed = 100.0
 _randomSpeed = 15.0
-_defaultHealth = 10.0
 
 [node name="Sprite" parent="." index="1"]
 material = SubResource("ShaderMaterial_8qmw2")

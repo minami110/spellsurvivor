@@ -17,8 +17,10 @@ radius = 30.0
 
 [node name="SlimeLarge" instance=ExtResource("1_qcxnr")]
 _splitScene = ExtResource("3_x2tly")
+BaseSpeed = 45.0
+BaseDamage = 20.0
 
-[node name="Sprite" parent="." index="0"]
+[node name="Sprite" parent="." index="1"]
 material = SubResource("ShaderMaterial_wasxr")
 
 [node name="CollisionForDamage" parent="DamageArea" index="0"]

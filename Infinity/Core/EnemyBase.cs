@@ -5,11 +5,18 @@ namespace fms;
 
 public partial class EnemyBase : RigidBody2D, IEntity
 {
-    [Export(PropertyHint.Range, "1,100,1")]
-    public uint Level {get; set;} = 1u;
+    /// <summary>
+    /// 体力の基礎値
+    /// </summary>
+    [ExportGroup("Status")]
+    [Export(PropertyHint.Range, "0,10000,1")]
+    private protected float BaseHealth { get; private set; } = 100f;
 
+    /// <summary>
+    /// 移動速度の基礎値
+    /// </summary>
     [Export(PropertyHint.Range, "0,1000,1,suffix:px/s")]
-    private float _defaultMoveSpeed = 50f;
+    private protected float BaseSpeed { get; private set; } = 50f;
 
     /// <summary>
     /// 設定した速度 ± ランダム値 の振れ幅の値. 計算には正規分布を使用する
@@ -17,14 +24,18 @@ public partial class EnemyBase : RigidBody2D, IEntity
     [Export(PropertyHint.Range, "0,1000,1,suffix:px/s")]
     private float _randomSpeed = 0f;
 
-    [Export(PropertyHint.Range, "0,10000,1")]
-    private float _defaultHealth = 100f;
-
     /// <summary>
-    ///     プレイヤーに与えるダメージ
+    /// 攻撃力の基礎値
     /// </summary>
     [Export(PropertyHint.Range, "0,1000,1")]
-    private protected float _power = 10f;
+    private protected float BaseDamage { get; private set; } = 10f;
+
+    /// <summary>
+    /// 現在の Enemy のLevel, Main Game では Spawner から自動で代入される
+    /// </summary>
+    [ExportGroup("For Developer")]
+    [Export(PropertyHint.Range, "1,100,1")]
+    public uint Level { get; internal set; } = 1u;
 
     /// <summary>
     /// 死亡時に発生させるパーティクル
@@ -42,7 +53,16 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// </summary>
     internal uint Age { get; private set; }
 
+    /// <summary>
+    /// 現在ノックバック状態かどうか
+    /// </summary>
+    private protected bool Knockbacking => _knockbackTimer > 0u;
+
     private protected Node2D _playerNode = null!;
+
+    private uint _knockbackTimer = 0u;
+
+    private float _defaultMass;
 
     public override void _Notification(int what)
     {
@@ -76,14 +96,8 @@ public partial class EnemyBase : RigidBody2D, IEntity
                     return;
                 }
 
-                // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
-                //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
-                var health = _defaultHealth + (Level - 1) * 5f;
-
-                State.AddEffect(new AddMaxHealthEffect { Value = health });
-                State.AddEffect(new AddHealthEffect { Value = health });
-                State.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(_defaultMoveSpeed, _randomSpeed) });
-                State.SolveEffect();
+                // スポーン時のパラメーターを初期化する
+                InitializeParameters();
 
                 // Refresh HUD
                 UpdateHealthBar();
@@ -92,10 +106,66 @@ public partial class EnemyBase : RigidBody2D, IEntity
             }
             case NotificationPhysicsProcess:
             {
+                // 毎フレーム Age を加算させる
                 Age++;
+                // ToDo: すべての Enemy 共通で雑にスタンの処理を書いています
+                if (_knockbackTimer > 0u)
+                {
+                    _knockbackTimer--;
+                    if (_knockbackTimer == 0u)
+                    {
+                        OnEndKnockback();
+                    }
+                }
                 break;
             }
         }
+    }
+
+    /// <summary>
+    /// スポーン時の体力や移動速度などの初期化を行う
+    /// </summary>
+    private protected void InitializeParameters()
+    {
+        // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
+        //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
+        var health = BaseHealth + (Level - 1) * 5f;
+
+        State.AddEffect(new AddMaxHealthEffect { Value = health });
+        State.AddEffect(new AddHealthEffect { Value = health });
+        State.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(BaseSpeed, _randomSpeed) });
+        State.SolveEffect();
+    }
+
+    /// <summary>
+    /// ノックバックを適用する
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="power"></param>
+    public void ApplyKnockback(Vector2 direction, float power)
+    {
+        if (power <= 0f)
+        {
+            return;
+        }
+
+        // 他の動きを停止するため, KnockBackTimer を設定する
+        _knockbackTimer = 10u; // frames
+
+        // Note: 既存の Linear Velocity をリセットして新しい値を適用する
+        //       ApplyCentralImpulse と同じ処理の上書き版を書いている
+        var impulce = direction.Normalized() * power;
+        LinearVelocity = impulce * Mass; // Note: Mass の設定値に応じて実際の動き度が変わるので要注意
+
+        // Knockback 中は他の敵を押しのけて欲しいので, 一時的に Mass をめちゃくちゃ上げる
+        _defaultMass = Mass;
+        Mass = 1000f;
+    }
+
+    private protected void OnEndKnockback()
+    {
+        // Knockback 終了時に Mass を元に戻す
+        Mass = _defaultMass;
     }
 
     /// <summary>
@@ -110,7 +180,12 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
         State.AddEffect(new PhysicalDamageEffect { Value = amount });
         State.SolveEffect();
+        OnTakeDamage(amount, instigator, causer);
+    }
 
+    private void OnTakeDamage(float amount, IEntity instigator, Node causer)
+    {
+        // 体力が 0 以下になったら死亡
         if (State.Health.CurrentValue <= 0)
         {
             // Dead
@@ -126,6 +201,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
             StaticsManager.CommitDamage(report);
             KillByDamage();
         }
+        // まだ体力が残っているとき
         else
         {
             var report = new DamageReport
@@ -157,6 +233,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
     private void KillByWaveEnd()
     {
+        // QueueFree
         CallDeferred(GodotObject.MethodName.Free);
     }
 
