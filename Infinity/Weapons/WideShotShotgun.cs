@@ -30,6 +30,7 @@ public partial class WideShotShotgun : WeaponBase
             // ToDo: 仮の実装
             var prj = _projectile.Instantiate<BaseProjectile>();
             prj.Damage = BaseDamage;
+            prj.Knockback = Knockback;
             prj.LifeFrame = 120;
             prj.Speed = 500;
 

@@ -67,10 +67,25 @@ public partial class ForwardKnife : WeaponBase
 
     private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
     {
+        // Main の Projectile
         var prj1 = _projectile.Instantiate<BaseProjectile>();
+        {
+            prj1.Damage = BaseDamage;
+            prj1.Knockback = Knockback;
+            prj1.LifeFrame = 120u;
+            prj1.Speed = 500u;
+        }
+
         if (TrickShotCount >= 1)
         {
             var prj2 = _projectile.Instantiate<BaseProjectile>();
+            {
+                prj2.Damage = BaseDamage;
+                prj2.Knockback = Knockback;
+                prj2.LifeFrame = 120u;
+                prj2.Speed = 500u;
+            }
+
             prj2.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
             prj2.AddChild(new AutoAim
             {
@@ -82,6 +97,13 @@ public partial class ForwardKnife : WeaponBase
             if (TrickShotCount >= 2)
             {
                 var prj3 = _projectile.Instantiate<BaseProjectile>();
+                {
+                    prj3.Damage = BaseDamage;
+                    prj3.Knockback = Knockback;
+                    prj3.LifeFrame = 120u;
+                    prj3.Speed = 500u;
+                }
+
                 prj3.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
                 prj3.AddChild(new AutoAim
                 {
