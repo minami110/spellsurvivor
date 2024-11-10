@@ -47,7 +47,7 @@ public partial class WeaponBase : Node2D
     /// 武器が敵に与えるノックバック量
     /// </summary>
     [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
-    public float Knockback { get; private set; } = 0f;
+    public uint Knockback { get; private set; } = 20u;
 
     /// <summary>
     /// Tree に入った時に自動で Start するかどうか (Debug 用のパラメーター, 通常は Wave 開始時に勝手に操作される)

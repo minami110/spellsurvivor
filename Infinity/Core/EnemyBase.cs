@@ -62,8 +62,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
     private uint _knockbackTimer = 0u;
 
-    private float _defaultMass;
-
     public override void _Notification(int what)
     {
         switch ((long)what)
@@ -142,30 +140,30 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// </summary>
     /// <param name="direction"></param>
     /// <param name="power"></param>
-    public void ApplyKnockback(Vector2 direction, float power)
+    public virtual void ApplyKnockback(Vector2 direction, float power)
     {
-        if (power <= 0f)
+        // すでにノックバック中 あるいは power が 0 以下のときは処理をスキップする
+        if (power <= 0f || Knockbacking)
         {
             return;
         }
 
         // 他の動きを停止するため, KnockBackTimer を設定する
-        _knockbackTimer = 10u; // frames
+        _knockbackTimer = 15u; // frames
 
         // Note: 既存の Linear Velocity をリセットして新しい値を適用する
         //       ApplyCentralImpulse と同じ処理の上書き版を書いている
         var impulce = direction.Normalized() * power;
-        LinearVelocity = impulce * Mass; // Note: Mass の設定値に応じて実際の動き度が変わるので要注意
+        LinearVelocity = impulce / Mass; // Note: Mass の設定値に応じて実際の動き度が変わるので要注意
 
-        // Knockback 中は他の敵を押しのけて欲しいので, 一時的に Mass をめちゃくちゃ上げる
-        _defaultMass = Mass;
-        Mass = 1000f;
+        // Note: Knockback 中は他の敵を押しのけて欲しいので, 一時的に CollisionMask を無効化する
+        CollisionMask = Constant.LAYER_NONE;
     }
 
     private protected void OnEndKnockback()
     {
         // Knockback 終了時に Mass を元に戻す
-        Mass = _defaultMass;
+        CollisionMask = Constant.LAYER_MOB;
     }
 
     /// <summary>

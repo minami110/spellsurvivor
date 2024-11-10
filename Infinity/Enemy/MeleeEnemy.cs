@@ -26,7 +26,7 @@ public partial class MeleeEnemy : EnemyBase
 
     public override void _IntegrateForces(PhysicsDirectBodyState2D state)
     {
-        // ToDo: スタン中であれば何もしない
+        // ノックバック中であれば何もしない
         if (Knockbacking)
         {
             return;
