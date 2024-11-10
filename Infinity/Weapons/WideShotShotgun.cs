@@ -27,9 +27,9 @@ public partial class WideShotShotgun : WeaponBase
         // プレイヤーの正面から spredAngle の範囲で均等に numberOfProjectiles の数だけ弾を発射する
         for (var i = 0; i < _numberOfProjectiles; i++)
         {
+            // ToDo: 仮の実装
             var prj = _projectile.Instantiate<BaseProjectile>();
-
-            prj.Damage = 12;
+            prj.Damage = BaseDamage;
             prj.LifeFrame = 120;
             prj.Speed = 500;
 

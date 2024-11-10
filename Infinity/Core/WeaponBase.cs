@@ -14,9 +14,15 @@ namespace fms.Weapon;
 public partial class WeaponBase : Node2D
 {
     /// <summary>
-    /// 武器の Cooldown にかかるフレーム数 (ベース値)
+    /// 武器の基礎ダメージ量
     /// </summary>
-    [Export(PropertyHint.Range, "1,9999,1")]
+    [Export(PropertyHint.Range, "0,9999,1")]
+    public float BaseDamage { get; private set; } = 10f;
+
+    /// <summary>
+    /// 武器の Cooldown にかかる基礎フレーム数
+    /// </summary>
+    [Export(PropertyHint.Range, "1,9999,1,suffix:frames")]
     public uint BaseCoolDownFrame
     {
         get => _baseCoolDownFrame;
@@ -36,6 +42,12 @@ public partial class WeaponBase : Node2D
             }
         }
     }
+
+    /// <summary>
+    /// 武器が敵に与えるノックバック量
+    /// </summary>
+    [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
+    public float Knockback { get; private set; } = 0f;
 
     /// <summary>
     /// Tree に入った時に自動で Start するかどうか (Debug 用のパラメーター, 通常は Wave 開始時に勝手に操作される)
@@ -68,10 +80,11 @@ public partial class WeaponBase : Node2D
 
     // 現在武器に付与されている Effect
     private readonly HashSet<EffectBase> _effects = new();
+
     private uint _baseCoolDownFrame = 10u;
 
     // クールダウンの削減率 (範囲: 0 ~ 1 / デフォルト: 0)
-    private float _coolDownReduceRateRp;
+    private float _coolDownReduceRate;
 
     // Effect の変更があったかどうか
     private bool _isDirtyEffect;
@@ -86,7 +99,7 @@ public partial class WeaponBase : Node2D
     /// 武器の Id
     /// Note: Minion から勝手に代入されます
     /// </summary>
-    public string MinionId { get; set; } = string.Empty;
+    public string MinionId { get; internal set; } = string.Empty;
 
     /// <summary>
     /// Effect の解決後の Cooldown のフレーム数
@@ -95,7 +108,7 @@ public partial class WeaponBase : Node2D
     {
         get
         {
-            var coolDown = (uint)Mathf.Floor(BaseCoolDownFrame * (1f - _coolDownReduceRateRp));
+            var coolDown = (uint)Mathf.Floor(BaseCoolDownFrame * (1f - _coolDownReduceRate));
             return Math.Max(coolDown, 1u);
         }
     }
@@ -110,12 +123,11 @@ public partial class WeaponBase : Node2D
     /// </summary>
     public ReadOnlyReactiveProperty<uint> CoolDownLeft => FrameTimer.FrameLeft;
 
+    // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装
     public override void _Notification(int what)
     {
         if (what == NotificationEnterTree)
         {
-            Name = $"(Weapon) {MinionId}";
-
             // Weapon group に所属する
             AddToGroup(Constant.GroupNameWeapon);
 
@@ -280,7 +292,7 @@ public partial class WeaponBase : Node2D
         }
 
         // 値を更新
-        _coolDownReduceRateRp = Math.Max(reduceCoolDownRate, 0);
+        _coolDownReduceRate = Math.Max(reduceCoolDownRate, 0);
         _manaGenerationInterval = Math.Max(manaRegenerationInterval, 0);
         _manaGenerationValue = Math.Max(manaRegenerationValue, 0);
 
