@@ -16,7 +16,7 @@ public partial class MeleeEnemy : EnemyBase
 
     public override void _Ready()
     {
-        // Subscribe and start FrameTimer
+        // プレイヤーを攻撃するためのタイマーを設定する
         var timer = new FrameTimer();
         AddChild(timer);
         var d1 = timer.TimeOut.Subscribe(_ => Attack()).AddTo(this);
@@ -26,10 +26,15 @@ public partial class MeleeEnemy : EnemyBase
 
     public override void _IntegrateForces(PhysicsDirectBodyState2D state)
     {
-        var delta = _playerNode!.GlobalPosition - GlobalPosition;
+        // ToDo: スタン中であれば何もしない
+        if (Knockbacking)
+        {
+            return;
+        }
 
-        // 20 px 以内に近づいたら移動を停止する
-        if (delta.LengthSquared() < 400)
+        // プレイヤーとの距離が 20px 以内に近づいたら移動を停止する
+        var delta = _playerNode!.GlobalPosition - GlobalPosition;
+        if (delta.LengthSquared() <= 400)
         {
             state.LinearVelocity = Vector2.Zero;
             return;
@@ -54,7 +59,7 @@ public partial class MeleeEnemy : EnemyBase
         {
             if (node is IEntity entity)
             {
-                entity.ApplayDamage(_power, this, this);
+                entity.ApplayDamage(BaseDamage, this, this);
             }
         }
     }

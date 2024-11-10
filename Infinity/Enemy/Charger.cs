@@ -59,7 +59,7 @@ public partial class Charger : EnemyBase
             // プレイヤーがめちゃくちゃ近くに来たらダメージを与えて突進終了
             if (direction.LengthSquared() < 300)
             {
-                ((IEntity)_playerNode).ApplayDamage(_power, this, this);
+                ((IEntity)_playerNode).ApplayDamage(BaseDamage, this, this);
                 ToIdle();
                 return;
             }
