@@ -21,19 +21,18 @@ radius = 23.0
 [node name="SlimeMiddle" instance=ExtResource("1_mab6m")]
 mass = 0.5
 _splitScene = ExtResource("3_gfug3")
-_defaultMoveSpeed = 80.0
-_defaultHealth = 50.0
-_power = 10.0
+BaseHealth = 50.0
+BaseSpeed = 80.0
 
-[node name="Sprite" parent="." index="0"]
+[node name="Sprite" parent="." index="1"]
 material = SubResource("ShaderMaterial_wasxr")
 scale = Vector2(0.6, 0.6)
 
-[node name="CollisionForRigidbody" parent="." index="2"]
+[node name="CollisionForRigidbody" parent="." index="3"]
 shape = SubResource("CircleShape2D_rukc6")
-
-[node name="CollisionForDamage" parent="DamageArea" index="0"]
-shape = SubResource("CircleShape2D_24god")
 
 [node name="LightOccluder2D" parent="." index="4"]
 scale = Vector2(0.6, 0.6)
+
+[node name="CollisionForDamage" parent="DamageArea" index="0"]
+shape = SubResource("CircleShape2D_24god")

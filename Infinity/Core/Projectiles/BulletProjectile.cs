@@ -46,6 +46,15 @@ public partial class BulletProjectile : BaseProjectile
             // ToDo: Player / Enemy ともに Weapon が必ず直下に存在している という前提で実装してます
             entity.ApplayDamage(Damage, Weapon.GetParent<IEntity>(), Weapon);
 
+            if (body is EnemyBase enemy)
+            {
+                if (Knockback > 0)
+                {
+                    var dir = Direction.Normalized() * Speed;
+                    enemy.ApplyKnockback(dir, Knockback);
+                }
+            }
+
             /*
             if (_hitSound != null)
             {

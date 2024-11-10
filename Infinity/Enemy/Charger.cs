@@ -40,6 +40,12 @@ public partial class Charger : EnemyBase
 
         if (_chargerState == ChargerState.Idle)
         {
+            // ノックバック中であれば何もしない
+            if (Knockbacking)
+            {
+                return;
+            }   
+
             // 待機が完了したら突進を開始する
             if (_frameTimer > _chargeFrame)
             {
@@ -59,7 +65,7 @@ public partial class Charger : EnemyBase
             // プレイヤーがめちゃくちゃ近くに来たらダメージを与えて突進終了
             if (direction.LengthSquared() < 300)
             {
-                ((IEntity)_playerNode).ApplayDamage(_power, this, this);
+                ((IEntity)_playerNode).ApplayDamage(BaseDamage, this, this);
                 ToIdle();
                 return;
             }
@@ -79,6 +85,19 @@ public partial class Charger : EnemyBase
                 ToIdle();
                 return;
             }
+        }
+    }
+
+    public override void ApplyKnockback(Vector2 direction, float power)
+    {
+        // 突進中はノックバックを受け付けない
+        if (_chargerState == ChargerState.AttackToPlayer)
+        {
+            return;
+        }
+        else
+        {
+            base.ApplyKnockback(direction, power);
         }
     }
 

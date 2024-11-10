@@ -15,13 +15,13 @@ resource_local_to_scene = true
 radius = 20.0
 
 [node name="Enemy" instance=ExtResource("1_pfb5x")]
-_defaultMoveSpeed = 0.0
-_defaultHealth = 9999.0
+BaseHealth = 9999.0
+BaseSpeed = 0.0
 
-[node name="Sprite" parent="." index="0"]
+[node name="Sprite" parent="." index="1"]
 material = SubResource("ShaderMaterial_1u0w2")
 
-[node name="HealthBar" parent="." index="1"]
+[node name="HealthBar" parent="." index="2"]
 offset_top = 31.0
 offset_bottom = 39.0
 

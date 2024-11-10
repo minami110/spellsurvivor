@@ -7,6 +7,7 @@
 [node name="ForwardKnife" type="Node2D"]
 script = ExtResource("1_6cweh")
 _projectile = ExtResource("2_rgfqv")
+BaseDamage = 34.0
 BaseCoolDownFrame = 30
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

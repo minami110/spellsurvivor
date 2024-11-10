@@ -27,8 +27,6 @@ script = ExtResource("2_vk2va")
 _splitScene = null
 _splitCount = 4
 _coolDownFrame = 60
-_defaultMoveSpeed = 45.0
-_power = 20.0
 
 [node name="Sprite" parent="." index="1"]
 material = SubResource("ShaderMaterial_us232")

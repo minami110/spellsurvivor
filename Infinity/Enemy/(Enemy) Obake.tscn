@@ -19,8 +19,8 @@ resource_local_to_scene = true
 radius = 30.0
 
 [node name="Obake" instance=ExtResource("1_phgd3")]
-_defaultMoveSpeed = 25.0
-_defaultHealth = 300.0
+BaseHealth = 300.0
+BaseSpeed = 25.0
 
 [node name="EnemyAnimator" parent="." index="0"]
 _invertFlipDirection = true

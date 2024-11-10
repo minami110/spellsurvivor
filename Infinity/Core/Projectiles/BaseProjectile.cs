@@ -33,6 +33,12 @@ public partial class BaseProjectile : Area2D
     [Export]
     public uint Speed { get; set; }
 
+    /// <summary>
+    /// ノックバック速度
+    /// </summary>
+    [Export]
+    public uint Knockback { get; set; }
+
     private const uint _FORCED_LIFETIME = 7200u;
 
     /// <summary>
