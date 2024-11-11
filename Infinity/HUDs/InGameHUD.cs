@@ -26,7 +26,7 @@ public sealed partial class InGameHUD : CanvasLayer
     private PackedScene _equipmentPackedScene = null!;
 
     // ToDo: 現在 Main 側の Wave 実装が適当なためこっちで管理する
-    private uint _currentWave = 0u;
+    private uint _currentWave;
 
     public override void _Ready()
     {

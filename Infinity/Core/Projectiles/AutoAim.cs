@@ -16,9 +16,9 @@ public enum AutoAimMode : uint
 }
 
 /// <summary>
-///     Projectile の Direction を補正する Mod
-///     Note: Godot はスクリプトベースでの CircleCast とかが簡単にできないので, Area2D 生成して.. でやってます
-///     開始数フレームは安定しない などの問題が微妙にあります
+/// Projectile の Direction を補正する Mod
+/// Note: Godot はスクリプトベースでの CircleCast とかが簡単にできないので, Area2D 生成して.. でやってます
+/// 開始数フレームは安定しない などの問題が微妙にあります
 /// </summary>
 public partial class AutoAim : Area2D
 {

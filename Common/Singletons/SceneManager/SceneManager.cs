@@ -7,7 +7,7 @@ using Array = Godot.Collections.Array;
 namespace fms;
 
 /// <summary>
-///     This node is assigned as Singleton in the project settings.
+/// This node is assigned as Singleton in the project settings.
 /// </summary>
 public partial class SceneManager : Node
 {

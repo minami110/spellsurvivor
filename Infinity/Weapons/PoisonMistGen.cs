@@ -4,7 +4,7 @@ using Godot;
 namespace fms.Weapon;
 
 /// <summary>
-///     ポイズンミストを生成する
+/// ポイズンミストを生成する
 /// </summary>
 public partial class PoisonMistGen : WeaponBase
 {

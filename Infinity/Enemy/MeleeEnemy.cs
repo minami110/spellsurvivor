@@ -9,7 +9,7 @@ namespace fms.Enemy;
 public partial class MeleeEnemy : EnemyBase
 {
     /// <summary>
-    ///     プレイヤーと重なっている時攻撃を発生させるクールダウン
+    /// プレイヤーと重なっている時攻撃を発生させるクールダウン
     /// </summary>
     [Export(PropertyHint.Range, "1,9999,1,suffix:frames")]
     private uint _coolDownFrame = 20;

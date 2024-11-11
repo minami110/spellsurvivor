@@ -102,6 +102,11 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
         StaticsManager.CommitDamage(info);
     }
 
+    private void AddEffect(EffectBase effect)
+    {
+        GetNode<PlayerState>("%PlayerState").AddEffect(effect);
+    }
+
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
         AddEffect(new PhysicalDamageEffect { Value = amount });
@@ -115,11 +120,6 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
             IsDead = false
         };
         StaticsManager.CommitDamage(info);
-    }
-
-    private void AddEffect(EffectBase effect)
-    {
-        GetNode<PlayerState>("%PlayerState").AddEffect(effect);
     }
 
     void IPawn.PrimaryPressed()

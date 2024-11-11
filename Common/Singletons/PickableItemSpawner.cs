@@ -45,7 +45,8 @@ public partial class PickableItemSpawner : Node
     /// <param name="isCallDeffered"></param>
     /// <param name="settings"></param>
     /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
-    public void SpawnItem(string id, Vector2 position, bool isCallDeffered = true, Godot.Collections.Dictionary<string, float>? settings = null)
+    public void SpawnItem(string id, Vector2 position, bool isCallDeffered = true,
+        Godot.Collections.Dictionary<string, float>? settings = null)
     {
         if (!_itemDict.TryGetValue(id, out var packedScene))
         {

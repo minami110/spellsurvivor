@@ -8,7 +8,7 @@ namespace fms.Enemy;
 public partial class EnemyAnimator : Node
 {
     /// <summary>
-    /// ぷにぷにする速度の Scale 
+    /// ぷにぷにする速度の Scale
     /// </summary>
     [Export(PropertyHint.Range, "0.0,5.0")]
     private float _puniSpeed = 1.0f;
@@ -20,13 +20,13 @@ public partial class EnemyAnimator : Node
     private float _puniDepth = 0.06f;
 
     [Export]
-    private bool _invertFlipDirection = false;
+    private bool _invertFlipDirection;
 
     private Vector2 _defaultScale = Vector2.One;
     private EnemyBase _enemy = null!;
-    private Sprite2D _sprite = null!;
 
-    private float _puniLocation = 0.0f;
+    private float _puniLocation;
+    private Sprite2D _sprite = null!;
 
     public override void _Ready()
     {
@@ -62,7 +62,7 @@ public partial class EnemyAnimator : Node
 
         // 現在の移動方向を取得する
         var vel = _enemy.LinearVelocity;
-        var dir =  vel.Normalized();
+        var dir = vel.Normalized();
 
         // 右に移動している場合は右に, 左に移動している場合は左を向くように FlipH を制御する
         if (dir.X > 0)

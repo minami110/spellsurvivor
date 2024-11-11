@@ -118,7 +118,7 @@ public partial class ShopState : Node
     }
 
     /// <summary>
-    ///     Minion をショップから購入
+    /// Minion をショップから購入
     /// </summary>
     /// <param name="minion"></param>
     public void BuyItem(Minion minion)
@@ -218,7 +218,7 @@ public partial class ShopState : Node
     }
 
     /// <summary>
-    ///     Minion をショップに売却
+    /// Minion をショップに売却
     /// </summary>
     /// <param name="minion"></param>
     public void SellItem(Minion minion)

@@ -11,13 +11,6 @@ namespace fms.Enemy;
 /// </summary>
 public partial class Hornet : EnemyBase
 {
-    private enum MovementState
-    {
-        FollowPlayer,
-        AwayPlayer,
-        AttackPlayer,
-    }
-
     [Export(PropertyHint.Range, "0,10000,1")]
     private int _minAttackDistance = 180;
 
@@ -38,7 +31,7 @@ public partial class Hornet : EnemyBase
     public override void _EnterTree()
     {
         // Weapon が存在していなかったら作成する
-        WeaponBase weapon = GetNodeOrNull<WeaponBase>("Weapon");
+        var weapon = GetNodeOrNull<WeaponBase>("Weapon");
         if (weapon == null)
         {
             weapon = new WeaponBase();
@@ -53,11 +46,8 @@ public partial class Hornet : EnemyBase
         // Weapon 内部にある FrameTimer の初期化/購読を行う
         // Note: Weapon 側の実装で必ずこの名前で生成されています
         var frameTimer = _weapon.GetNode<FrameTimer>("FrameTimer");
-        frameTimer.TimeOut.Subscribe(this, (_, state) =>
-        {
-            state.Attack();
-        })
-        .AddTo(this);
+        frameTimer.TimeOut.Subscribe(this, (_, state) => { state.Attack(); })
+            .AddTo(this);
 
         frameTimer.WaitFrame = _baseCoolDownFrame;
     }
@@ -157,5 +147,12 @@ public partial class Hornet : EnemyBase
 
         // 武器から発射する
         _weapon.AddProjectile(prj, pos, direction);
+    }
+
+    private enum MovementState
+    {
+        FollowPlayer,
+        AwayPlayer,
+        AttackPlayer
     }
 }

@@ -4,7 +4,7 @@ using R3;
 namespace fms;
 
 /// <summary>
-///     画面端のランダムな位置に Enemy をスポーsんする
+/// 画面端のランダムな位置に Enemy をスポーsんする
 /// </summary>
 public partial class EnemySpawnerFromRect : EnemySpawnerBase
 {
@@ -14,10 +14,10 @@ public partial class EnemySpawnerFromRect : EnemySpawnerBase
     [Export]
     private PackedScene _emepySpawnMarkerPackScene = null!;
 
-    private int _frameCounter;
-
     // ToDo: 現在メインゲームの Wave のほうが色々仮実装なので, こっち側でスポーンする敵のレベルを管理するカウンターを独自に実装しています
     private uint _enemyLevelCounter = 1u;
+
+    private int _frameCounter;
 
     public override void _Ready()
     {

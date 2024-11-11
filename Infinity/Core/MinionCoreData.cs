@@ -4,7 +4,7 @@ using Godot;
 namespace fms;
 
 /// <summary>
-///     Minion のデータ Shop 販売
+/// Minion のデータ Shop 販売
 /// </summary>
 [GlobalClass]
 public partial class MinionCoreData : Resource
@@ -13,19 +13,19 @@ public partial class MinionCoreData : Resource
     public PackedScene WeaponPackedScene { get; private set; } = null!;
 
     /// <summary>
-    ///     Minion が所有する Faction のリスト (Flag)
+    /// Minion が所有する Faction のリスト (Flag)
     /// </summary>
     [Export(PropertyHint.Flags)]
     public FactionType Faction { get; private set; }
 
     /// <summary>
-    ///     アイテムのティア
+    /// アイテムのティア
     /// </summary>
     [Export(PropertyHint.Range, "1,5,1")]
     public int Tier { get; private set; } = 1;
 
     /// <summary>
-    ///     ショップで購入する際の値段
+    /// ショップで購入する際の値段
     /// </summary>
     [Export(PropertyHint.Range, "0,100,1")]
     public uint Price { get; private set; } = 10;

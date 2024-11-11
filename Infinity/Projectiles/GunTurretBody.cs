@@ -2,13 +2,13 @@
 using Godot;
 
 namespace fms.Weapon;
-/// <summary>
-///     GunTurretのクラス
-///     Weaponからこのクラスを生成し、このクラスから弾を生成する
-/// </summary>
 
+/// <summary>
+/// GunTurretのクラス
+/// Weaponからこのクラスを生成し、このクラスから弾を生成する
+/// </summary>
 public partial class GunTurretBody : AreaProjectile
-{ 
+{
     // タレットが発射する弾
     [Export]
     private PackedScene _projectileScene = null!;
@@ -20,7 +20,9 @@ public partial class GunTurretBody : AreaProjectile
     {
         var bodies = GetOverlappingBodies();
         if (bodies.Count == 0)
+        {
             return;
+        }
 
         // ToDo: 一番近い敵を選択する 
         var target = bodies[0];
@@ -41,7 +43,7 @@ public partial class GunTurretBody : AreaProjectile
                 Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
                 SearchRadius = 1000
             });
-            
+
             // BaseWeapon 系の処理を追加でかく
             prj.Position = GlobalPosition;
             AddSibling(prj);

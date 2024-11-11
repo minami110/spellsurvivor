@@ -4,7 +4,7 @@ using R3;
 namespace fms;
 
 /// <summary>
-///     ポーズ画面の Hud (Singleton)
+/// ポーズ画面の Hud (Singleton)
 /// </summary>
 public partial class PauseHud : CanvasLayer
 {

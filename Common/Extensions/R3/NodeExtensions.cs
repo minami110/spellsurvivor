@@ -7,7 +7,7 @@ namespace R3;
 public static class NodeExtensions
 {
     /// <summary>
-    ///     Dispose self on target node has bee tree exited.
+    /// Dispose self on target node has bee tree exited.
     /// </summary>
     /// <param name="disposable"></param>
     /// <param name="node"></param>

@@ -6,7 +6,7 @@ using R3;
 namespace fms.Projectile;
 
 /// <summary>
-///     Modifier, 死亡時に次の弾を連鎖する
+/// Modifier, 死亡時に次の弾を連鎖する
 /// </summary>
 public partial class DeathTrigger : Node
 {

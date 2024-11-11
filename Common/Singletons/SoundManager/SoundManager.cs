@@ -115,7 +115,7 @@ public partial class SoundManager : Node
     }
 
     /// <summary>
-    ///     Set Master Bus Volume
+    /// Set Master Bus Volume
     /// </summary>
     /// <param name="volume">Linear volume [0, 1]</param>
     public static void SetMasterBusVolume(float volume)

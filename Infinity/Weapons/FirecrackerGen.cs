@@ -6,7 +6,7 @@ using Godot;
 namespace fms.Weapon;
 
 /// <summary>
-///     爆竹を生成する
+/// 爆竹を生成する
 /// </summary>
 public partial class FirecrackerGen : WeaponBase
 {

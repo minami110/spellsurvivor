@@ -6,7 +6,7 @@ using R3;
 namespace fms;
 
 /// <summary>
-///     Player の体力やバフなどを管理するクラス
+/// Player の体力やバフなどを管理するクラス
 /// </summary>
 public partial class PlayerState : Node
 {
@@ -19,22 +19,22 @@ public partial class PlayerState : Node
     private bool _isDirty;
 
     /// <summary>
-    ///     現在の所持金
+    /// 現在の所持金
     /// </summary>
     public ReadOnlyReactiveProperty<uint> Money => _money;
 
     /// <summary>
-    ///     現在の移動速度
+    /// 現在の移動速度
     /// </summary>
     public ReadOnlyReactiveProperty<float> MoveSpeed => _moveSpeed;
 
     /// <summary>
-    ///     現在の体力
+    /// 現在の体力
     /// </summary>
     public ReadOnlyReactiveProperty<float> Health => _health;
 
     /// <summary>
-    ///     最大体力
+    /// 最大体力
     /// </summary>
     public ReadOnlyReactiveProperty<float> MaxHealth => _maxHealth;
 

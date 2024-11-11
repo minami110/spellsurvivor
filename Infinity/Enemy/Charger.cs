@@ -7,14 +7,8 @@ namespace fms.Enemy;
 /// </summary>
 public partial class Charger : EnemyBase
 {
-    private enum ChargerState
-    {
-        Idle,
-        AttackToPlayer,
-    }
-
     /// <summary>
-    ///   突進後のクールダウン
+    /// 突進後のクールダウン
     /// </summary>
     [Export(PropertyHint.Range, "1,9999,1,suffix:frames")]
     private uint _chargeFrame = 60;
@@ -24,7 +18,7 @@ public partial class Charger : EnemyBase
 
 
     private ChargerState _chargerState = ChargerState.Idle;
-    private uint _frameTimer = 0u;
+    private uint _frameTimer;
 
     public override void _Ready()
     {
@@ -44,7 +38,7 @@ public partial class Charger : EnemyBase
             if (Knockbacking)
             {
                 return;
-            }   
+            }
 
             // 待機が完了したら突進を開始する
             if (_frameTimer > _chargeFrame)
@@ -83,7 +77,6 @@ public partial class Charger : EnemyBase
             if (_frameTimer > _maxAttackFrame)
             {
                 ToIdle();
-                return;
             }
         }
     }
@@ -95,10 +88,8 @@ public partial class Charger : EnemyBase
         {
             return;
         }
-        else
-        {
-            base.ApplyKnockback(direction, power);
-        }
+
+        base.ApplyKnockback(direction, power);
     }
 
     private void ToIdle()
@@ -108,5 +99,9 @@ public partial class Charger : EnemyBase
         LinearVelocity = Vector2.Zero;
     }
 
-
+    private enum ChargerState
+    {
+        Idle,
+        AttackToPlayer
+    }
 }

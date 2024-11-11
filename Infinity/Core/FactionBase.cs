@@ -6,12 +6,12 @@ using Godot;
 namespace fms.Faction;
 
 /// <summary>
-///     Entity が所有する シナジー の基底クラス
+/// Entity が所有する シナジー の基底クラス
 /// </summary>
 public partial class FactionBase : Node
 {
     /// <summary>
-    ///     現在の Faction の Level
+    /// 現在の Faction の Level
     /// </summary>
     [Export]
     public uint Level
@@ -45,8 +45,8 @@ public partial class FactionBase : Node
     private uint _level;
 
     /// <summary>
-    ///     この Faction でなんらかの効果が有効になっているかどうか
-    ///     UI がこの値に応じて表示を切り替える
+    /// この Faction でなんらかの効果が有効になっているかどうか
+    /// UI がこの値に応じて表示を切り替える
     /// </summary>
     public virtual bool IsActiveAnyEffect => Level >= 2u;
 
@@ -74,7 +74,7 @@ public partial class FactionBase : Node
     }
 
     /// <summary>
-    ///     Player に対して Effect を追加
+    /// Player に対して Effect を追加
     /// </summary>
     /// <param name="effect"></param>
     private protected void AddEffactToPlayer(EffectBase effect)
@@ -97,8 +97,8 @@ public partial class FactionBase : Node
     }
 
     /// <summary>
-    ///     プレイヤーが装備を切り替えて最終的に Faction の Level が確定したときに呼ばれるコールバック
-    ///     継承先で Effect を適用させる
+    /// プレイヤーが装備を切り替えて最終的に Faction の Level が確定したときに呼ばれるコールバック
+    /// 継承先で Effect を適用させる
     /// </summary>
     /// <param name="level"></param>
     private protected virtual void OnLevelChanged(uint level)

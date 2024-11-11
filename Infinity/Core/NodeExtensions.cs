@@ -6,7 +6,7 @@ namespace fms;
 public static partial class NodeExtensions
 {
     /// <summary>
-    ///     Wrapper for SceneTree PhysicsFrame signal awaiter
+    /// Wrapper for SceneTree PhysicsFrame signal awaiter
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>

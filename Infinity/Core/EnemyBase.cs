@@ -22,7 +22,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// 設定した速度 ± ランダム値 の振れ幅の値. 計算には正規分布を使用する
     /// </summary>
     [Export(PropertyHint.Range, "0,1000,1,suffix:px/s")]
-    private float _randomSpeed = 0f;
+    private float _randomSpeed;
 
     /// <summary>
     /// 攻撃力の基礎値
@@ -48,6 +48,10 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// </summary>
     internal readonly EnemyState State = new();
 
+    private uint _knockbackTimer;
+
+    private protected Node2D _playerNode = null!;
+
     /// <summary>
     /// スポーンしてからの経過フレーム数
     /// </summary>
@@ -57,10 +61,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// 現在ノックバック状態かどうか
     /// </summary>
     private protected bool Knockbacking => _knockbackTimer > 0u;
-
-    private protected Node2D _playerNode = null!;
-
-    private uint _knockbackTimer = 0u;
 
     public override void _Notification(int what)
     {
@@ -115,24 +115,10 @@ public partial class EnemyBase : RigidBody2D, IEntity
                         OnEndKnockback();
                     }
                 }
+
                 break;
             }
         }
-    }
-
-    /// <summary>
-    /// スポーン時の体力や移動速度などの初期化を行う
-    /// </summary>
-    private protected void InitializeParameters()
-    {
-        // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
-        //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
-        var health = BaseHealth + (Level - 1) * 5f;
-
-        State.AddEffect(new AddMaxHealthEffect { Value = health });
-        State.AddEffect(new AddHealthEffect { Value = health });
-        State.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(BaseSpeed, _randomSpeed) });
-        State.SolveEffect();
     }
 
     /// <summary>
@@ -160,25 +146,43 @@ public partial class EnemyBase : RigidBody2D, IEntity
         CollisionMask = Constant.LAYER_NONE;
     }
 
+    /// <summary>
+    /// スポーン時の体力や移動速度などの初期化を行う
+    /// </summary>
+    private protected void InitializeParameters()
+    {
+        // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
+        //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
+        var health = BaseHealth + (Level - 1) * 5f;
+
+        State.AddEffect(new AddMaxHealthEffect { Value = health });
+        State.AddEffect(new AddHealthEffect { Value = health });
+        State.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(BaseSpeed, _randomSpeed) });
+        State.SolveEffect();
+    }
+
+    private protected virtual void KillByDamage()
+    {
+        // Emit Dead Particle
+        var onDeadParticle = _onDeadParticle.Instantiate<GpuParticles2D>();
+        onDeadParticle.GlobalPosition = GlobalPosition;
+        GetParent().CallDeferred(Node.MethodName.AddChild, onDeadParticle);
+        onDeadParticle.Emitting = true;
+
+        // QueueFree
+        CallDeferred(GodotObject.MethodName.Free);
+    }
+
     private protected void OnEndKnockback()
     {
         // Knockback 終了時に Mass を元に戻す
         CollisionMask = Constant.LAYER_MOB;
     }
 
-    /// <summary>
-    /// プレイヤーなどからダメージを受けるときの処理
-    /// </summary>
-    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
+    private void KillByWaveEnd()
     {
-        if (amount.Equals(0f))
-        {
-            return;
-        }
-
-        State.AddEffect(new PhysicalDamageEffect { Value = amount });
-        State.SolveEffect();
-        OnTakeDamage(amount, instigator, causer);
+        // QueueFree
+        CallDeferred(GodotObject.MethodName.Free);
     }
 
     private void OnTakeDamage(float amount, IEntity instigator, Node causer)
@@ -216,24 +220,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
             UpdateHealthBar();
         }
     }
-    
-    private protected virtual void KillByDamage()
-    {
-        // Emit Dead Particle
-        var onDeadParticle = _onDeadParticle.Instantiate<GpuParticles2D>();
-        onDeadParticle.GlobalPosition = GlobalPosition;
-        GetParent().CallDeferred(Node.MethodName.AddChild, onDeadParticle);
-        onDeadParticle.Emitting = true;
-
-        // QueueFree
-        CallDeferred(GodotObject.MethodName.Free);
-    }
-
-    private void KillByWaveEnd()
-    {
-        // QueueFree
-        CallDeferred(GodotObject.MethodName.Free);
-    }
 
     private void TakeDamageAnimationAsync()
     {
@@ -245,7 +231,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
     private void UpdateHealthBar()
     {
-        var healthBar = GetNode<Godot.Range>("HealthBar");
+        var healthBar = GetNode<Range>("HealthBar");
         healthBar.MaxValue = State.MaxHealth.CurrentValue;
         healthBar.SetValueNoSignal(State.Health.CurrentValue);
     }
@@ -258,5 +244,20 @@ public partial class EnemyBase : RigidBody2D, IEntity
         }
 
         sm.SetShaderParameter("hit", value);
+    }
+
+    /// <summary>
+    /// プレイヤーなどからダメージを受けるときの処理
+    /// </summary>
+    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
+    {
+        if (amount.Equals(0f))
+        {
+            return;
+        }
+
+        State.AddEffect(new PhysicalDamageEffect { Value = amount });
+        State.SolveEffect();
+        OnTakeDamage(amount, instigator, causer);
     }
 }
