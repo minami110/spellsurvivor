@@ -6,12 +6,6 @@ namespace fms;
 
 public partial class AimToNearEnemy : Area2D
 {
-    public enum AimTarget
-    {
-        Nearest,
-        Farthest
-    }
-
     /// <summary>
     /// 対象とするターゲットのタイプ
     /// </summary>
@@ -26,6 +20,17 @@ public partial class AimToNearEnemy : Area2D
 
     [Export(PropertyHint.Range, "0,1")]
     private float RotateSensitivity { get; set; } = 0.7f;
+
+    public enum AimTarget
+    {
+        Nearest,
+        Farthest
+    }
+
+    /// <summary>
+    /// 範囲内に存在する敵のリスト
+    /// </summary>
+    public readonly List<EnemyBase> Enemies = new();
 
     private float _restAngle;
 
@@ -45,11 +50,6 @@ public partial class AimToNearEnemy : Area2D
     /// 範囲内の最も遠い敵, 存在しない場合は null
     /// </summary>
     public EnemyBase? FarthestEnemy { get; private set; }
-
-    /// <summary>
-    /// 範囲内に存在する敵のリスト
-    /// </summary>
-    public readonly List<EnemyBase> Enemies = new();
 
     public override void _EnterTree()
     {
@@ -120,7 +120,6 @@ public partial class AimToNearEnemy : Area2D
                 Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
             }
         }
-
     }
 
     private void UpdateNearAndFarEnemy()
@@ -150,6 +149,7 @@ public partial class AimToNearEnemy : Area2D
                 minLen = distance;
                 NearestEnemy = e;
             }
+
             if (distance > maxLen)
             {
                 maxLen = distance;

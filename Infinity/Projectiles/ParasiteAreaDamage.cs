@@ -3,19 +3,11 @@ using Godot;
 
 namespace fms.Weapon;
 
-
 public partial class ParasiteAreaDamage : AreaProjectile
 {
-    private enum State
-    {
-        SearchEnemy,
-        FollowPlayer,
-        FollowEnemy,
-    }
-
     private State _state = State.SearchEnemy;
 
-    private EnemyBase? _targetEnemy = null;
+    private EnemyBase? _targetEnemy;
 
     public override void _PhysicsProcess(double delta)
     {
@@ -45,14 +37,12 @@ public partial class ParasiteAreaDamage : AreaProjectile
             {
                 _state = State.FollowEnemy;
                 _targetEnemy = nearest;
-
             }
             // 敵が見つからなかったらプレイヤーに向かう
             else
             {
                 _state = State.FollowPlayer;
             }
-
         }
 
         if (_state == State.FollowPlayer)
@@ -61,7 +51,6 @@ public partial class ParasiteAreaDamage : AreaProjectile
             var pos = Weapon.GlobalPosition;
             // 向きを変更する
             Direction = (pos - GlobalPosition).Normalized();
-
         }
         // 敵追従
         else if (_state == State.FollowEnemy)
@@ -77,5 +66,12 @@ public partial class ParasiteAreaDamage : AreaProjectile
             // 向きを変更する
             Direction = (_targetEnemy!.GlobalPosition - GlobalPosition).Normalized();
         }
+    }
+
+    private enum State
+    {
+        SearchEnemy,
+        FollowPlayer,
+        FollowEnemy
     }
 }

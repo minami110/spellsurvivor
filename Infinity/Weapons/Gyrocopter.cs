@@ -62,6 +62,5 @@ public partial class Gyrocopter : WeaponBase
                 AddProjectile(prj, spawnPos, direction);
             }
         }
-
     }
 }

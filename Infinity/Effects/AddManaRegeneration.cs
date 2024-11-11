@@ -1,7 +1,7 @@
 ﻿namespace fms.Effect;
 
 /// <summary>
-///     Faction: Trickshot により生成される Effect
+/// Faction: Trickshot により生成される Effect
 /// </summary>
 public class AddManaRegeneration : EffectBase
 {

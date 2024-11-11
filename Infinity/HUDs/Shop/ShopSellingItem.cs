@@ -3,7 +3,7 @@ using Godot;
 using R3;
 
 /// <summary>
-///     Shop で販売しているアイテム の HUD, Shop により自動で生成される
+/// Shop で販売しているアイテム の HUD, Shop により自動で生成される
 /// </summary>
 public partial class ShopSellingItem : VBoxContainer
 {

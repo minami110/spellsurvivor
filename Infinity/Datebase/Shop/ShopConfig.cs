@@ -18,7 +18,7 @@ public partial class ShopConfig : FmsResource
     public string ShopItemRootDir { get; private set; } = string.Empty;
 
     /// <summary>
-    ///     Shop Level  別 Tier 別の 排出率
+    /// Shop Level  別 Tier 別の 排出率
     /// </summary>
     public float[] Odds { get; private set; } =
     {

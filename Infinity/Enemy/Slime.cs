@@ -21,13 +21,14 @@ public partial class Slime : MeleeEnemy
             for (var i = 0u; i < _splitCount; i++)
             {
                 var slime = _splitScene.Instantiate<EnemyBase>();
-                
+
                 // Level はそのまま引き継ぐ 
                 slime.Level = Level;
 
                 // 自分の距離から 30px 以内に配置する
                 var range = 30;
-                slime.GlobalPosition = GlobalPosition + new Vector2((float)GD.Randfn(0, range), (float)GD.Randfn(0, range));
+                slime.GlobalPosition =
+                    GlobalPosition + new Vector2((float)GD.Randfn(0, range), (float)GD.Randfn(0, range));
 
                 // 兄弟に配置する
                 GetParent().CallDeferred(Node.MethodName.AddChild, slime);

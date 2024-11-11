@@ -4,12 +4,10 @@ using Godot;
 namespace fms.Weapon;
 
 /// <summary>
-/// 
-///     Weaponからこのクラスを生成し、このクラスから弾を生成する
+/// Weaponからこのクラスを生成し、このクラスから弾を生成する
 /// </summary>
-
 public partial class TentacleBody : AreaProjectile
-{ 
+{
     [Export]
     private PackedScene _projectile = null!;
 
@@ -21,7 +19,9 @@ public partial class TentacleBody : AreaProjectile
         // 範囲内の敵を検索する
         var bodies = GetOverlappingBodies();
         if (bodies.Count == 0)
+        {
             return;
+        }
 
         // ToDo: 一番近い敵を選択する 
         var target = bodies[0];

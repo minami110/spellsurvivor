@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Godot;
 
 namespace fms.Faction;
 
 /// <summary>
-///     Faction の種類
-///     Note: Flag を使っているため 32 コまでしか定義できないです
+/// Faction の種類
+/// Note: Flag を使っているため 32 コまでしか定義できないです
 /// </summary>
 [Flags]
 public enum FactionType
@@ -18,7 +17,7 @@ public enum FactionType
 
     Healer = 1 << 4,
     Scrap = 1 << 5
-        
+
     // Note: ↓ に新しい Faction を追加していく
 }
 

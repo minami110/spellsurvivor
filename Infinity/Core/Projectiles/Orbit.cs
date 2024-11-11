@@ -3,8 +3,8 @@
 namespace fms.Projectile;
 
 /// <summary>
-///     Projectile を対象の周りを回るような挙動に上書きする Mod
-///     Note: Speed は Proj のものを使用する
+/// Projectile を対象の周りを回るような挙動に上書きする Mod
+/// Note: Speed は Proj のものを使用する
 /// </summary>
 public partial class Orbit : Node
 {

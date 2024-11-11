@@ -37,7 +37,7 @@ public partial class Hocho : WeaponBase
     private void A()
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        
+
         // この時点で狙う方向が確定する
         // 敵を殺したときに変な回転をしないように physics_process を止める 
         aim.SetPhysicsProcess(false);

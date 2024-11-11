@@ -16,19 +16,19 @@ public readonly struct ProjectileHitInfo
 public partial class BaseProjectile : Area2D
 {
     /// <summary>
-    ///     Projectile のダメージ
+    /// Projectile のダメージ
     /// </summary>
     [Export]
     public float Damage { get; set; }
 
     /// <summary>
-    ///     Projectile の寿命 (フレーム数)
+    /// Projectile の寿命 (フレーム数)
     /// </summary>
     [Export]
     public uint LifeFrame { get; set; } = _FORCED_LIFETIME;
 
     /// <summary>
-    ///     Projectile の 1秒あたりの速度 (px)
+    /// Projectile の 1秒あたりの速度 (px)
     /// </summary>
     [Export]
     public uint Speed { get; set; }
@@ -44,7 +44,7 @@ public partial class BaseProjectile : Area2D
     /// <summary>
     /// 生成直後ダメージを与えない猶予期間, この期間はチラツキ防止で描写も行われない
     /// Note: 1F 目は Position の解決, 2F 目は Mod による位置の解決 でなんか丁度いい値
-    ///       const ではなくてメンバにしたほうが柔軟かも
+    /// const ではなくてメンバにしたほうが柔軟かも
     /// </summary>
     private protected const uint _SLEEP_FRAME = 2u;
 
@@ -76,7 +76,7 @@ public partial class BaseProjectile : Area2D
     /// この Projectile を発射した Weapon (OnReady で自動で取得)
     /// </summary>
     public WeaponBase Weapon { get; private set; } = null!;
-    
+
     public bool IsDead => _deadSubject.IsDisposed;
 
     public override void _Notification(int what)
@@ -145,13 +145,18 @@ public partial class BaseProjectile : Area2D
         }
     }
 
+    public virtual void Kill(WhyDead reason)
+    {
+        OnDead(reason);
+    }
+
     /// <summary>
     /// Projectile を生成した Weapon を取得する, 先祖の何処かにいるはずなので再帰的に検索する
     /// </summary>
     /// <returns></returns>
     private WeaponBase GetWeaponInParent()
     {
-        Node? parent = GetParent();
+        var parent = GetParent();
 
         while (parent is not null)
         {
@@ -165,11 +170,6 @@ public partial class BaseProjectile : Area2D
         }
 
         throw new InvalidProgramException("Failed to find WeaponBase");
-    }
-
-    public virtual void Kill(WhyDead reason)
-    {
-        OnDead(reason);
     }
 
     private void OnDead(WhyDead reason)

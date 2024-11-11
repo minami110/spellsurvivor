@@ -7,7 +7,7 @@ using R3;
 namespace fms;
 
 /// <summary>
-///     Player が所有済みの Minion の情報
+/// Player が所有済みの Minion の情報
 /// </summary>
 [GlobalClass]
 public partial class Minion : Node
@@ -42,7 +42,7 @@ public partial class Minion : Node
     public string Description => CoreData.Description;
 
     /// <summary>
-    ///     この Minion が装備している Weapon, InHand にない場合は所有していない
+    /// この Minion が装備している Weapon, InHand にない場合は所有していない
     /// </summary>
     public WeaponBase? Weapon
     {
@@ -68,7 +68,7 @@ public partial class Minion : Node
     }
 
     /// <summary>
-    ///     この Minion の所属する Faction (Flag)
+    /// この Minion の所属する Faction (Flag)
     /// </summary>
     public FactionType Faction => CoreData.Faction;
 
@@ -161,7 +161,7 @@ public partial class Minion : Node
     }
 
     /// <summary>
-    ///     Minion が指定した Faction に所属しているかどうか
+    /// Minion が指定した Faction に所属しているかどうか
     /// </summary>
     /// <param name="faction"></param>
     /// <returns></returns>

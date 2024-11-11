@@ -13,17 +13,17 @@ public sealed class EnemyState : IEffectSolver, IDisposable
     private readonly ReactiveProperty<float> _moveSpeed = new();
 
     /// <summary>
-    ///     現在の移動速度
+    /// 現在の移動速度
     /// </summary>
     public ReadOnlyReactiveProperty<float> MoveSpeed => _moveSpeed;
 
     /// <summary>
-    ///     最大体力
+    /// 最大体力
     /// </summary>
     public ReadOnlyReactiveProperty<float> Health => _health;
 
     /// <summary>
-    ///     現在の体力
+    /// 現在の体力
     /// </summary>
     public ReadOnlyReactiveProperty<float> MaxHealth => _maxHealth;
 

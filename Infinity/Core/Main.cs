@@ -25,7 +25,7 @@ public partial class Main : Node
     }
 
     /// <summary>
-    ///     Get the current WaveState
+    /// Get the current WaveState
     /// </summary>
     public static WaveState WaveState
     {
@@ -34,7 +34,7 @@ public partial class Main : Node
     }
 
     /// <summary>
-    ///     Get Main instance
+    /// Get Main instance
     /// </summary>
     /// <exception cref="ApplicationException"></exception>
     private static Main Instance

@@ -6,7 +6,7 @@ namespace fms;
 public static partial class NodeExtensions
 {
     /// <summary>
-    ///     Wrapper for SceneTree PhysicsFrame signal awaiter
+    /// Wrapper for SceneTree PhysicsFrame signal awaiter
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
@@ -16,7 +16,7 @@ public static partial class NodeExtensions
     }
 
     /// <summary>
-    ///     Wrapper for SceneTree ProcessFrame signal awaiter
+    /// Wrapper for SceneTree ProcessFrame signal awaiter
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
@@ -31,7 +31,7 @@ public static partial class NodeExtensions
     }
 
     /// <summary>
-    ///     Finds sibling nodes with the specified pattern and type. GetParent().FindChildren() wrapper.
+    /// Finds sibling nodes with the specified pattern and type. GetParent().FindChildren() wrapper.
     /// </summary>
     /// <param name="node"></param>
     /// <param name="pattern"></param>
@@ -48,7 +48,7 @@ public static partial class NodeExtensions
     }
 
     /// <summary>
-    ///     Wrapper for GetTree().CreateTimer()
+    /// Wrapper for GetTree().CreateTimer()
     /// </summary>
     /// <param name="node"></param>
     /// <param name="timeSec"></param>

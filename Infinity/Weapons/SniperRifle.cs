@@ -33,10 +33,7 @@ public partial class SniperRifle : WeaponBase
         // Prj は貫通するが, 一つの Prj につき 1回だけ Stack を貯められるので Take(1) を入れている
         prj.Hit
             .Where(x => x.HitNode is EnemyBase)
-            .Subscribe(prj, (x, s) =>
-            {
-                s.Damage *= 0.5f;
-            })
+            .Subscribe(prj, (x, s) => { s.Damage *= 0.5f; })
             .AddTo(prj);
     }
 }

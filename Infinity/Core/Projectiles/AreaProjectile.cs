@@ -19,7 +19,7 @@ public partial class AreaProjectile : BaseProjectile
 
         if (what == NotificationProcess)
         {
-            if (IsDead ||_attackLock || Age < _SLEEP_FRAME)
+            if (IsDead || _attackLock || Age < _SLEEP_FRAME)
             {
                 return;
             }
@@ -35,7 +35,7 @@ public partial class AreaProjectile : BaseProjectile
             }
         }
     }
-    
+
     /// <summary>
     /// ダメージを与える処理
     /// </summary>
