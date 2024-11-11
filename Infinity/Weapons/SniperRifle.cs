@@ -30,7 +30,6 @@ public partial class SniperRifle : WeaponBase
 
         // Note: AddTo はシーンに入れたあとしかできないので
         // Projectile が Enemy にヒットしたら Stack を一つ貯める
-        // Prj は貫通するが, 一つの Prj につき 1回だけ Stack を貯められるので Take(1) を入れている
         prj.Hit
             .Where(x => x.HitNode is EnemyBase)
             .Subscribe(prj, (x, s) => { s.Damage *= 0.5f; })
