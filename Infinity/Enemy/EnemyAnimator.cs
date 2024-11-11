@@ -20,6 +20,9 @@ public partial class EnemyAnimator : Node
     [Export(PropertyHint.Range, "0.0,2.0")]
     private float _puniDepth = 0.06f;
 
+    /// <summary>
+    /// 元 Sprite が左を向いている Texture の場合はチェックを入れる
+    /// </summary>
     [Export]
     private bool _invertFlipDirection;
 
@@ -74,7 +77,9 @@ public partial class EnemyAnimator : Node
         _puniLocation += speed * _puniSpeed * (float)delta * 0.1f;
 
         // Sprite を変形させる
-        var scaleY = 1f + MathF.Sin(_puniLocation) * _puniDepth;
-        _sprite.Scale = _defaultScale * new Vector2(1f, scaleY);
+        var puniScale = MathF.Sin(_puniLocation) * _puniDepth;
+        var scaleX = 1f - puniScale * 0.6f;
+        var scaleY = 1f + puniScale; 
+        _sprite.Scale = _defaultScale * new Vector2(scaleX, scaleY);
     }
 }
