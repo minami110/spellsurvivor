@@ -195,6 +195,8 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
         // 自身の物理を無効化する
         GetNode<CollisionShape2D>("CollisionForRigidbody").SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+        // 移動速度をゼロに
+        LinearVelocity = Vector2.Zero;
 
         // Emit Dead Particle
         var onDeadParticle = _onDeadParticle.Instantiate<GpuParticles2D>();

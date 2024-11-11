@@ -35,7 +35,7 @@ public partial class Charger : EnemyBase
         if (_chargerState == ChargerState.Idle)
         {
             // ノックバック中であれば何もしない
-            if (Knockbacking)
+            if (IsDead || Knockbacking)
             {
                 return;
             }
@@ -57,10 +57,8 @@ public partial class Charger : EnemyBase
         }
         else if (_chargerState == ChargerState.AttackToPlayer)
         {
-            // 死亡したら 
             if (IsDead)
             {
-                LinearVelocity = Vector2.Zero;
                 return;
             }
 

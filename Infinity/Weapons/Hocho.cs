@@ -18,7 +18,6 @@ public partial class Hocho : WeaponBase
             return;
         }
 
-
         // ToDo: BaseCoolDown = 30f 決め打ちのアニメ を再生している
         var sprite = GetNode<Node2D>("%SpriteRoot");
         var t = CreateTween();
@@ -43,14 +42,18 @@ public partial class Hocho : WeaponBase
         aim.SetPhysicsProcess(false);
 
         // 現在狙っている敵を取得
-        // ToDo: もう死んでいたとしても振りかぶっているので範囲ダメを発生させる
         var enemy = aim.NearestEnemy;
+        if (enemy is null)
+        {
+            // ToDo: 狙っている間に敵が殺されたパターン
+            return;
+        }
 
         // アニメーションに合うようにエリア攻撃の弾を生成する
         var prj = _projectile.Instantiate<BaseProjectile>();
 
         // 敵の方向を向くような rotation を計算する
-        var dir = enemy!.GlobalPosition - GlobalPosition;
+        var dir = enemy.GlobalPosition - GlobalPosition;
         var angle = dir.Angle();
 
         // 自分の位置から angle 方向に 90 伸ばした位置を計算する
