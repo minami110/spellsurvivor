@@ -15,6 +15,11 @@ public partial class Slime : MeleeEnemy
 
     private protected override void KillByDamage()
     {
+        if (IsDead)
+        {
+            return;
+        }
+
         if (_splitCount > 0u && _splitScene is not null)
         {
             // 自身の場所に分裂する

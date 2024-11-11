@@ -52,6 +52,15 @@ public partial class EnemyAnimator : Node
 
     public override void _Process(double delta)
     {
+        // Note: 死亡時アニメーションがあるのでこっちでの再生はやめる
+        // ToDo: Animator なんだから こっちで巻き取ったほうがいいかも
+        if (_enemy.IsDead)
+        {
+            SetProcess(false);
+            SetPhysicsProcess(false);
+            return;
+        }
+
         // 現在の移動方向を取得する
         var vel = _enemy.LinearVelocity; // 実際の移動ベクトル (ノックバック中は後ろ)
         var dir = _enemy.TargetVelocity; // 本人が思っている方向 (ノックバック中でもプレイヤー)
@@ -79,7 +88,7 @@ public partial class EnemyAnimator : Node
         // Sprite を変形させる
         var puniScale = MathF.Sin(_puniLocation) * _puniDepth;
         var scaleX = 1f - puniScale * 0.6f;
-        var scaleY = 1f + puniScale; 
+        var scaleY = 1f + puniScale;
         _sprite.Scale = _defaultScale * new Vector2(scaleX, scaleY);
     }
 }

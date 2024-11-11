@@ -56,8 +56,7 @@ public partial class ParasiteAreaDamage : AreaProjectile
         else if (_state == State.FollowEnemy)
         {
             // 敵がまた生きているかどうかを確認する
-            // ToDo: 専用の関数用意したほうがいい
-            if (IsInstanceValid(_targetEnemy!) == false)
+            if (_targetEnemy!.IsDead)
             {
                 _state = State.SearchEnemy;
                 return;

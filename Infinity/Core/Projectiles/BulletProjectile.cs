@@ -48,12 +48,13 @@ public partial class BulletProjectile : BaseProjectile
             SendHitInfo(body);
 
             // ToDo: Knockback 処理, 型があいまい
+            // Note: 死んでても死亡時アニメーションがあるのでノックバックを与える
             if (body is EnemyBase enemy)
             {
                 if (Knockback > 0)
                 {
-                    var dir = Direction.Normalized() * Speed;
-                    enemy.ApplyKnockback(dir, Knockback);
+                    var impulse = Direction.Normalized() * Knockback;
+                    enemy.ApplyKnockback(impulse);
                 }
             }
 

@@ -63,6 +63,11 @@ public partial class EnemyBase : RigidBody2D, IEntity
     public bool Knockbacking => _knockbackTimer > 0u;
 
     /// <summary>
+    /// 現在死亡しているかどうか
+    /// </summary>
+    public bool IsDead { get; private set; }
+
+    /// <summary>
     /// Enemy が現在目指している方向 (Animator などから参照される)
     /// </summary>
     public Vector2 TargetVelocity { get; private protected set; }
@@ -93,7 +98,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
                 }
                 else
                 {
-                    SetProcess(false);
+                    // SetProcess(false);
                     SetPhysicsProcess(false);
                     GD.PrintErr($"[{nameof(EnemyBase)}] Player node is not found");
                     return;
@@ -109,6 +114,11 @@ public partial class EnemyBase : RigidBody2D, IEntity
             }
             case NotificationPhysicsProcess:
             {
+                if (IsDead)
+                {
+                    return;
+                }
+
                 // 毎フレーム Age を加算させる
                 Age++;
                 // ToDo: すべての Enemy 共通で雑にスタンの処理を書いています
@@ -129,13 +139,22 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// <summary>
     /// ノックバックを適用する
     /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="power"></param>
-    public virtual void ApplyKnockback(Vector2 direction, float power)
+    /// <param name="impulse"></param>
+    public virtual void ApplyKnockback(in Vector2 impulse)
     {
         // すでにノックバック中 あるいは power が 0 以下のときは処理をスキップする
-        if (power <= 0f || Knockbacking)
+        if (impulse.LengthSquared() <= 0f || Knockbacking)
         {
+            return;
+        }
+
+        if (IsDead)
+        {
+            // すでに死亡しているときは Mass をあまり考慮しない感じで飛んでほしいので, 武器の Knockback 値をそのまま反映させる
+            // 感じにぶっ飛ばす.
+            // またこのあと Tree から削除されるのでいろいろな処理が不要
+            LinearVelocity = (float)GD.Randfn(6f, 3f) * impulse;
+
             return;
         }
 
@@ -144,8 +163,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
         // Note: 既存の Linear Velocity をリセットして新しい値を適用する
         //       ApplyCentralImpulse と同じ処理の上書き版を書いている
-        var impulce = direction.Normalized() * power;
-        LinearVelocity = impulce / Mass; // Note: Mass の設定値に応じて実際の動き度が変わるので要注意
+        LinearVelocity = impulse / Mass; // Note: Mass の設定値に応じて実際の動き度が変わるので要注意
 
         // Note: Knockback 中は他の敵を押しのけて欲しいので, 一時的に CollisionMask を無効化する
         CollisionMask = Constant.LAYER_NONE;
@@ -168,14 +186,43 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
     private protected virtual void KillByDamage()
     {
+        if (IsDead)
+        {
+            return;
+        }
+
+        IsDead = true;
+
+        // 自身の物理を無効化する
+        GetNode<CollisionShape2D>("CollisionForRigidbody").SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+        // 移動速度をゼロに
+        LinearVelocity = Vector2.Zero;
+
         // Emit Dead Particle
         var onDeadParticle = _onDeadParticle.Instantiate<GpuParticles2D>();
         onDeadParticle.GlobalPosition = GlobalPosition;
         GetParent().CallDeferred(Node.MethodName.AddChild, onDeadParticle);
         onDeadParticle.Emitting = true;
 
-        // QueueFree
-        CallDeferred(GodotObject.MethodName.Free);
+        // Scale を小さく, くるくる回転させる Tween を再生する
+        // Note: sprite をいじる, this を対象にすると Knockback がのらなくなる
+        var sprite = GetNode<Sprite2D>("Sprite");
+        var tween = CreateTween();
+        tween.SetParallel();
+        tween.TweenProperty(sprite, "scale", new Vector2(0f, 0f), 0.5d)
+            .SetTrans(Tween.TransitionType.Quad)
+            .SetEase(Tween.EaseType.In);
+        tween.TweenProperty(sprite, "rotation", GD.Randfn(8f, 3f), 0.5d)
+            .SetTrans(Tween.TransitionType.Quart)
+            .SetEase(Tween.EaseType.Out);
+
+        // Tweeen の終了時に Free を呼ぶ
+        tween.Finished += () =>
+        {
+            // Particle が勝手に消えないのでついでに殺す (ToDo: 将来 Pool にすること) 
+            onDeadParticle.CallDeferred(GodotObject.MethodName.Free);
+            CallDeferred(GodotObject.MethodName.Free);
+        };
     }
 
     private protected void OnEndKnockback()
@@ -184,8 +231,18 @@ public partial class EnemyBase : RigidBody2D, IEntity
         CollisionMask = Constant.LAYER_MOB;
     }
 
+    /// <summary>
+    /// ウェーブ終了時などシステムに殺されるときに呼ばれる処理
+    /// </summary>
     private void KillByWaveEnd()
     {
+        if (IsDead)
+        {
+            return;
+        }
+
+        IsDead = true;
+
         // QueueFree
         CallDeferred(GodotObject.MethodName.Free);
     }
@@ -206,6 +263,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
                 IsDead = true
             };
             StaticsManager.CommitDamage(report);
+
             KillByDamage();
         }
         // まだ体力が残っているとき
@@ -241,6 +299,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
         {
             return;
         }
+
         healthBar.MaxValue = State.MaxHealth.CurrentValue;
         healthBar.SetValueNoSignal(State.Health.CurrentValue);
     }
@@ -260,7 +319,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// </summary>
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
-        if (amount.Equals(0f))
+        if (IsDead || amount.Equals(0f))
         {
             return;
         }
