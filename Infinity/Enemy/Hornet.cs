@@ -100,7 +100,7 @@ public partial class Hornet : EnemyBase
     public override void _IntegrateForces(PhysicsDirectBodyState2D state)
     {
         // ノックバック中であれば何もしない
-        if (Knockbacking)
+        if (IsDead || Knockbacking)
         {
             return;
         }

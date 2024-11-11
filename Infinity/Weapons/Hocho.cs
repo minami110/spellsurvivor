@@ -42,22 +42,22 @@ public partial class Hocho : WeaponBase
         // 敵を殺したときに変な回転をしないように physics_process を止める 
         aim.SetPhysicsProcess(false);
 
+        // 現在狙っている敵を取得
+        // ToDo: もう死んでいたとしても振りかぶっているので範囲ダメを発生させる
         var enemy = aim.NearestEnemy;
-        if (IsInstanceValid(enemy))
-        {
-            // アニメーションに合うようにエリア攻撃の弾を生成する
-            var prj = _projectile.Instantiate<BaseProjectile>();
 
-            // 敵の方向を向くような rotation を計算する
-            var dir = enemy!.GlobalPosition - GlobalPosition;
-            var angle = dir.Angle();
+        // アニメーションに合うようにエリア攻撃の弾を生成する
+        var prj = _projectile.Instantiate<BaseProjectile>();
 
-            // 自分の位置から angle 方向に 90 伸ばした位置を計算する
-            // Note: プレイ間確かめながらスポーン位置のピクセル数は調整する
-            var pos = GlobalPosition + dir.Normalized() * 90;
+        // 敵の方向を向くような rotation を計算する
+        var dir = enemy!.GlobalPosition - GlobalPosition;
+        var angle = dir.Angle();
 
-            AddProjectile(prj, pos, angle);
-        }
+        // 自分の位置から angle 方向に 90 伸ばした位置を計算する
+        // Note: プレイ間確かめながらスポーン位置のピクセル数は調整する
+        var pos = GlobalPosition + dir.Normalized() * 90;
+
+        AddProjectile(prj, pos, angle);
     }
 
     // アニメーションの終了時に呼ばれるコールバック

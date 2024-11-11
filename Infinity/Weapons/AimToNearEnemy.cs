@@ -141,6 +141,11 @@ public partial class AimToNearEnemy : Area2D
                 continue;
             }
 
+            if (e.IsDead)
+            {
+                continue;
+            }
+
             Enemies.Add(e);
 
             var distance = centerPosition.DistanceSquaredTo(e.GlobalPosition);

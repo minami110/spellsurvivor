@@ -39,7 +39,7 @@ public partial class Charger : EnemyBase
             {
                 return;
             }
-            
+
             // Animator 用に次の突進方向を保存しておく (ユーザーに狙う方向を開示)
             var v = _playerNode!.GlobalPosition - GlobalPosition;
             TargetVelocity = v.Normalized();
@@ -49,7 +49,7 @@ public partial class Charger : EnemyBase
             {
                 _chargerState = ChargerState.AttackToPlayer;
                 _frameTimer = 0;
-                
+
                 // Note: Impulse は 1/mass がかかるので, Mass を事前にかけてスケーリングしておく (一様に px/s の Speed で調整したいため)
                 var impulse = TargetVelocity * State.MoveSpeed.CurrentValue * Mass;
                 ApplyCentralImpulse(impulse);
@@ -57,6 +57,13 @@ public partial class Charger : EnemyBase
         }
         else if (_chargerState == ChargerState.AttackToPlayer)
         {
+            // 死亡したら 
+            if (IsDead)
+            {
+                LinearVelocity = Vector2.Zero;
+                return;
+            }
+
             var direction = _playerNode.GlobalPosition - GlobalPosition;
 
             // プレイヤーがめちゃくちゃ近くに来たらダメージを与えて突進終了
@@ -84,7 +91,7 @@ public partial class Charger : EnemyBase
         }
     }
 
-    public override void ApplyKnockback(Vector2 direction, float power)
+    public override void ApplyKnockback(in Vector2 impulse)
     {
         // 突進中はノックバックを受け付けない
         if (_chargerState == ChargerState.AttackToPlayer)
@@ -92,7 +99,7 @@ public partial class Charger : EnemyBase
             return;
         }
 
-        base.ApplyKnockback(direction, power);
+        base.ApplyKnockback(in impulse);
     }
 
     private void ToIdle()
