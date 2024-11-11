@@ -30,7 +30,7 @@ script = ExtResource("1_s0dvv")
 _minAttackDistance = 100
 _maxAttackDistance = 200
 _projectile = ExtResource("2_gjpaw")
-BaseHealth = 80.0
+BaseHealth = 20.0
 BaseSpeed = 80.0
 _onDeadParticle = ExtResource("3_t7ik7")
 
