@@ -41,8 +41,8 @@ public partial class MeleeEnemy : EnemyBase
         }
 
         // プレイヤーに指定した速度で近づく Velocity を設定する
-        var direction = delta.Normalized();
-        var vel = direction * State.MoveSpeed.CurrentValue;
+        TargetVelocity = delta.Normalized(); // Note: Animator 用にキャッシュしておく
+        var vel = TargetVelocity * State.MoveSpeed.CurrentValue;
         state.LinearVelocity = vel;
     }
 

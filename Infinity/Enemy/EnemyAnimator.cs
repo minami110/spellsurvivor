@@ -4,6 +4,7 @@ using Godot;
 namespace fms.Enemy;
 
 /// <summary>
+/// EnemyBase の子に配置して移動に応じて Sprite の方向を制御するノード
 /// </summary>
 public partial class EnemyAnimator : Node
 {
@@ -38,31 +39,19 @@ public partial class EnemyAnimator : Node
         }
 
         var enemy = GetParentOrNull<EnemyBase>();
-        if (enemy is null)
-        {
-            throw new InvalidProgramException("親に EnemyBase が見つかりませんでした");
-        }
-
-        _enemy = enemy;
+        _enemy = enemy ?? throw new InvalidProgramException("親に EnemyBase が見つかりませんでした");
 
         var sprite = GetNodeOrNull<Sprite2D>("../Sprite");
 
-        if (sprite is null)
-        {
-            throw new InvalidProgramException("兄弟に Sprite が見つかりませんでした");
-        }
-
-        _sprite = sprite;
+        _sprite = sprite ?? throw new InvalidProgramException("兄弟に Sprite が見つかりませんでした");
         _defaultScale = _sprite.Scale;
     }
 
     public override void _Process(double delta)
     {
-        // Note: いろいろ仮です
-
         // 現在の移動方向を取得する
-        var vel = _enemy.LinearVelocity;
-        var dir = vel.Normalized();
+        var vel = _enemy.LinearVelocity; // 実際の移動ベクトル (ノックバック中は後ろ)
+        var dir = _enemy.TargetVelocity; // 本人が思っている方向 (ノックバック中でもプレイヤー)
 
         // 右に移動している場合は右に, 左に移動している場合は左を向くように FlipH を制御する
         if (dir.X > 0)
