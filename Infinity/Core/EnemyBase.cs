@@ -236,7 +236,11 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
     private void UpdateHealthBar()
     {
-        var healthBar = GetNode<Range>("HealthBar");
+        var healthBar = GetNodeOrNull<Range>("HealthBar");
+        if (healthBar is null)
+        {
+            return;
+        }
         healthBar.MaxValue = State.MaxHealth.CurrentValue;
         healthBar.SetValueNoSignal(State.Health.CurrentValue);
     }
