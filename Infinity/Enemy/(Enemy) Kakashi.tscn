@@ -21,9 +21,5 @@ BaseSpeed = 0.0
 [node name="Sprite" parent="." index="1"]
 material = SubResource("ShaderMaterial_1u0w2")
 
-[node name="HealthBar" parent="." index="2"]
-offset_top = 31.0
-offset_bottom = 39.0
-
 [node name="CollisionForDamage" parent="DamageArea" index="0"]
 shape = SubResource("CircleShape2D_qqwno")

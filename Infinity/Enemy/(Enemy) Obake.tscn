@@ -11,12 +11,12 @@ shader_parameter/hit = 0.0
 shader_parameter/offset = Vector2(30, 30)
 shader_parameter/modulate = Color(0, 0, 1, 1)
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_0ow7h"]
-polygon = PackedVector2Array(76.4706, -129.412, 88.2353, -29.4118, 105.882, 29.4118, 94.1176, 94.1176, 41.1765, 135.294, -17.6471, 123.529, -58.8235, 52.9412, -100, 0, -82.5, -67.4, -35.2941, -147.059, 35.2941, -170.588)
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_xpoys"]
 resource_local_to_scene = true
 radius = 30.0
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_0ow7h"]
+polygon = PackedVector2Array(76.4706, -129.412, 88.2353, -29.4118, 105.882, 29.4118, 94.1176, 94.1176, 41.1765, 135.294, -17.6471, 123.529, -58.8235, 52.9412, -100, 0, -82.5, -67.4, -35.2941, -147.059, 35.2941, -170.588)
 
 [node name="Obake" instance=ExtResource("1_phgd3")]
 BaseHealth = 300.0
@@ -30,13 +30,9 @@ material = SubResource("ShaderMaterial_rawun")
 scale = Vector2(0.17, 0.17)
 texture = ExtResource("3_dxc77")
 
-[node name="HealthBar" parent="." index="2"]
-offset_top = 31.0
-offset_bottom = 39.0
+[node name="CollisionForDamage" parent="DamageArea" index="0"]
+shape = SubResource("CircleShape2D_xpoys")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="." index="4"]
 scale = Vector2(0.17, 0.17)
 occluder = SubResource("OccluderPolygon2D_0ow7h")
-
-[node name="CollisionForDamage" parent="DamageArea" index="0"]
-shape = SubResource("CircleShape2D_xpoys")
