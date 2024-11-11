@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://ctsnxp14rpk1l"]
+[gd_scene load_steps=10 format=3 uid="uid://ctsnxp14rpk1l"]
 
 [ext_resource type="Script" path="res://Infinity/Enemy/Hornet.cs" id="1_s0dvv"]
 [ext_resource type="PackedScene" uid="uid://cntnfk7uhqmi2" path="res://Infinity/Projectiles/(Projectile) SparkBoltDark.tscn" id="2_gjpaw"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://celvufqqj3boe" path="res://Infinity/VFX/BloodSplat.tscn" id="3_t7ik7"]
 [ext_resource type="Script" path="res://Infinity/Enemy/EnemyAnimator.cs" id="4_g4016"]
 [ext_resource type="Texture2D" uid="uid://dxm3tr4es72kd" path="res://Infinity/Enemy/hornet.png" id="4_pyg4b"]
-[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="5_dq6qi"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_xiomk"]
 friction = 0.1
@@ -43,26 +42,6 @@ unique_name_in_owner = true
 material = SubResource("ShaderMaterial_guyc4")
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("4_pyg4b")
-
-[node name="HealthBar" type="TextureProgressBar" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.0
-offset_top = 22.0
-offset_right = 54.0
-offset_bottom = 30.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.5, 0.5)
-value = 50.0
-nine_patch_stretch = true
-texture_under = ExtResource("5_dq6qi")
-texture_progress = ExtResource("5_dq6qi")
-tint_under = Color(0, 0, 0, 1)
-tint_progress = Color(1, 0, 0, 1)
 
 [node name="CollisionForRigidbody" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_4ld33")

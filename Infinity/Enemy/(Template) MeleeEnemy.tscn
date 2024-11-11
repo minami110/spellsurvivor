@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://dfjwy1udqlp80"]
+[gd_scene load_steps=9 format=3 uid="uid://dfjwy1udqlp80"]
 
 [ext_resource type="Script" path="res://Infinity/Enemy/MeleeEnemy.cs" id="1_icawc"]
 [ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="2_2u1e8"]
 [ext_resource type="Script" path="res://Infinity/Enemy/EnemyAnimator.cs" id="3_xviat"]
 [ext_resource type="Texture2D" uid="uid://cvsiafcid851k" path="res://Infinity/Enemy/tori.png" id="4_b3fk7"]
-[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="4_vrebk"]
 [ext_resource type="PackedScene" uid="uid://celvufqqj3boe" path="res://Infinity/VFX/BloodSplat.tscn" id="6_q38e6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_guyc4"]
@@ -36,26 +35,6 @@ unique_name_in_owner = true
 material = SubResource("ShaderMaterial_guyc4")
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("4_b3fk7")
-
-[node name="HealthBar" type="TextureProgressBar" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.0
-offset_top = 22.0
-offset_right = 54.0
-offset_bottom = 30.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.5, 0.5)
-value = 50.0
-nine_patch_stretch = true
-texture_under = ExtResource("4_vrebk")
-texture_progress = ExtResource("4_vrebk")
-tint_under = Color(0, 0, 0, 1)
-tint_progress = Color(1, 0, 0, 1)
 
 [node name="CollisionForRigidbody" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_4ld33")
