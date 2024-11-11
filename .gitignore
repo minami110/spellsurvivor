@@ -22,3 +22,6 @@ mono_crash.*.json
 
 # Backup files
 *.csproj.old
+
+# Rider
+*.DotSettings.user

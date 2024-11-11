@@ -57,6 +57,39 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
             .Subscribe(this, (x, self) => { self._moveSpeed = x; })
             .AddTo(this);
         _faceDirection.AddTo(this);
+        
+        var healthBar = GetNodeOrNull<Range>("HealthBar");
+        if (healthBar is not null)
+        {
+            playerState.MaxHealth
+                .Subscribe(healthBar, (x, s) =>
+                {
+                    s.MaxValue = x;
+                    if (s.Value < s.MaxValue)
+                    {
+                        s.Show();
+                    }
+                    else
+                    {
+                        s.Hide();
+                    }
+                })
+                .AddTo(healthBar);
+            playerState.Health
+                .Subscribe(healthBar, (x, s) =>
+                {
+                    s.SetValueNoSignal(x);
+                    if (s.Value < s.MaxValue)
+                    {
+                        s.Show();
+                    }
+                    else
+                    {
+                        s.Hide();
+                    }
+                })
+                .AddTo(healthBar);
+        }
     }
 
     public override void _PhysicsProcess(double delta)
@@ -106,7 +139,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
     {
         GetNode<PlayerState>("%PlayerState").AddEffect(effect);
     }
-
+    
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
         AddEffect(new PhysicalDamageEffect { Value = amount });

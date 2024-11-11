@@ -10,7 +10,7 @@ public partial class Slime : MeleeEnemy
     [Export]
     private PackedScene? _splitScene;
 
-    [Export(PropertyHint.Range, "0,100,0")]
+    [Export(PropertyHint.Range, "0,100,1")]
     private uint _splitCount = 4;
 
     private protected override void KillByDamage()

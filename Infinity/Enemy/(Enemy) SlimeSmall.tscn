@@ -30,11 +30,11 @@ BaseDamage = 2.0
 material = SubResource("ShaderMaterial_wasxr")
 scale = Vector2(0.3, 0.3)
 
-[node name="CollisionForRigidbody" parent="." index="3"]
+[node name="CollisionForRigidbody" parent="." index="2"]
 shape = SubResource("CircleShape2D_o8pnm")
-
-[node name="LightOccluder2D" parent="." index="4"]
-scale = Vector2(0.3, 0.3)
 
 [node name="CollisionForDamage" parent="DamageArea" index="0"]
 shape = SubResource("CircleShape2D_24god")
+
+[node name="LightOccluder2D" parent="." index="4"]
+scale = Vector2(0.3, 0.3)

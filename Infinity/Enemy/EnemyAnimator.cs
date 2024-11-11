@@ -4,6 +4,7 @@ using Godot;
 namespace fms.Enemy;
 
 /// <summary>
+/// EnemyBase の子に配置して移動に応じて Sprite の方向を制御するノード
 /// </summary>
 public partial class EnemyAnimator : Node
 {
@@ -19,6 +20,9 @@ public partial class EnemyAnimator : Node
     [Export(PropertyHint.Range, "0.0,2.0")]
     private float _puniDepth = 0.06f;
 
+    /// <summary>
+    /// 元 Sprite が左を向いている Texture の場合はチェックを入れる
+    /// </summary>
     [Export]
     private bool _invertFlipDirection;
 
@@ -38,31 +42,19 @@ public partial class EnemyAnimator : Node
         }
 
         var enemy = GetParentOrNull<EnemyBase>();
-        if (enemy is null)
-        {
-            throw new InvalidProgramException("親に EnemyBase が見つかりませんでした");
-        }
-
-        _enemy = enemy;
+        _enemy = enemy ?? throw new InvalidProgramException("親に EnemyBase が見つかりませんでした");
 
         var sprite = GetNodeOrNull<Sprite2D>("../Sprite");
 
-        if (sprite is null)
-        {
-            throw new InvalidProgramException("兄弟に Sprite が見つかりませんでした");
-        }
-
-        _sprite = sprite;
+        _sprite = sprite ?? throw new InvalidProgramException("兄弟に Sprite が見つかりませんでした");
         _defaultScale = _sprite.Scale;
     }
 
     public override void _Process(double delta)
     {
-        // Note: いろいろ仮です
-
         // 現在の移動方向を取得する
-        var vel = _enemy.LinearVelocity;
-        var dir = vel.Normalized();
+        var vel = _enemy.LinearVelocity; // 実際の移動ベクトル (ノックバック中は後ろ)
+        var dir = _enemy.TargetVelocity; // 本人が思っている方向 (ノックバック中でもプレイヤー)
 
         // 右に移動している場合は右に, 左に移動している場合は左を向くように FlipH を制御する
         if (dir.X > 0)
@@ -85,7 +77,9 @@ public partial class EnemyAnimator : Node
         _puniLocation += speed * _puniSpeed * (float)delta * 0.1f;
 
         // Sprite を変形させる
-        var scaleY = 1f + MathF.Sin(_puniLocation) * _puniDepth;
-        _sprite.Scale = _defaultScale * new Vector2(1f, scaleY);
+        var puniScale = MathF.Sin(_puniLocation) * _puniDepth;
+        var scaleX = 1f - puniScale * 0.6f;
+        var scaleY = 1f + puniScale; 
+        _sprite.Scale = _defaultScale * new Vector2(scaleX, scaleY);
     }
 }

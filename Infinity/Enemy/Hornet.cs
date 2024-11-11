@@ -110,18 +110,19 @@ public partial class Hornet : EnemyBase
         // 追跡モードのときはプレイヤーに近づいていく
         if (_moveState == MovementState.FollowPlayer)
         {
-            var direction = delta.Normalized();
-            var vel = direction * State.MoveSpeed.CurrentValue;
+            TargetVelocity = delta.Normalized();
+            var vel = TargetVelocity * State.MoveSpeed.CurrentValue;
             state.LinearVelocity = vel;
         }
         else if (_moveState == MovementState.AwayPlayer)
         {
-            var direction = -delta.Normalized();
-            var vel = direction * State.MoveSpeed.CurrentValue;
+            TargetVelocity = -delta.Normalized();
+            var vel = TargetVelocity * State.MoveSpeed.CurrentValue;
             state.LinearVelocity = vel;
         }
         else if (_moveState == MovementState.AttackPlayer)
         {
+            TargetVelocity = Vector2.Zero;
             state.LinearVelocity = Vector2.Zero;
         }
     }

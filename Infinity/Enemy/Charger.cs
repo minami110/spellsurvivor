@@ -39,16 +39,19 @@ public partial class Charger : EnemyBase
             {
                 return;
             }
+            
+            // Animator 用に次の突進方向を保存しておく (ユーザーに狙う方向を開示)
+            var v = _playerNode!.GlobalPosition - GlobalPosition;
+            TargetVelocity = v.Normalized();
 
             // 待機が完了したら突進を開始する
             if (_frameTimer > _chargeFrame)
             {
                 _chargerState = ChargerState.AttackToPlayer;
                 _frameTimer = 0;
-                var v = _playerNode!.GlobalPosition - GlobalPosition;
-
+                
                 // Note: Impulse は 1/mass がかかるので, Mass を事前にかけてスケーリングしておく (一様に px/s の Speed で調整したいため)
-                var impulse = v.Normalized() * State.MoveSpeed.CurrentValue * Mass;
+                var impulse = TargetVelocity * State.MoveSpeed.CurrentValue * Mass;
                 ApplyCentralImpulse(impulse);
             }
         }
@@ -96,6 +99,7 @@ public partial class Charger : EnemyBase
     {
         _chargerState = ChargerState.Idle;
         _frameTimer = 0;
+        TargetVelocity = Vector2.Zero;
         LinearVelocity = Vector2.Zero;
     }
 

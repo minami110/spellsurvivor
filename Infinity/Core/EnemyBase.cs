@@ -60,7 +60,12 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// <summary>
     /// 現在ノックバック状態かどうか
     /// </summary>
-    private protected bool Knockbacking => _knockbackTimer > 0u;
+    public bool Knockbacking => _knockbackTimer > 0u;
+
+    /// <summary>
+    /// Enemy が現在目指している方向 (Animator などから参照される)
+    /// </summary>
+    public Vector2 TargetVelocity { get; private protected set; }
 
     public override void _Notification(int what)
     {
@@ -231,7 +236,11 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
     private void UpdateHealthBar()
     {
-        var healthBar = GetNode<Range>("HealthBar");
+        var healthBar = GetNodeOrNull<Range>("HealthBar");
+        if (healthBar is null)
+        {
+            return;
+        }
         healthBar.MaxValue = State.MaxHealth.CurrentValue;
         healthBar.SetValueNoSignal(State.Health.CurrentValue);
     }

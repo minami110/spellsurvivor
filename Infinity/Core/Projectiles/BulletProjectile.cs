@@ -25,7 +25,7 @@ public partial class BulletProjectile : BaseProjectile
 
     private protected virtual void OnBodyEntered(Node2D body)
     {
-        if (Age < _SLEEP_FRAME)
+        if (Age < SLEEP_FRAME)
         {
             return;
         }
@@ -45,7 +45,9 @@ public partial class BulletProjectile : BaseProjectile
         {
             // ToDo: Player / Enemy ともに Weapon が必ず直下に存在している という前提で実装してます
             entity.ApplayDamage(Damage, Weapon.GetParent<IEntity>(), Weapon);
+            SendHitInfo(body);
 
+            // ToDo: Knockback 処理, 型があいまい
             if (body is EnemyBase enemy)
             {
                 if (Knockback > 0)
@@ -62,27 +64,27 @@ public partial class BulletProjectile : BaseProjectile
             }
             */
 
+            // 敵を貫通しないなら
             if (!PenetrateEnemy)
             {
                 Kill(WhyDead.CollidedWithEnemy);
             }
         }
+    }
 
-        if (IsDead)
-        {
-            return;
-        }
-
+    private void SendHitInfo(Node2D node)
+    {
         // 最新の HitInfo を更新 (ダメージ処理のあとにやること)
         // Note: すべての当たり判定が Sphere という決め打ちで法線を計算しています
         HitInfo = new ProjectileHitInfo
         {
-            HitNode = body,
+            HitNode = node,
             Position = GlobalPosition,
-            Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
+            Normal = (GlobalPosition - node.GlobalPosition).Normalized(),
             Velocity = Direction.Normalized() * Speed
         };
 
+        // Hit を通知する
         _hitSubject.OnNext(HitInfo);
     }
 }

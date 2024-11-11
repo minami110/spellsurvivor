@@ -17,9 +17,9 @@ public partial class AreaProjectile : BaseProjectile
     {
         base._Notification(what);
 
-        if (what == NotificationProcess)
+        if (what == NotificationPhysicsProcess)
         {
-            if (IsDead || _attackLock || Age < _SLEEP_FRAME)
+            if (IsDead || _attackLock || Age < SLEEP_FRAME)
             {
                 return;
             }

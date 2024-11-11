@@ -37,7 +37,6 @@ public partial class DeathTrigger : Node
             return;
         }
 
-
         var parent = GetParent<BaseProjectile>();
         var weapon = parent.Weapon;
         var hitInfo = parent.HitInfo;

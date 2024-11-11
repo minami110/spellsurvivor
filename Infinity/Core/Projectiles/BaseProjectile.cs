@@ -46,9 +46,10 @@ public partial class BaseProjectile : Area2D
     /// Note: 1F 目は Position の解決, 2F 目は Mod による位置の解決 でなんか丁度いい値
     /// const ではなくてメンバにしたほうが柔軟かも
     /// </summary>
-    private protected const uint _SLEEP_FRAME = 2u;
+    private protected const uint SLEEP_FRAME = 2u;
 
     private readonly Subject<WhyDead> _deadSubject = new();
+
 
     private protected readonly Subject<ProjectileHitInfo> _hitSubject = new();
 
@@ -91,14 +92,16 @@ public partial class BaseProjectile : Area2D
             case NotificationReady:
             {
                 // Note: スポーン, 位置補正 Mod などのチラツキ防止もあり, Sleep 中は非表示にしておく
-                if (_SLEEP_FRAME > 0)
+                if (SLEEP_FRAME > 0)
                 {
                     Hide();
                 }
 
                 _deadSubject.AddTo(this);
                 _hitSubject.AddTo(this);
-                SetProcess(true);
+
+                // Note: Override しないと動かないので手動で
+                SetPhysicsProcess(true);
 
                 try
                 {
@@ -111,23 +114,13 @@ public partial class BaseProjectile : Area2D
 
                 break;
             }
-            case NotificationProcess:
+            case NotificationPhysicsProcess:
             {
                 // 寿命を増加させる
                 Age++;
-
-                if (Age > _SLEEP_FRAME)
+                if (Age > SLEEP_FRAME)
                 {
                     Show();
-                }
-
-                // 移動処理を行う
-                if (Speed > 0 && Direction.LengthSquared() > 0)
-                {
-                    var deltaTime = GetProcessDeltaTime();
-                    var velocity = Direction.Normalized() * Speed;
-                    GlobalPosition += velocity * (float)deltaTime;
-                    GlobalRotation = velocity.Angle();
                 }
 
                 // 寿命が 0 の場合は無限に生存する
@@ -137,7 +130,17 @@ public partial class BaseProjectile : Area2D
                     if (Age > LifeFrame)
                     {
                         OnDead(WhyDead.Life);
+                        return;
                     }
+                }
+
+                // 移動処理を行う
+                if (Speed > 0 && Direction.LengthSquared() > 0)
+                {
+                    var deltaTime = GetPhysicsProcessDeltaTime();
+                    var velocity = Direction.Normalized() * Speed;
+                    GlobalPosition += velocity * (float)deltaTime;
+                    GlobalRotation = velocity.Angle();
                 }
 
                 break;

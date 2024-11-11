@@ -15,12 +15,12 @@ shader_parameter/modulate = Color(0, 0, 1, 1)
 [sub_resource type="CircleShape2D" id="CircleShape2D_spbld"]
 radius = 15.0
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_frcoh"]
-polygon = PackedVector2Array(-15, -60.5, -15, -58.8, -17, -52.8, -17, -41.8, -14.6, -38.6, -19.3, -36.5, -23, -36.5, -19.1, -27.5, -29.1, -27.5, -23, -14.2, -23, -8.2, -31.4, -6.5, -32, -6.5, -32, 9.2, -22.5, 16.1, -28, 21.7, -28, 26.7, -9.3, 37.1, -11, 53.4, -11, 58.1, 0.200001, 60.5, 16, 60.5, 16, 39.1, 23.4, 37.5, 26, 37.5, 32, 29.5, 32, 12.1, 30, 8.2, 32, 6.2, 32, -4.8, 25, -16.1, 25, -29.1, 12, -47.2, 12, -48.7, 2.5, -53.5, 0.900002, -53.5, -5, -60.3)
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_o4f3r"]
 resource_local_to_scene = true
 radius = 30.0
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_frcoh"]
+polygon = PackedVector2Array(-15, -60.5, -15, -58.8, -17, -52.8, -17, -41.8, -14.6, -38.6, -19.3, -36.5, -23, -36.5, -19.1, -27.5, -29.1, -27.5, -23, -14.2, -23, -8.2, -31.4, -6.5, -32, -6.5, -32, 9.2, -22.5, 16.1, -28, 21.7, -28, 26.7, -9.3, 37.1, -11, 53.4, -11, 58.1, 0.200001, 60.5, 16, 60.5, 16, 39.1, 23.4, 37.5, 26, 37.5, 32, 29.5, 32, 12.1, 30, 8.2, 32, 6.2, 32, -4.8, 25, -16.1, 25, -29.1, 12, -47.2, 12, -48.7, 2.5, -53.5, 0.900002, -53.5, -5, -60.3)
 
 [node name="SlimeLarge" instance=ExtResource("1_uti22")]
 script = ExtResource("2_vk2va")
@@ -33,16 +33,12 @@ material = SubResource("ShaderMaterial_us232")
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("5_3o48c")
 
-[node name="HealthBar" parent="." index="2"]
-offset_top = 31.0
-offset_bottom = 39.0
-
-[node name="CollisionForRigidbody" parent="." index="3"]
+[node name="CollisionForRigidbody" parent="." index="2"]
 shape = SubResource("CircleShape2D_spbld")
+
+[node name="CollisionForDamage" parent="DamageArea" index="0"]
+shape = SubResource("CircleShape2D_o4f3r")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="." index="4"]
 scale = Vector2(0.8, 0.8)
 occluder = SubResource("OccluderPolygon2D_frcoh")
-
-[node name="CollisionForDamage" parent="DamageArea" index="0"]
-shape = SubResource("CircleShape2D_o4f3r")
