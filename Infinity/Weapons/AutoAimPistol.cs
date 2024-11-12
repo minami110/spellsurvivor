@@ -12,7 +12,7 @@ public partial class AutoAimPistol : WeaponBase
     private float _speed = 200f;
 
     [Export(PropertyHint.Range, "0,7200,1,suffix:frames")]
-    private uint _life = 120;
+    private uint _life = 120u;
 
     /// <summary>
     /// 攻撃を実行する際の敵の検索範囲
