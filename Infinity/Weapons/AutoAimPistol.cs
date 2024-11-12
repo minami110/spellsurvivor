@@ -18,11 +18,11 @@ public partial class AutoAimPistol : WeaponBase
     /// 攻撃を実行する際の敵の検索範囲
     /// </summary>
     [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
-    private float _searchRadius = 100f;
+    private float _maxRange = 100f;
 
     public override void _Ready()
     {
-        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _searchRadius;
+        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
     }
 
     private protected override void SpawnProjectile(uint level)
