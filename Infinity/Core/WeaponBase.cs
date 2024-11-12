@@ -182,6 +182,7 @@ public partial class WeaponBase : Node2D
         AddProjectile(projectile);
     }
 
+    [Obsolete("Use AddProjectile(BaseProjectile, Vector2) instead")]
     public void AddProjectile(BaseProjectile projectile, Vector2 position, Vector2 direction)
     {
         projectile.Position = position;
