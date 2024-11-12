@@ -44,7 +44,7 @@ public partial class TentacleBody : AreaProjectile
             // 自分の位置にダメージエリアを生成する
             var pos = GlobalPosition + dir.Normalized();
 
-            // BaseWeapon 系の処理を追加でかく
+            // 自身の兄弟階層に弾を生成する
             prj.Position = pos;
             prj.Rotation = angle;
             AddSibling(prj);
