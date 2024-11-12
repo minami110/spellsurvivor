@@ -25,7 +25,11 @@ public partial class BaseProjectile : Area2D
     /// Projectile の寿命 (フレーム数)
     /// </summary>
     [Export(PropertyHint.Range, "0,_FORCED_LIFETIME,1,suffix:frames")]
-    public uint LifeFrame { get; set; } = _FORCED_LIFETIME;
+    public uint LifeFrame
+    {
+        get => _lifeFrame;
+        set => _lifeFrame = Math.Min(value, _FORCED_LIFETIME);
+    }
 
     /// <summary>
     /// Projectile の 1秒あたりの速度 (px)
@@ -40,6 +44,9 @@ public partial class BaseProjectile : Area2D
     [Export(PropertyHint.Range, "0,9999,1,suffix:px/s")]
     public uint Knockback { get; set; }
 
+    /// <summary>
+    /// Projectile の最大生存時間 (フレーム数)
+    /// </summary>
     private const uint _FORCED_LIFETIME = 7200u;
 
     /// <summary>
@@ -52,6 +59,8 @@ public partial class BaseProjectile : Area2D
     private readonly Subject<WhyDead> _deadSubject = new();
 
     private protected readonly Subject<ProjectileHitInfo> _hitSubject = new();
+
+    private uint _lifeFrame = _FORCED_LIFETIME;
 
     /// <summary>
     /// 恒常的に与える力
