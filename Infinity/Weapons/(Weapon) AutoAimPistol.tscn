@@ -1,12 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cmr1iekscwraj"]
+[gd_scene load_steps=5 format=3 uid="uid://cmr1iekscwraj"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/AutoAimPistol.cs" id="1_p2onu"]
 [ext_resource type="PackedScene" uid="uid://bh75eb2lfndkv" path="res://Infinity/Projectiles/(Projectile) EnergyOrb.tscn" id="2_ctqn5"]
-[ext_resource type="Texture2D" uid="uid://bufla4g8aocx6" path="res://Common/Resources/Textures/2dgizmo_8x8.png" id="3_gcjpe"]
 [ext_resource type="Script" path="res://Infinity/Weapons/AimToNearEnemy.cs" id="3_t4nq4"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_l482i"]
-radius = 100.0
+[ext_resource type="Texture2D" uid="uid://cf8sqsunyrjpl" path="res://Common/Resources/Textures/Emoji/gun.png" id="4_m5utu"]
 
 [node name="AutoAimPistol" type="Node2D"]
 script = ExtResource("1_p2onu")
@@ -22,9 +19,6 @@ script = ExtResource("3_t4nq4")
 
 [node name="Sprite" type="Sprite2D" parent="AimToNearEnemy"]
 texture_filter = 1
-texture = ExtResource("3_gcjpe")
-centered = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AimToNearEnemy"]
-shape = SubResource("CircleShape2D_l482i")
-debug_color = Color(0.756, 0.432, 0.397, 0)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("4_m5utu")
+flip_h = true

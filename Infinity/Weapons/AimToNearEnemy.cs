@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using R3;
 
 namespace fms;
 
+[GlobalClass]
 public partial class AimToNearEnemy : Area2D
 {
     /// <summary>
@@ -13,11 +15,37 @@ public partial class AimToNearEnemy : Area2D
     private AimTarget Target { get; set; } = AimTarget.Nearest;
 
     /// <summary>
-    /// 自身を回転するかどうか
+    /// 敵を検索する範囲 (px)
+    /// </summary>
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    public float SearchRadius
+    {
+        get => _searchRadius;
+        set
+        {
+            if (Math.Abs(_searchRadius - value) <= 0.0001f)
+            {
+                return;
+            }
+
+            if (IsNodeReady())
+            {
+                UpdateCollisionRadius(value);
+            }
+
+            _searchRadius = value;
+        }
+    }
+
+    /// <summary>
+    /// 子の回転を更新するかどうか
     /// </summary>
     [Export]
     private bool UpdateRotation { get; set; } = true;
 
+    /// <summary>
+    /// 子の回転が有効な場合の回転感度
+    /// </summary>
     [Export(PropertyHint.Range, "0,1")]
     private float RotateSensitivity { get; set; } = 0.7f;
 
@@ -33,6 +61,8 @@ public partial class AimToNearEnemy : Area2D
     public readonly List<EnemyBase> Enemies = new();
 
     private float _restAngle;
+
+    private float _searchRadius = 100f;
 
     private float _targetAngle;
 
@@ -58,6 +88,11 @@ public partial class AimToNearEnemy : Area2D
         player.FaceDirection
             .Subscribe(x => { _restAngle = x == PawnFaceDirection.Right ? Mathf.Atan2(0, 1) : Mathf.Atan2(0, -1); })
             .AddTo(this);
+    }
+
+    public override void _Ready()
+    {
+        UpdateCollisionRadius(_searchRadius);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -119,6 +154,46 @@ public partial class AimToNearEnemy : Area2D
                 // Update Rotation
                 Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
             }
+        }
+    }
+
+    private void UpdateCollisionRadius(float radius)
+    {
+        // Find CollisionShape2D
+        CollisionShape2D? collisionShape = null;
+        foreach (var c in GetChildren())
+        {
+            if (c is not CollisionShape2D cs)
+            {
+                continue;
+            }
+
+            collisionShape = cs;
+            break;
+        }
+
+        // Do not exist, create new one
+        if (collisionShape is null)
+        {
+            collisionShape = new CollisionShape2D();
+            collisionShape.DebugColor = new Color("c16e6500");
+            AddChild(collisionShape);
+        }
+
+        // Update CircleShape2D radius, if not exist, create new one
+        if (collisionShape.Shape is null)
+        {
+            var newCircleShape = new CircleShape2D();
+            collisionShape.Shape = newCircleShape;
+        }
+
+        if (collisionShape.Shape is CircleShape2D circleShape)
+        {
+            circleShape.Radius = radius;
+        }
+        else
+        {
+            throw new InvalidOperationException("Shape must be CircleShape2D");
         }
     }
 
