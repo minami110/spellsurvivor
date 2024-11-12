@@ -7,6 +7,7 @@
 [node name="Book" type="Node2D"]
 script = ExtResource("1_vqguh")
 _projectile = ExtResource("2_ceugq")
+BaseDamage = 50.0
 BaseCoolDownFrame = 180
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
