@@ -85,7 +85,7 @@ public partial class Claw : WeaponBase
         {
             prj.Damage = BaseDamage;
             prj.Knockback = Knockback;
-            prj.LifeFrame = 30u;
+            prj.LifeFrame = 30u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
         }
 
         // 敵の方向を向くような rotation を計算する
