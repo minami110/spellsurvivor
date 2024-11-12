@@ -88,10 +88,6 @@ public partial class AimToNearEnemy : Area2D
         player.FaceDirection
             .Subscribe(x => { _restAngle = x == PawnFaceDirection.Right ? Mathf.Atan2(0, 1) : Mathf.Atan2(0, -1); })
             .AddTo(this);
-    }
-
-    public override void _Ready()
-    {
         UpdateCollisionRadius(_searchRadius);
     }
 

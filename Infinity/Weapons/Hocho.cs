@@ -8,8 +8,11 @@ namespace fms.Weapon;
 /// </summary>
 public partial class Hocho : WeaponBase
 {
+    /// <summary>
+    /// 生成するダメージエリアのサイズ
+    /// </summary>
     [Export]
-    private PackedScene _projectile = null!;
+    private Vector2 _damageSize = new(60, 10);
 
     /// <summary>
     /// 攻撃を実行する際の敵の検索範囲
@@ -67,11 +70,13 @@ public partial class Hocho : WeaponBase
         }
 
         // アニメーションに合うようにエリア攻撃の弾を生成する
-        var prj = _projectile.Instantiate<BaseProjectile>();
+        var prj = new RectAreaProjectile();
         {
             prj.Damage = BaseDamage;
             prj.Knockback = Knockback;
             prj.LifeFrame = 30u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
+            prj.DamageEveryXFrames = 0u; // 一度ダメージを与えたら消滅する
+            prj.Size = _damageSize;
         }
 
         // 敵の方向を向くような rotation を計算する

@@ -7,8 +7,11 @@ namespace fms.Weapon;
 
 public partial class Claw : WeaponBase
 {
+    /// <summary>
+    /// 生成するダメージエリアのサイズ
+    /// </summary>
     [Export]
-    private PackedScene _projectile = null!;
+    private Vector2 _damageSize = new(50, 80);
 
     /// <summary>
     /// 攻撃を実行する際の敵の検索範囲
@@ -81,11 +84,13 @@ public partial class Claw : WeaponBase
         var enemy = aim.NearestEnemy;
 
         // 弾生成
-        var prj = _projectile.Instantiate<AreaProjectile>();
+        var prj = new RectAreaProjectile();
         {
             prj.Damage = BaseDamage;
             prj.Knockback = Knockback;
             prj.LifeFrame = 30u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
+            prj.DamageEveryXFrames = 0u; // 一度ダメージを与えて消滅する
+            prj.Size = _damageSize;
         }
 
         // 敵の方向を向くような rotation を計算する
