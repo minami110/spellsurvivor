@@ -116,11 +116,8 @@ public partial class BaseProjectile : Area2D
             }
             case NotificationReady:
             {
-                // Note: スポーン, 位置補正 Mod などのチラツキ防止もあり, Sleep 中は非表示にしておく
-                if (SLEEP_FRAME > 0)
-                {
-                    Hide();
-                }
+                // Note: スポーン, 位置補正 Mod などのチラツキ防止もあり, Sleep 明けまで非表示にしておく
+                Hide();
 
                 _deadSubject.AddTo(this);
                 _hitSubject.AddTo(this);
@@ -180,7 +177,7 @@ public partial class BaseProjectile : Area2D
     private protected virtual void IntegrateForces(double delta)
     {
         // 毎フレーム Direction * Speed の Vector を加算する
-        // ToDo: Direction とかいうなまえがわかりにくい, Constant Force とかに統合シちゃったほうがわかりやすいかも
+        // ToDo: Direction とかいうなまえがわかりにくい, Constant Force とかに統合しちゃったほうがわかりやすいかも
         var constantForce = Direction.Normalized() * Speed;
         LinearVelocity += constantForce;
 
