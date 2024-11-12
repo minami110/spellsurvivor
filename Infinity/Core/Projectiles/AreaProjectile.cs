@@ -57,6 +57,7 @@ public partial class AreaProjectile : BaseProjectile
         {
             if (body is IEntity entity)
             {
+                // ToDo: Player / Enemy ともに Weapon が必ず直下に存在している という前提で実装してます
                 entity.ApplayDamage(Damage, Weapon.GetParent<IEntity>(), Weapon);
 
                 // 複数の敵にヒットするため, HitInfo は最初の敵に対してのみ生成する
@@ -70,10 +71,23 @@ public partial class AreaProjectile : BaseProjectile
                         HitNode = body,
                         Position = GlobalPosition,
                         Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
-                        Velocity = Direction.Normalized() * Speed
+                        Velocity = PrevLinearVelocity
                     };
 
                     _hitSubject.OnNext(HitInfo);
+                }
+
+                // ToDo: Knockback 処理, 型があいまい
+                // Note: 死んでても死亡時アニメーションがあるのでノックバックを与える
+                if (body is EnemyBase enemy)
+                {
+                    if (Knockback > 0)
+                    {
+                        // ToDo: 暫定的に Area Projectile は 自身の位置から敵の位置に向かうノックバックを与えてます
+                        var vel = body.GlobalPosition - GlobalPosition;
+                        var impulse = vel.Normalized() * Knockback;
+                        enemy.ApplyKnockback(impulse);
+                    }
                 }
             }
         }

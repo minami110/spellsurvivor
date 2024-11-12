@@ -54,7 +54,8 @@ public partial class FirecrackerGen : WeaponBase
             prj0.AddChild(new DeathTrigger
             {
                 Next = prj1,
-                When = WhyDead.CollidedWithAny
+                When = WhyDead.CollidedWithAny,
+                Speed = 0f
             });
 
             if (TrickShotCount >= 2)
@@ -64,7 +65,8 @@ public partial class FirecrackerGen : WeaponBase
                 prj1.AddChild(new DeathTrigger
                 {
                     Next = prj2,
-                    When = WhyDead.CollidedWithAny
+                    When = WhyDead.CollidedWithAny,
+                    Speed = 0f
                 });
             }
         }
@@ -99,7 +101,8 @@ public partial class FirecrackerGen : WeaponBase
         mainPrj.AddChild(new DeathTrigger
         {
             Next = subPrj,
-            When = WhyDead.CollidedWithAny
+            When = WhyDead.CollidedWithAny,
+            Speed = 0f
         });
 
         return mainPrj;

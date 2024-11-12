@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqc7i4vktg7s"
-path="res://.godot/imported/fist.png-a5882ebe4f708ee4df08a0cdb38b2cce.ctex"
+uid="uid://dmrvxabprg7y0"
+path="res://.godot/imported/claw.png-d00a3b0c1058384fcf4bacb233bc7049.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Emoji/fist.png"
-dest_files=["res://.godot/imported/fist.png-a5882ebe4f708ee4df08a0cdb38b2cce.ctex"]
+source_file="res://Common/Resources/Textures/AI Emojis/claw.png"
+dest_files=["res://.godot/imported/claw.png-d00a3b0c1058384fcf4bacb233bc7049.ctex"]
 
 [params]
 

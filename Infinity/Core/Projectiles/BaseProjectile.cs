@@ -24,21 +24,29 @@ public partial class BaseProjectile : Area2D
     /// <summary>
     /// Projectile の寿命 (フレーム数)
     /// </summary>
-    [Export]
-    public uint LifeFrame { get; set; } = _FORCED_LIFETIME;
+    [Export(PropertyHint.Range, "0,_FORCED_LIFETIME,1,suffix:frames")]
+    public uint LifeFrame
+    {
+        get => _lifeFrame;
+        set => _lifeFrame = Math.Min(value, _FORCED_LIFETIME);
+    }
 
     /// <summary>
     /// Projectile の 1秒あたりの速度 (px)
     /// </summary>
-    [Export]
+    [Obsolete("Use ConstantForce instead")]
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px/s")]
     public uint Speed { get; set; }
 
     /// <summary>
     /// ノックバック速度
     /// </summary>
-    [Export]
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px/s")]
     public uint Knockback { get; set; }
 
+    /// <summary>
+    /// Projectile の最大生存時間 (フレーム数)
+    /// </summary>
     private const uint _FORCED_LIFETIME = 7200u;
 
     /// <summary>
@@ -50,11 +58,20 @@ public partial class BaseProjectile : Area2D
 
     private readonly Subject<WhyDead> _deadSubject = new();
 
-
     private protected readonly Subject<ProjectileHitInfo> _hitSubject = new();
+
+    private uint _lifeFrame = _FORCED_LIFETIME;
+
+    /// <summary>
+    /// 恒常的に与える力
+    /// </summary>
+    public Vector2 ConstantForce;
 
     public ProjectileHitInfo HitInfo { get; internal set; }
 
+    /// <summary>
+    /// Projectile の消滅時に通知
+    /// </summary>
     public Observable<WhyDead> Dead => _deadSubject;
 
     /// <summary>
@@ -71,6 +88,7 @@ public partial class BaseProjectile : Area2D
     /// <summary>
     /// 現在進む方向
     /// </summary>
+    [Obsolete("Use ConstantForce instead")]
     public Vector2 Direction { get; set; }
 
     /// <summary>
@@ -78,7 +96,14 @@ public partial class BaseProjectile : Area2D
     /// </summary>
     public WeaponBase Weapon { get; private set; } = null!;
 
-    public bool IsDead => _deadSubject.IsDisposed;
+    /// <summary>
+    /// 移動ベクトル
+    /// </summary>
+    public Vector2 LinearVelocity { get; private set; }
+
+    public Vector2 PrevLinearVelocity { get; private set; }
+
+    private protected bool IsDead => _deadSubject.IsDisposed;
 
     public override void _Notification(int what)
     {
@@ -91,11 +116,8 @@ public partial class BaseProjectile : Area2D
             }
             case NotificationReady:
             {
-                // Note: スポーン, 位置補正 Mod などのチラツキ防止もあり, Sleep 中は非表示にしておく
-                if (SLEEP_FRAME > 0)
-                {
-                    Hide();
-                }
+                // Note: スポーン, 位置補正 Mod などのチラツキ防止もあり, Sleep 明けまで非表示にしておく
+                Hide();
 
                 _deadSubject.AddTo(this);
                 _hitSubject.AddTo(this);
@@ -135,22 +157,47 @@ public partial class BaseProjectile : Area2D
                 }
 
                 // 移動処理を行う
-                if (Speed > 0 && Direction.LengthSquared() > 0)
-                {
-                    var deltaTime = GetPhysicsProcessDeltaTime();
-                    var velocity = Direction.Normalized() * Speed;
-                    GlobalPosition += velocity * (float)deltaTime;
-                    GlobalRotation = velocity.Angle();
-                }
+                IntegrateForces(GetPhysicsProcessDeltaTime());
 
                 break;
             }
         }
     }
 
+    public void AddLinearVelocity(in Vector2 velocity)
+    {
+        LinearVelocity += velocity;
+    }
+
     public virtual void Kill(WhyDead reason)
     {
         OnDead(reason);
+    }
+
+    private protected virtual void IntegrateForces(double delta)
+    {
+        // 毎フレーム Direction * Speed の Vector を加算する
+        // ToDo: Direction とかいうなまえがわかりにくい, Constant Force とかに統合しちゃったほうがわかりやすいかも
+        var constantForce = Direction.Normalized() * Speed;
+        LinearVelocity += constantForce;
+
+        LinearVelocity += ConstantForce;
+
+        if (LinearVelocity.LengthSquared() <= 0f)
+        {
+            PrevLinearVelocity = Vector2.Zero;
+            return;
+        }
+
+        var motion = LinearVelocity * (float)delta;
+
+        // 位置を更新する
+        GlobalPosition += motion;
+        GlobalRotation = motion.Angle(); // 移動方向の方を向く
+
+        // LinearVelocity の更新
+        PrevLinearVelocity = LinearVelocity;
+        LinearVelocity = Vector2.Zero; // Damping: 0 相当の挙動
     }
 
     /// <summary>

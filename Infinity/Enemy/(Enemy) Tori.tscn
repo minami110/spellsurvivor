@@ -22,7 +22,7 @@ polygon = PackedVector2Array(73.3333, -120, 106.667, -66.6667, 106.667, -20, 80,
 
 [node name="Tori" instance=ExtResource("1_hmpv4")]
 position = Vector2(0, 3)
-mass = 0.1
+mass = 0.5
 physics_material_override = SubResource("PhysicsMaterial_byesr")
 BaseHealth = 10.0
 BaseSpeed = 100.0

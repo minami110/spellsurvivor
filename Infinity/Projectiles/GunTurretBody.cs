@@ -9,9 +9,18 @@ namespace fms.Weapon;
 /// </summary>
 public partial class GunTurretBody : AreaProjectile
 {
-    // タレットが発射する弾
-    [Export]
-    private PackedScene _projectileScene = null!;
+    internal uint BulletAliveFrame;
+    internal PackedScene BulletPackedScene = null!;
+    internal uint BulletSpeed;
+    internal uint DetectionRadius;
+
+    public override void _EnterTree()
+    {
+        // Circle Shape の Radius を設定する
+        var col = GetNode<CollisionShape2D>("CollisionShape2D");
+        var circle = (CircleShape2D)col.Shape;
+        circle.Radius = DetectionRadius;
+    }
 
     /// <summary>
     /// Projectile のダメージ処理をオーバーライドして新しい弾を生成する
@@ -30,21 +39,15 @@ public partial class GunTurretBody : AreaProjectile
         if (target is EnemyBase enemy)
         {
             // タレットが発射する弾を生成
-            var prj = _projectileScene.Instantiate<BaseProjectile>();
-
-            // 弾のパラメーターを設定する
-            prj.Damage = 12;
-            prj.LifeFrame = 15;
-            prj.Speed = 800;
-
-            // 一番近い敵に向かっていく
-            prj.AddChild(new AutoAim
+            var prj = BulletPackedScene.Instantiate<BaseProjectile>();
             {
-                Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
-                SearchRadius = 1000
-            });
+                prj.Damage = Damage;
+                prj.Knockback = Knockback;
+                prj.LifeFrame = BulletAliveFrame;
+                prj.ConstantForce = (enemy.GlobalPosition - GlobalPosition).Normalized() * BulletSpeed;
+            }
 
-            // BaseWeapon 系の処理を追加でかく
+            // 自身の兄弟階層に弾を生成する
             prj.Position = GlobalPosition;
             AddSibling(prj);
         }

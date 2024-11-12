@@ -53,7 +53,7 @@ public partial class BulletProjectile : BaseProjectile
             {
                 if (Knockback > 0)
                 {
-                    var impulse = Direction.Normalized() * Knockback;
+                    var impulse = PrevLinearVelocity.Normalized() * Knockback;
                     enemy.ApplyKnockback(impulse);
                 }
             }

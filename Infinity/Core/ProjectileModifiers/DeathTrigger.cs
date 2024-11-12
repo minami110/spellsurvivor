@@ -10,8 +10,12 @@ namespace fms.Projectile;
 /// </summary>
 public partial class DeathTrigger : Node
 {
+    // ToDo: 生成されるかどうかわからんのに Tree 外のインスタンスもらうのやばい
     public required BaseProjectile Next { get; init; }
+
     public required WhyDead When { get; init; }
+
+    public required float Speed { get; init; }
 
     public override void _EnterTree()
     {
@@ -31,6 +35,7 @@ public partial class DeathTrigger : Node
             throw new ApplicationException("次の弾がメモリから消されています");
         }
 
+        // 指定された消滅理由ではない
         if (!When.HasFlag(why))
         {
             Next.CallDeferred(GodotObject.MethodName.Free);
@@ -42,19 +47,18 @@ public partial class DeathTrigger : Node
         var hitInfo = parent.HitInfo;
 
         // Spawn Next 
-        {
-            Next.Position = hitInfo.Position;
+        Next.Position = hitInfo.Position;
 
-            // ToDo: ベクトル生成, 外部化でいい節がある
-            // 反射ベクトルを計算する
-            var normal = hitInfo.Normal;
-            var direction = hitInfo.Velocity.Normalized();
-            Next.Direction = direction - 2 * direction.Dot(normal) * normal;
+        // ToDo: ベクトル生成, 外部化でいい節がある
+        // 反射ベクトルを計算する
+        var normal = hitInfo.Normal;
+        var direction = hitInfo.Velocity.Normalized();
+        var refvec = direction - 2 * direction.Dot(normal) * normal;
+        Next.ConstantForce = refvec * Speed;
 
-            // ToDO: HitInfo を継承する (Note: 一部 Mod が前回の HitInfo を使うので)
-            Next.HitInfo = parent.HitInfo;
+        // ToDO: HitInfo を継承する (Note: 一部 Mod が前回の HitInfo を使うので)
+        Next.HitInfo = parent.HitInfo;
 
-            weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, Next);
-        }
+        weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, Next);
     }
 }

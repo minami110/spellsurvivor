@@ -10,6 +10,12 @@ public partial class ForwardKnife : WeaponBase
     [Export]
     private PackedScene _projectile = null!;
 
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px/s")]
+    private float _speed = 500f;
+
+    [Export(PropertyHint.Range, "0,7200,1,suffix:frames")]
+    private uint _life = 120u;
+
     [ExportGroup("For Debugging")]
     [Export]
     private int TrickShotCount { get; set; }
@@ -65,59 +71,60 @@ public partial class ForwardKnife : WeaponBase
         }
     }
 
+    // ToDo: Heap Allocation 対策で Static にする
+    private void AddTrickShotMod(BaseProjectile parent, PackedScene p, uint currentDepth, uint maxDepth)
+    {
+        parent.AddChild(new TrickshotMod
+        {
+            ProjectileSpawnAction = TrickShotSpawnCallback,
+            When = WhyDead.CollidedWithAny,
+            SearchRadius = 200, // Trickshot 実行時の敵検索範囲,
+            Depth = currentDepth,
+            MaxDepth = maxDepth,
+            Projectile = p
+        });
+    }
+
     private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
     {
         // Main の Projectile
-        var prj1 = _projectile.Instantiate<BaseProjectile>();
+        var prjMain = _projectile.Instantiate<BaseProjectile>();
         {
-            prj1.Damage = BaseDamage;
-            prj1.Knockback = Knockback;
-            prj1.LifeFrame = 120u;
-            prj1.Speed = 500u;
+            prjMain.Damage = BaseDamage;
+            prjMain.Knockback = Knockback;
+            prjMain.LifeFrame = _life;
+
+            // Get Player's aim direction
+            var direction = GetParent<BasePlayerPawn>().LatestMoveDirection;
+            prjMain.ConstantForce = direction * _speed;
         }
 
-        if (TrickShotCount >= 1)
+        // DeathTrigger を追加する
+        if (TrickShotCount > 0 || TrickShotDamageMul > 0f)
         {
-            var prj2 = _projectile.Instantiate<BaseProjectile>();
-            {
-                prj2.Damage = BaseDamage;
-                prj2.Knockback = Knockback;
-                prj2.LifeFrame = 120u;
-                prj2.Speed = 500u;
-            }
-
-            prj2.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
-            prj2.AddChild(new AutoAim
-            {
-                Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
-                SearchRadius = 100
-            });
-            prj1.AddChild(new DeathTrigger { Next = prj2, When = WhyDead.CollidedWithAny });
-
-            if (TrickShotCount >= 2)
-            {
-                var prj3 = _projectile.Instantiate<BaseProjectile>();
-                {
-                    prj3.Damage = BaseDamage;
-                    prj3.Knockback = Knockback;
-                    prj3.LifeFrame = 120u;
-                    prj3.Speed = 500u;
-                }
-
-                prj3.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
-                prj3.AddChild(new AutoAim
-                {
-                    Mode = AutoAimMode.JustOnce | AutoAimMode.KillPrjWhenSearchFailed,
-                    SearchRadius = 100
-                });
-                prj2.AddChild(new DeathTrigger { Next = prj3, When = WhyDead.CollidedWithAny });
-            }
+            AddTrickShotMod(prjMain, _projectile, 0, (uint)TrickShotCount);
         }
 
         var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
+        AddProjectile(prjMain, spawnPos);
+    }
 
-        // Get Player's aim direction
-        var direction = GetParent<BasePlayerPawn>().LatestMoveDirection;
-        AddProjectile(prj1, spawnPos, direction);
+    // ToDo: Heap Allocation 対策で Static にする
+    private BaseProjectile TrickShotSpawnCallback(PackedScene p, Vector2 pos, Vector2 direction, uint depth,
+        uint maxDepth)
+    {
+        var prj = p.Instantiate<BaseProjectile>();
+        prj.Position = pos;
+        prj.Damage = BaseDamage * TrickShotDamageMul;
+        prj.Knockback = Knockback;
+        prj.LifeFrame = _life;
+        prj.ConstantForce = direction * _speed;
+
+        if (depth < maxDepth)
+        {
+            AddTrickShotMod(prj, p, depth, maxDepth);
+        }
+
+        return prj;
     }
 }

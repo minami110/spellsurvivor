@@ -1,5 +1,6 @@
 ﻿using fms.Projectile;
 using Godot;
+using R3;
 
 namespace fms.Weapon;
 
@@ -7,13 +8,29 @@ namespace fms.Weapon;
 /// </summary>
 public partial class Hocho : WeaponBase
 {
+    /// <summary>
+    /// 生成するダメージエリアのサイズ
+    /// </summary>
     [Export]
-    private PackedScene _projectile = null!;
+    private Vector2 _damageSize = new(60, 10);
+
+    /// <summary>
+    /// 攻撃を実行する際の敵の検索範囲
+    /// </summary>
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private float _maxRange = 100f;
+
+    private AimToNearEnemy _aimToNearEnemy = null!;
+
+    public override void _Ready()
+    {
+        _aimToNearEnemy = GetNode<AimToNearEnemy>("AimToNearEnemy");
+        _aimToNearEnemy.SearchRadius = _maxRange;
+    }
 
     private protected override void SpawnProjectile(uint level)
     {
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        if (!aim.IsAiming)
+        if (!_aimToNearEnemy.IsAiming)
         {
             return;
         }
@@ -24,49 +41,52 @@ public partial class Hocho : WeaponBase
         t.TweenProperty(sprite, "position", new Vector2(-12, 0), 0.2d)
             .SetTrans(Tween.TransitionType.Quart)
             .SetEase(Tween.EaseType.Out);
-        t.TweenCallback(Callable.From(A));
+        t.TweenCallback(Callable.From(Attack));
         t.TweenProperty(sprite, "position", new Vector2(57, 0), 0.2d)
             .SetTrans(Tween.TransitionType.Elastic)
             .SetEase(Tween.EaseType.Out);
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.08d);
-        t.TweenCallback(Callable.From(B));
+
+        // 再生終了したら AimToNearEnemy を再開する
+        t.FinishedAsObservable()
+            .Take(1)
+            .Subscribe(this, (_, state) => { state._aimToNearEnemy.SetPhysicsProcess(true); })
+            .AddTo(this);
     }
 
     // アニメーションの最初のタメ が終わったタイミングで呼ばれるコールバック
-    private void A()
+    private void Attack()
     {
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-
-        // この時点で狙う方向が確定する
+        // この時点で狙う方向が確定するので,
         // 敵を殺したときに変な回転をしないように physics_process を止める 
-        aim.SetPhysicsProcess(false);
+        _aimToNearEnemy.SetPhysicsProcess(false);
 
         // 現在狙っている敵を取得
-        var enemy = aim.NearestEnemy;
+        var enemy = _aimToNearEnemy.NearestEnemy;
         if (enemy is null)
         {
-            // ToDo: 狙っている間に敵が殺されたパターン
+            // ToDo: 狙っている間に敵が殺されたパターンの処理を考えていない
             return;
         }
 
         // アニメーションに合うようにエリア攻撃の弾を生成する
-        var prj = _projectile.Instantiate<BaseProjectile>();
+        var prj = new RectAreaProjectile();
+        {
+            prj.Damage = BaseDamage;
+            prj.Knockback = Knockback;
+            prj.LifeFrame = 30u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
+            prj.DamageEveryXFrames = 0u; // 一度ダメージを与えたら消滅する
+            prj.Size = _damageSize;
+        }
 
         // 敵の方向を向くような rotation を計算する
         var dir = enemy.GlobalPosition - GlobalPosition;
         var angle = dir.Angle();
 
-        // 自分の位置から angle 方向に 90 伸ばした位置を計算する
+        // 自分の位置から angle 方向に ちょっと伸ばした位置を計算してダメージを発生させる
         // Note: プレイ間確かめながらスポーン位置のピクセル数は調整する
-        var pos = GlobalPosition + dir.Normalized() * 90;
+        var pos = GlobalPosition + dir.Normalized() * 60;
 
         AddProjectile(prj, pos, angle);
-    }
-
-    // アニメーションの終了時に呼ばれるコールバック
-    private void B()
-    {
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        aim.SetPhysicsProcess(true);
     }
 }

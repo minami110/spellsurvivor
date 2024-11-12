@@ -1,16 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://dx52nto82q801"]
+[gd_scene load_steps=5 format=3 uid="uid://dx52nto82q801"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/SniperRifle.cs" id="1_4mwl3"]
 [ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) SparkBolt.tscn" id="2_gpmga"]
 [ext_resource type="Script" path="res://Infinity/Weapons/AimToNearEnemy.cs" id="3_hpiyo"]
-[ext_resource type="Texture2D" uid="uid://c2edxtyae4q6n" path="res://Common/Resources/Textures/Emoji/hocho.png" id="4_lek6r"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_33fx5"]
-radius = 500.0
+[ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/M14EBR.png" id="4_p1vhi"]
 
 [node name="SniperRifle" type="Node2D"]
 script = ExtResource("1_4mwl3")
 _projectile = ExtResource("2_gpmga")
+BaseDamage = 12.0
 BaseCoolDownFrame = 60
 
 [node name="AimToNearEnemy" type="Area2D" parent="."]
@@ -20,13 +18,7 @@ monitorable = false
 script = ExtResource("3_hpiyo")
 Target = 1
 
-[node name="SpriteRoot" type="Node2D" parent="AimToNearEnemy"]
-
-[node name="Sprite" type="Sprite2D" parent="AimToNearEnemy/SpriteRoot"]
-position = Vector2(23, 0)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("4_lek6r")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AimToNearEnemy"]
-shape = SubResource("CircleShape2D_33fx5")
-debug_color = Color(0.756, 0.432, 0.397, 0)
+[node name="Sprite" type="Sprite2D" parent="AimToNearEnemy"]
+position = Vector2(20, 0)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("4_p1vhi")
