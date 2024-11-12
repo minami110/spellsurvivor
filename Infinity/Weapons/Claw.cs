@@ -5,13 +5,24 @@ using R3;
 
 namespace fms.Weapon;
 
-public partial class ClawGen : WeaponBase
+public partial class Claw : WeaponBase
 {
     [Export]
     private PackedScene _projectile = null!;
 
+    /// <summary>
+    /// 攻撃を実行する際の敵の検索範囲
+    /// </summary>
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private float _maxRange = 60f;
+
     private uint _enemyHitReduceCounter;
     private uint _enemyHitStacks;
+
+    public override void _Ready()
+    {
+        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
+    }
 
     public override void _PhysicsProcess(double delta)
     {
@@ -70,15 +81,20 @@ public partial class ClawGen : WeaponBase
         var enemy = aim.NearestEnemy;
 
         // 弾生成
-        var prj = _projectile.Instantiate<BaseProjectile>();
+        var prj = _projectile.Instantiate<AreaProjectile>();
+        {
+            prj.Damage = BaseDamage;
+            prj.Knockback = Knockback;
+            prj.LifeFrame = 30u;
+        }
 
         // 敵の方向を向くような rotation を計算する
         var dir = enemy!.GlobalPosition - GlobalPosition;
         var angle = dir.Angle();
 
-        // 自分の位置から angle 方向に 40 伸ばした位置を計算する
+        // 自分の位置から angle 方向に 15 伸ばした位置を計算する
         // Note: プレイ間確かめながらスポーン位置のピクセル数は調整する
-        var pos = GlobalPosition + dir.Normalized() * 40;
+        var pos = GlobalPosition + dir.Normalized() * 15;
 
         AddProjectile(prj, pos, angle);
 
