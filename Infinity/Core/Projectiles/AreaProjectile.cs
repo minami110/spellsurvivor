@@ -71,7 +71,7 @@ public partial class AreaProjectile : BaseProjectile
                         HitNode = body,
                         Position = GlobalPosition,
                         Normal = (GlobalPosition - body.GlobalPosition).Normalized(),
-                        Velocity = Direction.Normalized() * Speed
+                        Velocity = PrevLinearVelocity
                     };
 
                     _hitSubject.OnNext(HitInfo);

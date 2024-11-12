@@ -8,8 +8,7 @@ namespace fms.Weapon;
 /// </summary>
 public partial class TentacleBody : AreaProjectile
 {
-    [Export]
-    private PackedScene _projectile = null!;
+    public Vector2 DamageSize;
 
     /// <summary>
     /// Projectile のダメージ処理をオーバーライドして新しい弾を生成する
@@ -28,16 +27,22 @@ public partial class TentacleBody : AreaProjectile
 
         if (target is EnemyBase enemy)
         {
-            // タレットが発射する弾を生成
-            var prj = _projectile.Instantiate<BaseProjectile>();
+            // 触手が生成する範囲ダメージ
+            var prj = new RectAreaProjectile();
+            {
+                prj.Damage = Damage; // 自身のものを継承
+                prj.Knockback = Knockback; // 自身のものを継承
+                prj.LifeFrame = 30u; // 一発しばいたら終わりなので短く適当に
+                prj.DamageEveryXFrames = 0u; // 一度ダメージを与えて消滅する設定
+                prj.Size = DamageSize;
+            }
 
             // 敵の方向を向くような rotation を計算する
             var dir = enemy.GlobalPosition - GlobalPosition;
             var angle = dir.Angle();
 
-            // 自分の位置から angle 方向に 90 伸ばした位置を計算する
-            // Note: プレイ間確かめながらスポーン位置のピクセル数は調整する
-            var pos = GlobalPosition + dir.Normalized() * 90;
+            // 自分の位置にダメージエリアを生成する
+            var pos = GlobalPosition + dir.Normalized();
 
             // BaseWeapon 系の処理を追加でかく
             prj.Position = pos;
