@@ -8,7 +8,7 @@ namespace fms.Weapon;
 /// <summary>
 /// 爆竹を生成する
 /// </summary>
-public partial class FirecrackerGen : WeaponBase
+public partial class Firecracker : WeaponBase
 {
     [ExportGroup("Bomb Projectile")]
     [Export]
