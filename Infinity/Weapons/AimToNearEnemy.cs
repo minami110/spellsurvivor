@@ -156,17 +156,7 @@ public partial class AimToNearEnemy : Area2D
     private void UpdateCollisionRadius(float radius)
     {
         // Find CollisionShape2D
-        CollisionShape2D? collisionShape = null;
-        foreach (var c in GetChildren())
-        {
-            if (c is not CollisionShape2D cs)
-            {
-                continue;
-            }
-
-            collisionShape = cs;
-            break;
-        }
+        var collisionShape = this.FindFirstChild<CollisionShape2D>();
 
         // Do not exist, create new one
         if (collisionShape is null)
