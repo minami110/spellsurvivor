@@ -33,15 +33,16 @@ public partial class Book : WeaponBase
             }
 
             // Orbit Mod を追加
-            var player = GetParent<Node2D>();
-            var offset = 360f * i / level;
 
             // 武器の持つクールダウンにあわせて360度回転するような速度を設定する
             // Note: 360度 / クールダウン(フレーム) / 60 フレーム (= かかる秒数)
             var speed = 360f / (SolvedCoolDownFrame / 60f);
             speed *= _speedMultiplier;
 
-            prj.AddChild(new Orbit { Target = player, Radius = _radius, OffsetDeg = offset, Speed = speed });
+            // Loop の i 番目の弾丸の角度を計算する
+            var offset = 360f * i / level;
+
+            prj.AddChild(new Orbit { Target = OwnedEntity, Radius = _radius, OffsetDeg = offset, Speed = speed });
 
             AddProjectile(prj, GlobalPosition);
         }

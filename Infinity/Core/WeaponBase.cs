@@ -102,6 +102,11 @@ public partial class WeaponBase : Node2D
     public string MinionId { get; internal set; } = string.Empty;
 
     /// <summary>
+    /// この武器を所有している Entity
+    /// </summary>
+    public Node2D OwnedEntity { get; private set; } = null!;
+
+    /// <summary>
     /// Effect の解決後の Cooldown のフレーム数
     /// </summary>
     public uint SolvedCoolDownFrame
@@ -138,6 +143,10 @@ public partial class WeaponBase : Node2D
                 frameTimer.Name = FrameTimerPath.ToString();
                 AddChild(frameTimer);
             }
+
+            // 親が Node2D であることを確認してキャッシュしておく
+            var parent = GetParentOrNull<Node2D>();
+            OwnedEntity = parent ?? throw new ApplicationException("WeaponBase は IEntity の子ノードでなければなりません");
         }
         else if (what == NotificationReady)
         {
