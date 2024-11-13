@@ -15,4 +15,3 @@ void fragment() {
 	COLOR = mix(shadow, col, col.a);
 	COLOR.rgb += hit;
 }
-
