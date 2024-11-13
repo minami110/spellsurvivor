@@ -16,35 +16,6 @@ public readonly struct ProjectileHitInfo
 public partial class BaseProjectile : Area2D
 {
     /// <summary>
-    /// Projectile のダメージ
-    /// </summary>
-    [Export]
-    public float Damage { get; set; }
-
-    /// <summary>
-    /// Projectile の寿命 (フレーム数)
-    /// </summary>
-    [Export(PropertyHint.Range, "0,_FORCED_LIFETIME,1,suffix:frames")]
-    public uint LifeFrame
-    {
-        get => _lifeFrame;
-        set => _lifeFrame = Math.Min(value, _FORCED_LIFETIME);
-    }
-
-    /// <summary>
-    /// Projectile の 1秒あたりの速度 (px)
-    /// </summary>
-    [Obsolete("Use ConstantForce instead")]
-    [Export(PropertyHint.Range, "0,9999,1,suffix:px/s")]
-    public uint Speed { get; set; }
-
-    /// <summary>
-    /// ノックバック速度
-    /// </summary>
-    [Export(PropertyHint.Range, "0,9999,1,suffix:px/s")]
-    public uint Knockback { get; set; }
-
-    /// <summary>
     /// Projectile の最大生存時間 (フレーム数)
     /// </summary>
     private const uint _FORCED_LIFETIME = 7200u;
@@ -67,6 +38,25 @@ public partial class BaseProjectile : Area2D
     /// </summary>
     public Vector2 ConstantForce;
 
+    /// <summary>
+    /// Projectile のダメージ
+    /// </summary>
+    internal float Damage { get; set; }
+
+    /// <summary>
+    /// Projectile の寿命 (フレーム数)
+    /// </summary>
+    internal uint LifeFrame
+    {
+        get => _lifeFrame;
+        set => _lifeFrame = Math.Min(value, _FORCED_LIFETIME);
+    }
+
+    /// <summary>
+    /// ノックバック速度
+    /// </summary>
+    internal uint Knockback { get; set; }
+
     public ProjectileHitInfo HitInfo { get; internal set; }
 
     /// <summary>
@@ -84,12 +74,6 @@ public partial class BaseProjectile : Area2D
     /// 現在の寿命 (フレーム数)
     /// </summary>
     public uint Age { get; private set; }
-
-    /// <summary>
-    /// 現在進む方向
-    /// </summary>
-    [Obsolete("Use ConstantForce instead")]
-    public Vector2 Direction { get; set; }
 
     /// <summary>
     /// この Projectile を発射した Weapon (OnReady で自動で取得)
