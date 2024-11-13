@@ -57,7 +57,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
             .Subscribe(this, (x, self) => { self._moveSpeed = x; })
             .AddTo(this);
         _faceDirection.AddTo(this);
-        
+
         var healthBar = GetNodeOrNull<Range>("HealthBar");
         if (healthBar is not null)
         {
@@ -139,7 +139,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
     {
         GetNode<PlayerState>("%PlayerState").AddEffect(effect);
     }
-    
+
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
         AddEffect(new PhysicalDamageEffect { Value = amount });
