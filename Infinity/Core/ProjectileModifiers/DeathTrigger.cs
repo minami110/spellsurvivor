@@ -15,8 +15,6 @@ public partial class DeathTrigger : Node
 
     public required WhyDead When { get; init; }
 
-    public required float Speed { get; init; }
-
     public override void _EnterTree()
     {
         var projectile = GetParent<BaseProjectile>();
@@ -48,16 +46,6 @@ public partial class DeathTrigger : Node
 
         // Spawn Next 
         Next.Position = hitInfo.Position;
-
-        // ToDo: ベクトル生成, 外部化でいい節がある
-        // 反射ベクトルを計算する
-        var normal = hitInfo.Normal;
-        var direction = hitInfo.Velocity.Normalized();
-        var refvec = direction - 2 * direction.Dot(normal) * normal;
-        Next.ConstantForce = refvec * Speed;
-
-        // ToDO: HitInfo を継承する (Note: 一部 Mod が前回の HitInfo を使うので)
-        Next.HitInfo = parent.HitInfo;
 
         weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, Next);
     }

@@ -10,11 +10,34 @@ namespace fms.Weapon;
 /// </summary>
 public partial class FirecrackerGen : WeaponBase
 {
+    [ExportGroup("Bomb Projectile")]
     [Export]
     private PackedScene _projectile0 = null!;
 
-    [Export]
-    private PackedScene _projectile1 = null!;
+    /// <summary>
+    /// 爆弾の投擲速度
+    /// </summary>
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px/s")]
+    private float _throwSpeed = 100f;
+
+    [Export(PropertyHint.Range, "0,9999,1,suffix:frames")]
+    private uint _bombLife = 120u;
+
+    /// <summary>
+    /// 攻撃を実行する際の敵の検索範囲
+    /// </summary>
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private float _maxRange = 200f;
+
+    [ExportGroup("Area Projectile")]
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private uint _areaRadius = 30u;
+
+    [Export(PropertyHint.Range, "0,9999,1,suffix:frames")]
+    private uint _areaDamageSpan = 10u;
+
+    [Export(PropertyHint.Range, "0,9999,1,suffix:frames")]
+    private uint _areaLife = 90u;
 
     [ExportGroup("For Debugging")]
     [Export]
@@ -22,6 +45,11 @@ public partial class FirecrackerGen : WeaponBase
 
     [Export]
     private float TrickShotDamageMul { get; set; }
+
+    public override void _Ready()
+    {
+        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
+    }
 
     private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
     {
@@ -45,66 +73,40 @@ public partial class FirecrackerGen : WeaponBase
 
     private protected override void SpawnProjectile(uint level)
     {
-        var prj0 = ConstructProj(false);
-
-        if (TrickShotCount >= 1)
+        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
+        if (!aim.IsAiming)
         {
-            // Trickshot 1
-            var prj1 = ConstructProj(true);
-            prj0.AddChild(new DeathTrigger
+            return;
+        }
+
+        var enemy = aim.NearestEnemy!;
+
+        // 展開後のエリアダメージ
+        var area = new CircleAreaProjectile();
+        {
+            area.Damage = BaseDamage;
+            area.Knockback = Knockback;
+            area.DamageEveryXFrames = _areaDamageSpan;
+            area.LifeFrame = _areaLife;
+            area.Radius = _areaRadius;
+            area.Offset = new Vector2(0, 0);
+        }
+
+        // 爆弾本体
+        var bomb = _projectile0.Instantiate<BaseProjectile>();
+        {
+            bomb.Damage = 0f; // 本体はダメージを与えない
+            bomb.Knockback = 0u; // 本体はノックバックを与えない
+            bomb.LifeFrame = _bombLife;
+            bomb.ConstantForce = (enemy.GlobalPosition - GlobalPosition).Normalized() * _throwSpeed;
+
+            bomb.AddChild(new DeathTrigger
             {
-                Next = prj1,
-                When = WhyDead.CollidedWithAny,
-                Speed = 0f
+                Next = area,
+                When = WhyDead.CollidedWithAny | WhyDead.Life // 何かにぶつかった or 寿命が来たらエリアダメージを展開する
             });
-
-            if (TrickShotCount >= 2)
-            {
-                // Trickshot 2
-                var prj2 = ConstructProj(true);
-                prj1.AddChild(new DeathTrigger
-                {
-                    Next = prj2,
-                    When = WhyDead.CollidedWithAny,
-                    Speed = 0f
-                });
-            }
         }
 
-        AddProjectile(prj0);
-    }
-
-    private BaseProjectile ConstructProj(bool trickshot)
-    {
-        // 根本のダメージない奴
-        var mainPrj = _projectile0.Instantiate<BaseProjectile>();
-        if (!trickshot)
-        {
-            mainPrj.GlobalPosition = GlobalPosition;
-        }
-
-        // 自動で敵狙う, 敵いないなら打たない
-        mainPrj.AddChild(new AutoAim
-        {
-            Mode = AutoAimMode.KillPrjWhenSearchFailed,
-            SearchRadius = 200
-        });
-
-        // 毒沼部分
-        var subPrj = _projectile1.Instantiate<BaseProjectile>();
-
-        if (trickshot)
-        {
-            subPrj.AddChild(new DamageMod { Multiply = TrickShotDamageMul });
-        }
-
-        mainPrj.AddChild(new DeathTrigger
-        {
-            Next = subPrj,
-            When = WhyDead.CollidedWithAny,
-            Speed = 0f
-        });
-
-        return mainPrj;
+        AddProjectile(bomb, GlobalPosition);
     }
 }

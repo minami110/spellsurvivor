@@ -2,17 +2,23 @@
 
 [ext_resource type="Script" path="res://Infinity/Weapons/FirecrackerGen.cs" id="1_j7148"]
 [ext_resource type="PackedScene" uid="uid://c03ya53oowgc4" path="res://Infinity/Projectiles/(Projectile) Bomb.tscn" id="2_graak"]
-[ext_resource type="PackedScene" uid="uid://rjw7gc5oxitd" path="res://Infinity/Projectiles/(Projectile) FirecrackerAreaDamage.tscn" id="3_n2427"]
-[ext_resource type="Texture2D" uid="uid://bufla4g8aocx6" path="res://Common/Resources/Textures/2dgizmo_8x8.png" id="4_i2en4"]
+[ext_resource type="Texture2D" uid="uid://cos3d4b1k4o1q" path="res://Common/Resources/Textures/Emoji/bomb.png" id="4_5k7dl"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="5_6386n"]
 
 [node name="Firecracker" type="Node2D"]
 script = ExtResource("1_j7148")
 _projectile0 = ExtResource("2_graak")
-_projectile1 = ExtResource("3_n2427")
+BaseDamage = 5.0
 BaseCoolDownFrame = 100
-metadata/_edit_group_ = true
+Knockback = 0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="AimToNearEnemy" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("5_6386n")
+
+[node name="Sprite2D" type="Sprite2D" parent="AimToNearEnemy"]
 texture_filter = 1
-texture = ExtResource("4_i2en4")
-centered = false
+scale = Vector2(0.14, 0.14)
+texture = ExtResource("4_5k7dl")
