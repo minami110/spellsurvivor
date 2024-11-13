@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Infinity/Weapons/WideShotShotgun.cs" id="1_c565q"]
 [ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) SparkBolt.tscn" id="2_i1r1w"]
-[ext_resource type="Script" path="res://Infinity/Weapons/AimToNearEnemy.cs" id="3_qrn4t"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="3_qrn4t"]
 [ext_resource type="Texture2D" uid="uid://c2wpoue220kop" path="res://Common/Resources/Textures/Nakagiri/WideShotShotgun.png" id="4_58v3b"]
 
 [node name="WideShotShotgun" type="Node2D"]

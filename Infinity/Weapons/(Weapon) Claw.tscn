@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://b1is8i4sj01ki"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Claw.cs" id="1_0taiu"]
-[ext_resource type="Script" path="res://Infinity/Weapons/AimToNearEnemy.cs" id="4_1janu"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="4_1janu"]
 [ext_resource type="Texture2D" uid="uid://dmrvxabprg7y0" path="res://Common/Resources/Textures/AI Emojis/claw.png" id="4_umwcb"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_wa13x"]

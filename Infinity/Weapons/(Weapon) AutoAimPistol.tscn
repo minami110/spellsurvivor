@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Infinity/Weapons/AutoAimPistol.cs" id="1_p2onu"]
 [ext_resource type="PackedScene" uid="uid://bh75eb2lfndkv" path="res://Infinity/Projectiles/(Projectile) EnergyOrb.tscn" id="2_ctqn5"]
-[ext_resource type="Script" path="res://Infinity/Weapons/AimToNearEnemy.cs" id="3_t4nq4"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="3_t4nq4"]
 [ext_resource type="Texture2D" uid="uid://cf8sqsunyrjpl" path="res://Common/Resources/Textures/Emoji/gun.png" id="4_m5utu"]
 
 [node name="AutoAimPistol" type="Node2D"]
