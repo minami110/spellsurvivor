@@ -40,7 +40,6 @@ public partial class Orbit : Node
         }
 
         _projectile = prj;
-        _projectile.Speed *= 20;
     }
 
     public override void _PhysicsProcess(double delta)
