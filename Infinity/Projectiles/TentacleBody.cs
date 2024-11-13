@@ -8,7 +8,16 @@ namespace fms.Weapon;
 /// </summary>
 public partial class TentacleBody : AreaProjectile
 {
-    public Vector2 DamageSize;
+    internal Vector2 DamageSize;
+    internal uint DetectionRadius;
+
+    public override void _EnterTree()
+    {
+        // Circle Shape の Radius を設定する
+        var col = GetNode<CollisionShape2D>("CollisionShape2D");
+        var circle = (CircleShape2D)col.Shape;
+        circle.Radius = DetectionRadius;
+    }
 
     /// <summary>
     /// Projectile のダメージ処理をオーバーライドして新しい弾を生成する

@@ -3,8 +3,7 @@
 [ext_resource type="Script" path="res://Infinity/Projectiles/TentacleBody.cs" id="1_1egpm"]
 [ext_resource type="Texture2D" uid="uid://bgpd8lly2nuk" path="res://Common/Resources/Textures/Emoji/octopus.png" id="2_8re3w"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_1wghh"]
-radius = 85.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_au7ev"]
 
 [node name="TentacleBody" type="Area2D"]
 collision_layer = 0
@@ -19,5 +18,5 @@ texture = ExtResource("2_8re3w")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(2, 2)
-shape = SubResource("CircleShape2D_1wghh")
+shape = SubResource("CircleShape2D_au7ev")
 debug_color = Color(0.756, 0.432, 0.397, 0)
