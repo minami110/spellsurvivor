@@ -136,7 +136,6 @@ public partial class Hornet : EnemyBase
             // プレイヤー / 壁 に当たるようにする
             prj.CollisionMask = Constant.LAYER_PLAYER | Constant.LAYER_WALL;
             prj.Damage = BaseDamage;
-            prj.Speed = 180;
             prj.LifeFrame = 300;
             prj.PenetrateEnemy = false;
             prj.PenetrateWall = false;
@@ -144,10 +143,12 @@ public partial class Hornet : EnemyBase
 
         // プレイヤーに向けて発射する
         var direction = (_playerNode!.GlobalPosition - GlobalPosition).Normalized();
+        prj.ConstantForce = direction * 180;
+
         var pos = GlobalPosition;
 
         // 武器から発射する
-        _weapon.AddProjectile(prj, pos, direction);
+        _weapon.AddProjectile(prj, pos);
     }
 
     private enum MovementState

@@ -176,11 +176,6 @@ public partial class BaseProjectile : Area2D
 
     private protected virtual void IntegrateForces(double delta)
     {
-        // 毎フレーム Direction * Speed の Vector を加算する
-        // ToDo: Direction とかいうなまえがわかりにくい, Constant Force とかに統合しちゃったほうがわかりやすいかも
-        var constantForce = Direction.Normalized() * Speed;
-        LinearVelocity += constantForce;
-
         LinearVelocity += ConstantForce;
 
         if (LinearVelocity.LengthSquared() <= 0f)

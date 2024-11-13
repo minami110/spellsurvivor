@@ -82,7 +82,7 @@ public partial class BulletProjectile : BaseProjectile
             HitNode = node,
             Position = GlobalPosition,
             Normal = (GlobalPosition - node.GlobalPosition).Normalized(),
-            Velocity = Direction.Normalized() * Speed
+            Velocity = PrevLinearVelocity
         };
 
         // Hit を通知する
