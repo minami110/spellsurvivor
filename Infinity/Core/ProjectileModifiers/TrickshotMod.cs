@@ -1,6 +1,7 @@
 ﻿using System;
 using fms.Weapon;
 using Godot;
+using Godot.Collections;
 using R3;
 
 namespace fms.Projectile;
@@ -13,17 +14,13 @@ namespace fms.Projectile;
 /// </summary>
 public partial class TrickshotMod : Node
 {
-    public required Func<PackedScene, Vector2, Vector2, uint, uint, BaseProjectile> ProjectileSpawnAction { get; init; }
+    public required Func<Dictionary, BaseProjectile> Next { get; init; }
 
     public required WhyDead When { get; init; }
 
     public required float SearchRadius { get; init; }
 
-    public required uint Depth { get; init; }
-
-    public required uint MaxDepth { get; init; }
-
-    public required PackedScene Projectile { get; init; }
+    public required Dictionary Payload { get; init; }
 
     public override void _EnterTree()
     {
@@ -73,10 +70,26 @@ public partial class TrickshotMod : Node
             // ToDo: 一番近いやつを選ぶ
             var dict = result[0];
             var collider = (Node2D)dict["collider"];
-            var vec = (collider.GlobalPosition - parent.GlobalPosition).Normalized();
+            var dir = (collider.GlobalPosition - parent.GlobalPosition).Normalized();
+
+            // Update payload
+            Payload["Direction"] = dir;
+
+            // Trickshot の Iteration を更新する
+            if (Payload.TryGetValue("Iter", out var iter))
+            {
+                Payload["Iter"] = (int)iter + 1;
+            }
+            else
+            {
+                Payload["Iter"] = 1;
+            }
+
+            Payload["WhyDead"] = (ulong)why;
+            Payload["DeadPosition"] = parent.Position;
 
             // Spawn Next 
-            var next = ProjectileSpawnAction(Projectile, hitInfo.Position, vec, Depth + 1, MaxDepth);
+            var next = Next(Payload);
             weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, next);
         }
     }

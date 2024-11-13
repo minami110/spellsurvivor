@@ -33,6 +33,7 @@ public partial class DeathTrigger : Node
         var weapon = parent.Weapon;
         var info = new Dictionary
         {
+            { "WhyDead", (ulong)why }, // 消滅理由
             { "DeadPosition", parent.Position } // Projectile が消滅した位置
         };
 
