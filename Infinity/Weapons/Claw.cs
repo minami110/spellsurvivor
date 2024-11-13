@@ -71,6 +71,9 @@ public partial class Claw : WeaponBase
         // 0: 60f, 1: 50f, 2: 40f, 3: 30f, 4: 20f, 5: 10f
         var newCoolDown = 60u - _enemyHitStacks * 10u;
         BaseCoolDownFrame = newCoolDown;
+
+        // GUI を更新する
+        UpdateStackLabel();
     }
 
     private protected override void SpawnProjectile(uint level)
@@ -91,6 +94,7 @@ public partial class Claw : WeaponBase
             prj.LifeFrame = 30u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
             prj.DamageEveryXFrames = 0u; // 一度ダメージを与えて消滅する
             prj.Size = _damageSize;
+            prj.Offset = new Vector2(_damageSize.X / 2f, 0f); // 原点に左辺が重なるような Offset を設定
         }
 
         // 敵の方向を向くような rotation を計算する
@@ -101,18 +105,37 @@ public partial class Claw : WeaponBase
         // Note: プレイ間確かめながらスポーン位置のピクセル数は調整する
         var pos = GlobalPosition + dir.Normalized() * 15;
 
-        AddProjectile(prj, pos, angle);
-
-        // Note: AddTo はシーンに入れたあとしかできないので
         // Projectile が Enemy にヒットしたら Stack を一つ貯める
         // Prj は貫通するが, 一つの Prj につき 1回だけ Stack を貯められるので Take(1) を入れている
-        prj.Hit.Where(x => x.HitNode is EnemyBase)
+        prj.Hit
+            .Where(x => x.HitNode is EnemyBase)
             .Take(1)
-            .Subscribe(hitInfo =>
+            .Subscribe(this, (_, s) =>
             {
-                _enemyHitStacks++;
-                _enemyHitReduceCounter = 0;
+                s._enemyHitStacks++;
+                s._enemyHitReduceCounter = 0;
             })
-            .AddTo(prj);
+            .AddTo(this);
+
+        AddProjectile(prj, pos, angle);
+    }
+
+    private void UpdateStackLabel()
+    {
+        var label = GetNodeOrNull<Label>("StackLabel");
+        if (label is null)
+        {
+            return;
+        }
+
+        if (_enemyHitStacks == 0)
+        {
+            label.Hide();
+        }
+        else
+        {
+            label.Show();
+            label.Text = $"+{_enemyHitStacks}";
+        }
     }
 }

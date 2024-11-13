@@ -8,6 +8,7 @@ namespace fms.Projectile;
 /// </summary>
 public partial class RectAreaProjectile : AreaProjectile
 {
+    private Vector2 _offset;
     private Vector2 _size;
 
     public Vector2 Size
@@ -22,10 +23,29 @@ public partial class RectAreaProjectile : AreaProjectile
 
             if (IsNodeReady())
             {
-                UpdateSize(value);
+                UpdateSizeAndOffset(value, _offset);
             }
 
             _size = value;
+        }
+    }
+
+    public Vector2 Offset
+    {
+        get => _offset;
+        set
+        {
+            if (Math.Abs(_offset.X - value.X) <= 0.0001f && Math.Abs(_offset.Y - value.Y) <= 0.0001f)
+            {
+                return;
+            }
+
+            if (IsNodeReady())
+            {
+                UpdateSizeAndOffset(_size, value);
+            }
+
+            _offset = value;
         }
     }
 
@@ -34,23 +54,13 @@ public partial class RectAreaProjectile : AreaProjectile
         Monitorable = false;
         CollisionLayer = Constant.LAYER_NONE;
         CollisionMask = Constant.LAYER_MOB;
-        UpdateSize(_size);
+        UpdateSizeAndOffset(_size, _offset);
     }
 
-    private void UpdateSize(in Vector2 newSize)
+    private void UpdateSizeAndOffset(in Vector2 newSize, in Vector2 offset)
     {
         // Find CollisionShape2D
-        CollisionShape2D? collisionShape = null;
-        foreach (var c in GetChildren())
-        {
-            if (c is not CollisionShape2D cs)
-            {
-                continue;
-            }
-
-            collisionShape = cs;
-            break;
-        }
+        var collisionShape = this.FindFirstChild<CollisionShape2D>();
 
         // Do not exist, create new one
         if (collisionShape is null)
@@ -67,11 +77,11 @@ public partial class RectAreaProjectile : AreaProjectile
             collisionShape.Shape = newShape;
         }
 
-        // 指定されたサイズに更新する, オフセットを入れて Rect の左辺が原点に重なるようにする
+        // 指定されたサイズに更新する
         if (collisionShape.Shape is RectangleShape2D rectShape)
         {
             rectShape.Size = newSize;
-            collisionShape.Position = new Vector2(newSize.X / 2f, 0f);
+            collisionShape.Position = offset;
         }
         else
         {
