@@ -12,7 +12,7 @@ public partial class Hocho : WeaponBase
     /// 生成するダメージエリアのサイズ
     /// </summary>
     [Export]
-    private Vector2 _damageSize = new(60, 10);
+    private Vector2 _damageSize = new(80, 10);
 
     /// <summary>
     /// 攻撃を実行する際の敵の検索範囲
@@ -77,6 +77,7 @@ public partial class Hocho : WeaponBase
             prj.LifeFrame = 30u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
             prj.DamageEveryXFrames = 0u; // 一度ダメージを与えたら消滅する
             prj.Size = _damageSize;
+            prj.Offset = new Vector2(_damageSize.X / 2f, 0f); // 原点に左辺が重なるような Offset を設定
         }
 
         // 敵の方向を向くような rotation を計算する
@@ -85,7 +86,7 @@ public partial class Hocho : WeaponBase
 
         // 自分の位置から angle 方向に ちょっと伸ばした位置を計算してダメージを発生させる
         // Note: プレイ間確かめながらスポーン位置のピクセル数は調整する
-        var pos = GlobalPosition + dir.Normalized() * 60;
+        var pos = GlobalPosition + dir.Normalized() * 20;
 
         AddProjectile(prj, pos, angle);
     }
