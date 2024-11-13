@@ -35,6 +35,7 @@ public partial class TentacleBody : AreaProjectile
                 prj.LifeFrame = 30u; // 一発しばいたら終わりなので短く適当に
                 prj.DamageEveryXFrames = 0u; // 一度ダメージを与えて消滅する設定
                 prj.Size = DamageSize;
+                prj.Offset = new Vector2(DamageSize.X / 2f, 0f); // 原点に左辺が重なるような Offset を設定
             }
 
             // 敵の方向を向くような rotation を計算する
