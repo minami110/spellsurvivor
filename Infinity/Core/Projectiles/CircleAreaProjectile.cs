@@ -4,29 +4,29 @@ using Godot;
 namespace fms.Projectile;
 
 /// <summary>
-/// Rect 形状の AreaProjectile
+/// Circle 形状の AreaProjectile
 /// </summary>
-public partial class RectAreaProjectile : AreaProjectile
+public partial class CircleAreaProjectile : AreaProjectile
 {
     private Vector2 _offset;
-    private Vector2 _size;
+    private float _radius;
 
-    public Vector2 Size
+    public float Radius
     {
-        get => _size;
+        get => _radius;
         set
         {
-            if (Math.Abs(_size.X - value.X) <= 0.0001f && Math.Abs(_size.Y - value.Y) <= 0.0001f)
+            if (Math.Abs(_radius - value) <= 0.0001f)
             {
                 return;
             }
 
             if (IsNodeReady())
             {
-                UpdateSizeAndOffset(value, _offset);
+                UpdateRadiusAndOffset(value, _offset);
             }
 
-            _size = value;
+            _radius = value;
         }
     }
 
@@ -42,7 +42,7 @@ public partial class RectAreaProjectile : AreaProjectile
 
             if (IsNodeReady())
             {
-                UpdateSizeAndOffset(_size, value);
+                UpdateRadiusAndOffset(_radius, value);
             }
 
             _offset = value;
@@ -54,10 +54,10 @@ public partial class RectAreaProjectile : AreaProjectile
         Monitorable = false;
         CollisionLayer = Constant.LAYER_NONE;
         CollisionMask = Constant.LAYER_MOB;
-        UpdateSizeAndOffset(_size, _offset);
+        UpdateRadiusAndOffset(_radius, _offset);
     }
 
-    private void UpdateSizeAndOffset(in Vector2 size, in Vector2 offset)
+    private void UpdateRadiusAndOffset(float radius, in Vector2 offset)
     {
         // Find CollisionShape2D
         var collisionShape = this.FindFirstChild<CollisionShape2D>();
@@ -73,19 +73,19 @@ public partial class RectAreaProjectile : AreaProjectile
         // Update CircleShape2D radius, if not exist, create new one
         if (collisionShape.Shape is null)
         {
-            var newShape = new RectangleShape2D();
+            var newShape = new CircleShape2D();
             collisionShape.Shape = newShape;
         }
 
         // 指定されたサイズに更新する
-        if (collisionShape.Shape is RectangleShape2D rectShape)
+        if (collisionShape.Shape is CircleShape2D circleShape)
         {
-            rectShape.Size = size;
+            circleShape.Radius = radius;
             collisionShape.Position = offset;
         }
         else
         {
-            throw new InvalidOperationException($"Shape must be {nameof(RectangleShape2D)}");
+            throw new InvalidOperationException($"Shape must be {nameof(CircleShape2D)}");
         }
     }
 }

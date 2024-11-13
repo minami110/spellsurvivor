@@ -4,18 +4,14 @@
 [ext_resource type="Texture2D" uid="uid://5mgf28e054d7" path="res://Common/Resources/Textures/Emoji/japanese_ogre.png" id="2_imyyw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_j4vjk"]
-radius = 30.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sg7k6"]
-radius = 150.0
 
 [node name="ParasiteAreaDamage" type="Area2D" groups=["Projectile"]]
 collision_layer = 0
 collision_mask = 4
 monitorable = false
 script = ExtResource("1_ltqpd")
-Damage = 20.0
-Speed = 100
 
 [node name="Sprite" type="TextureRect" parent="."]
 anchors_preset = 8
@@ -32,7 +28,7 @@ grow_vertical = 2
 texture = ExtResource("2_imyyw")
 expand_mode = 1
 
-[node name="DamageCollision" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_j4vjk")
 debug_color = Color(1, 0, 0, 0)
 

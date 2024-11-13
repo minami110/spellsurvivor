@@ -30,6 +30,21 @@ public static partial class NodeExtensions
         GD.Print($"[{node.GetType()}] {message}");
     }
 
+    public static T? FindFirstChild<T>(this Node node)
+        where T : Node
+    {
+        var size = node.GetChildCount();
+        for (var i = 0; i < size; i++)
+        {
+            if (node.GetChild(i) is T t)
+            {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// Finds sibling nodes with the specified pattern and type. GetParent().FindChildren() wrapper.
     /// </summary>

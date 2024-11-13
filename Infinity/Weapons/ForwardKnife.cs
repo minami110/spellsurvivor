@@ -2,6 +2,7 @@
 using fms.Effect;
 using fms.Projectile;
 using Godot;
+using Godot.Collections;
 
 namespace fms.Weapon;
 
@@ -71,17 +72,14 @@ public partial class ForwardKnife : WeaponBase
         }
     }
 
-    // ToDo: Heap Allocation 対策で Static にする
-    private void AddTrickShotMod(BaseProjectile parent, PackedScene p, uint currentDepth, uint maxDepth)
+    private static void RegisterTrickshot(BaseProjectile parent, Dictionary payload)
     {
         parent.AddChild(new TrickshotMod
         {
-            ProjectileSpawnAction = TrickShotSpawnCallback,
+            Next = SpawnTrickshotProjectile,
             When = WhyDead.CollidedWithAny,
             SearchRadius = 200, // Trickshot 実行時の敵検索範囲,
-            Depth = currentDepth,
-            MaxDepth = maxDepth,
-            Projectile = p
+            Payload = payload
         });
     }
 
@@ -99,30 +97,40 @@ public partial class ForwardKnife : WeaponBase
             prjMain.ConstantForce = direction * _speed;
         }
 
-        // DeathTrigger を追加する
+        // Trickshot が有効な場合は登録する
         if (TrickShotCount > 0 || TrickShotDamageMul > 0f)
         {
-            AddTrickShotMod(prjMain, _projectile, 0, (uint)TrickShotCount);
+            var payload = new Dictionary
+            {
+                { "BaseDamage", BaseDamage },
+                { "Knockback", Knockback },
+                { "Speed", _speed },
+                { "Life", _life },
+                { "TrickShotCount", TrickShotCount },
+                { "TrickShotDamageMul", TrickShotDamageMul },
+                { "ProjectileScene", _projectile }
+            };
+
+            RegisterTrickshot(prjMain, payload);
         }
 
         var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
         AddProjectile(prjMain, spawnPos);
     }
 
-    // ToDo: Heap Allocation 対策で Static にする
-    private BaseProjectile TrickShotSpawnCallback(PackedScene p, Vector2 pos, Vector2 direction, uint depth,
-        uint maxDepth)
+    private static BaseProjectile SpawnTrickshotProjectile(Dictionary payload)
     {
-        var prj = p.Instantiate<BaseProjectile>();
-        prj.Position = pos;
-        prj.Damage = BaseDamage * TrickShotDamageMul;
-        prj.Knockback = Knockback;
-        prj.LifeFrame = _life;
-        prj.ConstantForce = direction * _speed;
+        var prj = ((PackedScene)payload["ProjectileScene"]).Instantiate<BaseProjectile>();
 
-        if (depth < maxDepth)
+        prj.Position = (Vector2)payload["DeadPosition"];
+        prj.Damage = (float)payload["BaseDamage"] * (float)payload["TrickShotDamageMul"];
+        prj.Knockback = (uint)payload["Knockback"];
+        prj.LifeFrame = (uint)payload["Life"];
+        prj.ConstantForce = (Vector2)payload["Direction"] * (float)payload["Speed"];
+
+        if ((int)payload["Iter"] < (int)payload["TrickShotCount"])
         {
-            AddTrickShotMod(prj, p, depth, maxDepth);
+            RegisterTrickshot(prj, payload);
         }
 
         return prj;

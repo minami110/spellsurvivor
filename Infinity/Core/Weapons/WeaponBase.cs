@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using fms.Effect;
 using fms.Faction;
 using fms.Projectile;
@@ -102,6 +103,11 @@ public partial class WeaponBase : Node2D
     public string MinionId { get; internal set; } = string.Empty;
 
     /// <summary>
+    /// この武器を所有している Entity
+    /// </summary>
+    public Node2D OwnedEntity { get; private set; } = null!;
+
+    /// <summary>
     /// Effect の解決後の Cooldown のフレーム数
     /// </summary>
     public uint SolvedCoolDownFrame
@@ -138,6 +144,10 @@ public partial class WeaponBase : Node2D
                 frameTimer.Name = FrameTimerPath.ToString();
                 AddChild(frameTimer);
             }
+
+            // 親が Node2D であることを確認してキャッシュしておく
+            var parent = GetParentOrNull<Node2D>();
+            OwnedEntity = parent ?? throw new ApplicationException("WeaponBase は IEntity の子ノードでなければなりません");
         }
         else if (what == NotificationReady)
         {
@@ -170,6 +180,7 @@ public partial class WeaponBase : Node2D
         _isDirtyEffect = true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AddProjectile(BaseProjectile projectile)
     {
         // Note: FrameTimer が Node 継承 (座標がない) かつ必ず存在しているのでその子にスポーンする
@@ -179,14 +190,6 @@ public partial class WeaponBase : Node2D
     public void AddProjectile(BaseProjectile projectile, Vector2 position)
     {
         projectile.Position = position;
-        AddProjectile(projectile);
-    }
-
-    [Obsolete("Use AddProjectile(BaseProjectile, Vector2) instead")]
-    public void AddProjectile(BaseProjectile projectile, Vector2 position, Vector2 direction)
-    {
-        projectile.Position = position;
-        projectile.Direction = direction;
         AddProjectile(projectile);
     }
 

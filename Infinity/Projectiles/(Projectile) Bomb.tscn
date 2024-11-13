@@ -9,12 +9,11 @@
 particle_flag_disable_z = true
 gravity = Vector3(0, 98, 0)
 
-[node name="Bomb" type="Area2D" groups=["Projectile"]]
+[node name="Bomb" type="Area2D"]
 collision_layer = 0
 collision_mask = 4
+monitorable = false
 script = ExtResource("1_1pitn")
-LifeFrame = 120
-Speed = 100
 
 [node name="Sprite" type="TextureRect" parent="."]
 anchors_preset = 8
