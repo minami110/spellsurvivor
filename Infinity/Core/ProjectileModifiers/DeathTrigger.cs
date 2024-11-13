@@ -15,6 +15,8 @@ public partial class DeathTrigger : Node
 
     public required WhyDead When { get; init; }
 
+    public required Dictionary Payload { get; init; }
+
     public override void _EnterTree()
     {
         var projectile = GetParent<BaseProjectile>();
@@ -31,13 +33,12 @@ public partial class DeathTrigger : Node
 
         var parent = GetParent<BaseProjectile>();
         var weapon = parent.Weapon;
-        var info = new Dictionary
-        {
-            { "WhyDead", (ulong)why }, // 消滅理由
-            { "DeadPosition", parent.Position } // Projectile が消滅した位置
-        };
 
-        var prj = Next(info);
+        // Payload に死亡理由を追加
+        Payload["WhyDead"] = (ulong)why;
+        Payload["DeadPosition"] = parent.Position;
+
+        var prj = Next(Payload);
         weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, prj);
     }
 }
