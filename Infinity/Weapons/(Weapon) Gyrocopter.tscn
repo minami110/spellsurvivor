@@ -1,12 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://ckmcgmqfjqo6s"]
+[gd_scene load_steps=5 format=3 uid="uid://ckmcgmqfjqo6s"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Gyrocopter.cs" id="1_vlwh6"]
 [ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) SparkBolt.tscn" id="2_a7bqb"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="3_4bldk"]
 [ext_resource type="Texture2D" uid="uid://ctoyojvjd2wsq" path="res://Common/Resources/Textures/Emoji/helicopter.png" id="4_2s37q"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_iydas"]
-radius = 200.0
 
 [node name="Gyrocopter" type="Node2D"]
 script = ExtResource("1_vlwh6")
@@ -24,7 +21,3 @@ script = ExtResource("3_4bldk")
 rotation = 3.14159
 scale = Vector2(0.2, -0.2)
 texture = ExtResource("4_2s37q")
-
-[node name="EnemyDetectCircle" type="CollisionShape2D" parent="AimToNearEnemy"]
-shape = SubResource("CircleShape2D_iydas")
-debug_color = Color(0.756, 0.432, 0.397, 0)
