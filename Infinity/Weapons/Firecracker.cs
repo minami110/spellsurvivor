@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using fms.Effect;
 using fms.Projectile;
 using Godot;
+using Godot.Collections;
 
 namespace fms.Weapon;
 
@@ -79,18 +80,7 @@ public partial class Firecracker : WeaponBase
             return;
         }
 
-        var enemy = aim.NearestEnemy!;
-
-        // 展開後のエリアダメージ
-        var area = new CircleAreaProjectile();
-        {
-            area.Damage = BaseDamage;
-            area.Knockback = Knockback;
-            area.DamageEveryXFrames = _areaDamageSpan;
-            area.LifeFrame = _areaLife;
-            area.Radius = _areaRadius;
-            area.Offset = new Vector2(0, 0);
-        }
+        var target = aim.NearestEnemy!;
 
         // 爆弾本体
         var bomb = _projectile0.Instantiate<BaseProjectile>();
@@ -98,15 +88,33 @@ public partial class Firecracker : WeaponBase
             bomb.Damage = 0f; // 本体はダメージを与えない
             bomb.Knockback = 0u; // 本体はノックバックを与えない
             bomb.LifeFrame = _bombLife;
-            bomb.ConstantForce = (enemy.GlobalPosition - GlobalPosition).Normalized() * _throwSpeed;
+            bomb.ConstantForce = (target.GlobalPosition - GlobalPosition).Normalized() * _throwSpeed;
 
             bomb.AddChild(new DeathTrigger
             {
-                Next = area,
+                Next = SpawnAreaDamage,
                 When = WhyDead.CollidedWithAny | WhyDead.Life // 何かにぶつかった or 寿命が来たらエリアダメージを展開する
             });
         }
 
         AddProjectile(bomb, GlobalPosition);
+    }
+
+    /// <summary>
+    /// 爆発後のエリアダメージを生成する処理, DeathTrigger のコールバックで呼び出される
+    /// </summary>
+    /// <returns></returns>
+    private BaseProjectile SpawnAreaDamage(Dictionary info)
+    {
+        var area = new CircleAreaProjectile();
+        area.Damage = BaseDamage;
+        area.Knockback = Knockback;
+        area.DamageEveryXFrames = _areaDamageSpan;
+        area.LifeFrame = _areaLife;
+        area.Radius = _areaRadius;
+        area.Offset = new Vector2(0, 0);
+        area.Position = (Vector2)info["DeadPosition"];
+
+        return area;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using fms.Effect;
 using fms.Faction;
 using fms.Projectile;
@@ -179,6 +180,7 @@ public partial class WeaponBase : Node2D
         _isDirtyEffect = true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AddProjectile(BaseProjectile projectile)
     {
         // Note: FrameTimer が Node 継承 (座標がない) かつ必ず存在しているのでその子にスポーンする
@@ -188,14 +190,6 @@ public partial class WeaponBase : Node2D
     public void AddProjectile(BaseProjectile projectile, Vector2 position)
     {
         projectile.Position = position;
-        AddProjectile(projectile);
-    }
-
-    [Obsolete("Use AddProjectile(BaseProjectile, Vector2) instead")]
-    public void AddProjectile(BaseProjectile projectile, Vector2 position, Vector2 direction)
-    {
-        projectile.Position = position;
-        projectile.Direction = direction;
         AddProjectile(projectile);
     }
 
