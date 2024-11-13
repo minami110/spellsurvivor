@@ -6,7 +6,7 @@ namespace fms.Weapon;
 /// <summary>
 /// ポイズンミストを生成する
 /// </summary>
-public partial class PoisonMistGen : WeaponBase
+public partial class PoisonMist : WeaponBase
 {
     [Export]
     private PackedScene _projectile = null!;
