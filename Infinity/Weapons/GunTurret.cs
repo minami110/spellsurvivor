@@ -5,7 +5,7 @@ namespace fms.Weapon;
 /// <summary>
 /// ガンタレットを生成する
 /// </summary>
-public partial class GunTurretGen : WeaponBase
+public partial class GunTurret : WeaponBase
 {
     /// <summary>
     /// タレット本体 の PackedScene
