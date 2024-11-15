@@ -8,6 +8,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="R3" Version="1.1.11" />
+    <PackageReference Include="R3" Version="1.2.9"/>
   </ItemGroup>
 </Project>
