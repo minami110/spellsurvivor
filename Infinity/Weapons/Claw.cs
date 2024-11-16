@@ -76,7 +76,7 @@ public partial class Claw : WeaponBase
         UpdateStackLabel();
     }
 
-    private protected override void SpawnProjectile(uint level)
+    private protected override void OnCoolDownComplete(uint level)
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
         if (!aim.IsAiming)

@@ -14,7 +14,7 @@ public partial class Book : WeaponBase
     [Export(PropertyHint.Range, "0,99,1")]
     private float _speedMultiplier = 1.0f;
 
-    private protected override void SpawnProjectile(uint level)
+    private protected override void OnCoolDownComplete(uint level)
     {
         for (var i = 0; i < level; i++)
         {

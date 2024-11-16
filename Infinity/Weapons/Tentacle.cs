@@ -33,7 +33,7 @@ public partial class Tentacle : WeaponBase
     [Export]
     private Vector2 _damageSize = new(180, 70);
 
-    private protected override void SpawnProjectile(uint level)
+    private protected override void OnCoolDownComplete(uint level)
     {
         var prj = _projectile.Instantiate<TentacleBody>();
         prj.Damage = BaseDamage;

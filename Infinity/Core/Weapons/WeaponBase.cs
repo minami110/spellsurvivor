@@ -151,8 +151,9 @@ public partial class WeaponBase : Node2D
         }
         else if (what == NotificationReady)
         {
+            // 武器のクールダウンが完了時のコールバックを登録
             FrameTimer.TimeOut
-                .Subscribe(this, (_, state) => { state.SpawnProjectile(state.Level); })
+                .Subscribe(this, (_, state) => { state.OnCoolDownComplete(state.Level); })
                 .AddTo(this);
 
             if (_autostart)
@@ -217,6 +218,14 @@ public partial class WeaponBase : Node2D
         FrameTimer.Stop();
     }
 
+    /// <summary>
+    /// 武器のクールダウンが終了した時に呼び出されるメソッド
+    /// </summary>
+    /// <param name="level">現在の武器のレベル</param>
+    private protected virtual void OnCoolDownComplete(uint level)
+    {
+    }
+
     private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
     {
     }
@@ -225,14 +234,6 @@ public partial class WeaponBase : Node2D
     /// 武器が起動したときに呼び出されるメソッド, 通常はバトルウェーブ開始時に呼ばれる
     /// </summary>
     private protected virtual void OnStartAttack()
-    {
-    }
-
-    /// <summary>
-    /// 武器のクールダウンが終了した時に呼び出されるメソッド
-    /// </summary>
-    /// <param name="level">現在の武器のレベル</param>
-    private protected virtual void SpawnProjectile(uint level)
     {
     }
 

@@ -25,7 +25,7 @@ public partial class AutoAimPistol : WeaponBase
         GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
     }
 
-    private protected override void SpawnProjectile(uint level)
+    private protected override void OnCoolDownComplete(uint level)
     {
         // 範囲内に敵がいない場合は何もしない
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
