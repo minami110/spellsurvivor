@@ -150,7 +150,8 @@ public partial class ShopState : Node
         player.AddChild(minion);
 
         // ToDo: 現在購入後デフォで装備にしています
-        minion.AddWeapon();
+        // Note: 開発用にデフォでツリーに入ったらクールダウンが動き始めてしまうので Off にしておく
+        minion.SpawnWeapon(false);
     }
 
     public void RefreshInStoreMinions()
