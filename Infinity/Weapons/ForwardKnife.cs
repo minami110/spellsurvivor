@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using fms.Effect;
 using fms.Projectile;
 using Godot;
@@ -18,11 +19,13 @@ public partial class ForwardKnife : WeaponBase
     private uint _life = 120u;
 
     [ExportGroup("For Debugging")]
+    // 反射回数
     [Export]
-    private int TrickShotCount { get; set; }
+    private int BounceCount { get; set; }
 
     [Export]
-    private float TrickShotDamageMul { get; set; }
+    // 反射時のダメージ倍率
+    private float BounceDamageMul { get; set; }
 
     private protected override void OnCoolDownComplete(uint level)
     {
@@ -54,8 +57,8 @@ public partial class ForwardKnife : WeaponBase
 
     private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
     {
-        TrickShotCount = 0;
-        TrickShotDamageMul = 0f;
+        BounceCount = 0;
+        BounceDamageMul = 0f;
 
         foreach (var effect in effects)
         {
@@ -64,19 +67,20 @@ public partial class ForwardKnife : WeaponBase
                 // この武器は Trickshot に対応しているので拾う
                 case TrickshotBounce trickshotBounceCount:
                 {
-                    TrickShotCount += trickshotBounceCount.BounceCount;
-                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
+                    BounceCount += trickshotBounceCount.BounceCount;
+                    BounceDamageMul += trickshotBounceCount.BounceDamageMultiplier;
                     break;
                 }
             }
         }
     }
 
-    private static void RegisterTrickshot(BaseProjectile parent, Dictionary payload)
+    // 引数の Projectile に Trickshot Mod を登録する
+    private static void AddTrickshotMod(BaseProjectile parent, Dictionary payload)
     {
         parent.AddChild(new TrickshotMod
         {
-            Next = SpawnTrickshotProjectile,
+            Next = SpawnNextProjectile,
             When = WhyDead.CollidedWithAny,
             SearchRadius = 200, // Trickshot 実行時の敵検索範囲,
             Payload = payload
@@ -93,12 +97,18 @@ public partial class ForwardKnife : WeaponBase
             prjMain.LifeFrame = _life;
 
             // Get Player's aim direction
-            var direction = GetParent<BasePlayerPawn>().LatestMoveDirection;
-            prjMain.ConstantForce = direction * _speed;
+            if (OwnedEntity is IPawn pawn)
+            {
+                prjMain.ConstantForce = pawn.GetAimDirection() * _speed;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        // Trickshot が有効な場合は登録する
-        if (TrickShotCount > 0 || TrickShotDamageMul > 0f)
+        // Trickshot が有効な場合は Mod を登録する
+        if (BounceCount > 0 || BounceDamageMul > 0f)
         {
             var payload = new Dictionary
             {
@@ -106,19 +116,20 @@ public partial class ForwardKnife : WeaponBase
                 { "Knockback", Knockback },
                 { "Speed", _speed },
                 { "Life", _life },
-                { "TrickShotCount", TrickShotCount },
-                { "TrickShotDamageMul", TrickShotDamageMul },
+                { "TrickShotCount", BounceCount },
+                { "TrickShotDamageMul", BounceDamageMul },
                 { "ProjectileScene", _projectile }
             };
 
-            RegisterTrickshot(prjMain, payload);
+            AddTrickshotMod(prjMain, payload);
         }
 
         var spawnPos = center + GlobalTransform.Y * xOffset + GlobalTransform.X * yOffset;
         AddProjectile(prjMain, spawnPos);
     }
 
-    private static BaseProjectile SpawnTrickshotProjectile(Dictionary payload)
+    // ヒット時に Mod から呼ばれるコールバック, 次の弾を生成する 
+    private static BaseProjectile SpawnNextProjectile(Dictionary payload)
     {
         var prj = ((PackedScene)payload["ProjectileScene"]).Instantiate<BaseProjectile>();
 
@@ -130,7 +141,7 @@ public partial class ForwardKnife : WeaponBase
 
         if ((int)payload["Iter"] < (int)payload["TrickShotCount"])
         {
-            RegisterTrickshot(prj, payload);
+            AddTrickshotMod(prj, payload);
         }
 
         return prj;

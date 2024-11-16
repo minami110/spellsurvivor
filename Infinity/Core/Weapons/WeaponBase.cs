@@ -49,6 +49,8 @@ public partial class WeaponBase : Node2D
     [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
     public uint Knockback { get; private set; } = 20u;
 
+    // ---------- Debug Parameters ----------
+
     /// <summary>
     /// Tree に入った時に自動で Start するかどうか
     /// </summary>
@@ -162,6 +164,8 @@ public partial class WeaponBase : Node2D
         }
         else if (what == NotificationProcess)
         {
+            // ToDo: ショップでも裏で動いてるのへんかも?
+            // こっちで対応するより, Shop にいるときは削除 みたいな上位からの実装があったほうが素直かも
             SolveEffect();
         }
     }
