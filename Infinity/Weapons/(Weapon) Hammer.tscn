@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://cnt1krkwwjugi"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/Hammer.cs" id="1_y4mha"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_bssf8"]
+[ext_resource type="Texture2D" uid="uid://cjr81gun7p500" path="res://Common/Resources/Textures/Emoji/hammer.png" id="3_pe7su"]
+
+[node name="Hammer" type="Node2D"]
+script = ExtResource("1_y4mha")
+_damageRadius = 110
+BaseDamage = 5.0
+BaseCoolDownFrame = 100
+Knockback = 50
+
+[node name="AimToNearEnemy" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("2_bssf8")
+
+[node name="Sprite" type="Sprite2D" parent="AimToNearEnemy"]
+unique_name_in_owner = true
+position = Vector2(10, 1.19209e-06)
+rotation = 0.784637
+scale = Vector2(0.285, 0.285)
+texture = ExtResource("3_pe7su")
+flip_h = true
