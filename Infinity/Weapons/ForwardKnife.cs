@@ -24,27 +24,7 @@ public partial class ForwardKnife : WeaponBase
     [Export]
     private float TrickShotDamageMul { get; set; }
 
-    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
-    {
-        TrickShotCount = 0;
-        TrickShotDamageMul = 0f;
-
-        foreach (var effect in effects)
-        {
-            switch (effect)
-            {
-                // この武器は Trickshot に対応しているので拾う
-                case TrickshotBounce trickshotBounceCount:
-                {
-                    TrickShotCount += trickshotBounceCount.BounceCount;
-                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
-                    break;
-                }
-            }
-        }
-    }
-
-    private protected override void SpawnProjectile(uint level)
+    private protected override void OnCoolDownComplete(uint level)
     {
         switch (level)
         {
@@ -68,6 +48,26 @@ public partial class ForwardKnife : WeaponBase
                 SpawnBullet(GlobalPosition, 0f, 10f);
                 SpawnBullet(GlobalPosition, -20f);
                 break;
+            }
+        }
+    }
+
+    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    {
+        TrickShotCount = 0;
+        TrickShotDamageMul = 0f;
+
+        foreach (var effect in effects)
+        {
+            switch (effect)
+            {
+                // この武器は Trickshot に対応しているので拾う
+                case TrickshotBounce trickshotBounceCount:
+                {
+                    TrickShotCount += trickshotBounceCount.BounceCount;
+                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
+                    break;
+                }
             }
         }
     }

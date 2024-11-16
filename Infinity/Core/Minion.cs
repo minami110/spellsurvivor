@@ -147,19 +147,6 @@ public partial class Minion : Node
         }
     }
 
-    public void AddWeapon()
-    {
-        // Spawn Weapon
-        if (Weapon is null)
-        {
-            Weapon = CoreData.WeaponPackedScene.Instantiate<WeaponBase>();
-            Weapon.MinionId = Id;
-            Weapon.Faction = Faction;
-            Weapon.Level = _levelRp.Value;
-            AddSibling(Weapon);
-        }
-    }
-
     /// <summary>
     /// Minion が指定した Faction に所属しているかどうか
     /// </summary>
@@ -184,6 +171,20 @@ public partial class Minion : Node
     public void SetLevel(uint level)
     {
         _levelRp.Value = Math.Clamp(level, Constant.MINION_MIN_LEVEL, Constant.MINION_MAX_LEVEL);
+    }
+
+    public void SpawnWeapon(bool autoStart)
+    {
+        // まだ装備していない場合ときは生成する
+        if (Weapon is null)
+        {
+            Weapon = CoreData.WeaponPackedScene.Instantiate<WeaponBase>();
+            Weapon.MinionId = Id;
+            Weapon.Faction = Faction;
+            Weapon.Level = _levelRp.Value;
+            Weapon.AutoStart = autoStart;
+            AddSibling(Weapon);
+        }
     }
 
     protected override void Dispose(bool disposing)

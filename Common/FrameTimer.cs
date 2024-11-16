@@ -53,6 +53,12 @@ public partial class FrameTimer : Node
     /// </summary>
     public ReadOnlyReactiveProperty<uint> FrameLeft => _frameLeft;
 
+    /// <summary>
+    /// チャイマーの一時停止状態を示します
+    /// </summary>
+    /// <remarks>
+    /// true に設定するとタイマーが一時停止し、false に設定すると再開します
+    /// </remarks>
     public bool Paused
     {
         get => _paused;
@@ -68,6 +74,13 @@ public partial class FrameTimer : Node
         }
     }
 
+    /// <summary>
+    /// このプロパティはタイマーが停止しているかどうかを判定します。
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    public bool IsStopped => _frameLeft.Value == 0u;
+
     public override void _Notification(int what)
     {
         if (what == NotificationReady)
@@ -80,17 +93,15 @@ public partial class FrameTimer : Node
         }
         else if (what == NotificationPhysicsProcess)
         {
-            var next = 0u;
-            if (_frameLeft.Value == 0)
+            var current = _frameLeft.Value;
+            if (current == 0u)
             {
-                GD.PrintErr("FrameLeft is 0");
-            }
-            else
-            {
-                next = _frameLeft.Value - 1;
+                // Note: FrameTimer の PhysicsProcess が Start() 以外の方法で有効にされた場合にここに入る
+                throw new InvalidProgramException("Please call Start() method before using FrameTimer");
             }
 
-            if (next == 0)
+            var next = current - 1u;
+            if (next == 0u)
             {
                 _timeOut.OnNext(Unit.Default);
                 _frameLeft.Value = WaitFrame;
@@ -107,12 +118,28 @@ public partial class FrameTimer : Node
         }
     }
 
+    /// <summary>
+    /// Starts or restarts the frame timer with the specified number of frames to wait.
+    /// </summary>
+    /// <remarks>
+    /// This method sets the frame timer's countdown to the value of the <see cref="WaitFrame" /> property
+    /// and enables the physics processing for the node. The frame timer will continue to count down
+    /// each frame until it reaches zero, at which point it will emit a timeout signal if any observers
+    /// are listening.
+    /// </remarks>
     public void Start()
     {
         _frameLeft.Value = WaitFrame;
         SetPhysicsProcess(true);
     }
 
+    /// <summary>
+    /// Stops the frame timer, setting the remaining frames to zero and disabling physics processing.
+    /// </summary>
+    /// <remarks>
+    /// This method sets the frame timer's countdown to zero, disables the physics processing for the node,
+    /// and prevents the timer from automatically starting again if it was set to autostart.
+    /// </remarks>
     public void Stop()
     {
         _frameLeft.Value = 0;

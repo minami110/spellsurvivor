@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using fms.Effect;
 using fms.Faction;
 using fms.Projectile;
 using Godot;
@@ -51,11 +50,15 @@ public partial class WeaponBase : Node2D
     public uint Knockback { get; private set; } = 20u;
 
     /// <summary>
-    /// Tree に入った時に自動で Start するかどうか (Debug 用のパラメーター, 通常は Wave 開始時に勝手に操作される)
+    /// Tree に入った時に自動で Start するかどうか
     /// </summary>
+    /// <remarks>
+    /// 開発用のパラメーター, ショップから購入されたときは false が代入される
+    /// デフォで true にしておくことで, ツリーに雑に配置しておいても動作するようにする
+    /// </remarks>
     [ExportGroup("For Debugging")]
     [Export]
-    private bool _autostart;
+    public bool AutoStart { get; set; } = true;
 
     /// <summary>
     /// 現在の武器の Level
@@ -71,12 +74,6 @@ public partial class WeaponBase : Node2D
     [Export]
     public FactionType Faction { get; set; }
 
-    /// <summary>
-    /// 現在武器が持っている マナ
-    /// </summary>
-    [Export]
-    public float Mana { get; private set; }
-
     private static readonly NodePath FrameTimerPath = new("FrameTimer");
 
     // 現在武器に付与されている Effect
@@ -89,12 +86,6 @@ public partial class WeaponBase : Node2D
 
     // Effect の変更があったかどうか
     private bool _isDirtyEffect;
-
-    // マナの生成にかかるフレーム数 (0 の場合は生成しない)
-    private int _manaGenerationInterval;
-
-    // マナの生成量
-    private int _manaGenerationValue;
 
     /// <summary>
     /// 武器の Id
@@ -122,7 +113,7 @@ public partial class WeaponBase : Node2D
     /// <summary>
     /// FrameTimer を取得
     /// </summary>
-    protected FrameTimer FrameTimer => GetNode<FrameTimer>(FrameTimerPath);
+    private FrameTimer FrameTimer => GetNode<FrameTimer>(FrameTimerPath);
 
     /// <summary>
     /// 次の攻撃までの残りフレームを取得
@@ -151,11 +142,12 @@ public partial class WeaponBase : Node2D
         }
         else if (what == NotificationReady)
         {
+            // 武器のクールダウンが完了時のコールバックを登録
             FrameTimer.TimeOut
-                .Subscribe(this, (_, state) => { state.SpawnProjectile(state.Level); })
+                .Subscribe(this, (_, state) => { state.OnCoolDownComplete(state.Level); })
                 .AddTo(this);
 
-            if (_autostart)
+            if (AutoStart)
             {
                 StartAttack();
             }
@@ -164,13 +156,13 @@ public partial class WeaponBase : Node2D
                 StopAttack();
             }
 
-            // Note: Process を override していないのでここで手動で有効化する
+            // Note: Godot では override していないと Process が動かない
+            //       Notification で使いたいのでここでマニュアル有効化する
             SetProcess(true);
         }
         else if (what == NotificationProcess)
         {
             SolveEffect();
-            GenerateMana();
         }
     }
 
@@ -205,16 +197,40 @@ public partial class WeaponBase : Node2D
         return Faction.HasFlag(factionType);
     }
 
+    /// <summary>
+    /// 武器のクールダウンを減らすタイマーを開始 (武器の有効化)
+    /// </summary>
     public void StartAttack()
     {
+        if (!FrameTimer.IsStopped)
+        {
+            return;
+        }
+
         FrameTimer.WaitFrame = SolvedCoolDownFrame;
         FrameTimer.Start();
         OnStartAttack();
     }
 
+    /// <summary>
+    /// 武器のクールダウンを管理するタイマーを停止, カウントをリセット (武器の無効化)
+    /// </summary>
     public void StopAttack()
     {
+        if (FrameTimer.IsStopped)
+        {
+            return;
+        }
+
         FrameTimer.Stop();
+    }
+
+    /// <summary>
+    /// 武器のクールダウンが終了した時に呼び出されるメソッド
+    /// </summary>
+    /// <param name="level">現在の武器のレベル</param>
+    private protected virtual void OnCoolDownComplete(uint level)
+    {
     }
 
     private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
@@ -226,29 +242,6 @@ public partial class WeaponBase : Node2D
     /// </summary>
     private protected virtual void OnStartAttack()
     {
-    }
-
-    /// <summary>
-    /// 武器のクールダウンが終了した時に呼び出されるメソッド
-    /// </summary>
-    /// <param name="level">現在の武器のレベル</param>
-    private protected virtual void SpawnProjectile(uint level)
-    {
-    }
-
-    private void GenerateMana()
-    {
-        if (_manaGenerationInterval == 0 || _manaGenerationValue == 0)
-        {
-            return;
-        }
-
-        // Gets current frame
-        var frame = GetTree().GetFrame();
-        if (frame % _manaGenerationInterval == 0)
-        {
-            Mana += _manaGenerationValue;
-        }
     }
 
     private void SolveEffect()
@@ -274,8 +267,6 @@ public partial class WeaponBase : Node2D
 
         // 値を初期化する
         var reduceCoolDownRate = 0f;
-        var manaRegenerationValue = 0;
-        var manaRegenerationInterval = 0;
 
         foreach (var effect in _effects)
         {
@@ -287,18 +278,11 @@ public partial class WeaponBase : Node2D
                     reduceCoolDownRate += reduceCoolDownRateEffect.Value;
                     break;
                 }
-                // 常にマナを生成するエフェクト
-                case AddManaRegeneration addManaRegeneration:
-                    manaRegenerationValue += addManaRegeneration.Value;
-                    manaRegenerationInterval += addManaRegeneration.Interval;
-                    break;
             }
         }
 
         // 値を更新
         _coolDownReduceRate = Math.Max(reduceCoolDownRate, 0);
-        _manaGenerationInterval = Math.Max(manaRegenerationInterval, 0);
-        _manaGenerationValue = Math.Max(manaRegenerationValue, 0);
 
         OnSolveEffect(_effects);
     }

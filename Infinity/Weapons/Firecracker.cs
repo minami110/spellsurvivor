@@ -52,27 +52,7 @@ public partial class Firecracker : WeaponBase
         GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
     }
 
-    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
-    {
-        TrickShotCount = 0;
-        TrickShotDamageMul = 0f;
-
-        foreach (var effect in effects)
-        {
-            switch (effect)
-            {
-                // この武器は Trickshot に対応しているので拾う
-                case TrickshotBounce trickshotBounceCount:
-                {
-                    TrickShotCount += trickshotBounceCount.BounceCount;
-                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
-                    break;
-                }
-            }
-        }
-    }
-
-    private protected override void SpawnProjectile(uint level)
+    private protected override void OnCoolDownComplete(uint level)
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
         if (!aim.IsAiming)
@@ -124,6 +104,26 @@ public partial class Firecracker : WeaponBase
         }
 
         AddProjectile(bomb, GlobalPosition);
+    }
+
+    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    {
+        TrickShotCount = 0;
+        TrickShotDamageMul = 0f;
+
+        foreach (var effect in effects)
+        {
+            switch (effect)
+            {
+                // この武器は Trickshot に対応しているので拾う
+                case TrickshotBounce trickshotBounceCount:
+                {
+                    TrickShotCount += trickshotBounceCount.BounceCount;
+                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
+                    break;
+                }
+            }
+        }
     }
 
     private static void RegisterTrickshot(BaseProjectile parent, Dictionary payload)

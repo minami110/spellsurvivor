@@ -43,7 +43,7 @@ public partial class GunTurret : WeaponBase
     private uint _bulletSpeed = 800u;
 
     // Projectileじゃないけど、WeaponBaseの機構にタダ乗りするためにSpawnProjectileメソッドを利用
-    private protected override void SpawnProjectile(uint level)
+    private protected override void OnCoolDownComplete(uint level)
     {
         // タレット本体を生成する
         var prj = _body.Instantiate<GunTurretBody>();

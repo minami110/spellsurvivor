@@ -28,7 +28,7 @@ public partial class Hocho : WeaponBase
         _aimToNearEnemy.SearchRadius = _maxRange;
     }
 
-    private protected override void SpawnProjectile(uint level)
+    private protected override void OnCoolDownComplete(uint level)
     {
         if (!_aimToNearEnemy.IsAiming)
         {
