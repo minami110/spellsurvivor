@@ -49,6 +49,8 @@ public partial class CircleAreaProjectile : AreaProjectile
         }
     }
 
+    private protected virtual Color DebugColor { get; set; } = new("00a26e00");
+
     public override void _EnterTree()
     {
         Monitorable = false;
@@ -66,7 +68,7 @@ public partial class CircleAreaProjectile : AreaProjectile
         if (collisionShape is null)
         {
             collisionShape = new CollisionShape2D();
-            collisionShape.DebugColor = new Color("00a26e00");
+            collisionShape.DebugColor = DebugColor;
             AddChild(collisionShape);
         }
 
