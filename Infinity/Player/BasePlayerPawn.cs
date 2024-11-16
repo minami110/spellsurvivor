@@ -28,9 +28,9 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
     private Vector2 NextMoveDirection { get; set; }
 
     /// <summary>
-    /// 停止する直前まで移動していた方向
+    /// 前フレームの移動方向
     /// </summary>
-    public Vector2 LatestMoveDirection { get; private set; } = Vector2.Right;
+    private Vector2 PrevLinearVelocity { get; set; } = Vector2.Right;
 
     public override void _EnterTree()
     {
@@ -102,8 +102,8 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
             return;
         }
 
-        LatestMoveDirection = NextMoveDirection;
-        var motion = LatestMoveDirection * (float)delta * _moveSpeed;
+        PrevLinearVelocity = NextMoveDirection;
+        var motion = PrevLinearVelocity * (float)delta * _moveSpeed;
         MoveAndCollide(motion);
 
         // Update Animation
@@ -163,6 +163,38 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
     void IPawn.PrimaryReleased()
     {
         // Do nothing
+    }
+
+    Vector2 IPawn.GetAimDirection()
+    {
+        // 現在狙っている方向を返す
+        // コントローラーがつながっている場合は, 右スティックの入力方法を返す
+        if (Input.GetConnectedJoypads().Count > 0)
+        {
+            var deadZone = 0.2f;
+            // ToDo: InputAction 使用したほうがいいかも
+            var joyX = Input.GetJoyAxis(0, JoyAxis.RightX);
+            if (joyX < deadZone && joyX > -deadZone)
+            {
+                joyX = 0;
+            }
+
+            var joyY = Input.GetJoyAxis(0, JoyAxis.RightY);
+            if (joyY < deadZone && joyY > -deadZone)
+            {
+                joyY = 0;
+            }
+
+            var joy = (Vector2.Right * joyX + Vector2.Down * joyY).Normalized();
+
+            if (joy.LengthSquared() > 0)
+            {
+                return joy;
+            }
+        }
+
+        // つながっていない場合, スティックを倒していない場合は, 最後に動いた方向を返す
+        return PrevLinearVelocity.Normalized();
     }
 
     void IPawn.MoveForward(in Vector2 dir)
