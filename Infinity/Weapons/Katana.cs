@@ -1,35 +1,12 @@
-﻿using fms.Projectile;
-using Godot;
+﻿using Godot;
 using R3;
 
 namespace fms.Weapon;
 
 /// <summary>
 /// </summary>
-public partial class Hocho : WeaponBase
+public partial class Katana : Hocho
 {
-    /// <summary>
-    /// 攻撃を実行する際の敵の検索範囲
-    /// </summary>
-    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
-    private float _maxRange = 100f;
-
-    /// <summary>
-    /// 敵を狙う速度の感度 (0 ~ 1), 1 で最速, 0 で全然狙えない
-    /// </summary>
-    [Export(PropertyHint.Range, "0.01,1.0,0.01")]
-    private protected float _rotateSensitivity = 0.3f;
-
-    private protected AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
-
-    private protected StaticDamage StaticDamage => GetNode<StaticDamage>("%StaticDamage");
-
-    public override void _Ready()
-    {
-        AimToNearEnemy.SearchRadius = _maxRange;
-        AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
-    }
-
     private protected override void OnCoolDownComplete(uint level)
     {
         if (!AimToNearEnemy.IsAiming)
@@ -44,9 +21,14 @@ public partial class Hocho : WeaponBase
         // ToDo: 固定長のアニメーションなので, BaseCoolDown のほうが早くなるとおかしくなる 
         var sprite = GetNode<Node2D>("%SpriteRoot");
         var t = CreateTween();
-        t.TweenProperty(sprite, "position", new Vector2(-12, 0), 0.2d)
-            .SetTrans(Tween.TransitionType.Quart)
+        t.SetParallel();
+
+        // 構え
+        t.TweenProperty(sprite, "position", new Vector2(-12, 0), 0.1d)
             .SetEase(Tween.EaseType.Out);
+
+        // なぎ開始
+        t.Chain();
         t.TweenCallback(Callable.From(() =>
         {
             // 突き刺し時は回転しないようにする
@@ -54,9 +36,19 @@ public partial class Hocho : WeaponBase
             // ダメージを有効化
             StaticDamage.Disabled = false;
         }));
-        t.TweenProperty(sprite, "position", new Vector2(57, 0), 0.2d)
-            .SetTrans(Tween.TransitionType.Elastic)
+        t.TweenProperty(sprite, "position", new Vector2(5, -30), 0.05d)
             .SetEase(Tween.EaseType.Out);
+        t.TweenProperty(sprite, "rotation", Mathf.DegToRad(-120), 0.05d)
+            .SetEase(Tween.EaseType.Out);
+
+        t.Chain();
+        t.TweenProperty(sprite, "position", new Vector2(65, 50), 0.1d)
+            .SetEase(Tween.EaseType.Out);
+        t.TweenProperty(sprite, "rotation", Mathf.DegToRad(50), 0.1d)
+            .SetEase(Tween.EaseType.Out);
+
+        // なぎ終了
+        t.Chain();
         t.TweenCallback(Callable.From(() =>
         {
             // ダメージを無効化
@@ -64,20 +56,17 @@ public partial class Hocho : WeaponBase
         }));
         // 手元に戻すアニメーション
         t.TweenProperty(sprite, "position", new Vector2(3, 0), 0.08d);
+        t.TweenProperty(sprite, "rotation", Mathf.DegToRad(-4), 0.08d);
+
+        t.Chain();
         // すぐに他の敵を狙わないようなアニメの遊び
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
+        t.TweenProperty(sprite, "rotation", 0f, 0.2d);
 
         // 再生終了したら AimToNearEnemy を再開する
         t.FinishedAsObservable()
             .Take(1)
             .Subscribe(this, (_, state) => { state.AimToNearEnemy.RotateSensitivity = _rotateSensitivity; })
             .AddTo(this);
-    }
-
-    private protected override void OnStartAttack()
-    {
-        StaticDamage.Disabled = true;
-        StaticDamage.Damage = BaseDamage;
-        StaticDamage.Knockback = Knockback;
     }
 }
