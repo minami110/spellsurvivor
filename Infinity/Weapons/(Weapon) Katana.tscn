@@ -6,10 +6,11 @@
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_v8m0w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ou1fu"]
-size = Vector2(46, 10)
+size = Vector2(60, 20)
 
 [node name="Katana" type="Node2D"]
 script = ExtResource("1_jvqp3")
+_maxRange = 90.0
 BaseDamage = 5.0
 BaseCoolDownFrame = 100
 
@@ -38,6 +39,6 @@ monitorable = false
 script = ExtResource("4_v8m0w")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AimToNearEnemy/SpriteRoot/StaticDamage"]
-position = Vector2(35, 0)
+position = Vector2(41, 5)
 shape = SubResource("RectangleShape2D_ou1fu")
 debug_color = Color(0, 0.6, 0.701961, 0)
