@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://bdk07bdnvg3gj"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/Katana.cs" id="1_jvqp3"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_ijpih"]
+[ext_resource type="Texture2D" uid="uid://dfxptabhlg1pr" path="res://Common/Resources/Textures/AI Emojis/katana.png" id="3_tgsp1"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_v8m0w"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ou1fu"]
+size = Vector2(46, 10)
+
+[node name="Katana" type="Node2D"]
+script = ExtResource("1_jvqp3")
+BaseDamage = 5.0
+BaseCoolDownFrame = 100
+
+[node name="AimToNearEnemy" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("2_ijpih")
+
+[node name="SpriteRoot" type="Node2D" parent="AimToNearEnemy"]
+unique_name_in_owner = true
+
+[node name="Sprite" type="Sprite2D" parent="AimToNearEnemy/SpriteRoot"]
+position = Vector2(20, -2)
+rotation = -0.818389
+scale = Vector2(0.789027, 0.789027)
+texture = ExtResource("3_tgsp1")
+flip_h = true
+
+[node name="StaticDamage" type="Area2D" parent="AimToNearEnemy/SpriteRoot"]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 4
+input_pickable = false
+monitorable = false
+script = ExtResource("4_v8m0w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AimToNearEnemy/SpriteRoot/StaticDamage"]
+position = Vector2(35, 0)
+shape = SubResource("RectangleShape2D_ou1fu")
+debug_color = Color(0, 0.6, 0.701961, 0)
