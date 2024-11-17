@@ -1,4 +1,6 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Godot;
 using R3;
 
 namespace fms.Projectile;
@@ -11,6 +13,8 @@ public partial class BulletProjectile : BaseProjectile
     [Export]
     public bool PenetrateWall { get; set; }
 
+    private readonly List<ExcludeInfo> _excludes = [];
+
     public override void _Notification(int what)
     {
         base._Notification(what);
@@ -21,6 +25,10 @@ public partial class BulletProjectile : BaseProjectile
                 .Subscribe(this, (x, s) => s.OnBodyEntered(x))
                 .AddTo(this);
         }
+        else if (what == NotificationPhysicsProcess)
+        {
+            UpdateExcludes();
+        }
     }
 
     private protected virtual void OnBodyEntered(Node2D body)
@@ -29,6 +37,7 @@ public partial class BulletProjectile : BaseProjectile
         {
             return;
         }
+
 
         // 壁など静的なオブジェクトとの衝突時の処理
         // デフォルトでは壁と衝突したら常に自身は消滅する
@@ -43,8 +52,14 @@ public partial class BulletProjectile : BaseProjectile
         // 敵との衝突時の処理
         else if (body is IEntity entity)
         {
-            // ToDo: Player / Enemy ともに Weapon が必ず直下に存在している という前提で実装してます
-            entity.ApplayDamage(Damage, Weapon.GetParent<IEntity>(), Weapon);
+            // 除外リストに含まれている場合は無視
+            if (_excludes.Any(x => x.Node == body))
+            {
+                return;
+            }
+
+            // ToDo: IEntity に雑にキャスト
+            entity.ApplayDamage(Damage, (IEntity)Weapon.OwnedEntity, Weapon);
             SendHitInfo(body);
 
             // ToDo: Knockback 処理, 型があいまい
@@ -69,7 +84,15 @@ public partial class BulletProjectile : BaseProjectile
             if (!PenetrateEnemy)
             {
                 Kill(WhyDead.CollidedWithEnemy);
+                return;
             }
+
+            // 敵を貫通する場合 多段ヒットを防止するために除外リストに追加 
+            _excludes.Add(new ExcludeInfo
+            {
+                Node = body,
+                CreatedAge = Age
+            });
         }
     }
 
@@ -87,5 +110,28 @@ public partial class BulletProjectile : BaseProjectile
 
         // Hit を通知する
         _hitSubject.OnNext(HitInfo);
+    }
+
+    private void UpdateExcludes()
+    {
+        // 5 Frame 後には除外リストから削除
+        // Note: 5 Frame は適当な値っす
+        // リストを逆順にして削除していく
+        for (var i = _excludes.Count - 1; i >= 0; i--)
+        {
+            var exclude = _excludes[i];
+            if (Age - exclude.CreatedAge <= 5u)
+            {
+                continue;
+            }
+
+            _excludes.RemoveAt(i);
+        }
+    }
+
+    private struct ExcludeInfo
+    {
+        public Node2D Node { get; init; }
+        public uint CreatedAge { get; init; }
     }
 }

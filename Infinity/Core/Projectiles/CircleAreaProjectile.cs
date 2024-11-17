@@ -61,16 +61,10 @@ public partial class CircleAreaProjectile : AreaProjectile
 
     private void UpdateRadiusAndOffset(float radius, in Vector2 offset)
     {
-        // Find CollisionShape2D
-        var collisionShape = this.FindFirstChild<CollisionShape2D>();
+        var collisionShape = CollisionShape;
 
-        // Do not exist, create new one
-        if (collisionShape is null)
-        {
-            collisionShape = new CollisionShape2D();
-            collisionShape.DebugColor = DebugColor;
-            AddChild(collisionShape);
-        }
+        // Note: ついでにデバッグ用の色も設定する
+        collisionShape.DebugColor = DebugColor;
 
         // Update CircleShape2D radius, if not exist, create new one
         if (collisionShape.Shape is null)

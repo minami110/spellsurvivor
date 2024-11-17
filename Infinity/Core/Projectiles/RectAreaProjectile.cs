@@ -59,16 +59,11 @@ public partial class RectAreaProjectile : AreaProjectile
 
     private void UpdateSizeAndOffset(in Vector2 size, in Vector2 offset)
     {
-        // Find CollisionShape2D
-        var collisionShape = this.FindFirstChild<CollisionShape2D>();
+        var collisionShape = CollisionShape;
 
-        // Do not exist, create new one
-        if (collisionShape is null)
-        {
-            collisionShape = new CollisionShape2D();
-            collisionShape.DebugColor = new Color("00a26e00");
-            AddChild(collisionShape);
-        }
+        // Note: ついでにデバッグ用の色も設定する
+        collisionShape.DebugColor = new Color("00a26e00");
+        ;
 
         // Update CircleShape2D radius, if not exist, create new one
         if (collisionShape.Shape is null)
