@@ -7,6 +7,7 @@ using R3;
 
 namespace fms.Projectile;
 
+[GlobalClass]
 public partial class StaticDamage : Area2D
 {
     private readonly List<ExcludeInfo> _excludes = [];
@@ -88,7 +89,6 @@ public partial class StaticDamage : Area2D
             SendHitInfo(body);
 
             // ToDo: Knockback 処理, 型があいまい
-            // Note: 死んでても死亡時アニメーションがあるのでノックバックを与える
             if (body is EnemyBase enemy)
             {
                 if (Knockback > 0)

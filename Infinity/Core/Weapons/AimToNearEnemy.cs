@@ -5,6 +5,10 @@ using R3;
 
 namespace fms;
 
+/// <summary>
+/// 近くの敵を狙う関連の計算を行うノード
+/// Note: Collision がセットアップされていなくても自動で生成されます
+/// </summary>
 [GlobalClass]
 public partial class AimToNearEnemy : Area2D
 {
@@ -47,7 +51,7 @@ public partial class AimToNearEnemy : Area2D
     /// 子の回転が有効な場合の回転感度
     /// </summary>
     [Export(PropertyHint.Range, "0,1")]
-    private float RotateSensitivity { get; set; } = 0.7f;
+    public float RotateSensitivity { get; set; } = 0.7f;
 
     public enum AimTarget
     {
