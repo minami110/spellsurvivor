@@ -11,25 +11,23 @@ public partial class ArcAreaProjectile : CircleAreaProjectile
     private const float _ANGLE_LIMIT_MIN = 0f;
     private const float _ANGLE_LIMIT_MAX = 360f;
 
-    private float _angleLimit = 90f;
-
     // 独自に当たり判定を描画するので Godot のほうは透明に
     private protected override Color DebugColor { get; set; } = new("00000000");
 
     public float AngleLimit
     {
-        get => _angleLimit;
+        get;
         set
         {
             var newvalue = Mathf.Clamp(value, _ANGLE_LIMIT_MIN, _ANGLE_LIMIT_MAX);
-            if (Math.Abs(_angleLimit - newvalue) <= 0.0001f)
+            if (Math.Abs(field - newvalue) <= 0.0001f)
             {
                 return;
             }
 
-            _angleLimit = newvalue;
+            field = newvalue;
         }
-    }
+    } = 90f;
 
     // Note: エフェクト用意するのがめんどいので, Godot の Draw 関数を使って当たり判定を描写してます
     public override void _Draw()
@@ -43,7 +41,7 @@ public partial class ArcAreaProjectile : CircleAreaProjectile
 
         var center = Offset;
         var radius = Radius;
-        var angleRad = Mathf.DegToRad(_angleLimit);
+        var angleRad = Mathf.DegToRad(AngleLimit);
 
         // 円弧の端の線, 中心の線 3本を描画
         // 一番左の線のゴール
@@ -83,13 +81,13 @@ public partial class ArcAreaProjectile : CircleAreaProjectile
     private protected override void Attack()
     {
         // 角度制限が 0 以下の場合は攻撃しないと等しい
-        if (_angleLimit <= 0f)
+        if (AngleLimit <= 0f)
         {
             return;
         }
 
         // 角度制限が 180 以上の場合は通常の円形範囲攻撃と等しい
-        if (_angleLimit >= 180f)
+        if (AngleLimit >= 180f)
         {
             base.Attack();
             return;
@@ -119,7 +117,7 @@ public partial class ArcAreaProjectile : CircleAreaProjectile
             }
 
             // 角度制限内に収まっていない場合は攻撃しない
-            if (diffRad > Mathf.DegToRad(_angleLimit))
+            if (diffRad > Mathf.DegToRad(AngleLimit))
             {
                 continue;
             }

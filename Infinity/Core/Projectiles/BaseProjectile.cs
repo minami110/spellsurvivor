@@ -31,8 +31,6 @@ public partial class BaseProjectile : Area2D
 
     private protected readonly Subject<ProjectileHitInfo> _hitSubject = new();
 
-    private uint _lifeFrame = _FORCED_LIFETIME;
-
     /// <summary>
     /// 恒常的に与える力
     /// </summary>
@@ -48,9 +46,9 @@ public partial class BaseProjectile : Area2D
     /// </summary>
     internal uint LifeFrame
     {
-        get => _lifeFrame;
-        set => _lifeFrame = Math.Min(value, _FORCED_LIFETIME);
-    }
+        get;
+        set => field = Math.Min(value, _FORCED_LIFETIME);
+    } = _FORCED_LIFETIME;
 
     /// <summary>
     /// ノックバック速度
@@ -89,6 +87,24 @@ public partial class BaseProjectile : Area2D
 
     private protected bool IsDead => _deadSubject.IsDisposed;
 
+    protected CollisionShape2D CollisionShape
+    {
+        get
+        {
+            // Find CollisionShape2D
+            var collisionShape = this.FindFirstChild<CollisionShape2D>();
+
+            // Do not exist, create new one
+            if (collisionShape is null)
+            {
+                collisionShape = new CollisionShape2D();
+                AddChild(collisionShape);
+            }
+
+            return collisionShape;
+        }
+    }
+
     public override void _Notification(int what)
     {
         switch ((long)what)
@@ -111,11 +127,11 @@ public partial class BaseProjectile : Area2D
 
                 try
                 {
-                    Weapon = GetWeaponInParent();
+                    Weapon = FindWeaponInParent();
                 }
                 catch (InvalidCastException e)
                 {
-                    throw new InvalidProgramException("Projectile の2つ親が WeaponBase ではありません", e);
+                    throw new InvalidProgramException("Projectile の先祖に WeaponBase が見つかりませんでした", e);
                 }
 
                 break;
@@ -183,7 +199,7 @@ public partial class BaseProjectile : Area2D
     /// Projectile を生成した Weapon を取得する, 先祖の何処かにいるはずなので再帰的に検索する
     /// </summary>
     /// <returns></returns>
-    private WeaponBase GetWeaponInParent()
+    private WeaponBase FindWeaponInParent()
     {
         var parent = GetParent();
 
