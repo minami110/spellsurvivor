@@ -29,10 +29,16 @@ public partial class Licium : FactionBase
                 continue;
             }
 
-            if (level >= 1)
+            switch (level)
             {
-                // 10% の確率で 5 ダメージ回復
-                AddEffectToWeapon(weapon, new Lifesteal { Amount = 5u, Rate = 0.1f });
+                case >= 3:
+                    // 30% の確率で 5 ダメージ回復
+                    AddEffectToWeapon(weapon, new Lifesteal { Amount = 5u, Rate = 0.3f });
+                    break;
+                case >= 1:
+                    // 10% の確率で 5 ダメージ回復
+                    AddEffectToWeapon(weapon, new Lifesteal { Amount = 5u, Rate = 0.1f });
+                    break;
             }
         }
     }
