@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://ceuw4y35vfqm1"]
+[gd_scene load_steps=5 format=3 uid="uid://ceuw4y35vfqm1"]
 
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/BulletProjectile.cs" id="1_tmj8r"]
 [ext_resource type="Texture2D" uid="uid://b5pb2hrc4yrh6" path="res://Common/Resources/Textures/Noita/Spell_light_bullet.png" id="2_lrxa5"]
+[ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="3_w5sbp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
 radius = 5.0
@@ -33,3 +34,10 @@ expand_mode = 1
 position = Vector2(15, 0)
 shape = SubResource("CircleShape2D_jrj0e")
 debug_color = Color(1, 0, 0, 0)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.98274, 0.756911, 0.52964, 1)
+energy = 1.27
+shadow_enabled = true
+texture = ExtResource("3_w5sbp")
+texture_scale = 1.34

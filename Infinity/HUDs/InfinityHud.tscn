@@ -1,15 +1,23 @@
-[gd_scene load_steps=14 format=3 uid="uid://dndrw60tkxjwx"]
+[gd_scene load_steps=26 format=3 uid="uid://dndrw60tkxjwx"]
 
 [ext_resource type="Shader" path="res://Infinity/HUDs/BG/bg.gdshader" id="1_1dqes"]
 [ext_resource type="Texture2D" uid="uid://3g3bdtsmnid1" path="res://Infinity/HUDs/BG/bg_city_b.2k.png" id="2_4oonj"]
 [ext_resource type="Texture2D" uid="uid://136bqyejq4xa" path="res://Infinity/HUDs/BG/bg_city_a.2k.png" id="3_se5fq"]
 [ext_resource type="Texture2D" uid="uid://dge21nhsqkxnq" path="res://Infinity/HUDs/BG/bg_tile_a.png" id="4_uqdg2"]
+[ext_resource type="Texture2D" uid="uid://dh83miwj7srlb" path="res://Infinity/HUDs/BG/BGground_test.png" id="5_2inhk"]
 [ext_resource type="Texture2D" uid="uid://c0jusf0iejowu" path="res://Infinity/HUDs/BG/ninepatch_border.png" id="5_48qdi"]
+[ext_resource type="Texture2D" uid="uid://cqtkrw5j01oqh" path="res://Infinity/HUDs/BG/BGground_n.png" id="6_d67nd"]
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="6_fbv8a"]
 [ext_resource type="PackedScene" uid="uid://cn70mo64dy7mh" path="res://Infinity/HUDs/BattleResult/BattleResultHUD.tscn" id="7_7iy48"]
+[ext_resource type="Texture2D" uid="uid://2duwqvjml6rp" path="res://Infinity/HUDs/BG/BGground_R.png" id="7_j2gt1"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/Shop/ShopHUD.tscn" id="8_an48t"]
 [ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="9_n1574"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="10_orxi8"]
+[ext_resource type="Shader" path="res://Common/Resources/Shaders/pixelate.gdshader" id="13_vpxp3"]
+[ext_resource type="Shader" path="res://Common/Resources/Shaders/crt.gdshader" id="14_1hn5s"]
+[ext_resource type="Texture2D" uid="uid://c4dpueuu5subx" path="res://Infinity/HUDs/BG/tabletframe.png" id="15_a2f1p"]
+[ext_resource type="Texture2D" uid="uid://boliw1ltfe0l" path="res://Infinity/HUDs/BG/hudwindow.png" id="16_cpprl"]
+[ext_resource type="Texture2D" uid="uid://nol2ro1sggyi" path="res://Infinity/HUDs/BG/tabletparts.png" id="17_bxnp8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l71ky"]
 shader = ExtResource("1_1dqes")
@@ -19,6 +27,26 @@ shader = ExtResource("1_1dqes")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cnscl"]
 shader = ExtResource("1_1dqes")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_onfx3"]
+shader = ExtResource("1_1dqes")
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_rtxtm"]
+diffuse_texture = ExtResource("5_2inhk")
+normal_texture = ExtResource("6_d67nd")
+specular_texture = ExtResource("7_j2gt1")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a0f50"]
+shader = ExtResource("13_vpxp3")
+shader_parameter/pixel_size = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7bqg6"]
+shader = ExtResource("14_1hn5s")
+shader_parameter/crt_brightness = 2.511
+shader_parameter/crt_ghost = 0.39
+shader_parameter/crt_grid = 0.176
+shader_parameter/crt_white_noise = 0.0
+shader_parameter/crt_curve = 0.0
 
 [node name="InfinityHud" type="Node"]
 
@@ -95,6 +123,13 @@ rotation = -3.14159
 scale = Vector2(0.667, 0.667)
 texture = ExtResource("4_uqdg2")
 
+[node name="Sprite2D_8" type="Sprite2D" parent="BG Tile (-4)"]
+light_mask = 2
+material = SubResource("ShaderMaterial_onfx3")
+position = Vector2(0, -142)
+scale = Vector2(0.444889, 0.444889)
+texture = SubResource("CanvasTexture_rtxtm")
+
 [node name="UI Border (2)" type="CanvasLayer" parent="."]
 layer = 2
 
@@ -127,6 +162,43 @@ layer = 8
 
 [node name="TooltipToast" parent="Tooltip Toast (8)" instance=ExtResource("9_n1574")]
 visible = false
+
+[node name="dot" type="CanvasLayer" parent="."]
+
+[node name="ColorRect_2" type="ColorRect" parent="dot"]
+material = SubResource("ShaderMaterial_a0f50")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="CRT" type="CanvasLayer" parent="."]
+layer = -2
+
+[node name="ColorRect" type="ColorRect" parent="CRT"]
+material = SubResource("ShaderMaterial_7bqg6")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="CRT"]
+position = Vector2(807, 445)
+scale = Vector2(0.295, 0.295)
+texture = ExtResource("15_a2f1p")
+
+[node name="Sprite2D_2" type="Sprite2D" parent="CRT"]
+position = Vector2(811, 435)
+scale = Vector2(0.298, 0.298)
+texture = ExtResource("16_cpprl")
+
+[node name="Sprite2D_3" type="Sprite2D" parent="CRT"]
+position = Vector2(791, 797)
+scale = Vector2(0.227, 0.227)
+texture = ExtResource("17_bxnp8")
 
 [node name="DebugHUD (20)" parent="." instance=ExtResource("10_orxi8")]
 layer = 20
