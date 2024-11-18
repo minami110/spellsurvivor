@@ -17,7 +17,7 @@ public partial class FrameTimer : Node
     [Export(PropertyHint.Range, "1,216000")] // 216000f = 1 hour
     public uint WaitFrame
     {
-        get => _waitFrame;
+        get;
         set
         {
             if (value == 0)
@@ -28,9 +28,9 @@ public partial class FrameTimer : Node
                 );
             }
 
-            _waitFrame = value;
+            field = value;
         }
-    }
+    } = 20u;
 
     /// <summary>
     /// Ready 時に自動でタイマーをスタートするかどうか
@@ -38,10 +38,14 @@ public partial class FrameTimer : Node
     [Export]
     private bool _autostart;
 
+
+    /// <summary>
+    /// </summary>
+    [Export]
+    public bool OneShot { get; set; }
+
     private readonly ReactiveProperty<uint> _frameLeft = new(0);
     private readonly Subject<Unit> _timeOut = new();
-    private bool _paused;
-    private uint _waitFrame = 20u;
 
     /// <summary>
     /// タイマーがタイムアウトした時に発行されるイベント
@@ -61,16 +65,15 @@ public partial class FrameTimer : Node
     /// </remarks>
     public bool Paused
     {
-        get => _paused;
         set
         {
-            if (_paused == value)
+            if (field == value)
             {
                 return;
             }
 
-            _paused = value;
-            SetPhysicsProcess(!_paused);
+            field = value;
+            SetPhysicsProcess(!field);
         }
     }
 
@@ -103,8 +106,16 @@ public partial class FrameTimer : Node
             var next = current - 1u;
             if (next == 0u)
             {
-                _timeOut.OnNext(Unit.Default);
-                _frameLeft.Value = WaitFrame;
+                if (OneShot)
+                {
+                    Stop();
+                    _timeOut.OnNext(Unit.Default);
+                }
+                else
+                {
+                    _timeOut.OnNext(Unit.Default);
+                    _frameLeft.Value = WaitFrame;
+                }
             }
             else
             {
