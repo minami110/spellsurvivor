@@ -22,7 +22,7 @@ public partial class StaticDamage : Area2D
     /// </summary>
     internal uint Knockback { get; set; }
 
-    protected CollisionShape2D CollisionShape
+    private CollisionShape2D CollisionShape
     {
         get
         {
@@ -43,7 +43,16 @@ public partial class StaticDamage : Area2D
     public bool Disabled
     {
         get => CollisionShape.Disabled;
-        set => CollisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, value);
+        set
+        {
+            CollisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, value);
+
+            // 無効化時に除外リストをクリア
+            if (value)
+            {
+                _excludes.Clear();
+            }
+        }
     }
 
     public override void _Notification(int what)
@@ -157,7 +166,7 @@ public partial class StaticDamage : Area2D
 
         var current = Engine.GetPhysicsFrames();
 
-        // 5 Frame 後には除外リストから削除
+        // 5 Frame 後には除外リストから削除 (ToDo: 5 は根拠が適当, 連続ヒットを防ぐため)
         // リストを逆順にして削除していく
         for (var i = _excludes.Count - 1; i >= 0; i--)
         {

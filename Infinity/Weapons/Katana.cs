@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System.Threading.Tasks;
+using Godot;
 using R3;
 
 namespace fms.Weapon;
@@ -7,7 +8,7 @@ namespace fms.Weapon;
 /// </summary>
 public partial class Katana : Hocho
 {
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
     {
         if (!AimToNearEnemy.IsAiming)
         {
@@ -68,5 +69,7 @@ public partial class Katana : Hocho
             .Take(1)
             .Subscribe(this, (_, state) => { state.AimToNearEnemy.RotateSensitivity = _rotateSensitivity; })
             .AddTo(this);
+
+        await ToSignal(t, Tween.SignalName.Finished);
     }
 }

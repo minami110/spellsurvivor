@@ -1,4 +1,5 @@
-﻿using fms.Projectile;
+﻿using System.Threading.Tasks;
+using fms.Projectile;
 using Godot;
 using R3;
 
@@ -28,14 +29,13 @@ public partial class Hammer : WeaponBase
         _aimToNearEnemy.SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
     {
         if (!_aimToNearEnemy.IsAiming)
         {
             return;
         }
 
-        // Note: 30frame かかるアニメーションを再生しているので, CoolDown が追いついちゃったら変なことなります
         var sprite = GetNode<Node2D>("%Sprite");
         var t = CreateTween();
         t.TweenProperty(sprite, "position", new Vector2(0, -20), 0.3d)
@@ -52,6 +52,8 @@ public partial class Hammer : WeaponBase
             .Take(1)
             .Subscribe(this, (_, state) => { state._aimToNearEnemy.SetPhysicsProcess(true); })
             .AddTo(this);
+
+        await ToSignal(t, Tween.SignalName.Finished);
     }
 
     private void Attack()

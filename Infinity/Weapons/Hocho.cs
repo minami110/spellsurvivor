@@ -1,4 +1,5 @@
-﻿using fms.Projectile;
+﻿using System.Threading.Tasks;
+using fms.Projectile;
 using Godot;
 using R3;
 
@@ -30,7 +31,7 @@ public partial class Hocho : WeaponBase
         AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
     {
         if (!AimToNearEnemy.IsAiming)
         {
@@ -41,7 +42,6 @@ public partial class Hocho : WeaponBase
         AimToNearEnemy.RotateSensitivity = _rotateSensitivity * 0.5f;
 
         // Sprite に対して Tween で突き刺しアニメーション
-        // ToDo: 固定長のアニメーションなので, BaseCoolDown のほうが早くなるとおかしくなる 
         var sprite = GetNode<Node2D>("%SpriteRoot");
         var t = CreateTween();
         t.TweenProperty(sprite, "position", new Vector2(-12, 0), 0.2d)
@@ -72,6 +72,8 @@ public partial class Hocho : WeaponBase
             .Take(1)
             .Subscribe(this, (_, state) => { state.AimToNearEnemy.RotateSensitivity = _rotateSensitivity; })
             .AddTo(this);
+
+        await ToSignal(t, Tween.SignalName.Finished);
     }
 
     private protected override void OnStartAttack()
