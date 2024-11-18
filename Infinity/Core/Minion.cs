@@ -96,10 +96,12 @@ public partial class Minion : Node
 
             // Set Level
             SetLevel(1);
+
+            // Spawn Weapon
+            SpawnWeapon();
         }
         else if (what == NotificationReady)
         {
-            // Add Faction
             foreach (var faction in FactionUtil.GetFactionTypes())
             {
                 if (!IsBelongTo(faction))
@@ -125,7 +127,6 @@ public partial class Minion : Node
         }
         else if (what == NotificationExitTree)
         {
-            // Add Faction
             foreach (var faction in FactionUtil.GetFactionTypes())
             {
                 if (!IsBelongTo(faction))
@@ -173,23 +174,25 @@ public partial class Minion : Node
         _levelRp.Value = Math.Clamp(level, Constant.MINION_MIN_LEVEL, Constant.MINION_MAX_LEVEL);
     }
 
-    public void SpawnWeapon(bool autoStart)
-    {
-        // まだ装備していない場合ときは生成する
-        if (Weapon is null)
-        {
-            Weapon = CoreData.WeaponPackedScene.Instantiate<WeaponBase>();
-            Weapon.MinionId = Id;
-            Weapon.Faction = Faction;
-            Weapon.Level = _levelRp.Value;
-            Weapon.AutoStart = autoStart;
-            AddSibling(Weapon);
-        }
-    }
-
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
         _levelRp.Dispose();
+    }
+
+    private void SpawnWeapon()
+    {
+        // まだ装備していない場合ときは生成する
+        if (Weapon is not null)
+        {
+            return;
+        }
+
+        Weapon = CoreData.WeaponPackedScene.Instantiate<WeaponBase>();
+        Weapon.MinionId = Id;
+        Weapon.Faction = Faction;
+        Weapon.Level = _levelRp.Value;
+        Weapon.AutoStart = false;
+        AddSibling(Weapon);
     }
 }

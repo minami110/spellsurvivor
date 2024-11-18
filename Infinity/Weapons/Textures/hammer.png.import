@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjr81gun7p500"
-path="res://.godot/imported/hammer.png-7b81bb7f6bc4d9177824824bb028cb28.ctex"
+uid="uid://ck1nywcn7hjch"
+path="res://.godot/imported/hammer.png-e2ec9dc523202721ce1ed7bbbdf7e8ce.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Emoji/hammer.png"
-dest_files=["res://.godot/imported/hammer.png-7b81bb7f6bc4d9177824824bb028cb28.ctex"]
+source_file="res://Infinity/Weapons/Textures/hammer.png"
+dest_files=["res://.godot/imported/hammer.png-e2ec9dc523202721ce1ed7bbbdf7e8ce.ctex"]
 
 [params]
 
