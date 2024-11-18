@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfxptabhlg1pr"
-path="res://.godot/imported/katana.png-2d8ae7635c16c8f2b45def813a50c1eb.ctex"
+uid="uid://dkb7p5kr7rfbp"
+path="res://.godot/imported/M14EBR.png-66ed3cc4bf2ebd5ffc707528d93fed72.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/AI Emojis/katana.png"
-dest_files=["res://.godot/imported/katana.png-2d8ae7635c16c8f2b45def813a50c1eb.ctex"]
+source_file="res://Infinity/Weapons/Textures/M14EBR.png"
+dest_files=["res://.godot/imported/M14EBR.png-66ed3cc4bf2ebd5ffc707528d93fed72.ctex"]
 
 [params]
 
