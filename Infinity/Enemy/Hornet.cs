@@ -18,7 +18,7 @@ public partial class Hornet : EnemyBase
     private int _maxAttackDistance = 400;
 
     [Export(PropertyHint.Range, "1,9999,1")]
-    public uint _baseCoolDownFrame = 40u;
+    private uint _baseCoolDownFrame = 40u;
 
     [Export]
     private PackedScene _projectile = null!;
@@ -26,7 +26,6 @@ public partial class Hornet : EnemyBase
     private MovementState _moveState = MovementState.FollowPlayer;
 
     private WeaponBase _weapon = null!;
-
 
     public override void _EnterTree()
     {
@@ -36,6 +35,8 @@ public partial class Hornet : EnemyBase
         {
             weapon = new WeaponBase();
             AddChild(weapon);
+
+            weapon.BaseCoolDownFrame = _baseCoolDownFrame;
         }
 
         _weapon = weapon;
@@ -48,14 +49,10 @@ public partial class Hornet : EnemyBase
         var frameTimer = _weapon.GetNode<FrameTimer>("FrameTimer");
         frameTimer.TimeOut.Subscribe(this, (_, state) => { state.Attack(); })
             .AddTo(this);
-
-        frameTimer.WaitFrame = _baseCoolDownFrame;
     }
 
     public override void _PhysicsProcess(double _)
     {
-        var frameTimer = _weapon.GetNode<FrameTimer>("FrameTimer");
-
         // プレイヤーとの距離を計算する
         var delta = _playerNode!.GlobalPosition - GlobalPosition;
         var lengthSqr = delta.LengthSquared();
@@ -68,7 +65,8 @@ public partial class Hornet : EnemyBase
             if (lengthSqr <= Math.Pow(_maxAttackDistance - softLength, 2))
             {
                 _moveState = MovementState.AttackPlayer;
-                frameTimer.Start();
+
+                _weapon.StartAttack();
             }
         }
         // 逃走モードの時
@@ -86,13 +84,13 @@ public partial class Hornet : EnemyBase
             if (lengthSqr <= _minAttackDistance * _minAttackDistance)
             {
                 _moveState = MovementState.AwayPlayer;
-                frameTimer.Stop();
+                _weapon.StopAttack();
             }
             // プレイヤーが 最大距離以上離れたら追跡モードに移行する
             else if (lengthSqr >= _maxAttackDistance * _maxAttackDistance)
             {
                 _moveState = MovementState.FollowPlayer;
-                frameTimer.Stop();
+                _weapon.StopAttack();
             }
         }
     }
@@ -142,7 +140,7 @@ public partial class Hornet : EnemyBase
         }
 
         // プレイヤーに向けて発射する
-        var direction = (_playerNode!.GlobalPosition - GlobalPosition).Normalized();
+        var direction = (_playerNode.GlobalPosition - GlobalPosition).Normalized();
         prj.ConstantForce = direction * 180;
 
         var pos = GlobalPosition;
