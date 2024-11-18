@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://cyy8ynm6ig6cq"]
+[gd_scene load_steps=17 format=3 uid="uid://cyy8ynm6ig6cq"]
 
 [ext_resource type="Script" path="res://Infinity/Player/BasePlayerPawn.cs" id="1_vdmmf"]
 [ext_resource type="Script" path="res://Infinity/Core/PlayerState.cs" id="2_2yr66"]
+[ext_resource type="Script" path="res://Infinity/Player/CameraController.cs" id="2_xvrt4"]
 [ext_resource type="Script" path="res://Infinity/Player/HiHi/HiHiAnimator.cs" id="3_tw7gc"]
 [ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="4_xlwt1"]
 [ext_resource type="Shader" path="res://Infinity/Player/HiHi/HiHi.gdshader" id="5_2qhgr"]
@@ -12,6 +13,9 @@
 [ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="8_vwcq4"]
 [ext_resource type="Texture2D" uid="uid://qao6il7sl0c" path="res://Infinity/Player/HiHi/arm.png" id="9_3tai8"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="12_pnyqx"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5leg6"]
+radius = 250.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k2kdc"]
 shader = ExtResource("5_2qhgr")
@@ -30,6 +34,16 @@ _moveSpeed = 175.0
 unique_name_in_owner = true
 zoom = Vector2(1.5, 1.5)
 editor_draw_screen = false
+
+[node name="CameraController" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("2_xvrt4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CameraController"]
+shape = SubResource("CircleShape2D_5leg6")
+debug_color = Color(1, 1, 1, 0)
 
 [node name="PlayerState" type="Node" parent="."]
 unique_name_in_owner = true
