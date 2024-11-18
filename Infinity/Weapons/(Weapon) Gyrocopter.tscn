@@ -18,6 +18,7 @@ monitorable = false
 script = ExtResource("3_4bldk")
 
 [node name="Sprite" type="Sprite2D" parent="AimToNearEnemy"]
+unique_name_in_owner = true
 rotation = 3.14159
 scale = Vector2(0.2, -0.2)
 texture = ExtResource("4_2s37q")
