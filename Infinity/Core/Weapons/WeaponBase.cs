@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using fms.Faction;
 using fms.Projectile;
 using Godot;
@@ -26,7 +27,7 @@ public partial class WeaponBase : Node2D
     public uint BaseCoolDownFrame
     {
         get => _baseCoolDownFrame;
-        private protected set
+        set
         {
             if (_baseCoolDownFrame == value)
             {
@@ -150,7 +151,16 @@ public partial class WeaponBase : Node2D
         {
             // 武器のクールダウンが完了時のコールバックを登録
             FrameTimer.TimeOut
-                .Subscribe(this, (_, state) => { state.OnCoolDownComplete(state.Level); })
+                .SubscribeAwait(async (_, token) =>
+                {
+                    OnCoolDownComplete(Level);
+                    await OnCoolDownCompletedAsync(Level);
+
+                    // タイマーを再開する
+                    FrameTimer.OneShot = true;
+                    FrameTimer.WaitFrame = SolvedCoolDownFrame;
+                    FrameTimer.Start();
+                })
                 .AddTo(this);
 
             if (AutoStart)
@@ -216,6 +226,7 @@ public partial class WeaponBase : Node2D
         }
 
         FrameTimer.WaitFrame = SolvedCoolDownFrame;
+        FrameTimer.OneShot = true;
         FrameTimer.Start();
         OnStartAttack();
     }
@@ -239,6 +250,11 @@ public partial class WeaponBase : Node2D
     /// <param name="level">現在の武器のレベル</param>
     private protected virtual void OnCoolDownComplete(uint level)
     {
+    }
+
+    private protected virtual ValueTask OnCoolDownCompletedAsync(uint level)
+    {
+        return ValueTask.CompletedTask;
     }
 
     private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
