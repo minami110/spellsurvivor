@@ -33,6 +33,7 @@ _moveSpeed = 175.0
 [node name="MainCamera" type="Camera2D" parent="."]
 unique_name_in_owner = true
 zoom = Vector2(1.5, 1.5)
+position_smoothing_enabled = true
 editor_draw_screen = false
 
 [node name="CameraController" type="Area2D" parent="."]
@@ -40,6 +41,8 @@ collision_layer = 0
 collision_mask = 4
 monitorable = false
 script = ExtResource("2_xvrt4")
+_moveSpeed = 0.5
+_zoomSpeed = 0.1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CameraController"]
 shape = SubResource("CircleShape2D_5leg6")
