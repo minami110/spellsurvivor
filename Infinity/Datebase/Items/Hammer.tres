@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://bijbeix4ox0e"]
 
-[ext_resource type="Texture2D" uid="uid://cjr81gun7p500" path="res://Common/Resources/Textures/Emoji/hammer.png" id="1_o73ea"]
+[ext_resource type="Texture2D" uid="uid://ck1nywcn7hjch" path="res://Infinity/Weapons/Textures/hammer.png" id="1_tsnrs"]
 [ext_resource type="PackedScene" uid="uid://cnt1krkwwjugi" path="res://Infinity/Weapons/(Weapon) Hammer.tscn" id="2_p13di"]
 [ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_migau"]
 
@@ -12,4 +12,4 @@ Tier = 1
 Price = 5
 Name = "ハンマー"
 Description = "周囲の敵に攻撃"
-Sprite = ExtResource("1_o73ea")
+Sprite = ExtResource("1_tsnrs")
