@@ -24,10 +24,10 @@ public partial class AimToNearEnemy : Area2D
     [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
     public float SearchRadius
     {
-        get => _searchRadius;
+        get;
         set
         {
-            if (Math.Abs(_searchRadius - value) <= 0.0001f)
+            if (Math.Abs(field - value) <= 0.0001f)
             {
                 return;
             }
@@ -37,9 +37,9 @@ public partial class AimToNearEnemy : Area2D
                 UpdateCollisionRadius(value);
             }
 
-            _searchRadius = value;
+            field = value;
         }
-    }
+    } = 100f;
 
     /// <summary>
     /// 子の回転を更新するかどうか
@@ -51,7 +51,7 @@ public partial class AimToNearEnemy : Area2D
     /// 子の回転が有効な場合の回転感度
     /// </summary>
     [Export(PropertyHint.Range, "0,1")]
-    public float RotateSensitivity { get; set; } = 0.7f;
+    public float RotateSensitivity { get; set; } = 0.3f;
 
     public enum AimTarget
     {
@@ -65,8 +65,6 @@ public partial class AimToNearEnemy : Area2D
     public readonly List<EnemyBase> Enemies = new();
 
     private float _restAngle;
-
-    private float _searchRadius = 100f;
 
     private float _targetAngle;
 
@@ -87,74 +85,71 @@ public partial class AimToNearEnemy : Area2D
 
     public override void _EnterTree()
     {
+        // 継承元のパラメーターの初期化
+        // Note: 他の Area などに監視される必要がない設定
+        Monitorable = false;
+        CollisionLayer = Constant.LAYER_NONE;
+        // Note: 現在プレイヤーしか使っていないので敵のみを検知する設定
+        CollisionMask = Constant.LAYER_MOB;
+
         // Subscribe to parent player's face direction
-        var player = GetNode<BasePlayerPawn>("../.."); // ToDo: Hardcoded
+        // ToDo: ひとつ上が Weapon, 更にその上が Player であること前提のハードコード
+        var player = GetNode<BasePlayerPawn>("../..");
         player.FaceDirection
-            .Subscribe(x => { _restAngle = x == PawnFaceDirection.Right ? Mathf.Atan2(0, 1) : Mathf.Atan2(0, -1); })
+            .Subscribe(this, (x, state) =>
+            {
+                const float _RIGHT = 0f; // Mathf.Atan2(0, 1);
+                const float _LEFT = Mathf.Pi; // Mathf.Atan2(0, -1);
+                state._restAngle = x == PawnFaceDirection.Right ? _RIGHT : _LEFT;
+            })
             .AddTo(this);
-        UpdateCollisionRadius(_searchRadius);
+
+        // 子の Shape を初期化する
+        UpdateCollisionRadius(SearchRadius);
     }
 
     public override void _PhysicsProcess(double delta)
     {
         UpdateNearAndFarEnemy();
+        AimAtTarget();
+        UpdateSpriteFlip();
+    }
 
-        if (Target == AimTarget.Nearest)
+    private void AimAtTarget()
+    {
+        var targetEnemy = Target == AimTarget.Nearest ? NearestEnemy : FarthestEnemy;
+
+        if (targetEnemy is not null)
         {
-            if (NearestEnemy is not null)
+            IsAiming = true;
+            if (!UpdateRotation)
             {
-                IsAiming = true;
-
-                if (!UpdateRotation)
-                {
-                    return;
-                }
-
-                var targetPosition = NearestEnemy.GlobalPosition;
-                var targetAngle = Mathf.Atan2(targetPosition.Y - GlobalPosition.Y, targetPosition.X - GlobalPosition.X);
-                Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotateSensitivity);
+                return;
             }
-            else
-            {
-                IsAiming = false;
 
-                if (!UpdateRotation)
-                {
-                    return;
-                }
-
-                // Update Rotation
-                Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
-            }
+            RotateTowards(targetEnemy.GlobalPosition);
         }
-        else if (Target == AimTarget.Farthest)
+        else
         {
-            if (FarthestEnemy is not null)
+            IsAiming = false;
+            if (!UpdateRotation)
             {
-                IsAiming = true;
-
-                if (!UpdateRotation)
-                {
-                    return;
-                }
-
-                var targetPosition = FarthestEnemy.GlobalPosition;
-                var targetAngle = Mathf.Atan2(targetPosition.Y - GlobalPosition.Y, targetPosition.X - GlobalPosition.X);
-                Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotateSensitivity);
+                return;
             }
-            else
-            {
-                IsAiming = false;
 
-                if (!UpdateRotation)
-                {
-                    return;
-                }
-
-                // Update Rotation
-                Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
-            }
+            RotateTowardsRestAngle();
         }
+    }
+
+    private void RotateTowards(Vector2 targetPosition)
+    {
+        var targetAngle = Mathf.Atan2(targetPosition.Y - GlobalPosition.Y, targetPosition.X - GlobalPosition.X);
+        Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotateSensitivity);
+    }
+
+    private void RotateTowardsRestAngle()
+    {
+        Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
     }
 
     private void UpdateCollisionRadius(float radius)
@@ -226,5 +221,22 @@ public partial class AimToNearEnemy : Area2D
                 FarthestEnemy = e;
             }
         }
+    }
+
+    private void UpdateSpriteFlip()
+    {
+        var sprite = GetNodeOrNull<Sprite2D>("%Sprite");
+        if (sprite is null)
+        {
+            return;
+        }
+
+        // Rotation のベクトルが右向きか左向きかを判定する
+        var rot = Rotation;
+        var vec = new Vector2(Mathf.Cos(rot), Mathf.Sin(rot));
+        var isRight = vec.Dot(Vector2.Right) > 0;
+
+        // Rotation が右半分にいるときと左半分にいるときで Sprite の Flip を変更する
+        sprite.FlipV = !isRight;
     }
 }
