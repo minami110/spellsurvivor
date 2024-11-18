@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://dmopggccbhv7l"]
 
-[ext_resource type="Texture2D" uid="uid://dmrvxabprg7y0" path="res://Common/Resources/Textures/AI Emojis/claw.png" id="1_se7o6"]
+[ext_resource type="Texture2D" uid="uid://dmrvxabprg7y0" path="res://Infinity/Weapons/Textures/claw.png" id="1_se7o6"]
 [ext_resource type="PackedScene" uid="uid://b1is8i4sj01ki" path="res://Infinity/Weapons/(Weapon) Claw.tscn" id="2_i8wpy"]
 [ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_vey8v"]
 

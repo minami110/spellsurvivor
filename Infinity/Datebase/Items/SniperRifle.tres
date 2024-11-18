@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://dxy00fxyinowg"]
 
-[ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/M14EBR.png" id="1_8l1vw"]
+[ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/Textures/M14EBR.png" id="1_8l1vw"]
 [ext_resource type="PackedScene" uid="uid://dx52nto82q801" path="res://Infinity/Weapons/(Weapon) SniperRifle.tscn" id="2_k2k8x"]
 [ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_04dd8"]
 
