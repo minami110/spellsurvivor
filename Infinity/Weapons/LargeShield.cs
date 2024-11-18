@@ -1,4 +1,5 @@
-﻿using fms.Projectile;
+﻿using System.Threading.Tasks;
+using fms.Projectile;
 using Godot;
 using R3;
 
@@ -34,7 +35,7 @@ public partial class LargeShield : WeaponBase
         _aimToNearEnemy.SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
     {
         if (!_aimToNearEnemy.IsAiming)
         {
@@ -58,6 +59,8 @@ public partial class LargeShield : WeaponBase
             .Take(1)
             .Subscribe(this, (_, state) => { state._aimToNearEnemy.SetPhysicsProcess(true); })
             .AddTo(this);
+
+        await ToSignal(t, Tween.SignalName.Finished);
     }
 
     // アニメーションの最初のタメ が終わったタイミングで呼ばれるコールバック
