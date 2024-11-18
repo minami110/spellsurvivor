@@ -37,7 +37,7 @@ debug_color = Color(1, 0, 0, 0)
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 color = Color(0.98274, 0.756911, 0.52964, 1)
-energy = 1.27
+range_layer_min = -5
 shadow_enabled = true
 texture = ExtResource("3_w5sbp")
 texture_scale = 1.34
