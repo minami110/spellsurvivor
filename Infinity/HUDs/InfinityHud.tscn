@@ -1,9 +1,5 @@
-[gd_scene load_steps=26 format=3 uid="uid://dndrw60tkxjwx"]
+[gd_scene load_steps=18 format=3 uid="uid://dndrw60tkxjwx"]
 
-[ext_resource type="Shader" path="res://Infinity/HUDs/BG/bg.gdshader" id="1_1dqes"]
-[ext_resource type="Texture2D" uid="uid://3g3bdtsmnid1" path="res://Infinity/HUDs/BG/bg_city_b.2k.png" id="2_4oonj"]
-[ext_resource type="Texture2D" uid="uid://136bqyejq4xa" path="res://Infinity/HUDs/BG/bg_city_a.2k.png" id="3_se5fq"]
-[ext_resource type="Texture2D" uid="uid://dge21nhsqkxnq" path="res://Infinity/HUDs/BG/bg_tile_a.png" id="4_uqdg2"]
 [ext_resource type="Texture2D" uid="uid://dh83miwj7srlb" path="res://Infinity/HUDs/BG/BGground_test.png" id="5_2inhk"]
 [ext_resource type="Texture2D" uid="uid://c0jusf0iejowu" path="res://Infinity/HUDs/BG/ninepatch_border.png" id="5_48qdi"]
 [ext_resource type="Texture2D" uid="uid://cqtkrw5j01oqh" path="res://Infinity/HUDs/BG/BGground_n.png" id="6_d67nd"]
@@ -18,18 +14,6 @@
 [ext_resource type="Texture2D" uid="uid://c4dpueuu5subx" path="res://Infinity/HUDs/BG/tabletframe.png" id="15_a2f1p"]
 [ext_resource type="Texture2D" uid="uid://boliw1ltfe0l" path="res://Infinity/HUDs/BG/hudwindow.png" id="16_cpprl"]
 [ext_resource type="Texture2D" uid="uid://nol2ro1sggyi" path="res://Infinity/HUDs/BG/tabletparts.png" id="17_bxnp8"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_l71ky"]
-shader = ExtResource("1_1dqes")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_11h68"]
-shader = ExtResource("1_1dqes")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cnscl"]
-shader = ExtResource("1_1dqes")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_onfx3"]
-shader = ExtResource("1_1dqes")
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_rtxtm"]
 diffuse_texture = ExtResource("5_2inhk")
@@ -50,82 +34,11 @@ shader_parameter/crt_curve = 0.0
 
 [node name="InfinityHud" type="Node"]
 
-[node name="BG Parallax (-5)" type="ParallaxBackground" parent="."]
-layer = -5
-
-[node name="ParallaxLayer" type="ParallaxLayer" parent="BG Parallax (-5)"]
-motion_scale = Vector2(0.3, 0.3)
-motion_offset = Vector2(370, -40)
-
-[node name="Sprite2D" type="Sprite2D" parent="BG Parallax (-5)/ParallaxLayer"]
-self_modulate = Color(0.716296, 0.716296, 0.716296, 1)
-light_mask = 2
-material = SubResource("ShaderMaterial_l71ky")
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_4oonj")
-
-[node name="ParallaxLayerFront" type="ParallaxLayer" parent="BG Parallax (-5)"]
-motion_scale = Vector2(0.5, 0.5)
-motion_offset = Vector2(265, 255)
-
-[node name="Sprite2D" type="Sprite2D" parent="BG Parallax (-5)/ParallaxLayerFront"]
-self_modulate = Color(0.834614, 0.834614, 0.834614, 1)
-light_mask = 2
-material = SubResource("ShaderMaterial_11h68")
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_se5fq")
-
 [node name="BG Tile (-4)" type="CanvasLayer" parent="."]
 layer = -4
 follow_viewport_enabled = true
 
-[node name="Sprite2D_2" type="Sprite2D" parent="BG Tile (-4)"]
-light_mask = 2
-material = SubResource("ShaderMaterial_cnscl")
-position = Vector2(240, -393)
-scale = Vector2(0.667, 0.667)
-texture = ExtResource("4_uqdg2")
-
-[node name="Sprite2D_7" type="Sprite2D" parent="BG Tile (-4)"]
-light_mask = 2
-material = SubResource("ShaderMaterial_cnscl")
-position = Vector2(643, 57)
-rotation = 3.14159
-scale = Vector2(0.667, 0.667)
-texture = ExtResource("4_uqdg2")
-
-[node name="Sprite2D_3" type="Sprite2D" parent="BG Tile (-4)"]
-light_mask = 2
-material = SubResource("ShaderMaterial_cnscl")
-position = Vector2(-497, -624)
-scale = Vector2(0.667, 0.667)
-texture = ExtResource("4_uqdg2")
-
-[node name="Sprite2D_4" type="Sprite2D" parent="BG Tile (-4)"]
-light_mask = 2
-material = SubResource("ShaderMaterial_cnscl")
-position = Vector2(-641, -74)
-scale = Vector2(0.667, 0.667)
-texture = ExtResource("4_uqdg2")
-
-[node name="Sprite2D_5" type="Sprite2D" parent="BG Tile (-4)"]
-light_mask = 2
-material = SubResource("ShaderMaterial_cnscl")
-position = Vector2(-419, 409)
-scale = Vector2(0.667, 0.667)
-texture = ExtResource("4_uqdg2")
-
-[node name="Sprite2D_6" type="Sprite2D" parent="BG Tile (-4)"]
-light_mask = 2
-material = SubResource("ShaderMaterial_cnscl")
-position = Vector2(422, 453)
-rotation = -3.14159
-scale = Vector2(0.667, 0.667)
-texture = ExtResource("4_uqdg2")
-
 [node name="Sprite2D_8" type="Sprite2D" parent="BG Tile (-4)"]
-light_mask = 2
-material = SubResource("ShaderMaterial_onfx3")
 position = Vector2(0, -142)
 scale = Vector2(0.444889, 0.444889)
 texture = SubResource("CanvasTexture_rtxtm")
