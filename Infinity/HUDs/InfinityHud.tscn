@@ -1,7 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://dndrw60tkxjwx"]
+[gd_scene load_steps=23 format=3 uid="uid://dndrw60tkxjwx"]
 
+[ext_resource type="Texture2D" uid="uid://d0b6eo4xkswld" path="res://Infinity/HUDs/BG/prop/bucket.png" id="4_i6nut"]
+[ext_resource type="Texture2D" uid="uid://5wxxe8amn5t0" path="res://Infinity/HUDs/BG/prop/generator.png" id="4_qfl6a"]
 [ext_resource type="Texture2D" uid="uid://dh83miwj7srlb" path="res://Infinity/HUDs/BG/BGground_test.png" id="5_2inhk"]
 [ext_resource type="Texture2D" uid="uid://c0jusf0iejowu" path="res://Infinity/HUDs/BG/ninepatch_border.png" id="5_48qdi"]
+[ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="5_dh2yx"]
 [ext_resource type="Texture2D" uid="uid://cqtkrw5j01oqh" path="res://Infinity/HUDs/BG/BGground_n.png" id="6_d67nd"]
 [ext_resource type="PackedScene" uid="uid://bali3cj5bhs2q" path="res://Infinity/HUDs/InGameHUD.tscn" id="6_fbv8a"]
 [ext_resource type="PackedScene" uid="uid://cn70mo64dy7mh" path="res://Infinity/HUDs/BattleResult/BattleResultHUD.tscn" id="7_7iy48"]
@@ -20,9 +23,15 @@ diffuse_texture = ExtResource("5_2inhk")
 normal_texture = ExtResource("6_d67nd")
 specular_texture = ExtResource("7_j2gt1")
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_uuq4u"]
+polygon = PackedVector2Array(-103.397, -11.2388, -31.4685, 42.7073, -4.49551, 42.7073, -4.49551, 47.2028, 62.937, 47.2028, 62.937, 40.4595, 85.4146, 40.4595, 85.4146, 29.2208, 85.4146, -13.4865, 80.9191, -13.4865, 76.4236, -51.6983, 15.7343, -51.6983, 15.7343, -76.4236, 6.74326, -76.4236, 4.4955, -67.4326, -2.24776, -67.4326, -6.74326, -62.9371, -8.991, -51.6983, -103.397, -51.6983)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_63nd8"]
+polygon = PackedVector2Array(-101.149, 157.343, 101.149, 157.343, 98.9012, 15.7342, 71.9282, 15.7342, 71.9282, -96.6534, 62.9371, -105.644, 60.6894, -157.343, -42.7072, -159.59, -53.946, -134.865, -67.4325, -112.388, -65.1847, -51.6983, -83.1667, -51.6983, -85.4145, 13.4865, -98.901, 11.2387)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7bqg6"]
 shader = ExtResource("14_1hn5s")
-shader_parameter/crt_brightness = 2.511
+shader_parameter/crt_brightness = 1.336
 shader_parameter/crt_ghost = 0.39
 shader_parameter/crt_grid = 0.176
 shader_parameter/crt_white_noise = 0.0
@@ -43,8 +52,60 @@ position = Vector2(0, -142)
 scale = Vector2(0.444889, 0.444889)
 texture = SubResource("CanvasTexture_rtxtm")
 
+[node name="Sprite2D_10" type="Sprite2D" parent="BG (-4)/Sprite2D_8"]
+modulate = Color(1, 1, 0.784314, 1)
+position = Vector2(-89.9101, -150.599)
+texture = ExtResource("4_i6nut")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="BG (-4)/Sprite2D_8/Sprite2D_10"]
+show_behind_parent = true
+position = Vector2(8.99102, 15.7343)
+occluder = SubResource("OccluderPolygon2D_uuq4u")
+
+[node name="Sprite2D_8" type="Sprite2D" parent="BG (-4)/Sprite2D_8"]
+modulate = Color(1, 1, 0.784314, 1)
+position = Vector2(-735.015, 501.249)
+texture = ExtResource("4_qfl6a")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="BG (-4)/Sprite2D_8/Sprite2D_8"]
+show_behind_parent = true
+occluder = SubResource("OccluderPolygon2D_63nd8")
+
+[node name="PointLight2D" type="PointLight2D" parent="BG (-4)/Sprite2D_8"]
+position = Vector2(119.131, -103.397)
+scale = Vector2(2.31197, 2.36647)
+color = Color(1, 0.456571, 0.0770717, 1)
+energy = 0.76
+range_layer_min = -4
+range_layer_max = 3
+shadow_enabled = true
+shadow_color = Color(0.635294, 0.54902, 0.458824, 0)
+texture = ExtResource("5_dh2yx")
+texture_scale = 1.16
+
+[node name="PointLight2D_2" type="PointLight2D" parent="BG (-4)/Sprite2D_8"]
+position = Vector2(-564.186, 552.947)
+scale = Vector2(5.34521, 5.60018)
+color = Color(0.866667, 0.894118, 0.701961, 1)
+energy = 0.73
+range_layer_min = -4
+range_layer_max = 3
+shadow_enabled = true
+shadow_color = Color(0.635294, 0.54902, 0.458824, 0)
+texture = ExtResource("5_dh2yx")
+texture_scale = 0.67
+
+[node name="Sprite2D_9" type="Sprite2D" parent="BG (-4)/Sprite2D_8"]
+modulate = Color(1, 1, 0.784314, 1)
+position = Vector2(-393.357, 1042.96)
+texture = ExtResource("4_qfl6a")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="BG (-4)/Sprite2D_8/Sprite2D_9"]
+show_behind_parent = true
+occluder = SubResource("OccluderPolygon2D_63nd8")
+
 [node name="CRT (-2)" type="CanvasLayer" parent="."]
-layer = -2
+layer = 3
 
 [node name="ColorRect" type="ColorRect" parent="CRT (-2)"]
 material = SubResource("ShaderMaterial_7bqg6")
@@ -85,6 +146,7 @@ metadata/_edit_use_anchors_ = true
 
 [node name="UI Border (2)" type="CanvasLayer" parent="."]
 layer = 2
+visible = false
 
 [node name="NinePatchRect" type="NinePatchRect" parent="UI Border (2)"]
 self_modulate = Color(0.733005, 0.733005, 0.733005, 1)
@@ -114,7 +176,6 @@ layer = 4
 layer = 8
 
 [node name="TooltipToast" parent="Tooltip Toast (8)" instance=ExtResource("9_n1574")]
-visible = false
 
 [node name="DebugHUD (20)" parent="." instance=ExtResource("10_orxi8")]
 layer = 20

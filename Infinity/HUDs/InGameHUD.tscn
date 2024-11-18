@@ -114,23 +114,23 @@ horizontal_alignment = 1
 
 [node name="ActiveFactionsHud" parent="Container" instance=ExtResource("5_26dji")]
 layout_mode = 1
-anchors_preset = 4
+anchors_preset = 6
+anchor_left = 1.0
 anchor_top = 0.5
+anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = -52.0
-offset_bottom = 52.0
+offset_left = -207.0
+offset_top = -242.0
+offset_right = -100.0
+offset_bottom = -57.0
+grow_horizontal = 0
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Container"]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
+anchors_preset = 2
 anchor_top = 1.0
-anchor_right = 0.5
 anchor_bottom = 1.0
-offset_top = -67.0
-offset_bottom = 13.0
-grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_gyady")
 
