@@ -20,10 +20,6 @@ diffuse_texture = ExtResource("5_2inhk")
 normal_texture = ExtResource("6_d67nd")
 specular_texture = ExtResource("7_j2gt1")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_a0f50"]
-shader = ExtResource("13_vpxp3")
-shader_parameter/pixel_size = 1.0
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7bqg6"]
 shader = ExtResource("14_1hn5s")
 shader_parameter/crt_brightness = 2.511
@@ -32,16 +28,60 @@ shader_parameter/crt_grid = 0.176
 shader_parameter/crt_white_noise = 0.0
 shader_parameter/crt_curve = 0.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a0f50"]
+shader = ExtResource("13_vpxp3")
+shader_parameter/pixel_size = 1.0
+
 [node name="InfinityHud" type="Node"]
 
-[node name="BG Tile (-4)" type="CanvasLayer" parent="."]
+[node name="BG (-4)" type="CanvasLayer" parent="."]
 layer = -4
 follow_viewport_enabled = true
 
-[node name="Sprite2D_8" type="Sprite2D" parent="BG Tile (-4)"]
+[node name="Sprite2D_8" type="Sprite2D" parent="BG (-4)"]
 position = Vector2(0, -142)
 scale = Vector2(0.444889, 0.444889)
 texture = SubResource("CanvasTexture_rtxtm")
+
+[node name="CRT (-2)" type="CanvasLayer" parent="."]
+layer = -2
+
+[node name="ColorRect" type="ColorRect" parent="CRT (-2)"]
+material = SubResource("ShaderMaterial_7bqg6")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="CRT (-2)"]
+light_mask = 0
+position = Vector2(807, 445)
+scale = Vector2(0.295, 0.295)
+texture = ExtResource("15_a2f1p")
+
+[node name="Sprite2D_2" type="Sprite2D" parent="CRT (-2)"]
+light_mask = 0
+position = Vector2(811, 435)
+scale = Vector2(0.298, 0.298)
+texture = ExtResource("16_cpprl")
+
+[node name="Sprite2D_3" type="Sprite2D" parent="CRT (-2)"]
+light_mask = 0
+position = Vector2(791, 797)
+scale = Vector2(0.227, 0.227)
+texture = ExtResource("17_bxnp8")
+
+[node name="dot (1)" type="CanvasLayer" parent="."]
+
+[node name="ColorRect_2" type="ColorRect" parent="dot (1)"]
+material = SubResource("ShaderMaterial_a0f50")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="UI Border (2)" type="CanvasLayer" parent="."]
 layer = 2
@@ -75,43 +115,6 @@ layer = 8
 
 [node name="TooltipToast" parent="Tooltip Toast (8)" instance=ExtResource("9_n1574")]
 visible = false
-
-[node name="dot" type="CanvasLayer" parent="."]
-
-[node name="ColorRect_2" type="ColorRect" parent="dot"]
-material = SubResource("ShaderMaterial_a0f50")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="CRT" type="CanvasLayer" parent="."]
-layer = -2
-
-[node name="ColorRect" type="ColorRect" parent="CRT"]
-material = SubResource("ShaderMaterial_7bqg6")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="CRT"]
-position = Vector2(807, 445)
-scale = Vector2(0.295, 0.295)
-texture = ExtResource("15_a2f1p")
-
-[node name="Sprite2D_2" type="Sprite2D" parent="CRT"]
-position = Vector2(811, 435)
-scale = Vector2(0.298, 0.298)
-texture = ExtResource("16_cpprl")
-
-[node name="Sprite2D_3" type="Sprite2D" parent="CRT"]
-position = Vector2(791, 797)
-scale = Vector2(0.227, 0.227)
-texture = ExtResource("17_bxnp8")
 
 [node name="DebugHUD (20)" parent="." instance=ExtResource("10_orxi8")]
 layer = 20
