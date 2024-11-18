@@ -16,7 +16,6 @@ collision_layer = 0
 collision_mask = 4
 monitorable = false
 script = ExtResource("2_qrb6v")
-RotateSensitivity = 0.4
 
 [node name="Sprite" type="Sprite2D" parent="AimToNearEnemy"]
 unique_name_in_owner = true

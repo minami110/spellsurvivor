@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkb7p5kr7rfbp"
-path="res://.godot/imported/M14EBR.png-9e8ffd6db567f0ba2e5e44dcd30aecc2.ctex"
+uid="uid://dmrvxabprg7y0"
+path="res://.godot/imported/claw.png-0e01a01cb8edb6ed3871fa3d0e7c21e9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Weapons/M14EBR.png"
-dest_files=["res://.godot/imported/M14EBR.png-9e8ffd6db567f0ba2e5e44dcd30aecc2.ctex"]
+source_file="res://Infinity/Weapons/Textures/claw.png"
+dest_files=["res://.godot/imported/claw.png-0e01a01cb8edb6ed3871fa3d0e7c21e9.ctex"]
 
 [params]
 

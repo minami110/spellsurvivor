@@ -141,6 +141,10 @@ public partial class WeaponBase : Node2D
             // 親が Node2D であることを確認してキャッシュしておく
             var parent = GetParentOrNull<Node2D>();
             OwnedEntity = parent ?? throw new ApplicationException("WeaponBase は IEntity の子ノードでなければなりません");
+
+            // ToDo: 仮
+            // 手前に見えるようにする
+            ZIndex = 10;
         }
         else if (what == NotificationReady)
         {

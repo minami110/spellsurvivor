@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmrvxabprg7y0"
-path="res://.godot/imported/claw.png-d00a3b0c1058384fcf4bacb233bc7049.ctex"
+uid="uid://dfxptabhlg1pr"
+path="res://.godot/imported/katana.png-e213e43b52c03fbce19010fefe30a929.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/AI Emojis/claw.png"
-dest_files=["res://.godot/imported/claw.png-d00a3b0c1058384fcf4bacb233bc7049.ctex"]
+source_file="res://Infinity/Weapons/Textures/katana.png"
+dest_files=["res://.godot/imported/katana.png-e213e43b52c03fbce19010fefe30a929.ctex"]
 
 [params]
 

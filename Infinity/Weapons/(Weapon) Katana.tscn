@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Katana.cs" id="1_jvqp3"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_ijpih"]
-[ext_resource type="Texture2D" uid="uid://dfxptabhlg1pr" path="res://Common/Resources/Textures/AI Emojis/katana.png" id="3_tgsp1"]
+[ext_resource type="Texture2D" uid="uid://dfxptabhlg1pr" path="res://Infinity/Weapons/Textures/katana.png" id="3_tgsp1"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_v8m0w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ou1fu"]
@@ -24,11 +24,9 @@ script = ExtResource("2_ijpih")
 unique_name_in_owner = true
 
 [node name="Sprite" type="Sprite2D" parent="AimToNearEnemy/SpriteRoot"]
-position = Vector2(20, -2)
-rotation = -0.818389
-scale = Vector2(0.789027, 0.789027)
+unique_name_in_owner = true
+position = Vector2(23, 0)
 texture = ExtResource("3_tgsp1")
-flip_h = true
 
 [node name="StaticDamage" type="Area2D" parent="AimToNearEnemy/SpriteRoot"]
 unique_name_in_owner = true

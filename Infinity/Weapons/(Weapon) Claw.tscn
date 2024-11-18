@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Claw.cs" id="1_0taiu"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="4_1janu"]
-[ext_resource type="Texture2D" uid="uid://dmrvxabprg7y0" path="res://Common/Resources/Textures/AI Emojis/claw.png" id="4_umwcb"]
+[ext_resource type="Texture2D" uid="uid://dmrvxabprg7y0" path="res://Infinity/Weapons/Textures/claw.png" id="4_umwcb"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_wa13x"]
 font_size = 10
@@ -20,7 +20,9 @@ monitorable = false
 script = ExtResource("4_1janu")
 
 [node name="Sprite" type="Sprite2D" parent="AimToNearEnemy"]
-scale = Vector2(0.04, 0.04)
+unique_name_in_owner = true
+position = Vector2(12, 0)
+scale = Vector2(0.3, 0.3)
 texture = ExtResource("4_umwcb")
 
 [node name="StackLabel" type="Label" parent="."]
