@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using fms.Effect;
 using fms.Projectile;
 using Godot;
 using R3;
@@ -42,7 +45,10 @@ public partial class AorticKnife : WeaponBase
 
     // 攻撃前のナイフを構えるアニメーションのフレーム数
     [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
-    private uint _preAttackDuration = 10;
+    private uint _preAttackDuration = 4;
+
+    private uint _lifestealAmount;
+    private float _lifeStealRate;
 
     private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
     private StaticDamage StaticDamage => GetNode<StaticDamage>("%StaticDamage");
@@ -51,6 +57,23 @@ public partial class AorticKnife : WeaponBase
     {
         AimToNearEnemy.SearchRadius = _maxRange;
         AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
+
+        StaticDamage.Hit.Subscribe(payload =>
+        {
+            var hitEntity = (IEntity)(Node2D)payload["Entity"];
+
+            // ToDo: ライフスティールの対象かどうか?
+            // Player なら Enemy にあたったとき みたいな確認
+
+            // ライフスティールの確率計算
+            var chance = Math.Clamp(_lifeStealRate, 0f, 1f);
+            if (GD.Randf() < chance)
+            {
+                // OwnedEntity (Player) を回復する
+                var player = (IEntity)OwnedEntity;
+                player.ApplayDamage(_lifestealAmount * -1f, player, this);
+            }
+        }).AddTo(this);
     }
 
     private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
@@ -78,7 +101,7 @@ public partial class AorticKnife : WeaponBase
         // 突き刺しアニメーション
         for (var i = 0; i < PushCount; i++)
         {
-            Push(t, sprite);
+            RegisterPushAnimation(t, sprite);
         }
 
         // すぐに他の敵を狙わないようなアニメの遊び
@@ -93,6 +116,25 @@ public partial class AorticKnife : WeaponBase
         await ToSignal(t, Tween.SignalName.Finished);
     }
 
+    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    {
+        _lifestealAmount = 0;
+        _lifeStealRate = 0f;
+
+        foreach (var effect in effects)
+        {
+            switch (effect)
+            {
+                case Lifesteal lifesteal:
+                {
+                    _lifestealAmount += lifesteal.Amount;
+                    _lifeStealRate += lifesteal.Rate;
+                    break;
+                }
+            }
+        }
+    }
+
     private protected override void OnStartAttack()
     {
         StaticDamage.Disabled = true;
@@ -100,7 +142,7 @@ public partial class AorticKnife : WeaponBase
         StaticDamage.Knockback = Knockback;
     }
 
-    private void Push(Tween tween, Node2D sprite)
+    private void RegisterPushAnimation(Tween tween, Node2D sprite)
     {
         // 突き刺しアニメーション
         var distance = (float)_pushDistance;
