@@ -16,16 +16,16 @@ public partial class FactionBase : Node
     [Export]
     public uint Level
     {
-        get => _level;
+        get;
         set
         {
             var newLevel = Math.Clamp(value, 0, Constant.FACTION_MAX_LEVEL);
-            if (Level == newLevel)
+            if (field == newLevel)
             {
                 return;
             }
 
-            _level = newLevel;
+            field = newLevel;
 
             if (IsNodeReady())
             {
@@ -36,13 +36,12 @@ public partial class FactionBase : Node
                 }
 
                 _publishedEffects.Clear();
-                OnLevelChanged(Level);
+                OnLevelChanged(newLevel);
             }
         }
     }
 
     private readonly List<EffectBase> _publishedEffects = new();
-    private uint _level;
 
     /// <summary>
     /// この Faction でなんらかの効果が有効になっているかどうか
