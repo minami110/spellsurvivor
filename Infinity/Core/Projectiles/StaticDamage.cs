@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using fms.Weapon;
 using Godot;
+using Godot.Collections;
 using R3;
 
 namespace fms.Projectile;
@@ -11,6 +12,9 @@ namespace fms.Projectile;
 public partial class StaticDamage : Area2D
 {
     private readonly List<ExcludeInfo> _excludes = [];
+
+    private readonly Dictionary _hitInfo = new();
+    private readonly Subject<Dictionary> _hitSubject = new();
 
     /// <summary>
     /// Projectile のダメージ
@@ -21,6 +25,8 @@ public partial class StaticDamage : Area2D
     /// ノックバック速度
     /// </summary>
     internal uint Knockback { get; set; }
+
+    public Observable<Dictionary> Hit => _hitSubject;
 
     private CollisionShape2D CollisionShape
     {
@@ -94,7 +100,10 @@ public partial class StaticDamage : Area2D
             }
 
             // ToDo: IEntity に雑にキャスト
+            // ダメージを与える
             entity.ApplayDamage(Damage, (IEntity)weapon.OwnedEntity, weapon);
+
+            // Hit 通知
             SendHitInfo(body);
 
             // ToDo: Knockback 処理, 型があいまい
@@ -139,22 +148,16 @@ public partial class StaticDamage : Area2D
         throw new InvalidProgramException("Failed to find WeaponBase");
     }
 
-    private void SendHitInfo(Node2D node)
+    private void SendHitInfo(Node2D hitEntity)
     {
-        /*
+        _hitInfo.Clear();
+
         // 最新の HitInfo を更新 (ダメージ処理のあとにやること)
         // Note: すべての当たり判定が Sphere という決め打ちで法線を計算しています
-        HitInfo = new ProjectileHitInfo
-        {
-            HitNode = node,
-            Position = GlobalPosition,
-            Normal = (GlobalPosition - node.GlobalPosition).Normalized(),
-            Velocity = PrevLinearVelocity
-        };
+        _hitInfo["Entity"] = hitEntity;
 
         // Hit を通知する
-        _hitSubject.OnNext(HitInfo);
-        */
+        _hitSubject.OnNext(_hitInfo);
     }
 
     private void UpdateExcludes()
@@ -180,7 +183,7 @@ public partial class StaticDamage : Area2D
         }
     }
 
-    private struct ExcludeInfo
+    private readonly struct ExcludeInfo
     {
         public Node2D Node { get; init; }
         public ulong Created { get; init; }
