@@ -15,7 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="12_pnyqx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5leg6"]
-radius = 250.0
+radius = 223.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k2kdc"]
 shader = ExtResource("5_2qhgr")
@@ -41,8 +41,8 @@ collision_layer = 0
 collision_mask = 4
 monitorable = false
 script = ExtResource("2_xvrt4")
-_moveSpeed = 0.5
-_zoomSpeed = 0.1
+_moveSpeed = 0.12
+_zoomSpeed = 0.45
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CameraController"]
 shape = SubResource("CircleShape2D_5leg6")
