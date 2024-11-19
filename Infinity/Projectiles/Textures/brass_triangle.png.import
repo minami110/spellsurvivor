@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsn4catskks3m"
-path="res://.godot/imported/Spell_disc_bullet_big.webp-4f127ca2ea889524c2c2a7fcaaf0c2a3.ctex"
+uid="uid://cne4dh2mi2k8w"
+path="res://.godot/imported/brass_triangle.png-3e925f311b205fab351d086b478fc567.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Noita/Spell_disc_bullet_big.webp"
-dest_files=["res://.godot/imported/Spell_disc_bullet_big.webp-4f127ca2ea889524c2c2a7fcaaf0c2a3.ctex"]
+source_file="res://Infinity/Projectiles/Textures/brass_triangle.png"
+dest_files=["res://.godot/imported/brass_triangle.png-3e925f311b205fab351d086b478fc567.ctex"]
 
 [params]
 
