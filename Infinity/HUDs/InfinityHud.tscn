@@ -29,6 +29,10 @@ polygon = PackedVector2Array(-103.397, -11.2388, -31.4685, 42.7073, -4.49551, 42
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_63nd8"]
 polygon = PackedVector2Array(-101.149, 157.343, 101.149, 157.343, 98.9012, 15.7342, 71.9282, 15.7342, 71.9282, -96.6534, 62.9371, -105.644, 60.6894, -157.343, -42.7072, -159.59, -53.946, -134.865, -67.4325, -112.388, -65.1847, -51.6983, -83.1667, -51.6983, -85.4145, 13.4865, -98.901, 11.2387)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a0f50"]
+shader = ExtResource("13_vpxp3")
+shader_parameter/pixel_size = 1.0
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7bqg6"]
 shader = ExtResource("14_1hn5s")
 shader_parameter/crt_brightness = 1.336
@@ -36,10 +40,6 @@ shader_parameter/crt_ghost = 0.39
 shader_parameter/crt_grid = 0.176
 shader_parameter/crt_white_noise = 0.0
 shader_parameter/crt_curve = 0.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_a0f50"]
-shader = ExtResource("13_vpxp3")
-shader_parameter/pixel_size = 1.0
 
 [node name="InfinityHud" type="Node"]
 
@@ -104,35 +104,6 @@ texture = ExtResource("4_qfl6a")
 show_behind_parent = true
 occluder = SubResource("OccluderPolygon2D_63nd8")
 
-[node name="CRT (-2)" type="CanvasLayer" parent="."]
-layer = 3
-
-[node name="ColorRect" type="ColorRect" parent="CRT (-2)"]
-material = SubResource("ShaderMaterial_7bqg6")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="CRT (-2)"]
-light_mask = 0
-position = Vector2(807, 445)
-scale = Vector2(0.295, 0.295)
-texture = ExtResource("15_a2f1p")
-
-[node name="Sprite2D_2" type="Sprite2D" parent="CRT (-2)"]
-light_mask = 0
-position = Vector2(811, 435)
-scale = Vector2(0.298, 0.298)
-texture = ExtResource("16_cpprl")
-
-[node name="Sprite2D_3" type="Sprite2D" parent="CRT (-2)"]
-light_mask = 0
-position = Vector2(791, 797)
-scale = Vector2(0.227, 0.227)
-texture = ExtResource("17_bxnp8")
-
 [node name="dot (1)" type="CanvasLayer" parent="."]
 
 [node name="ColorRect_2" type="ColorRect" parent="dot (1)"]
@@ -149,6 +120,7 @@ layer = 2
 visible = false
 
 [node name="NinePatchRect" type="NinePatchRect" parent="UI Border (2)"]
+visible = false
 self_modulate = Color(0.733005, 0.733005, 0.733005, 1)
 anchors_preset = 15
 anchor_right = 1.0
@@ -163,6 +135,35 @@ patch_margin_top = 50
 patch_margin_right = 50
 patch_margin_bottom = 50
 
+[node name="CRT (3)" type="CanvasLayer" parent="."]
+layer = 3
+
+[node name="ColorRect" type="ColorRect" parent="CRT (3)"]
+material = SubResource("ShaderMaterial_7bqg6")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="CRT (3)"]
+light_mask = 0
+position = Vector2(807, 445)
+scale = Vector2(0.295, 0.295)
+texture = ExtResource("15_a2f1p")
+
+[node name="Sprite2D_2" type="Sprite2D" parent="CRT (3)"]
+light_mask = 0
+position = Vector2(811, 435)
+scale = Vector2(0.298, 0.298)
+texture = ExtResource("16_cpprl")
+
+[node name="Sprite2D_3" type="Sprite2D" parent="CRT (3)"]
+light_mask = 0
+position = Vector2(791, 797)
+scale = Vector2(0.227, 0.227)
+texture = ExtResource("17_bxnp8")
+
 [node name="InGameHUD (3)" parent="." instance=ExtResource("6_fbv8a")]
 layer = 3
 
@@ -174,6 +175,7 @@ layer = 4
 
 [node name="Tooltip Toast (8)" type="CanvasLayer" parent="."]
 layer = 8
+visible = false
 
 [node name="TooltipToast" parent="Tooltip Toast (8)" instance=ExtResource("9_n1574")]
 
