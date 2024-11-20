@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cnn42q6cv3uhn"]
 
-[ext_resource type="Script" path="res://Infinity/Weapons/HookedKnife.cs" id="1_ijfsl"]
+[ext_resource type="Script" path="res://Infinity/Weapons/Hocho.cs" id="1_ewj83"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_48nxa"]
 [ext_resource type="Texture2D" uid="uid://e38iw2qhlbeu" path="res://Infinity/Weapons/Textures/hooked_knife.png" id="3_dir6t"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_gscot"]
@@ -9,8 +9,9 @@
 size = Vector2(45, 10)
 
 [node name="HookedKnife" type="Node2D"]
-script = ExtResource("1_ijfsl")
+script = ExtResource("1_ewj83")
 _maxRange = 80.0
+_rotateSensitivity = 0.4
 BaseDamage = 5.0
 BaseCoolDownFrame = 8
 Knockback = 10

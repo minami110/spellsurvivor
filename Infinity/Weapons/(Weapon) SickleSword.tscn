@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dshhlgae4pcgw"]
 
-[ext_resource type="Script" path="res://Infinity/Weapons/SickleSword.cs" id="1_orhda"]
+[ext_resource type="Script" path="res://Infinity/Weapons/Katana.cs" id="1_3cxbp"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_oqpa6"]
 [ext_resource type="Texture2D" uid="uid://b450uj80h6cjs" path="res://Infinity/Weapons/Textures/sickle_sword.png" id="3_vnxey"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_ax5pe"]
@@ -9,7 +9,7 @@
 size = Vector2(60, 20)
 
 [node name="SickleSword" type="Node2D"]
-script = ExtResource("1_orhda")
+script = ExtResource("1_3cxbp")
 BaseCoolDownFrame = 50
 
 [node name="AimToNearEnemy" type="Area2D" parent="."]
