@@ -39,7 +39,7 @@ public partial class Incandescent : FactionBase
         if (level >= 3u)
         {
             AddEffactToPlayer(new Wing { Amount = 10u });
-            AddEffactToPlayer(new Dodge { Amount = 10u });
+            AddEffactToPlayer(new Dodge { Rate = 0.1f });
         }
 
         // Lv4. Heat (範囲ダメージ効果) をプレイヤーに付与

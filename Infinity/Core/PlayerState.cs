@@ -11,6 +11,7 @@ namespace fms;
 /// </summary>
 public partial class PlayerState : Node
 {
+    private readonly ReactiveProperty<float> _dodgeRate = new();
     private readonly HashSet<EffectBase> _effects = new();
     private readonly ReactiveProperty<float> _health = new();
     private readonly ReactiveProperty<float> _maxHealth = new();
@@ -38,6 +39,11 @@ public partial class PlayerState : Node
     /// 最大体力
     /// </summary>
     public ReadOnlyReactiveProperty<float> MaxHealth => _maxHealth;
+
+    /// <summary>
+    /// 回避率 (0.0 ~ 1.0), 1 を超えた値は 1 に丸められる
+    /// </summary>
+    public ReadOnlyReactiveProperty<float> DodgeRate => _dodgeRate;
 
 
     public override void _Notification(int what)
@@ -109,6 +115,7 @@ public partial class PlayerState : Node
         var damage = 0f;
         var money = 0;
         var moveSpeed = 0f;
+        var dodgeRate = 0f;
 
         // IsSolved が false のエフェクトを解決する
         foreach (var effect in _effects)
@@ -145,6 +152,11 @@ public partial class PlayerState : Node
                     health += healEffect.Value;
                     break;
                 }
+                case Dodge dodgeEffect:
+                {
+                    dodgeRate += dodgeEffect.Rate;
+                    break;
+                }
             }
         }
 
@@ -159,5 +171,6 @@ public partial class PlayerState : Node
         _health.Value = health;
         _money.Value = (uint)Math.Max(0, money);
         _moveSpeed.Value = moveSpeed;
+        _dodgeRate.Value = Mathf.Clamp(dodgeRate, 0f, 1f);
     }
 }

@@ -5,5 +5,8 @@
 /// </summary>
 public class Dodge : EffectBase
 {
-    public required uint Amount { get; init; }
+    /// <summary>
+    /// Dodge の発生率 (0 ~ 1)
+    /// </summary>
+    public required float Rate { get; init; }
 }

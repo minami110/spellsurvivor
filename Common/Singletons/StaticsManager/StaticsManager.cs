@@ -25,6 +25,9 @@ public partial class StaticsManager : CanvasLayer
     private PackedScene _damageNumberScene = null!;
 
     [Export]
+    private PackedScene _dodgePopup = null!;
+
+    [Export]
     private Node? _customDamageNumberContainer;
 
     public enum DamageTakeOwner
@@ -115,6 +118,11 @@ public partial class StaticsManager : CanvasLayer
         }
     }
 
+    public static void SuccessDodge(in Vector2 position)
+    {
+        _instance?.PopUpDodgeHud(in position);
+    }
+
     private void PopUpDamageHud(DamageTakeOwner ownerType, float damage, in Vector2 position, bool isDead)
     {
         // Config で表示設定がされていない場合は表示しない
@@ -149,5 +157,23 @@ public partial class StaticsManager : CanvasLayer
 
         damageNumberHud.GlobalPosition = position;
         damageNumberHud.Show();
+    }
+
+    private void PopUpDodgeHud(in Vector2 position)
+    {
+        var popup = _dodgePopup.Instantiate<DodgeHud>();
+        popup.Hide();
+
+        if (_customDamageNumberContainer is not null)
+        {
+            _customDamageNumberContainer.AddChild(popup);
+        }
+        else
+        {
+            AddChild(popup);
+        }
+
+        popup.GlobalPosition = position;
+        popup.Show();
     }
 }
