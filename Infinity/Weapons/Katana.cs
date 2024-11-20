@@ -1,13 +1,59 @@
-﻿using Godot;
+﻿using fms.Projectile;
+using Godot;
 using R3;
 
 namespace fms.Weapon;
 
 /// <summary>
+/// 振りかぶりタイプの片刃切りつけアニメーションを持つ近接武器
 /// </summary>
-public partial class Katana : Hocho
+public partial class Katana : WeaponBase
 {
-    private protected override async void OnCoolDownCompleted(uint level)
+    /// <summary>
+    /// 攻撃を実行する際の敵の検索範囲
+    /// </summary>
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private float _maxRange = 100f;
+
+    /// <summary>
+    /// 敵を狙う速度の感度 (0 ~ 1), 1 で最速, 0 で全然狙えない
+    /// </summary>
+    [Export(PropertyHint.Range, "0.01,1.0,0.01")]
+    private float _rotateSensitivity = 0.3f;
+
+    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
+
+    private StaticDamage StaticDamage => GetNode<StaticDamage>("%StaticDamage");
+
+    public override void _Ready()
+    {
+        AimToNearEnemy.SearchRadius = _maxRange;
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
+    }
+
+    private protected override void OnCoolDownCompleted(uint level)
+    {
+        if (AimToNearEnemy.IsAiming)
+        {
+            PlayAttackAnimation();
+        }
+        else
+        {
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .Subscribe(this, (_, state) => { state.PlayAttackAnimation(); })
+                .AddTo(this);
+        }
+    }
+
+    private protected override void OnStartAttack()
+    {
+        StaticDamage.Disabled = true;
+        StaticDamage.Damage = Damage;
+        StaticDamage.Knockback = Knockback;
+    }
+
+    private void PlayAttackAnimation()
     {
         if (!AimToNearEnemy.IsAiming)
         {
@@ -66,10 +112,11 @@ public partial class Katana : Hocho
         // 再生終了したら AimToNearEnemy を再開する
         t.FinishedAsObservable()
             .Take(1)
-            .Subscribe(this, (_, state) => { state.AimToNearEnemy.RotateSensitivity = _rotateSensitivity; })
+            .Subscribe(this, (_, state) =>
+            {
+                state.AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
+                state.RestartCoolDown();
+            })
             .AddTo(this);
-
-        await ToSignal(t, Tween.SignalName.Finished);
-        RestartCoolDown();
     }
 }
