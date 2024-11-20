@@ -49,7 +49,6 @@ public partial class Heat : WeaponBase
             prj.Offset = Vector2.Zero;
         }
 
-        // プレイヤーの位置に生成する
-        AddProjectile(prj, OwnedEntity.GlobalPosition);
+        AddProjectile(prj, GlobalPosition);
     }
 }

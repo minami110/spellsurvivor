@@ -47,7 +47,7 @@ public partial class Incandescent : FactionBase
             AddEffactToPlayer(new Dodge { Rate = 0.1f });
         }
 
-        // Lv4. Heat (範囲ダメージ効果) をプレイヤーに付与
+        // Lv4. Heat Lv.1 をプレイヤーに装備
         if (level >= 4u)
         {
             // もうすでに持っている場合は何もしない
@@ -65,15 +65,7 @@ public partial class Incandescent : FactionBase
             }
 
             var weapon = scene.Instantiate<Heat>();
-            {
-                weapon.Level = 1u;
-                weapon.BaseDamage = 5u;
-                weapon.BaseCoolDownFrame = 20u;
-                weapon.Knockback = 0u;
-                weapon.Radius = 100u;
-                weapon.AutoPosition = false; // 位置を自動で設定しない
-            }
-
+            weapon.Level = 1u;
             weapon.AutoStart = false;
             CallDeferred(Node.MethodName.AddSibling, weapon); // 親が Busy なことがあるので CallDeferred で追加
         }
