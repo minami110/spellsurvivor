@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("3_d2mbh")
 WeaponPackedScene = ExtResource("2_p68ud")
-Faction = 0
+Faction = 128
 Tier = 1
 Price = 5
 Name = "SickeSword"

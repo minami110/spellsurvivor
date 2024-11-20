@@ -1,13 +1,13 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://bg8rq1yk378n0"]
 
 [ext_resource type="Texture2D" uid="uid://drmuoam57gvyp" path="res://Infinity/Weapons/Textures/brass_shield.png" id="1_qfi0r"]
-[ext_resource type="PackedScene" uid="uid://kmvpmbn37pdi" path="res://Infinity/Weapons/(Weapon) LargeShield.tscn" id="2_d2hkd"]
+[ext_resource type="PackedScene" uid="uid://dc4v176yxxuu7" path="res://Infinity/Weapons/(Weapon) BrassShield.tscn" id="2_jw827"]
 [ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_7bov0"]
 
 [resource]
 script = ExtResource("3_7bov0")
-WeaponPackedScene = ExtResource("2_d2hkd")
-Faction = 0
+WeaponPackedScene = ExtResource("2_jw827")
+Faction = 128
 Tier = 1
 Price = 5
 Name = "BrassShield"

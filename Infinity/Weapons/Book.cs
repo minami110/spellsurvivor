@@ -21,7 +21,7 @@ public partial class Book : WeaponBase
             var prj = _projectile.Instantiate<BulletProjectile>();
             {
                 // ダメージ, ノックバック を設定する
-                prj.Damage = BaseDamage;
+                prj.Damage = Damage;
                 prj.Knockback = Knockback;
 
                 // 武器の持つクールダウンに揃える (+2 はちらつき防止)

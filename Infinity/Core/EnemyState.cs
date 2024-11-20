@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using fms.Effect;
 using Godot;
 using R3;
 
@@ -54,9 +55,9 @@ public sealed class EnemyState : IEffectSolver, IDisposable
         {
             switch (effect)
             {
-                case AddMoveSpeedEffect addMoveSpeedEffect:
+                case Wing wing:
                 {
-                    _moveSpeed.Value += addMoveSpeedEffect.Value;
+                    _moveSpeed.Value += wing.Amount;
                     break;
                 }
                 case AddHealthEffect addHealthEffect:

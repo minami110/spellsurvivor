@@ -1,5 +1,8 @@
+using System;
+using fms.Effect;
 using Godot;
 using R3;
+using Range = Godot.Range;
 
 namespace fms;
 
@@ -21,6 +24,8 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
     private Vector2I _cameraLimit = new(550, 550);
 
     private readonly ReactiveProperty<PawnFaceDirection> _faceDirection = new(PawnFaceDirection.Right);
+
+    private PlayerState? _state;
     public ReadOnlyReactiveProperty<PawnFaceDirection> FaceDirection => _faceDirection;
 
     /// <summary>
@@ -32,6 +37,20 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
     /// </summary>
     private Vector2 PrevLinearVelocity { get; set; } = Vector2.Right;
 
+    private PlayerState State
+    {
+        get
+        {
+            if (_state is null)
+            {
+                var state = GetNode<PlayerState>("%PlayerState");
+                _state = state ?? throw new ApplicationException("Failed to get PlayerState in children");
+            }
+
+            return _state;
+        }
+    }
+
     public override void _EnterTree()
     {
         AddToGroup(Constant.GroupNamePlayer);
@@ -40,10 +59,9 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
     public override void _Ready()
     {
         // Inititialize PlayerState
-        var playerState = GetNode<PlayerState>("%PlayerState");
-        playerState.AddEffect(new AddMoveSpeedEffect { Value = _moveSpeed });
-        playerState.AddEffect(new AddHealthEffect { Value = _health });
-        playerState.AddEffect(new AddMaxHealthEffect { Value = _health });
+        State.AddEffect(new Wing { Amount = _moveSpeed });
+        State.AddEffect(new AddHealthEffect { Value = _health });
+        State.AddEffect(new AddMaxHealthEffect { Value = _health });
 
         // Initialize Camera
         var camera = GetNode<Camera2D>("%MainCamera");
@@ -53,7 +71,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
         camera.LimitBottom = _cameraLimit.Y;
 
         // Subscribes
-        playerState.MoveSpeed
+        State.MoveSpeed
             .Subscribe(this, (x, self) => { self._moveSpeed = x; })
             .AddTo(this);
         _faceDirection.AddTo(this);
@@ -61,7 +79,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
         var healthBar = GetNodeOrNull<Range>("HealthBar");
         if (healthBar is not null)
         {
-            playerState.MaxHealth
+            State.MaxHealth
                 .Subscribe(healthBar, (x, s) =>
                 {
                     s.MaxValue = x;
@@ -75,7 +93,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
                     }
                 })
                 .AddTo(healthBar);
-            playerState.Health
+            State.Health
                 .Subscribe(healthBar, (x, s) =>
                 {
                     s.SetValueNoSignal(x);
@@ -137,11 +155,24 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
 
     private void AddEffect(EffectBase effect)
     {
-        GetNode<PlayerState>("%PlayerState").AddEffect(effect);
+        State.AddEffect(effect);
     }
 
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
+        // Dodge がある場合は, ここで回避する
+        var dodgeRate = State.DodgeRate.CurrentValue;
+        if (dodgeRate > 0f)
+        {
+            var chance = (float)GD.RandRange(0f, 1f);
+            if (dodgeRate > chance)
+            {
+                // 回避成功なのでダメージ処理を行わず, 回避演出を行う
+                StaticsManager.SuccessDodge(GlobalPosition);
+                return;
+            }
+        }
+
         AddEffect(new PhysicalDamageEffect { Value = amount });
         var info = new DamageReport
         {

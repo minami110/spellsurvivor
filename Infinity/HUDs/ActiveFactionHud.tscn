@@ -75,3 +75,13 @@ script = ExtResource("2_7e8q8")
 ToolTipText = "Licium
 Lv1: Licium 武器に Lifesteal (10% / 5 回復)
 Lv3: Licium 武器に Lifesteal (30% / 5 回復)"
+
+[node name="Incandescent" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Incandescent: N/A"
+script = ExtResource("2_7e8q8")
+ToolTipText = "Incandescent
+Lv2: Incandescent 武器に Strength (+5)
+Lv3: プレイヤーに Wing (+10) / Dodge (+5)
+Lv4: プレイヤーに Heat (100px / 20 frame / 5 dmg)"
