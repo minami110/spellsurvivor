@@ -15,9 +15,9 @@ public partial class WeaponPositionAnimator : Node
     {
         if (what == NotificationEnterTree)
         {
-            // 兄弟階層の Tree 構造の変化を検知する
             // Note: Must be parent is MeMe
-            GetParent().ChildOrderChangedAsObservable()
+            GetParent()
+                .ChildOrderChangedAsObservable()
                 .Subscribe(this, (_, self) => { self.RefreshWeapons(); })
                 .AddTo(this);
         }
@@ -37,7 +37,7 @@ public partial class WeaponPositionAnimator : Node
                 continue;
             }
 
-            if (weapon.AutoPosition)
+            if (weapon.AutoPositioning)
             {
                 _weapons.Add(weapon);
             }
@@ -53,7 +53,6 @@ public partial class WeaponPositionAnimator : Node
     {
         if (_weapons.Count == 0)
         {
-            SetPhysicsProcess(false);
             return;
         }
 

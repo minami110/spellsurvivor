@@ -51,6 +51,16 @@ public partial class WeaponBase : Node2D
     [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
     public uint Knockback { get; set; } = 20u;
 
+    // ---------- Animation Parameters ----------
+
+    /// <summary>
+    /// ToDo: こっちでもっておくべきか検討する
+    /// <see cref="WeaponPositionAnimator" /> により自動で位置を調整するかどうか
+    /// </summary>
+    [ExportGroup("Animation")]
+    [Export]
+    public bool AutoPositioning { get; set; } = true;
+
     // ---------- Debug Parameters ----------
 
     /// <summary>
@@ -90,12 +100,6 @@ public partial class WeaponBase : Node2D
 
     // Effect の変更があったかどうか
     private bool _isDirtyEffect;
-
-    /// <summary>
-    /// ToDo: こっちでもっておくべきか検討する
-    /// <see cref="WeaponPositionAnimator" /> により自動で位置を調整するかどうか
-    /// </summary>
-    public bool AutoPosition { get; set; } = true;
 
     /// <summary>
     /// 武器の Id
