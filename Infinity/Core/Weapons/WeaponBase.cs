@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using fms.Effect;
 using fms.Faction;
 using fms.Projectile;
 using Godot;
@@ -122,6 +123,11 @@ public partial class WeaponBase : Node2D
     /// 次の攻撃までの残りフレームを取得
     /// </summary>
     public ReadOnlyReactiveProperty<uint> CoolDownLeft => FrameTimer.FrameLeft;
+
+    /// <summary>
+    /// 武器のダメージ量 (エフェクトを適用した後の値)
+    /// </summary>
+    public uint Damage { get; private set; }
 
     // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装
     public override void _Notification(int what)
@@ -290,12 +296,19 @@ public partial class WeaponBase : Node2D
         _isDirtyEffect = false;
 
         // 値を初期化する
+        var damage = (uint)BaseDamage;
         var reduceCoolDownRate = 0f;
 
         foreach (var effect in _effects)
         {
             switch (effect)
             {
+                // Strength (武器ダメージ)
+                case Strength strengthEffect:
+                {
+                    damage += strengthEffect.Amount;
+                    break;
+                }
                 // クールダウンを減少させるエフェクト
                 case ReduceCoolDownRate reduceCoolDownRateEffect:
                 {
@@ -306,6 +319,7 @@ public partial class WeaponBase : Node2D
         }
 
         // 値を更新
+        Damage = damage;
         _coolDownReduceRate = Math.Max(reduceCoolDownRate, 0);
 
         OnSolveEffect(_effects);

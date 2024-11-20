@@ -19,7 +19,7 @@ public partial class StaticDamage : Area2D
     /// <summary>
     /// Projectile のダメージ
     /// </summary>
-    internal float Damage { get; set; }
+    internal uint Damage { get; set; }
 
     /// <summary>
     /// ノックバック速度

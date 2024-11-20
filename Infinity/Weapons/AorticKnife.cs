@@ -138,7 +138,7 @@ public partial class AorticKnife : WeaponBase
     private protected override void OnStartAttack()
     {
         StaticDamage.Disabled = true;
-        StaticDamage.Damage = BaseDamage;
+        StaticDamage.Damage = Damage;
         StaticDamage.Knockback = Knockback;
     }
 
