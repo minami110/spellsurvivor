@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Godot;
+﻿using Godot;
 using R3;
 
 namespace fms.Weapon;
@@ -8,7 +7,7 @@ namespace fms.Weapon;
 /// </summary>
 public partial class SickleSword : Hocho
 {
-    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
+    private protected override async void OnCoolDownCompleted(uint level)
     {
         if (!AimToNearEnemy.IsAiming)
         {
@@ -71,5 +70,6 @@ public partial class SickleSword : Hocho
             .AddTo(this);
 
         await ToSignal(t, Tween.SignalName.Finished);
+        RestartCoolDown();
     }
 }

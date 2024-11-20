@@ -26,7 +26,7 @@ public partial class SniperRifle : WeaponBase
         GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
         if (!aim.IsAiming)
@@ -45,12 +45,13 @@ public partial class SniperRifle : WeaponBase
             prj.PenetrateWall = false;
         }
 
-        AddProjectile(prj, GlobalPosition);
-
         // ToDo: 暫定実装, 敵にヒットするたびにダメージを半分にする
         prj.Hit
             .Where(x => x.HitNode is EnemyBase)
             .Subscribe(prj, (x, s) => { s.Damage *= 0.5f; })
             .AddTo(prj);
+
+        AddProjectile(prj, GlobalPosition);
+        RestartCoolDown();
     }
 }

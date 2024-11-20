@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using fms.Effect;
 using fms.Projectile;
 using Godot;
@@ -76,7 +75,7 @@ public partial class AorticKnife : WeaponBase
         }).AddTo(this);
     }
 
-    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
+    private protected override async void OnCoolDownCompleted(uint level)
     {
         if (!AimToNearEnemy.IsAiming)
         {
@@ -107,13 +106,12 @@ public partial class AorticKnife : WeaponBase
         // すぐに他の敵を狙わないようなアニメの遊び
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
 
-        // 再生終了したら回転を再開する
-        t.FinishedAsObservable()
-            .Take(1)
-            .Subscribe(this, (_, state) => { state.AimToNearEnemy.RotateSensitivity = _rotateSensitivity; })
-            .AddTo(this);
-
+        // Tween の終了を待つ
         await ToSignal(t, Tween.SignalName.Finished);
+
+        // 通常の感度に戻す
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
+        RestartCoolDown();
     }
 
     private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)

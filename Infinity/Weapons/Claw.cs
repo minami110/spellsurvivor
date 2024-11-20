@@ -76,7 +76,7 @@ public partial class Claw : WeaponBase
         UpdateStackLabel();
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
         if (!aim.IsAiming)
@@ -118,6 +118,7 @@ public partial class Claw : WeaponBase
             .AddTo(this);
 
         AddProjectile(prj, pos, angle);
+        RestartCoolDown();
     }
 
     private void UpdateStackLabel()

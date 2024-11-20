@@ -52,7 +52,7 @@ public partial class Firecracker : WeaponBase
         GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
         if (!aim.IsAiming)
@@ -104,6 +104,7 @@ public partial class Firecracker : WeaponBase
         }
 
         AddProjectile(bomb, GlobalPosition);
+        RestartCoolDown();
     }
 
     private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)

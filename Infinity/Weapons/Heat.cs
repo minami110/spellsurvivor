@@ -36,7 +36,7 @@ public partial class Heat : WeaponBase
         sprite.Scale = new Vector2(scale, scale);
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
         // 円形の攻撃を行う
         var prj = new CircleAreaProjectile();
@@ -50,5 +50,6 @@ public partial class Heat : WeaponBase
         }
 
         AddProjectile(prj, GlobalPosition);
+        RestartCoolDown();
     }
 }

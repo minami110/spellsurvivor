@@ -31,7 +31,7 @@ public partial class WideShotShotgun : WeaponBase
         GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
         var mazzle = GetNode<Node2D>("AimToNearEnemy/MazzlePoint");
@@ -55,5 +55,7 @@ public partial class WideShotShotgun : WeaponBase
 
             AddProjectile(prj, mazzle.GlobalPosition);
         }
+
+        RestartCoolDown();
     }
 }

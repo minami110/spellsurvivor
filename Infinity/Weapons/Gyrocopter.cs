@@ -37,7 +37,7 @@ public partial class Gyrocopter : WeaponBase
         GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
         var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
 
@@ -87,5 +87,7 @@ public partial class Gyrocopter : WeaponBase
                 AddProjectile(prj, GlobalPosition);
             }
         }
+
+        RestartCoolDown();
     }
 }

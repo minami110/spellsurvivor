@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Godot;
-using R3;
+﻿using Godot;
 
 namespace fms.Weapon;
 
@@ -25,7 +23,7 @@ public partial class HookedKnife : Hocho
     [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
     private uint _pushDuration = 10;
 
-    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
+    private protected override async void OnCoolDownCompleted(uint level)
     {
         if (!AimToNearEnemy.IsAiming)
         {
@@ -71,11 +69,8 @@ public partial class HookedKnife : Hocho
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
 
         // 再生終了したら AimToNearEnemy を再開する
-        t.FinishedAsObservable()
-            .Take(1)
-            .Subscribe(this, (_, state) => { state.AimToNearEnemy.RotateSensitivity = _rotateSensitivity; })
-            .AddTo(this);
-
         await ToSignal(t, Tween.SignalName.Finished);
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
+        RestartCoolDown();
     }
 }

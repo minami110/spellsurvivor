@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using fms.Projectile;
+﻿using fms.Projectile;
 using Godot;
 using R3;
 
@@ -31,7 +30,7 @@ public partial class Hocho : WeaponBase
         AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
     }
 
-    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
+    private protected override async void OnCoolDownCompleted(uint level)
     {
         if (!AimToNearEnemy.IsAiming)
         {
@@ -74,6 +73,7 @@ public partial class Hocho : WeaponBase
             .AddTo(this);
 
         await ToSignal(t, Tween.SignalName.Finished);
+        RestartCoolDown();
     }
 
     private protected override void OnStartAttack()

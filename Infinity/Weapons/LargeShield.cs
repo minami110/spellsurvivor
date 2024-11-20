@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using fms.Projectile;
+﻿using fms.Projectile;
 using Godot;
 using R3;
 
@@ -35,8 +34,9 @@ public partial class LargeShield : WeaponBase
         _aimToNearEnemy.SearchRadius = _maxRange;
     }
 
-    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
+    private protected override async void OnCoolDownCompleted(uint level)
     {
+        // 近くに敵がいない場合はクールダウンを停止して
         if (!_aimToNearEnemy.IsAiming)
         {
             return;
@@ -61,6 +61,8 @@ public partial class LargeShield : WeaponBase
             .AddTo(this);
 
         await ToSignal(t, Tween.SignalName.Finished);
+
+        RestartCoolDown();
     }
 
     // アニメーションの最初のタメ が終わったタイミングで呼ばれるコールバック

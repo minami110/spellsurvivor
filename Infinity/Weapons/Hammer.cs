@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using fms.Projectile;
+﻿using fms.Projectile;
 using Godot;
 using R3;
 
@@ -29,7 +28,7 @@ public partial class Hammer : WeaponBase
         _aimToNearEnemy.SearchRadius = _maxRange;
     }
 
-    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
         if (!_aimToNearEnemy.IsAiming)
         {
@@ -46,14 +45,14 @@ public partial class Hammer : WeaponBase
             .SetEase(Tween.EaseType.Out);
         t.TweenCallback(Callable.From(Attack));
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
-
-        // 再生終了したら AimToNearEnemy を再開する
         t.FinishedAsObservable()
             .Take(1)
-            .Subscribe(this, (_, state) => { state._aimToNearEnemy.SetPhysicsProcess(true); })
+            .Subscribe(this, (_, state) =>
+            {
+                state._aimToNearEnemy.SetPhysicsProcess(true);
+                state.RestartCoolDown();
+            })
             .AddTo(this);
-
-        await ToSignal(t, Tween.SignalName.Finished);
     }
 
     private void Attack()
