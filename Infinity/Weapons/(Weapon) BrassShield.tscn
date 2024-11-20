@@ -6,7 +6,13 @@
 
 [node name="BrassShield" type="Node2D"]
 script = ExtResource("1_ltaog")
-_damageRadius = 120
+_damageRadius = 100
+_angleLimit = 120.0
+_maxRange = 95.0
+_rotateSensitivity = 0.1
+_preAttackDuration = 10
+_pushDistance = 20
+_pushDuration = 4
 BaseDamage = 2.0
 BaseCoolDownFrame = 200
 Knockback = 200

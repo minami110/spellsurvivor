@@ -27,7 +27,7 @@ public partial class ForwardKnife : WeaponBase
     // 反射時のダメージ倍率
     private float BounceDamageMul { get; set; }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
         switch (level)
         {
@@ -53,6 +53,8 @@ public partial class ForwardKnife : WeaponBase
                 break;
             }
         }
+
+        RestartCoolDown();
     }
 
     private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)

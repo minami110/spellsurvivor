@@ -22,9 +22,11 @@ public partial class Claw : WeaponBase
     private uint _enemyHitReduceCounter;
     private uint _enemyHitStacks;
 
+    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
+
     public override void _Ready()
     {
-        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
+        AimToNearEnemy.SearchRadius = _maxRange;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -76,16 +78,28 @@ public partial class Claw : WeaponBase
         UpdateStackLabel();
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        if (!aim.IsAiming)
+        if (AimToNearEnemy.IsAiming)
         {
-            return;
+            SpawnDamage();
         }
+        else
+        {
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .SubscribeAwait(async (_, _) =>
+                {
+                    // AimToNearEnemy が対象を狙うまでちょっと待つ必要がある
+                    await this.WaitForSecondsAsync(0.1f);
+                    SpawnDamage();
+                })
+                .AddTo(this);
+        }
+    }
 
-        var enemy = aim.NearestEnemy;
-
+    private void SpawnDamage()
+    {
         // 弾生成
         var prj = new RectAreaProjectile();
         {
@@ -97,13 +111,9 @@ public partial class Claw : WeaponBase
             prj.Offset = new Vector2(_damageSize.X / 2f, 0f); // 原点に左辺が重なるような Offset を設定
         }
 
-        // 敵の方向を向くような rotation を計算する
-        var dir = enemy!.GlobalPosition - GlobalPosition;
-        var angle = dir.Angle();
-
         // 自分の位置から angle 方向に 15 伸ばした位置を計算する
         // Note: プレイ間確かめながらスポーン位置のピクセル数は調整する
-        var pos = GlobalPosition + dir.Normalized() * 15;
+        var pos = GlobalPosition + AimToNearEnemy.GlobalTransform.X * 15;
 
         // Projectile が Enemy にヒットしたら Stack を一つ貯める
         // Prj は貫通するが, 一つの Prj につき 1回だけ Stack を貯められるので Take(1) を入れている
@@ -117,7 +127,8 @@ public partial class Claw : WeaponBase
             })
             .AddTo(this);
 
-        AddProjectile(prj, pos, angle);
+        AddProjectile(prj, pos, AimToNearEnemy.GlobalRotation);
+        RestartCoolDown();
     }
 
     private void UpdateStackLabel()

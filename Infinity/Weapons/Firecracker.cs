@@ -3,6 +3,7 @@ using fms.Effect;
 using fms.Projectile;
 using Godot;
 using Godot.Collections;
+using R3;
 
 namespace fms.Weapon;
 
@@ -47,63 +48,31 @@ public partial class Firecracker : WeaponBase
     [Export]
     private float TrickShotDamageMul { get; set; }
 
+    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
+
     public override void _Ready()
     {
-        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
+        AimToNearEnemy.SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        if (!aim.IsAiming)
+        if (AimToNearEnemy.IsAiming)
         {
-            return;
+            SpawnProjectile();
         }
-
-        var target = aim.NearestEnemy!;
-
-        // 爆弾本体
-        var bomb = _projectile.Instantiate<BaseProjectile>();
+        else
         {
-            bomb.Damage = 0f; // 本体はダメージを与えない
-            bomb.Knockback = 0u; // 本体はノックバックを与えない
-            bomb.LifeFrame = _bombLife;
-            bomb.ConstantForce = (target.GlobalPosition - GlobalPosition).Normalized() * _throwSpeed;
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .SubscribeAwait(async (_, _) =>
+                {
+                    // AimToNearEnemy が対象を狙うまでちょっと待つ必要がある
+                    await this.WaitForSecondsAsync(0.1f);
+                    SpawnProjectile();
+                })
+                .AddTo(this);
         }
-
-        // Mod に渡すパラメータを設置する
-        var payload = new Dictionary
-        {
-            // Bomb
-            { "ProjectileScene", _projectile },
-            { "ThrowSpeed", _throwSpeed },
-            { "BombLife", _bombLife },
-            // Area
-            { "Knockback", Knockback },
-            { "BaseDamage", BaseDamage },
-            { "AreaRadius", _areaRadius },
-            { "AreaDamageSpan", _areaDamageSpan },
-            { "AreaLife", _areaLife },
-            // Trickshot 用
-            { "TrickShotCount", TrickShotCount },
-            { "TrickShotDamageMul", TrickShotDamageMul }
-        };
-
-        // 爆発後のエリアダメージを生成する処理を登録
-        bomb.AddChild(new DeathTrigger
-        {
-            Next = SpawnAreaDamage,
-            When = WhyDead.CollidedWithAny | WhyDead.Life, // 何かにぶつかった or 寿命が来たらエリアダメージを展開する
-            Payload = payload
-        });
-
-        // Trickshot が有効な場合は登録する
-        if (TrickShotCount > 0 || TrickShotDamageMul > 0f)
-        {
-            RegisterTrickshot(bomb, payload);
-        }
-
-        AddProjectile(bomb, GlobalPosition);
     }
 
     private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
@@ -158,6 +127,53 @@ public partial class Firecracker : WeaponBase
         area.Position = (Vector2)payload["DeadPosition"];
 
         return area;
+    }
+
+    private void SpawnProjectile()
+    {
+        // 爆弾本体
+        var bomb = _projectile.Instantiate<BaseProjectile>();
+        {
+            bomb.Damage = 0f; // 本体はダメージを与えない
+            bomb.Knockback = 0u; // 本体はノックバックを与えない
+            bomb.LifeFrame = _bombLife;
+            bomb.ConstantForce = AimToNearEnemy.GlobalTransform.X * _throwSpeed;
+        }
+
+        // Mod に渡すパラメータを設置する
+        var payload = new Dictionary
+        {
+            // Bomb
+            { "ProjectileScene", _projectile },
+            { "ThrowSpeed", _throwSpeed },
+            { "BombLife", _bombLife },
+            // Area
+            { "Knockback", Knockback },
+            { "BaseDamage", BaseDamage },
+            { "AreaRadius", _areaRadius },
+            { "AreaDamageSpan", _areaDamageSpan },
+            { "AreaLife", _areaLife },
+            // Trickshot 用
+            { "TrickShotCount", TrickShotCount },
+            { "TrickShotDamageMul", TrickShotDamageMul }
+        };
+
+        // 爆発後のエリアダメージを生成する処理を登録
+        bomb.AddChild(new DeathTrigger
+        {
+            Next = SpawnAreaDamage,
+            When = WhyDead.CollidedWithAny | WhyDead.Life, // 何かにぶつかった or 寿命が来たらエリアダメージを展開する
+            Payload = payload
+        });
+
+        // Trickshot が有効な場合は登録する
+        if (TrickShotCount > 0 || TrickShotDamageMul > 0f)
+        {
+            RegisterTrickshot(bomb, payload);
+        }
+
+        AddProjectile(bomb, GlobalPosition);
+        RestartCoolDown();
     }
 
     private static BaseProjectile SpawnTrickshotProjectile(Dictionary payload)

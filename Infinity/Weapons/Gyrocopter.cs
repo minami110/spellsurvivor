@@ -1,6 +1,6 @@
-﻿using System;
-using fms.Projectile;
+﻿using fms.Projectile;
 using Godot;
+using R3;
 
 namespace fms.Weapon;
 
@@ -32,25 +32,36 @@ public partial class Gyrocopter : WeaponBase
     [Export(PropertyHint.Range, "0,7200,1,suffix:frames")]
     private uint _lifeSub = 39u;
 
+    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
+
     public override void _Ready()
     {
-        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
+        AimToNearEnemy.SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-
-        if (aim is null)
+        if (AimToNearEnemy.IsAiming)
         {
-            throw new InvalidProgramException("AimToNearEnemy is not found.");
+            SpawnProjectile(level);
         }
-
-        var enemies = aim.Enemies;
-        if (enemies.Count == 0)
+        else
         {
-            return;
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .SubscribeAwait(async (_, _) =>
+                {
+                    // AimToNearEnemy が対象を狙うまでちょっと待つ必要がある
+                    await this.WaitForSecondsAsync(0.1f);
+                    SpawnProjectile(level);
+                })
+                .AddTo(this);
         }
+    }
+
+    private void SpawnProjectile(uint level)
+    {
+        var enemies = AimToNearEnemy.Enemies;
 
         // ToDo: 近い / 遠い 適当に実装しています
         for (var i = 0; i < enemies.Count; i++)
@@ -87,5 +98,7 @@ public partial class Gyrocopter : WeaponBase
                 AddProjectile(prj, GlobalPosition);
             }
         }
+
+        RestartCoolDown();
     }
 }

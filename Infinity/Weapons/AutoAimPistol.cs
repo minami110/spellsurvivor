@@ -1,5 +1,6 @@
 ﻿using fms.Projectile;
 using Godot;
+using R3;
 
 namespace fms.Weapon;
 
@@ -20,31 +21,46 @@ public partial class AutoAimPistol : WeaponBase
     [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
     private float _maxRange = 100f;
 
+    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
+
     public override void _Ready()
     {
-        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
+        AimToNearEnemy.SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
-        // 範囲内に敵がいない場合は何もしない
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        if (!aim.IsAiming)
+        if (AimToNearEnemy.IsAiming)
         {
-            return;
+            SpawnProjectile();
         }
+        else
+        {
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .SubscribeAwait(async (_, _) =>
+                {
+                    // AimToNearEnemy が対象を狙うまでちょっと待つ必要がある
+                    await this.WaitForSecondsAsync(0.1f);
+                    SpawnProjectile();
+                })
+                .AddTo(this);
+        }
+    }
 
-        var enemy = aim.NearestEnemy!;
+    private void SpawnProjectile()
+    {
         var prj = _projectile.Instantiate<BulletProjectile>();
         {
             prj.Damage = BaseDamage;
             prj.Knockback = Knockback;
             prj.LifeFrame = _life;
-            prj.ConstantForce = (enemy.GlobalPosition - GlobalPosition).Normalized() * _speed;
+            prj.ConstantForce = AimToNearEnemy.GlobalTransform.X * _speed;
             prj.PenetrateEnemy = false;
             prj.PenetrateWall = false;
         }
 
         AddProjectile(prj, GlobalPosition);
+        RestartCoolDown();
     }
 }

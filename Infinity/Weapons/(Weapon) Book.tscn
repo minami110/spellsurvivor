@@ -8,3 +8,4 @@ script = ExtResource("1_vqguh")
 _projectile = ExtResource("2_ceugq")
 BaseDamage = 50.0
 BaseCoolDownFrame = 180
+AutoPositioning = false

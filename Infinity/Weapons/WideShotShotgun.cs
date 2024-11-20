@@ -1,5 +1,6 @@
 ﻿using fms.Projectile;
 using Godot;
+using R3;
 
 namespace fms.Weapon;
 
@@ -26,20 +27,36 @@ public partial class WideShotShotgun : WeaponBase
     [Export]
     private float _spreadAngle = 120f;
 
+    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
+
     public override void _Ready()
     {
-        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
+        AimToNearEnemy.SearchRadius = _maxRange;
     }
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        var mazzle = GetNode<Node2D>("AimToNearEnemy/MazzlePoint");
-
-        if (!aim.IsAiming)
+        if (AimToNearEnemy.IsAiming)
         {
-            return;
+            SpawnProjectile();
         }
+        else
+        {
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .SubscribeAwait(async (_, _) =>
+                {
+                    // AimToNearEnemy が対象を狙うまでちょっと待つ必要がある
+                    await this.WaitForSecondsAsync(0.1f);
+                    SpawnProjectile();
+                })
+                .AddTo(this);
+        }
+    }
+
+    private void SpawnProjectile()
+    {
+        var mazzle = GetNode<Node2D>("AimToNearEnemy/MazzlePoint");
 
         // プレイヤーの正面から spredAngle の範囲で均等に numberOfProjectiles の数だけ弾を発射する
         for (var i = 0; i < _numberOfProjectiles; i++)
@@ -55,5 +72,7 @@ public partial class WideShotShotgun : WeaponBase
 
             AddProjectile(prj, mazzle.GlobalPosition);
         }
+
+        RestartCoolDown();
     }
 }

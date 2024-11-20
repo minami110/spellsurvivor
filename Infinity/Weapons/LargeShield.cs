@@ -27,58 +27,88 @@ public partial class LargeShield : WeaponBase
     [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
     private float _maxRange = 100f;
 
-    private AimToNearEnemy _aimToNearEnemy = null!;
+    /// <summary>
+    /// 敵を狙う速度の感度 (0 ~ 1), 1 で最速, 0 で全然狙えない
+    /// </summary>
+    [Export(PropertyHint.Range, "0.01,1.0,0.01")]
+    private float _rotateSensitivity = 0.3f;
+
+    // 攻撃前の盾を構える距離
+    [ExportGroup("Animation")]
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private uint _preAttackDistance = 20;
+
+    // 攻撃前の盾を構えるフレーム数
+    [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
+    private uint _preAttackDuration = 4;
+
+    // 突き刺しアニメーションの距離
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private uint _pushDistance = 40;
+
+    // 突き刺しアニメーションのフレーム数
+    [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
+    private uint _pushDuration = 10;
+
+    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
 
     public override void _Ready()
     {
-        _aimToNearEnemy = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        _aimToNearEnemy.SearchRadius = _maxRange;
+        AimToNearEnemy.SearchRadius = _maxRange;
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
     }
 
-    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
-        if (!_aimToNearEnemy.IsAiming)
+        // 近くに敵がいない場合は AimToNearEnemy の次のヒットイベントを購読する
+        if (AimToNearEnemy.IsAiming)
         {
-            return;
+            _ = PlayAttackAnimationAsync();
         }
+        else
+        {
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .Subscribe(this, (b, state) => { _ = state.PlayAttackAnimationAsync(); })
+                .AddTo(this);
+        }
+    }
 
-        // Note: 30frame かかるアニメーションを再生しているので, CoolDown が追いついちゃったら変なことなります
+    private async ValueTask PlayAttackAnimationAsync()
+    {
+        // 攻撃アニメーションを再生する
+        // この段階でエイム速度を少し下げる
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity * 0.5f;
+
         var sprite = GetNode<Node2D>("%Sprite");
         var t = CreateTween();
-        t.TweenProperty(sprite, "position", new Vector2(-20, 0), 0.3d)
-            .SetTrans(Tween.TransitionType.Quart)
-            .SetEase(Tween.EaseType.Out);
-        t.TweenProperty(sprite, "position", new Vector2(10, 0), 0.03d)
-            .SetTrans(Tween.TransitionType.Quart)
-            .SetEase(Tween.EaseType.Out);
-        t.TweenCallback(Callable.From(Attack));
+
+        // A. 盾を手前に引くアニメーション
+        var distA = _preAttackDistance * -1f;
+        var durA = _preAttackDuration / 60d;
+        t.TweenProperty(sprite, "position", new Vector2(distA, 0), durA)
+            .SetEase(Tween.EaseType.InOut);
+
+        // B. 盾を前に突き出すアニメーション, この段階でエイム感度をほぼ 0 にする
+        var distB = _pushDistance;
+        var durB = _pushDuration / 60d;
+        t.TweenCallback(Callable.From(() => { AimToNearEnemy.RotateSensitivity = 0.01f; }));
+        t.TweenProperty(sprite, "position", new Vector2(distB, 0), durB)
+            .SetTrans(Tween.TransitionType.Back)
+            .SetEase(Tween.EaseType.InOut);
+
+        // C. 攻撃判定を生成して盾を戻す (突き出しアニメーション終了時に発生)
+        t.TweenCallback(Callable.From(SpawnDamage));
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
 
-        // 再生終了したら AimToNearEnemy を再開する
-        t.FinishedAsObservable()
-            .Take(1)
-            .Subscribe(this, (_, state) => { state._aimToNearEnemy.SetPhysicsProcess(true); })
-            .AddTo(this);
-
+        // Tween の再生を待つ
         await ToSignal(t, Tween.SignalName.Finished);
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity; // エイム感度を戻す
+        RestartCoolDown(); // クールダウンを再開
     }
 
-    // アニメーションの最初のタメ が終わったタイミングで呼ばれるコールバック
-    private void Attack()
+    private void SpawnDamage()
     {
-        // この時点で狙う方向が確定するので,
-        // 敵を殺したときに変な回転をしないように physics_process を止める 
-        _aimToNearEnemy.SetPhysicsProcess(false);
-
-        // 現在狙っている敵を取得
-        var enemy = _aimToNearEnemy.NearestEnemy;
-        if (enemy is null)
-        {
-            // ToDo: 狙っている間に敵が殺されたパターンの処理を考えていない
-            return;
-        }
-
-        // アニメーションに合うようにエリア攻撃の弾を生成する
         var prj = new ArcAreaProjectile();
         {
             prj.Damage = Damage;
@@ -90,10 +120,6 @@ public partial class LargeShield : WeaponBase
             prj.Offset = new Vector2(0, 0); // この武器の中心からのオフセット
         }
 
-        // 敵の方向を向くような rotation を計算する
-        var dir = enemy.GlobalPosition - GlobalPosition;
-        var angle = dir.Angle();
-
-        AddProjectile(prj, GlobalPosition, angle);
+        AddProjectile(prj, GlobalPosition, AimToNearEnemy.GlobalRotation);
     }
 }

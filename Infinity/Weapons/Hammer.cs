@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using fms.Projectile;
+﻿using fms.Projectile;
 using Godot;
 using R3;
 
@@ -21,55 +20,69 @@ public partial class Hammer : WeaponBase
     [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
     private float _maxRange = 100f;
 
-    private AimToNearEnemy _aimToNearEnemy = null!;
+    /// <summary>
+    /// 敵を狙う速度の感度 (0 ~ 1), 1 で最速, 0 で全然狙えない
+    /// </summary>
+    [Export(PropertyHint.Range, "0.01,1.0,0.01")]
+    private float _rotateSensitivity = 0.3f;
+
+    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
 
     public override void _Ready()
     {
-        _aimToNearEnemy = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        _aimToNearEnemy.SearchRadius = _maxRange;
+        AimToNearEnemy.SearchRadius = _maxRange;
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
     }
 
-    private protected override async ValueTask OnCoolDownCompletedAsync(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
-        if (!_aimToNearEnemy.IsAiming)
+        if (AimToNearEnemy.IsAiming)
         {
-            return;
+            PlayAttackAnimation();
         }
+        else
+        {
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .Subscribe(this, (_, state) => { state.PlayAttackAnimation(); })
+                .AddTo(this);
+        }
+    }
 
+    private void PlayAttackAnimation()
+    {
         var sprite = GetNode<Node2D>("%Sprite");
         var t = CreateTween();
+
+        // A. ハンマーを振り上げるアニメーション
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity * 0.5f;
         t.TweenProperty(sprite, "position", new Vector2(0, -20), 0.3d)
             .SetTrans(Tween.TransitionType.Quart)
             .SetEase(Tween.EaseType.Out);
+
+        // B. ハンマーを振り下ろすアニメーション
+        t.TweenCallback(Callable.From(() => { AimToNearEnemy.RotateSensitivity = 0.001f; }));
         t.TweenProperty(sprite, "position", new Vector2(0, 10), 0.03d)
             .SetTrans(Tween.TransitionType.Quart)
             .SetEase(Tween.EaseType.Out);
-        t.TweenCallback(Callable.From(Attack));
+
+        // C. ハンマーを元の位置に戻すアニメーション, 振り下ろしのタイミングでダメージ発生
+        t.TweenCallback(Callable.From(SpawnDamage));
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
 
-        // 再生終了したら AimToNearEnemy を再開する
+        // D. アニメーション終了後の処理
         t.FinishedAsObservable()
             .Take(1)
-            .Subscribe(this, (_, state) => { state._aimToNearEnemy.SetPhysicsProcess(true); })
+            .Subscribe(this, (_, state) =>
+            {
+                state.AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
+                state.RestartCoolDown();
+            })
             .AddTo(this);
-
-        await ToSignal(t, Tween.SignalName.Finished);
     }
 
-    private void Attack()
+    private void SpawnDamage()
     {
-        // この時点で狙う方向が確定するので,
-        // 敵を殺したときに変な回転をしないように physics_process を止める 
-        _aimToNearEnemy.SetPhysicsProcess(false);
-
-        // 現在狙っている敵を取得
-        var enemy = _aimToNearEnemy.NearestEnemy;
-        if (enemy is null)
-        {
-            // ToDo: 狙っている間に敵が殺されたパターンの処理を考えていない
-            return;
-        }
-
         // アニメーションに合うようにエリア攻撃の弾を生成する
         var prj = new CircleAreaProjectile();
         {

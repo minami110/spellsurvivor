@@ -26,7 +26,7 @@ public partial class PoisonMist : WeaponBase
     [Export(PropertyHint.Range, "1,1000,1,suffix:px")]
     private uint _size = 100u;
 
-    private protected override void OnCoolDownComplete(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
         var prj = new CircleAreaProjectile();
         prj.Damage = BaseDamage;
@@ -44,5 +44,6 @@ public partial class PoisonMist : WeaponBase
         prj.Offset = Vector2.Zero;
 
         AddProjectile(prj, GlobalPosition);
+        RestartCoolDown();
     }
 }

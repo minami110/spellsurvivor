@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using fms.Effect;
 using fms.Faction;
 using fms.Projectile;
@@ -51,6 +50,16 @@ public partial class WeaponBase : Node2D
     [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
     public uint Knockback { get; set; } = 20u;
 
+    // ---------- Animation Parameters ----------
+
+    /// <summary>
+    /// ToDo: こっちでもっておくべきか検討する
+    /// <see cref="WeaponPositionAnimator" /> により自動で位置を調整するかどうか
+    /// </summary>
+    [ExportGroup("Animation")]
+    [Export]
+    public bool AutoPositioning { get; set; } = true;
+
     // ---------- Debug Parameters ----------
 
     /// <summary>
@@ -90,12 +99,6 @@ public partial class WeaponBase : Node2D
 
     // Effect の変更があったかどうか
     private bool _isDirtyEffect;
-
-    /// <summary>
-    /// ToDo: こっちでもっておくべきか検討する
-    /// <see cref="WeaponPositionAnimator" /> により自動で位置を調整するかどうか
-    /// </summary>
-    public bool AutoPosition { get; set; } = true;
 
     /// <summary>
     /// 武器の Id
@@ -167,16 +170,7 @@ public partial class WeaponBase : Node2D
         {
             // 武器のクールダウンが完了時のコールバックを登録
             FrameTimer.TimeOut
-                .SubscribeAwait(async (_, token) =>
-                {
-                    OnCoolDownComplete(Level);
-                    await OnCoolDownCompletedAsync(Level);
-
-                    // タイマーを再開する
-                    FrameTimer.OneShot = true;
-                    FrameTimer.WaitFrame = SolvedCoolDownFrame;
-                    FrameTimer.Start();
-                })
+                .Subscribe(this, (_, state) => { state.OnCoolDownCompleted(state.Level); })
                 .AddTo(this);
 
             if (AutoStart)
@@ -264,13 +258,9 @@ public partial class WeaponBase : Node2D
     /// 武器のクールダウンが終了した時に呼び出されるメソッド
     /// </summary>
     /// <param name="level">現在の武器のレベル</param>
-    private protected virtual void OnCoolDownComplete(uint level)
+    private protected virtual void OnCoolDownCompleted(uint level)
     {
-    }
-
-    private protected virtual ValueTask OnCoolDownCompletedAsync(uint level)
-    {
-        return ValueTask.CompletedTask;
+        RestartCoolDown();
     }
 
     private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
@@ -282,6 +272,23 @@ public partial class WeaponBase : Node2D
     /// </summary>
     private protected virtual void OnStartAttack()
     {
+    }
+
+    /// <summary>
+    /// 継承クラスから クールダウンの終了時に呼び出される
+    /// ToDo: 引数経由のコンテキストから呼べないほうが硬いけど一旦シンプルな実装で
+    /// </summary>
+    private protected void RestartCoolDown()
+    {
+        if (!FrameTimer.IsStopped)
+        {
+            return;
+        }
+
+        // タイマーを再開する
+        FrameTimer.OneShot = true;
+        FrameTimer.WaitFrame = SolvedCoolDownFrame;
+        FrameTimer.Start();
     }
 
     private void SolveEffect()
