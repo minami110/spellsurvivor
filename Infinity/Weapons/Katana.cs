@@ -55,16 +55,10 @@ public partial class Katana : WeaponBase
 
     private void PlayAttackAnimation()
     {
-        if (!AimToNearEnemy.IsAiming)
-        {
-            return;
-        }
-
         // 包丁のひきはじめ, 通常時よりも感度を下げる
         AimToNearEnemy.RotateSensitivity = _rotateSensitivity * 0.5f;
 
         // Sprite に対して Tween で突き刺しアニメーション
-        // ToDo: 固定長のアニメーションなので, BaseCoolDown のほうが早くなるとおかしくなる 
         var sprite = GetNode<Node2D>("%SpriteRoot");
         var t = CreateTween();
         t.SetParallel();
