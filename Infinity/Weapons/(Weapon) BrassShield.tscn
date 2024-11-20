@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dc4v176yxxuu7"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/LargeShield.cs" id="1_ltaog"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_3lg82"]
+[ext_resource type="Texture2D" uid="uid://drmuoam57gvyp" path="res://Infinity/Weapons/Textures/brass_shield.png" id="3_adr66"]
+
+[node name="BrassShield" type="Node2D"]
+script = ExtResource("1_ltaog")
+_damageRadius = 120
+BaseDamage = 2.0
+BaseCoolDownFrame = 200
+Knockback = 200
+
+[node name="AimToNearEnemy" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("2_3lg82")
+
+[node name="Sprite" type="Sprite2D" parent="AimToNearEnemy"]
+unique_name_in_owner = true
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("3_adr66")
