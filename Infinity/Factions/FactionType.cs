@@ -35,6 +35,7 @@ public static class FactionUtil
             FactionType.Healer => new Healer(),
             FactionType.Scrap => new Scrap(),
             FactionType.Licium => new Licium(),
+            FactionType.Incandescent => new Incandescent(),
 
             // Note: ↓ に新しい Faction を追加していく
 
