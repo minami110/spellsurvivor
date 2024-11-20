@@ -59,6 +59,8 @@ public partial class AimToNearEnemy : Area2D
         Farthest
     }
 
+    private readonly Subject<Unit> _enteredAnyEnemy = new();
+
     /// <summary>
     /// 範囲内に存在する敵のリスト
     /// </summary>
@@ -67,6 +69,7 @@ public partial class AimToNearEnemy : Area2D
     private float _restAngle;
 
     private float _targetAngle;
+    public Observable<Unit> EnteredAnyEnemy => _enteredAnyEnemy;
 
     /// <summary>
     /// 現在狙っている(有効な敵が存在する)かどうか
@@ -106,6 +109,9 @@ public partial class AimToNearEnemy : Area2D
 
         // 子の Shape を初期化する
         UpdateCollisionRadius(SearchRadius);
+
+        // Disposable 関連
+        _enteredAnyEnemy.AddTo(this);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -220,6 +226,11 @@ public partial class AimToNearEnemy : Area2D
                 maxLen = distance;
                 FarthestEnemy = e;
             }
+        }
+
+        if (NearestEnemy is not null || FarthestEnemy is not null)
+        {
+            _enteredAnyEnemy.OnNext(Unit.Default);
         }
     }
 
