@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://b5yd1ajpdgy0g"]
 
-[ext_resource type="Texture2D" uid="uid://usnuvkr7jron" path="res://Common/Resources/Textures/Emoji/blue_book.png" id="1_apc3v"]
+[ext_resource type="Texture2D" uid="uid://cne4dh2mi2k8w" path="res://Infinity/Projectiles/Textures/brass_triangle.png" id="1_w4as0"]
 [ext_resource type="PackedScene" uid="uid://cc0rh5i501pkg" path="res://Infinity/Weapons/(Weapon) Book.tscn" id="2_1g3d2"]
 [ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_qvqf1"]
 
@@ -14,4 +14,4 @@ Name = "本"
 Description = "プレイヤーの周囲を回る
 攻撃力: 34
 範囲: 100"
-Sprite = ExtResource("1_apc3v")
+Sprite = ExtResource("1_w4as0")
