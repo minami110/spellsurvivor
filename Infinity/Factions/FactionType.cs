@@ -16,7 +16,8 @@ public enum FactionType
     Invoker = 1 << 3,
     Healer = 1 << 4,
     Scrap = 1 << 5,
-    Licium = 1 << 6
+    Licium = 1 << 6,
+    Incandescent = 1 << 7
 
     // Note: ↓ に新しい Faction を追加していく
 }

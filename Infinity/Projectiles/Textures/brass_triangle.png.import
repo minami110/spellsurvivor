@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://usnuvkr7jron"
-path="res://.godot/imported/blue_book.png-c6ccd7b956e644455474946344f63b78.ctex"
+uid="uid://cne4dh2mi2k8w"
+path="res://.godot/imported/brass_triangle.png-3e925f311b205fab351d086b478fc567.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Emoji/blue_book.png"
-dest_files=["res://.godot/imported/blue_book.png-c6ccd7b956e644455474946344f63b78.ctex"]
+source_file="res://Infinity/Projectiles/Textures/brass_triangle.png"
+dest_files=["res://.godot/imported/brass_triangle.png-3e925f311b205fab351d086b478fc567.ctex"]
 
 [params]
 
