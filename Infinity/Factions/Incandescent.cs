@@ -1,6 +1,9 @@
-﻿using fms.Effect;
+﻿using System.IO;
+using System.Linq;
+using fms.Effect;
 using fms.Weapon;
 using Godot;
+using Heat = fms.Weapon.Heat;
 
 namespace fms.Faction;
 
@@ -10,6 +13,8 @@ namespace fms.Faction;
 [GlobalClass]
 public partial class Incandescent : FactionBase
 {
+    private string _heatWeaponPath = "res://Infinity/Weapons/(Weapon) Heat.tscn";
+
     // Lv.2 以上で有効な効果がある
     public override bool IsActiveAnyEffect => Level >= 2u;
 
@@ -45,7 +50,32 @@ public partial class Incandescent : FactionBase
         // Lv4. Heat (範囲ダメージ効果) をプレイヤーに付与
         if (level >= 4u)
         {
-            AddEffactToPlayer(new Heat { Range = 100u, Span = 20u, Damage = 5u });
+            // もうすでに持っている場合は何もしない
+            var siblings = this.GetSiblings();
+            if (siblings.OfType<Heat>().Any())
+            {
+                return;
+            }
+
+            // まだ持っていない場合は新たに生成してプレイヤーに追加
+            var scene = ResourceLoader.Load<PackedScene>(_heatWeaponPath);
+            if (scene is null)
+            {
+                throw new FileNotFoundException($"Heat weapon scene not found: {_heatWeaponPath}");
+            }
+
+            var weapon = scene.Instantiate<Heat>();
+            {
+                weapon.Level = 1u;
+                weapon.BaseDamage = 5u;
+                weapon.BaseCoolDownFrame = 20u;
+                weapon.Knockback = 0u;
+                weapon.Radius = 100u;
+                weapon.AutoPosition = false; // 位置を自動で設定しない
+            }
+
+            weapon.AutoStart = false;
+            CallDeferred(Node.MethodName.AddSibling, weapon); // 親が Busy なことがあるので CallDeferred で追加
         }
     }
 }
