@@ -1,3 +1,4 @@
+using fms.Effect;
 using Godot;
 using R3;
 
@@ -41,7 +42,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
     {
         // Inititialize PlayerState
         var playerState = GetNode<PlayerState>("%PlayerState");
-        playerState.AddEffect(new AddMoveSpeedEffect { Value = _moveSpeed });
+        playerState.AddEffect(new Wing { Amount = _moveSpeed });
         playerState.AddEffect(new AddHealthEffect { Value = _health });
         playerState.AddEffect(new AddMaxHealthEffect { Value = _health });
 

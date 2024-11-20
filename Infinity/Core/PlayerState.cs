@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using fms.Effect;
 using Godot;
 using R3;
 
@@ -119,9 +120,9 @@ public partial class PlayerState : Node
                     money += moneyEffect.Value;
                     break;
                 }
-                case AddMoveSpeedEffect addMoveSpeedEffect:
+                case Wing wing:
                 {
-                    moveSpeed += addMoveSpeedEffect.Value;
+                    moveSpeed += wing.Amount;
                     break;
                 }
                 case AddHealthEffect addHealthEffect:

@@ -1,3 +1,4 @@
+using fms.Effect;
 using Godot;
 using R3;
 
@@ -180,7 +181,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
         State.AddEffect(new AddMaxHealthEffect { Value = health });
         State.AddEffect(new AddHealthEffect { Value = health });
-        State.AddEffect(new AddMoveSpeedEffect { Value = (float)GD.Randfn(BaseSpeed, _randomSpeed) });
+        State.AddEffect(new Wing { Amount = (float)GD.Randfn(BaseSpeed, _randomSpeed) });
         State.SolveEffect();
     }
 
