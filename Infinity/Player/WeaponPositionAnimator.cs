@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using fms;
+using fms.Weapon;
 using Godot;
 using R3;
 
@@ -31,14 +32,14 @@ public partial class WeaponPositionAnimator : Node
         _weapons.Clear();
         foreach (var n in this.GetSiblings())
         {
-            if (n is not Node2D n2)
+            if (n is not WeaponBase weapon)
             {
                 continue;
             }
 
-            if (n.IsInGroup(Constant.GroupNameWeapon))
+            if (weapon.AutoPosition)
             {
-                _weapons.Add(n2);
+                _weapons.Add(weapon);
             }
         }
 

@@ -33,7 +33,7 @@ public partial class MeleeEnemy : EnemyBase
         }
 
         // プレイヤーとの距離が 20px 以内に近づいたら移動を停止する
-        var delta = _playerNode!.GlobalPosition - GlobalPosition;
+        var delta = _playerNode.GlobalPosition - GlobalPosition;
         if (delta.LengthSquared() <= 400)
         {
             state.LinearVelocity = Vector2.Zero;

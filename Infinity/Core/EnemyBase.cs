@@ -101,6 +101,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
                 {
                     // SetProcess(false);
                     SetPhysicsProcess(false);
+
                     GD.PrintErr($"[{nameof(EnemyBase)}] Player node is not found");
                     return;
                 }
