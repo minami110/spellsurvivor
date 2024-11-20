@@ -1,4 +1,3 @@
-using System;
 using fms.Weapon;
 using Godot;
 using R3;
@@ -41,7 +40,11 @@ public partial class InGameEquipment : VBoxContainer
 
         if (targetMinion is null)
         {
-            throw new ApplicationException($"Minion not found for {Weapon}");
+            // Note: シナジーなどから生成された特殊な武器の場合は、対象のミニオンが存在しないことがある
+            // このような場合は描写を行わない
+            Hide(); // ToDo: めっちゃ適当な処理, Minion ナシ とか ショップ排出ナシの武器 みたいなもっと上位な仕組みを用意する
+
+            return;
         }
 
         _icon.Texture = targetMinion.Sprite;
