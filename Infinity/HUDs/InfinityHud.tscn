@@ -175,9 +175,9 @@ layer = 4
 
 [node name="Tooltip Toast (8)" type="CanvasLayer" parent="."]
 layer = 8
-visible = false
 
 [node name="TooltipToast" parent="Tooltip Toast (8)" instance=ExtResource("9_n1574")]
+visible = false
 
 [node name="DebugHUD (20)" parent="." instance=ExtResource("10_orxi8")]
 layer = 20
