@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://bgoe131ylhqji"]
+
+[ext_resource type="Texture2D" uid="uid://b450uj80h6cjs" path="res://Infinity/Weapons/Textures/sickle_sword.png" id="1_gpmc3"]
+[ext_resource type="PackedScene" uid="uid://dshhlgae4pcgw" path="res://Infinity/Weapons/(Weapon) SickleSword.tscn" id="2_p68ud"]
+[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_d2mbh"]
+
+[resource]
+script = ExtResource("3_d2mbh")
+WeaponPackedScene = ExtResource("2_p68ud")
+Faction = 0
+Tier = 1
+Price = 5
+Name = "SickeSword"
+Description = "薙ぎ"
+Sprite = ExtResource("1_gpmc3")
