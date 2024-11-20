@@ -33,6 +33,23 @@ public partial class LargeShield : WeaponBase
     [Export(PropertyHint.Range, "0.01,1.0,0.01")]
     private float _rotateSensitivity = 0.3f;
 
+    // 攻撃前の盾を構える距離
+    [ExportGroup("Animation")]
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private uint _preAttackDistance = 20;
+
+    // 攻撃前の盾を構えるフレーム数
+    [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
+    private uint _preAttackDuration = 4;
+
+    // 突き刺しアニメーションの距離
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private uint _pushDistance = 40;
+
+    // 突き刺しアニメーションのフレーム数
+    [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
+    private uint _pushDuration = 10;
+
     private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
 
     public override void _Ready()
@@ -66,18 +83,22 @@ public partial class LargeShield : WeaponBase
         var sprite = GetNode<Node2D>("%Sprite");
         var t = CreateTween();
 
-        // 盾を手前に引くアニメーション
-        t.TweenProperty(sprite, "position", new Vector2(-20, 0), 0.3d)
-            .SetTrans(Tween.TransitionType.Quart)
-            .SetEase(Tween.EaseType.Out);
+        // A. 盾を手前に引くアニメーション
+        var distA = _preAttackDistance * -1f;
+        var durA = _preAttackDuration / 60d;
+        t.TweenProperty(sprite, "position", new Vector2(distA, 0), durA)
+            .SetEase(Tween.EaseType.InOut);
 
-        // 盾を前に突き出すアニメーション, この段階でエイム感度をほぼ 0 にする
+        // B. 盾を前に突き出すアニメーション, この段階でエイム感度をほぼ 0 にする
+        var distB = _pushDistance;
+        var durB = _pushDuration / 60d;
         t.TweenCallback(Callable.From(() => { AimToNearEnemy.RotateSensitivity = 0.01f; }));
-        t.TweenProperty(sprite, "position", new Vector2(10, 0), 0.03d)
-            .SetTrans(Tween.TransitionType.Quart)
-            .SetEase(Tween.EaseType.Out);
+        t.TweenProperty(sprite, "position", new Vector2(distB, 0), durB)
+            .SetTrans(Tween.TransitionType.Back)
+            .SetEase(Tween.EaseType.InOut);
 
-        // 攻撃判定を生成して盾を戻す
+
+        // 攻撃判定を生成して盾を戻す (突き出しアニメーション終了時に発生)
         t.TweenCallback(Callable.From(SpawnDamage));
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
 
