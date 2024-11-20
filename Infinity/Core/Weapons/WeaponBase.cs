@@ -19,7 +19,7 @@ public partial class WeaponBase : Node2D
     /// 武器の基礎ダメージ量
     /// </summary>
     [Export(PropertyHint.Range, "0,9999,1")]
-    public float BaseDamage { get; private set; } = 10f;
+    public float BaseDamage { get; set; } = 10f;
 
     /// <summary>
     /// 武器の Cooldown にかかる基礎フレーム数
@@ -49,7 +49,7 @@ public partial class WeaponBase : Node2D
     /// 武器が敵に与えるノックバック量
     /// </summary>
     [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
-    public uint Knockback { get; private set; } = 20u;
+    public uint Knockback { get; set; } = 20u;
 
     // ---------- Debug Parameters ----------
 
@@ -90,6 +90,12 @@ public partial class WeaponBase : Node2D
 
     // Effect の変更があったかどうか
     private bool _isDirtyEffect;
+
+    /// <summary>
+    /// ToDo: こっちでもっておくべきか検討する
+    /// <see cref="WeaponPositionAnimator" /> により自動で位置を調整するかどうか
+    /// </summary>
+    public bool AutoPosition { get; set; } = true;
 
     /// <summary>
     /// 武器の Id
@@ -152,6 +158,10 @@ public partial class WeaponBase : Node2D
             // ToDo: 仮
             // 手前に見えるようにする
             ZIndex = 10;
+
+            // ToDO: 
+            // エフェクト解決が行われない場合の最終敵なステータスをここで更新しておく
+            Damage = (uint)BaseDamage;
         }
         else if (what == NotificationReady)
         {
