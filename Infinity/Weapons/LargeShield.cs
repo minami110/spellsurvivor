@@ -97,8 +97,7 @@ public partial class LargeShield : WeaponBase
             .SetTrans(Tween.TransitionType.Back)
             .SetEase(Tween.EaseType.InOut);
 
-
-        // 攻撃判定を生成して盾を戻す (突き出しアニメーション終了時に発生)
+        // C. 攻撃判定を生成して盾を戻す (突き出しアニメーション終了時に発生)
         t.TweenCallback(Callable.From(SpawnDamage));
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
 

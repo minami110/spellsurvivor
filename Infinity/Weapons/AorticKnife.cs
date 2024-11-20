@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using fms.Effect;
 using fms.Projectile;
 using Godot;
@@ -21,7 +22,7 @@ public partial class AorticKnife : WeaponBase
     /// 敵を狙う速度の感度 (0 ~ 1), 1 で最速, 0 で全然狙えない
     /// </summary>
     [Export(PropertyHint.Range, "0.01,1.0,0.01")]
-    private protected float _rotateSensitivity = 0.3f;
+    private float _rotateSensitivity = 0.3f;
 
     /// <summary>
     /// 突き刺し回数
@@ -75,43 +76,19 @@ public partial class AorticKnife : WeaponBase
         }).AddTo(this);
     }
 
-    private protected override async void OnCoolDownCompleted(uint level)
+    private protected override void OnCoolDownCompleted(uint level)
     {
-        if (!AimToNearEnemy.IsAiming)
+        if (AimToNearEnemy.IsAiming)
         {
-            return;
+            _ = PlayAttackAnimationAsync();
         }
-
-        // 包丁のひきはじめ, 通常時よりも感度を下げる
-        AimToNearEnemy.RotateSensitivity = _rotateSensitivity * 0.5f;
-
-        // Sprite に対して Tween で突き刺しアニメーション
-        var sprite = GetNode<Node2D>("%SpriteRoot");
-        var t = CreateTween();
-        t.TweenProperty(sprite, "position", new Vector2(-12, 0), 0.2d)
-            .SetTrans(Tween.TransitionType.Quart)
-            .SetEase(Tween.EaseType.Out);
-        t.TweenCallback(Callable.From(() =>
+        else
         {
-            // 突き刺し時は回転しないようにする
-            AimToNearEnemy.RotateSensitivity = 0.001f;
-        }));
-
-        // 突き刺しアニメーション
-        for (var i = 0; i < PushCount; i++)
-        {
-            RegisterPushAnimation(t, sprite);
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .Subscribe(this, (b, state) => { _ = state.PlayAttackAnimationAsync(); })
+                .AddTo(this);
         }
-
-        // すぐに他の敵を狙わないようなアニメの遊び
-        t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
-
-        // Tween の終了を待つ
-        await ToSignal(t, Tween.SignalName.Finished);
-
-        // 通常の感度に戻す
-        AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
-        RestartCoolDown();
     }
 
     private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
@@ -140,6 +117,37 @@ public partial class AorticKnife : WeaponBase
         StaticDamage.Knockback = Knockback;
     }
 
+    private async ValueTask PlayAttackAnimationAsync()
+    {
+        // A. 包丁のひきはじめ, 通常時よりも感度を下げる
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity * 0.5f;
+
+        // Sprite に対して Tween で突き刺しアニメーション
+        var sprite = GetNode<Node2D>("%SpriteRoot");
+        var t = CreateTween();
+
+        // A. 攻撃前のナイフを構えるアニメーション
+        t.TweenProperty(sprite, "position", new Vector2(-12, 0), 0.2d)
+            .SetEase(Tween.EaseType.InOut);
+
+        // B. ナイフを前に突き出すアニメーション, この段階でエイム感度をほぼ 0 にする
+        t.TweenCallback(Callable.From(() => { AimToNearEnemy.RotateSensitivity = 0.001f; }));
+        for (var i = 0; i < PushCount; i++)
+        {
+            RegisterPushAnimation(t, sprite);
+        }
+
+        // すぐに他の敵を狙わないようなアニメの遊び
+        t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
+
+        // Tween の終了を待つ
+        await ToSignal(t, Tween.SignalName.Finished);
+
+        // 通常の感度に戻す
+        AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
+        RestartCoolDown();
+    }
+
     private void RegisterPushAnimation(Tween tween, Node2D sprite)
     {
         // 突き刺しアニメーション
@@ -150,8 +158,8 @@ public partial class AorticKnife : WeaponBase
 
         tween.TweenCallback(Callable.From(() => { StaticDamage.Disabled = false; })); // ダメージを有効化
         tween.TweenProperty(sprite, "position", new Vector2(distance, 0), pushDulation)
-            .SetTrans(Tween.TransitionType.Elastic)
-            .SetEase(Tween.EaseType.Out);
+            .SetTrans(Tween.TransitionType.Back)
+            .SetEase(Tween.EaseType.InOut);
 
         // 手元に戻すアニメーション
         tween.TweenCallback(Callable.From(() => { StaticDamage.Disabled = true; })); // ダメージを無効化

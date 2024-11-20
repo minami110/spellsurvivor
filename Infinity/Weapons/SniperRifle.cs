@@ -21,26 +21,41 @@ public partial class SniperRifle : WeaponBase
     [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
     private float _maxRange = 500f;
 
+    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
+
     public override void _Ready()
     {
-        GetNode<AimToNearEnemy>("AimToNearEnemy").SearchRadius = _maxRange;
+        AimToNearEnemy.SearchRadius = _maxRange;
     }
 
     private protected override void OnCoolDownCompleted(uint level)
     {
-        var aim = GetNode<AimToNearEnemy>("AimToNearEnemy");
-        if (!aim.IsAiming)
+        if (AimToNearEnemy.IsAiming)
         {
-            return;
+            SpawnProjectile();
         }
+        else
+        {
+            AimToNearEnemy.EnteredAnyEnemy
+                .Take(1)
+                .SubscribeAwait(async (_, _) =>
+                {
+                    // AimToNearEnemy が対象を狙うまでちょっと待つ必要がある
+                    await this.WaitForSecondsAsync(0.1f);
+                    SpawnProjectile();
+                })
+                .AddTo(this);
+        }
+    }
 
-        var enemy = aim.FarthestEnemy!;
+    private void SpawnProjectile()
+    {
         var prj = _projectile.Instantiate<BulletProjectile>();
         {
             prj.Damage = BaseDamage;
             prj.Knockback = Knockback;
             prj.LifeFrame = _life;
-            prj.ConstantForce = (enemy.GlobalPosition - GlobalPosition).Normalized() * _speed;
+            prj.ConstantForce = AimToNearEnemy.GlobalTransform.X * _speed;
             prj.PenetrateEnemy = true;
             prj.PenetrateWall = false;
         }
