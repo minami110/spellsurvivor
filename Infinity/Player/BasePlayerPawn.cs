@@ -6,32 +6,23 @@ using Range = Godot.Range;
 
 namespace fms;
 
-public enum PawnFaceDirection
+public partial class BasePlayerPawn : CharacterBody2D, IEntity
 {
-    Right,
-    Left
-}
-
-public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
-{
+    [ExportGroup("Base Stats")]
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _health = 100f;
 
     [Export(PropertyHint.Range, "0,1000,1,suffix:px/s")]
     private float _moveSpeed = 100f;
 
+    [ExportGroup("Camera Settings")]
     [Export]
     private Vector2I _cameraLimit = new(550, 550);
 
-    private readonly ReactiveProperty<PawnFaceDirection> _faceDirection = new(PawnFaceDirection.Right);
-
     private PlayerState? _state;
-    public ReadOnlyReactiveProperty<PawnFaceDirection> FaceDirection => _faceDirection;
 
     /// <summary>
     /// </summary>
-    private Vector2 NextMoveDirection { get; set; }
-
     /// <summary>
     /// 前フレームの移動方向
     /// </summary>
@@ -72,10 +63,10 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
 
         // Subscribes
         State.MoveSpeed
-            .Subscribe(this, (x, self) => { self._moveSpeed = x; })
+            .Subscribe(this, (x, self) => { self.GetNode<PhysicsBody2DPawn>("PhysicsBody2DPawn").MoveSpeed = x; })
             .AddTo(this);
-        _faceDirection.AddTo(this);
 
+        // Initialize healthbar
         var healthBar = GetNodeOrNull<Range>("HealthBar");
         if (healthBar is not null)
         {
@@ -110,37 +101,9 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
         }
     }
 
-    public override void _PhysicsProcess(double delta)
-    {
-        var controller = GetNode<BasePlayerAnimator>("%Animator");
-
-        if (NextMoveDirection.LengthSquared() <= 0f)
-        {
-            controller.SendSignalStop();
-            return;
-        }
-
-        PrevLinearVelocity = NextMoveDirection;
-        var motion = PrevLinearVelocity * (float)delta * _moveSpeed;
-        MoveAndCollide(motion);
-
-        // Update Animation
-        controller.SendSignelMove();
-        if (motion.X > 0)
-        {
-            _faceDirection.Value = PawnFaceDirection.Right;
-            controller.SendSignalMoveRight();
-        }
-        else if (motion.X < 0)
-        {
-            _faceDirection.Value = PawnFaceDirection.Left;
-            controller.SendSignalMoveLeft();
-        }
-    }
-
     public void Heal(uint amount)
     {
-        AddEffect(new HealEffect { Value = amount });
+        State.AddEffect(new HealEffect { Value = amount });
         var info = new DamageReport
         {
             Amount = -amount,
@@ -153,9 +116,9 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
         StaticsManager.CommitDamage(info);
     }
 
-    private void AddEffect(EffectBase effect)
+    void IEntity.AddEffect(string effectName)
     {
-        State.AddEffect(effect);
+        throw new NotImplementedException();
     }
 
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
@@ -173,7 +136,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
             }
         }
 
-        AddEffect(new PhysicalDamageEffect { Value = amount });
+        State.AddEffect(new PhysicalDamageEffect { Value = amount });
         var info = new DamageReport
         {
             Amount = amount,
@@ -184,52 +147,5 @@ public partial class BasePlayerPawn : CharacterBody2D, IPawn, IEntity
             IsDead = false
         };
         StaticsManager.CommitDamage(info);
-    }
-
-    void IPawn.PrimaryPressed()
-    {
-        // Do nothing
-    }
-
-    void IPawn.PrimaryReleased()
-    {
-        // Do nothing
-    }
-
-    Vector2 IPawn.GetAimDirection()
-    {
-        // 現在狙っている方向を返す
-        // コントローラーがつながっている場合は, 右スティックの入力方法を返す
-        if (Input.GetConnectedJoypads().Count > 0)
-        {
-            var deadZone = 0.2f;
-            // ToDo: InputAction 使用したほうがいいかも
-            var joyX = Input.GetJoyAxis(0, JoyAxis.RightX);
-            if (joyX < deadZone && joyX > -deadZone)
-            {
-                joyX = 0;
-            }
-
-            var joyY = Input.GetJoyAxis(0, JoyAxis.RightY);
-            if (joyY < deadZone && joyY > -deadZone)
-            {
-                joyY = 0;
-            }
-
-            var joy = (Vector2.Right * joyX + Vector2.Down * joyY).Normalized();
-
-            if (joy.LengthSquared() > 0)
-            {
-                return joy;
-            }
-        }
-
-        // つながっていない場合, スティックを倒していない場合は, 最後に動いた方向を返す
-        return PrevLinearVelocity.Normalized();
-    }
-
-    void IPawn.MoveForward(in Vector2 dir)
-    {
-        NextMoveDirection = dir;
     }
 }

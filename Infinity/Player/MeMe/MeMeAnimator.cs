@@ -38,25 +38,25 @@ public partial class MeMeAnimator : BasePlayerAnimator
         _movingFootTween.Stop();
     }
 
-    public override void SendSignalMoveLeft()
+    private protected override void SendSignalMove()
+    {
+        _movingFootTween.Play();
+    }
+
+    private protected override void SendSignalMoveLeft()
     {
         _body.Scale = new Vector2(-3, 3);
     }
 
-    public override void SendSignalMoveRight()
+    private protected override void SendSignalMoveRight()
     {
         _body.Scale = new Vector2(3, 3);
     }
 
-    public override void SendSignalStop()
+    private protected override void SendSignalStop()
     {
         _movingFootTween.Stop();
         _footR.Position = new Vector2(0, 0);
         _footL.Position = new Vector2(3, 0);
-    }
-
-    public override void SendSignelMove()
-    {
-        _movingFootTween.Play();
     }
 }

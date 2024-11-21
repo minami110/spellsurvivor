@@ -66,6 +66,8 @@ public partial class AimToNearEnemy : Area2D
     /// </summary>
     public readonly List<EnemyBase> Enemies = new();
 
+    private Vector2? _prevPosition;
+
     private float _restAngle;
 
     private float _targetAngle;
@@ -95,18 +97,6 @@ public partial class AimToNearEnemy : Area2D
         // Note: 現在プレイヤーしか使っていないので敵のみを検知する設定
         CollisionMask = Constant.LAYER_MOB;
 
-        // Subscribe to parent player's face direction
-        // ToDo: ひとつ上が Weapon, 更にその上が Player であること前提のハードコード
-        var player = GetNode<BasePlayerPawn>("../..");
-        player.FaceDirection
-            .Subscribe(this, (x, state) =>
-            {
-                const float _RIGHT = 0f; // Mathf.Atan2(0, 1);
-                const float _LEFT = Mathf.Pi; // Mathf.Atan2(0, -1);
-                state._restAngle = x == PawnFaceDirection.Right ? _RIGHT : _LEFT;
-            })
-            .AddTo(this);
-
         // 子の Shape を初期化する
         UpdateCollisionRadius(SearchRadius);
 
@@ -116,9 +106,21 @@ public partial class AimToNearEnemy : Area2D
 
     public override void _PhysicsProcess(double delta)
     {
+        if (_prevPosition.HasValue)
+        {
+            var vel = GlobalPosition - _prevPosition.Value;
+            if (vel.LengthSquared() > 0)
+            {
+                var isRight = vel.Dot(Vector2.Right) > 0;
+                _restAngle = isRight ? 0f : Mathf.Pi;
+            }
+        }
+
         UpdateNearAndFarEnemy();
         AimAtTarget();
         UpdateSpriteFlip();
+
+        _prevPosition = GlobalPosition;
     }
 
     private void AimAtTarget()

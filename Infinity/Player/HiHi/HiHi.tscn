@@ -1,7 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://cyy8ynm6ig6cq"]
+[gd_scene load_steps=18 format=3 uid="uid://cyy8ynm6ig6cq"]
 
 [ext_resource type="Script" path="res://Infinity/Player/BasePlayerPawn.cs" id="1_vdmmf"]
 [ext_resource type="Script" path="res://Infinity/Core/PlayerState.cs" id="2_2yr66"]
+[ext_resource type="Script" path="res://Common/Singletons/PlayerController/PhysicsBody2DPawn.cs" id="2_ce18s"]
 [ext_resource type="Script" path="res://Infinity/Player/CameraController.cs" id="2_xvrt4"]
 [ext_resource type="Script" path="res://Infinity/Player/HiHi/HiHiAnimator.cs" id="3_tw7gc"]
 [ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="4_xlwt1"]
@@ -30,6 +31,17 @@ collision_mask = 16
 script = ExtResource("1_vdmmf")
 _moveSpeed = 175.0
 
+[node name="PhysicsBody2DPawn" type="Node" parent="."]
+script = ExtResource("2_ce18s")
+
+[node name="HiHiAnimator" type="Node" parent="." node_paths=PackedStringArray("_body", "_head", "_footL", "_footR", "_arm")]
+script = ExtResource("3_tw7gc")
+_body = NodePath("../Body")
+_head = NodePath("../Body/Head")
+_footL = NodePath("../Body/FeetLeftRoot")
+_footR = NodePath("../Body/FeetRightRoot")
+_arm = NodePath("../Body/Arm")
+
 [node name="MainCamera" type="Camera2D" parent="."]
 unique_name_in_owner = true
 zoom = Vector2(1.5, 1.5)
@@ -51,15 +63,6 @@ debug_color = Color(1, 1, 1, 0)
 [node name="PlayerState" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_2yr66")
-
-[node name="Animator" type="Node" parent="." node_paths=PackedStringArray("_body", "_head", "_footL", "_footR", "_arm")]
-unique_name_in_owner = true
-script = ExtResource("3_tw7gc")
-_body = NodePath("../Body")
-_head = NodePath("../Body/Head")
-_footL = NodePath("../Body/FeetLeftRoot")
-_footR = NodePath("../Body/FeetRightRoot")
-_arm = NodePath("../Body/Arm")
 
 [node name="WeaponPositionAnimator" type="Node" parent="."]
 script = ExtResource("4_xlwt1")

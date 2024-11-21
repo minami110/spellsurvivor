@@ -2,19 +2,49 @@ using Godot;
 
 public partial class BasePlayerAnimator : Node
 {
-    public virtual void SendSignalMoveLeft()
+    private Vector2? _prevPosition;
+
+    public override void _Process(double delta)
+    {
+        if (_prevPosition.HasValue)
+        {
+            var currentPosition = GetParent<Node2D>().GlobalPosition;
+            var vel = currentPosition - _prevPosition.Value;
+            if (vel.LengthSquared() <= 0f)
+            {
+                SendSignalStop();
+            }
+            else
+            {
+                SendSignalMove();
+                switch (vel.X)
+                {
+                    case > 0:
+                        SendSignalMoveRight();
+                        break;
+                    case < 0:
+                        SendSignalMoveLeft();
+                        break;
+                }
+            }
+        }
+
+        _prevPosition = GetParent<Node2D>().GlobalPosition;
+    }
+
+    private protected virtual void SendSignalMove()
     {
     }
 
-    public virtual void SendSignalMoveRight()
+    private protected virtual void SendSignalMoveLeft()
     {
     }
 
-    public virtual void SendSignalStop()
+    private protected virtual void SendSignalMoveRight()
     {
     }
 
-    public virtual void SendSignelMove()
+    private protected virtual void SendSignalStop()
     {
     }
 }
