@@ -20,6 +20,8 @@ public partial class PlayerState : Node
 
     private bool _isDirty;
 
+    // ===== Begin Stats =====
+
     /// <summary>
     /// 現在の所持金
     /// </summary>
@@ -50,22 +52,14 @@ public partial class PlayerState : Node
     {
         if (what == NotificationEnterTree)
         {
-            if (!IsInGroup(Constant.GroupNamePlayerState))
-            {
-                AddToGroup(Constant.GroupNamePlayerState);
-            }
-        }
-        else if (what == NotificationReady)
-        {
+            AddToGroup(Constant.GroupNamePlayerState);
+
             // Note: Process を override していないのでここで手動で有効化する
             SetProcess(true);
-        }
-        else if (what == NotificationExitTree)
-        {
-            _health.Dispose();
-            _maxHealth.Dispose();
-            _money.Dispose();
-            _moveSpeed.Dispose();
+
+            // Disposable 関連
+            var d = Disposable.Combine(_money, _moveSpeed, _health, _maxHealth, _dodgeRate);
+            d.AddTo(this);
         }
         else if (what == NotificationProcess)
         {

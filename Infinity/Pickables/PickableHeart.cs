@@ -21,10 +21,7 @@ public partial class PickableHeart : Node2D
 
     public override void _EnterTree()
     {
-        if (!IsInGroup(Constant.GroupNamePickableItem))
-        {
-            AddToGroup(Constant.GroupNamePickableItem);
-        }
+        AddToGroup(Constant.GroupNamePickableItem);
     }
 
     public override void _Ready()
