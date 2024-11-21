@@ -1,6 +1,7 @@
 ﻿namespace fms.Effect;
 
 /// <summary>
+/// Entity Effect
 /// https://scrapbox.io/FUMOSurvivor/Dodge
 /// </summary>
 public class Dodge : EffectBase
