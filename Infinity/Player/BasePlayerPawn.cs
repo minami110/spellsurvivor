@@ -14,7 +14,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
     [Export(PropertyHint.Range, "0,1000,1,suffix:px/s")]
     private uint _moveSpeed = 100u;
 
-    [Export(PropertyHint.Range, "0,1,0.01,suffix:%")]
+    [Export(PropertyHint.Range, "0,100,0.1,suffix:%")]
     private float _dodgeRate;
 
     [ExportGroup("Camera Settings")]
@@ -29,7 +29,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
         State = new EntityState(
             _health,
             _moveSpeed,
-            _dodgeRate
+            _dodgeRate * 0.01f
         );
         AddChild(State);
         State.AddToGroup(GroupNames.PlayerState);
@@ -115,17 +115,22 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
             return;
         }
 
-        // Dodge がある場合は, ここで回避する
+        // DodgeRate による回避判定
         var dodgeRate = State.DodgeRate.CurrentValue;
-        if (dodgeRate > 0f)
+        switch (dodgeRate)
         {
-            var chance = (float)GD.RandRange(0f, 1f);
-            if (dodgeRate > chance)
-            {
-                // 回避成功なのでダメージ処理を行わず, 回避演出を行う
+            case >= 1f: // 確定で回避に成功する
                 StaticsManager.SuccessDodge(GlobalPosition);
                 return;
-            }
+            case > 0f:
+                var chance = (float)GD.RandRange(0f, 1f);
+                if (dodgeRate > chance)
+                {
+                    StaticsManager.SuccessDodge(GlobalPosition);
+                    return;
+                }
+
+                break;
         }
 
         // ダメージ処理
