@@ -31,8 +31,8 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
             _moveSpeed,
             _dodgeRate
         );
-        State.AddToGroup(GroupNames.PlayerState);
         AddChild(State);
+        State.AddToGroup(GroupNames.PlayerState);
 
         // Join to Player Group
         AddToGroup(GroupNames.Player);
