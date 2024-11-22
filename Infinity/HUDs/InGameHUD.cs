@@ -30,7 +30,7 @@ public sealed partial class InGameHUD : CanvasLayer
 
     public override void _Ready()
     {
-        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
+        var playerState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
 
         // Subscribe player health
         var d1 = playerState.Health.ChangedCurrentValue.Subscribe(OnHealthChanged);
@@ -97,7 +97,7 @@ public sealed partial class InGameHUD : CanvasLayer
 
     private void OnHealthChanged(uint _)
     {
-        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
+        var playerState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
 
         // Update health bar
         _healthBar.MinValue = 0f;

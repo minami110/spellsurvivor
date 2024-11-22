@@ -14,7 +14,7 @@ public partial class Main : Node
 
     private static Main? _instance;
 
-    private PlayerState _playerState = null!;
+    private EntityState _entityState = null!;
     private ShopState _shopState = null!;
     private WaveState _waveState = null!;
 
@@ -66,14 +66,14 @@ public partial class Main : Node
     public override void _Ready()
     {
         // PlayerState をキャッシュ
-        _playerState = (PlayerState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
+        _entityState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
 
         // Battle Wave の開始時
         var d1 = _waveState.Phase.Where(x => x == WavePhase.Battle).Subscribe(this, (_, state) =>
         {
             // ToDo: ダメージの Effect の解決方法決まり次第こちらも変える (#34)
             // Playerの体力を全回復する
-            state._playerState.ResetToMaxHealth();
+            state._entityState.ResetToMaxHealth();
 
             // Spawner に設定を渡す
             var spawner = (EnemySpawnerBase)GetTree().GetFirstNodeInGroup("EnemySpawner");
@@ -124,7 +124,7 @@ public partial class Main : Node
             {
                 // Playerに報酬を与える
                 var reward = state._waveState.CurrentWaveConfig.Reward;
-                state._playerState.AddMoney((uint)reward);
+                state._entityState.AddMoney((uint)reward);
             }
             else
             {
@@ -159,6 +159,6 @@ public partial class Main : Node
     private void ResetPlayerState()
     {
         // Plauer を初期化する
-        _playerState.AddMoney(_gameSettings.StartMoney);
+        _entityState.AddMoney(_gameSettings.StartMoney);
     }
 }

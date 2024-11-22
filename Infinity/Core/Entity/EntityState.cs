@@ -7,9 +7,9 @@ using R3;
 namespace fms;
 
 /// <summary>
-/// Player の体力やバフなどを管理するクラス
+/// Entity の体力やバフなどを管理するクラス
 /// </summary>
-public partial class PlayerState : Node
+public partial class EntityState : Node
 {
     private readonly EntityAttribute<float> _dodgeRate;
     private readonly HashSet<EffectBase> _effects = new();
@@ -42,14 +42,14 @@ public partial class PlayerState : Node
     public ReadOnlyEntityHealth Health => _health;
 
     // Parameterless constructor for Godot
-    private PlayerState()
+    private EntityState()
     {
         _health = new EntityHealth(0u, 0u);
         _moveSpeed = new EntityAttribute<float>(0f);
         _dodgeRate = new EntityAttribute<float>(0f);
     }
 
-    public PlayerState(uint maxHealth, uint moveSpeed, float dodgeRate)
+    public EntityState(uint maxHealth, uint moveSpeed, float dodgeRate)
     {
         _health = new EntityHealth(maxHealth, maxHealth);
         _moveSpeed = new EntityAttribute<float>(moveSpeed);
@@ -60,8 +60,6 @@ public partial class PlayerState : Node
     {
         if (what == NotificationEnterTree)
         {
-            AddToGroup(GroupNames.PlayerState);
-
             // Note: Process を override していないのでここで手動で有効化する
             SetProcess(true);
 

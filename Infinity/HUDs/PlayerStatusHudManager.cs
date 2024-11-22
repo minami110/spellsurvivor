@@ -22,7 +22,7 @@ public partial class PlayerStatusHudManager : Node
     public override void _Ready()
     {
         var n = GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
-        if (n is not PlayerState playerState)
+        if (n is not EntityState playerState)
         {
             throw new ApplicationException("PlayerState is not found");
         }

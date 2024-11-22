@@ -25,7 +25,7 @@ internal partial class BattleResultHudController : Node
         {
             if (p == WavePhase.Battleresult)
             {
-                var playerState = (PlayerState)self.GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
+                var playerState = (EntityState)self.GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
                 var reward = Main.WaveState.CurrentWaveConfig.Reward;
                 var playerMoney = playerState.Money.CurrentValue;
 

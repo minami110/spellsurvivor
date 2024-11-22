@@ -21,17 +21,20 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
     [Export]
     private Vector2I _cameraLimit = new(550, 550);
 
-    private PlayerState State { get; set; } = null!;
+    private EntityState State { get; set; } = null!;
 
     public override void _EnterTree()
     {
         // Crate PlayerState
-        State = new PlayerState(
+        State = new EntityState(
             _health,
             _moveSpeed,
             _dodgeRate
         );
+        State.AddToGroup(GroupNames.PlayerState);
         AddChild(State);
+
+        // Join to Player Group
         AddToGroup(GroupNames.Player);
     }
 
