@@ -1,7 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://bfke7q0b0owyb"]
+[gd_scene load_steps=10 format=3 uid="uid://bfke7q0b0owyb"]
 
 [ext_resource type="Script" path="res://Infinity/Player/BasePlayerPawn.cs" id="1_petec"]
-[ext_resource type="Script" path="res://Infinity/Core/PlayerState.cs" id="2_klmxs"]
 [ext_resource type="Script" path="res://Infinity/Player/MeMe/MeMeAnimator.cs" id="3_kjji6"]
 [ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="4_tkpes"]
 [ext_resource type="Script" path="res://Common/Singletons/PlayerController/PhysicsBody2DPawn.cs" id="5_6vvia"]
@@ -23,12 +22,7 @@ unique_name_in_owner = true
 zoom = Vector2(1.5, 1.5)
 editor_draw_screen = false
 
-[node name="PlayerState" type="Node" parent="."]
-unique_name_in_owner = true
-script = ExtResource("2_klmxs")
-
-[node name="Animator" type="Node" parent="." node_paths=PackedStringArray("_body", "_head", "_footL", "_footR")]
-unique_name_in_owner = true
+[node name="MeMeAnimator" type="Node" parent="." node_paths=PackedStringArray("_body", "_head", "_footL", "_footR")]
 script = ExtResource("3_kjji6")
 _body = NodePath("../Body")
 _head = NodePath("../Body/Head")

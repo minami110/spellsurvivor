@@ -1,5 +1,4 @@
 using System;
-using fms.Effect;
 using Godot;
 using R3;
 using Range = Godot.Range;
@@ -8,7 +7,7 @@ namespace fms;
 
 public partial class BasePlayerPawn : CharacterBody2D, IEntity
 {
-    [ExportGroup("Base Stats")]
+    [ExportGroup("Base Status")]
     [Export(PropertyHint.Range, "0,1000,1")]
     private float _health = 100f;
 
@@ -19,41 +18,18 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
     [Export]
     private Vector2I _cameraLimit = new(550, 550);
 
-    private PlayerState? _state;
-
-    /// <summary>
-    /// </summary>
-    /// <summary>
-    /// 前フレームの移動方向
-    /// </summary>
-    private Vector2 PrevLinearVelocity { get; set; } = Vector2.Right;
-
-    private PlayerState State
-    {
-        get
-        {
-            if (_state is null)
-            {
-                var state = GetNode<PlayerState>("%PlayerState");
-                _state = state ?? throw new ApplicationException("Failed to get PlayerState in children");
-            }
-
-            return _state;
-        }
-    }
+    private PlayerState State { get; set; } = null!;
 
     public override void _EnterTree()
     {
-        AddToGroup(Constant.GroupNamePlayer);
+        // Crate PlayerState
+        State = new PlayerState((uint)_moveSpeed, (uint)_health);
+        AddChild(State);
+        AddToGroup(GroupNames.Player);
     }
 
     public override void _Ready()
     {
-        // Inititialize PlayerState
-        State.AddEffect(new Wing { Amount = _moveSpeed });
-        State.AddEffect(new AddHealthEffect { Value = _health });
-        State.AddEffect(new AddMaxHealthEffect { Value = _health });
-
         // Initialize Camera
         var camera = GetNode<Camera2D>("%MainCamera");
         camera.LimitLeft = -_cameraLimit.X;
@@ -62,15 +38,16 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
         camera.LimitBottom = _cameraLimit.Y;
 
         // Subscribes
-        State.MoveSpeed
-            .Subscribe(this, (x, self) => { self.GetNode<PhysicsBody2DPawn>("PhysicsBody2DPawn").MoveSpeed = x; })
-            .AddTo(this);
+        var pawn = GetNode<PhysicsBody2DPawn>("PhysicsBody2DPawn");
+        State.MoveSpeed.ChangedCurrentValue
+            .Subscribe(pawn, (x, state) => { state.MoveSpeed = x; })
+            .AddTo(pawn);
 
         // Initialize healthbar
         var healthBar = GetNodeOrNull<Range>("HealthBar");
         if (healthBar is not null)
         {
-            State.MaxHealth
+            State.Health.ChangedMaxValue
                 .Subscribe(healthBar, (x, s) =>
                 {
                     s.MaxValue = x;
@@ -84,7 +61,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
                     }
                 })
                 .AddTo(healthBar);
-            State.Health
+            State.Health.ChangedCurrentValue
                 .Subscribe(healthBar, (x, s) =>
                 {
                     s.SetValueNoSignal(x);
@@ -103,7 +80,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
 
     public void Heal(uint amount)
     {
-        State.AddEffect(new HealEffect { Value = amount });
+        State.Heal(amount);
         var info = new DamageReport
         {
             Amount = -amount,
@@ -123,6 +100,11 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
 
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
+        if (amount == 0f)
+        {
+            return;
+        }
+
         // Dodge がある場合は, ここで回避する
         var dodgeRate = State.DodgeRate.CurrentValue;
         if (dodgeRate > 0f)
@@ -136,7 +118,10 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
             }
         }
 
-        State.AddEffect(new PhysicalDamageEffect { Value = amount });
+        // ダメージ処理
+        State.ApplyDamage((uint)amount);
+
+        // 統計情報を送信
         var info = new DamageReport
         {
             Amount = amount,
