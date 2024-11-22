@@ -24,6 +24,8 @@ public partial class EntityState : Node
     /// <summary>
     /// 現在の所持金
     /// </summary>
+    // ToDo: これは Entity State ではないので, Main / Shop などの Game 側で管理する
+    [Obsolete]
     public ReadOnlyReactiveProperty<uint> Money => _money;
 
     /// <summary>
@@ -79,6 +81,7 @@ public partial class EntityState : Node
         _isDirty = true;
     }
 
+    [Obsolete]
     public void AddMoney(uint amount)
     {
         _money.Value += amount;
@@ -101,6 +104,7 @@ public partial class EntityState : Node
         _health.SetCurrentValue(_health.CurrentValue + amount);
     }
 
+    [Obsolete]
     public void ReduceMoney(uint amount)
     {
         if (_money.Value < amount)
