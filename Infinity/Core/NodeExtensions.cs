@@ -6,7 +6,6 @@ namespace fms;
 public static partial class NodeExtensions
 {
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>

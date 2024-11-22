@@ -10,13 +10,9 @@
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ksyvo"]
 streams_count = 4
 stream_0/stream = ExtResource("2_rbmxw")
-stream_0/weight = 1.0
 stream_1/stream = ExtResource("3_jai5m")
-stream_1/weight = 1.0
 stream_2/stream = ExtResource("4_kt638")
-stream_2/weight = 1.0
 stream_3/stream = ExtResource("5_lgiyx")
-stream_3/weight = 1.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ko4ev"]
 radius = 30.0
