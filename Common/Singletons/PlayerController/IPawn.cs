@@ -5,12 +5,6 @@ namespace fms;
 public interface IPawn
 {
     /// <summary>
-    /// 現在狙っている方向を取得する
-    /// </summary>
-    /// <returns></returns>
-    public Vector2 GetAimDirection();
-
-    /// <summary>
     /// 指定された方向に移動する
     /// </summary>
     /// <param name="direction"></param>

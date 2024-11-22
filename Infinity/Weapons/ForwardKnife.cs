@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using fms.Effect;
 using fms.Projectile;
 using Godot;
@@ -26,6 +25,22 @@ public partial class ForwardKnife : WeaponBase
     [Export]
     // 反射時のダメージ倍率
     private float BounceDamageMul { get; set; }
+
+    private Vector2 _latestDirection = Vector2.Right;
+
+    private Vector2 _prevGlobalPosition;
+
+    public override void _Process(double delta)
+    {
+        var currentGlobalPosition = GlobalPosition;
+        var direction = currentGlobalPosition - _prevGlobalPosition;
+        if (direction.LengthSquared() > 0)
+        {
+            _latestDirection = direction;
+        }
+
+        _prevGlobalPosition = currentGlobalPosition;
+    }
 
     private protected override void OnCoolDownCompleted(uint level)
     {
@@ -89,6 +104,37 @@ public partial class ForwardKnife : WeaponBase
         });
     }
 
+    private Vector2 GetAimDirection()
+    {
+        // コントローラーがつながっている場合は, 右スティックの入力方法を返す
+        if (Input.GetConnectedJoypads().Count > 0)
+        {
+            var deadZone = 0.2f;
+            // ToDo: InputAction 使用したほうがいいかも
+            var joyX = Input.GetJoyAxis(0, JoyAxis.RightX);
+            if (joyX < deadZone && joyX > -deadZone)
+            {
+                joyX = 0;
+            }
+
+            var joyY = Input.GetJoyAxis(0, JoyAxis.RightY);
+            if (joyY < deadZone && joyY > -deadZone)
+            {
+                joyY = 0;
+            }
+
+            var joy = (Vector2.Right * joyX + Vector2.Down * joyY).Normalized();
+
+            if (joy.LengthSquared() > 0)
+            {
+                return joy;
+            }
+        }
+
+        // コントローラーがつながっているが, 右スティックを倒していない, あるいはコントローラーがつながっていない場合は, 最後に動いた方向を返す
+        return _latestDirection;
+    }
+
     private void SpawnBullet(in Vector2 center, float xOffset = 0f, float yOffset = 0f)
     {
         // Main の Projectile
@@ -99,14 +145,7 @@ public partial class ForwardKnife : WeaponBase
             prjMain.LifeFrame = _life;
 
             // Get Player's aim direction
-            if (OwnedEntity is IPawn pawn)
-            {
-                prjMain.ConstantForce = pawn.GetAimDirection() * _speed;
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            prjMain.ConstantForce = GetAimDirection().Normalized() * _speed;
         }
 
         // Trickshot が有効な場合は Mod を登録する

@@ -29,7 +29,7 @@ public partial class AorticKnife : Hocho
             if (GD.Randf() < chance)
             {
                 // OwnedEntity (Player) を回復する
-                var player = (IEntity)state.OwnedEntity;
+                var player = state.OwnedEntity;
                 player.ApplayDamage(state._lifestealAmount * -1f, player, state);
             }
         }).AddTo(this);

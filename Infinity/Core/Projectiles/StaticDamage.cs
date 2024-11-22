@@ -101,7 +101,7 @@ public partial class StaticDamage : Area2D
 
             // ToDo: IEntity に雑にキャスト
             // ダメージを与える
-            entity.ApplayDamage(Damage, (IEntity)weapon.OwnedEntity, weapon);
+            entity.ApplayDamage(Damage, weapon.OwnedEntity, weapon);
 
             // Hit 通知
             SendHitInfo(body);
