@@ -28,7 +28,7 @@ radius = 20.0
 [node name="HiHi" type="CharacterBody2D"]
 collision_mask = 16
 script = ExtResource("1_vdmmf")
-_moveSpeed = 175.0
+_moveSpeed = 175
 
 [node name="PhysicsBody2DPawn" type="Node" parent="."]
 script = ExtResource("2_ce18s")
