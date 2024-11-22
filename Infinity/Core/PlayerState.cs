@@ -49,11 +49,11 @@ public partial class PlayerState : Node
         _dodgeRate = new EntityAttribute<float>(0f);
     }
 
-    public PlayerState(uint baseMoveSpeed, uint baseMaxHealth)
+    public PlayerState(uint maxHealth, uint moveSpeed, float dodgeRate)
     {
-        _health = new EntityHealth(baseMaxHealth, baseMaxHealth);
-        _moveSpeed = new EntityAttribute<float>(baseMoveSpeed);
-        _dodgeRate = new EntityAttribute<float>(0f);
+        _health = new EntityHealth(maxHealth, maxHealth);
+        _moveSpeed = new EntityAttribute<float>(moveSpeed);
+        _dodgeRate = new EntityAttribute<float>(dodgeRate);
     }
 
     public override void _Notification(int what)

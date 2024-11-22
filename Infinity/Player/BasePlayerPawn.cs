@@ -9,10 +9,13 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
 {
     [ExportGroup("Base Status")]
     [Export(PropertyHint.Range, "0,1000,1")]
-    private float _health = 100f;
+    private uint _health = 100u;
 
     [Export(PropertyHint.Range, "0,1000,1,suffix:px/s")]
-    private float _moveSpeed = 100f;
+    private uint _moveSpeed = 100u;
+
+    [Export(PropertyHint.Range, "0,1,0.01,suffix:%")]
+    private float _dodgeRate;
 
     [ExportGroup("Camera Settings")]
     [Export]
@@ -23,7 +26,11 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
     public override void _EnterTree()
     {
         // Crate PlayerState
-        State = new PlayerState((uint)_moveSpeed, (uint)_health);
+        State = new PlayerState(
+            _health,
+            _moveSpeed,
+            _dodgeRate
+        );
         AddChild(State);
         AddToGroup(GroupNames.Player);
     }
