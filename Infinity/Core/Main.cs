@@ -66,15 +66,14 @@ public partial class Main : Node
     public override void _Ready()
     {
         // PlayerState をキャッシュ
-        _playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
+        _playerState = (PlayerState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
 
         // Battle Wave の開始時
         var d1 = _waveState.Phase.Where(x => x == WavePhase.Battle).Subscribe(this, (_, state) =>
         {
             // ToDo: ダメージの Effect の解決方法決まり次第こちらも変える (#34)
             // Playerの体力を全回復する
-            state._playerState.AddEffect(new AddHealthEffect
-                { Value = state._playerState.MaxHealth.CurrentValue - state._playerState.Health.CurrentValue });
+            state._playerState.ResetToMaxHealth();
 
             // Spawner に設定を渡す
             var spawner = (EnemySpawnerBase)GetTree().GetFirstNodeInGroup("EnemySpawner");
@@ -125,7 +124,7 @@ public partial class Main : Node
             {
                 // Playerに報酬を与える
                 var reward = state._waveState.CurrentWaveConfig.Reward;
-                state._playerState.AddEffect(new MoneyEffect { Value = reward });
+                state._playerState.AddMoney((uint)reward);
             }
             else
             {
@@ -160,6 +159,6 @@ public partial class Main : Node
     private void ResetPlayerState()
     {
         // Plauer を初期化する
-        _playerState.AddEffect(new MoneyEffect { Value = (int)_gameSettings.StartMoney });
+        _playerState.AddMoney(_gameSettings.StartMoney);
     }
 }
