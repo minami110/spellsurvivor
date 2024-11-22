@@ -1,6 +1,7 @@
-using fms.Effect;
+using System;
 using Godot;
 using R3;
+using Range = Godot.Range;
 
 namespace fms;
 
@@ -44,14 +45,14 @@ public partial class EnemyBase : RigidBody2D, IEntity
     [Export]
     private PackedScene _onDeadParticle = null!;
 
-    /// <summary>
-    /// 現在の State
-    /// </summary>
-    internal readonly EnemyState State = new();
-
     private uint _knockbackTimer;
 
     private protected Node2D _playerNode = null!;
+
+    /// <summary>
+    /// 現在の State
+    /// </summary>
+    internal EnemyState State = null!;
 
     /// <summary>
     /// スポーンしてからの経過フレーム数
@@ -84,11 +85,8 @@ public partial class EnemyBase : RigidBody2D, IEntity
             }
             case NotificationReady:
             {
-                // Disposable 関係
-                State.AddTo(this);
-
                 // Player の Node をキャッシュする
-                if (GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer) is Node2D player)
+                if (GetTree().GetFirstNodeInGroup(GroupNames.Player) is Node2D player)
                 {
                     _playerNode = player;
 
@@ -111,6 +109,9 @@ public partial class EnemyBase : RigidBody2D, IEntity
 
                 // Refresh HUD
                 UpdateHealthBar();
+
+                // Disposable 関係
+                State.AddTo(this);
 
                 break;
             }
@@ -171,21 +172,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
         CollisionMask = Constant.LAYER_NONE;
     }
 
-    /// <summary>
-    /// スポーン時の体力や移動速度などの初期化を行う
-    /// </summary>
-    private protected void InitializeParameters()
-    {
-        // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
-        //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
-        var health = BaseHealth + (Level - 1) * 5f;
-
-        State.AddEffect(new AddMaxHealthEffect { Value = health });
-        State.AddEffect(new AddHealthEffect { Value = health });
-        State.AddEffect(new Wing { Amount = (float)GD.Randfn(BaseSpeed, _randomSpeed) });
-        State.SolveEffect();
-    }
-
     private protected virtual void KillByDamage()
     {
         if (IsDead)
@@ -231,6 +217,19 @@ public partial class EnemyBase : RigidBody2D, IEntity
     {
         // Knockback 終了時に Mass を元に戻す
         CollisionMask = Constant.LAYER_MOB;
+    }
+
+    /// <summary>
+    /// スポーン時の体力や移動速度などの初期化を行う
+    /// </summary>
+    private void InitializeParameters()
+    {
+        // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
+        //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
+        var health = BaseHealth + (Level - 1) * 5f;
+        var speed = GD.Randfn(BaseSpeed, _randomSpeed);
+
+        State = new EnemyState((uint)speed, (uint)health);
     }
 
     /// <summary>
@@ -302,7 +301,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
             return;
         }
 
-        healthBar.MaxValue = State.MaxHealth.CurrentValue;
+        healthBar.MaxValue = State.Health.MaxValue;
         healthBar.SetValueNoSignal(State.Health.CurrentValue);
     }
 
@@ -316,6 +315,11 @@ public partial class EnemyBase : RigidBody2D, IEntity
         sm.SetShaderParameter("hit", value);
     }
 
+    void IEntity.AddEffect(string effectName)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// プレイヤーなどからダメージを受けるときの処理
     /// </summary>
@@ -326,7 +330,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
             return;
         }
 
-        State.AddEffect(new PhysicalDamageEffect { Value = amount });
+        State.ApplyDamage((uint)amount);
         State.SolveEffect();
         OnTakeDamage(amount, instigator, causer);
     }

@@ -1,9 +1,9 @@
 [gd_scene load_steps=10 format=3 uid="uid://bfke7q0b0owyb"]
 
 [ext_resource type="Script" path="res://Infinity/Player/BasePlayerPawn.cs" id="1_petec"]
-[ext_resource type="Script" path="res://Infinity/Core/PlayerState.cs" id="2_klmxs"]
 [ext_resource type="Script" path="res://Infinity/Player/MeMe/MeMeAnimator.cs" id="3_kjji6"]
 [ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="4_tkpes"]
+[ext_resource type="Script" path="res://Common/Singletons/PlayerController/PhysicsBody2DPawn.cs" id="5_6vvia"]
 [ext_resource type="Texture2D" uid="uid://bt6mvjcjkcp32" path="res://Infinity/Player/MeMe/torso.png" id="5_x3mmk"]
 [ext_resource type="Texture2D" uid="uid://cup57j01kq1r7" path="res://Infinity/Player/MeMe/head.png" id="6_yiulq"]
 [ext_resource type="Texture2D" uid="uid://fxms0jyc10sf" path="res://Infinity/Player/MeMe/feet.png" id="7_kufux"]
@@ -15,19 +15,14 @@ radius = 20.0
 [node name="MeMe" type="CharacterBody2D"]
 collision_mask = 16
 script = ExtResource("1_petec")
-_moveSpeed = 175.0
+_moveSpeed = 175
 
 [node name="MainCamera" type="Camera2D" parent="."]
 unique_name_in_owner = true
 zoom = Vector2(1.5, 1.5)
 editor_draw_screen = false
 
-[node name="PlayerState" type="Node" parent="."]
-unique_name_in_owner = true
-script = ExtResource("2_klmxs")
-
-[node name="Animator" type="Node" parent="." node_paths=PackedStringArray("_body", "_head", "_footL", "_footR")]
-unique_name_in_owner = true
+[node name="MeMeAnimator" type="Node" parent="." node_paths=PackedStringArray("_body", "_head", "_footL", "_footR")]
 script = ExtResource("3_kjji6")
 _body = NodePath("../Body")
 _head = NodePath("../Body/Head")
@@ -36,6 +31,9 @@ _footR = NodePath("../Body/FeetRight")
 
 [node name="WeaponPositionAnimator" type="Node" parent="."]
 script = ExtResource("4_tkpes")
+
+[node name="PhysicsBody2DPawn" type="Node" parent="."]
+script = ExtResource("5_6vvia")
 
 [node name="Body" type="Sprite2D" parent="."]
 texture_filter = 1

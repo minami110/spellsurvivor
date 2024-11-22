@@ -1,14 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://dvwlkv2f4pl2i"]
+[gd_scene load_steps=7 format=3 uid="uid://dvwlkv2f4pl2i"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopHudController.cs" id="1_5xunh"]
 [ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/InstoreMinionPanel.tscn" id="2_7j4ye"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="3_nlrg2"]
+[ext_resource type="PackedScene" uid="uid://3cf1cbaj3tc7" path="res://Infinity/HUDs/PlayerStatusHud.tscn" id="5_3laas"]
 [ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/ActiveFactionHud.tscn" id="5_jthwe"]
 [ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/OwnedMinionPanel.tscn" id="6_dux5n"]
 
 [node name="ShopHUD" type="CanvasLayer"]
 
-[node name="ShopHudController" type="Node" parent="." node_paths=PackedStringArray("_container", "_shopItemSpawnParent", "_equipItemSpawnParent", "_upgradeButton", "_rerollButton", "_lockButton", "_addSlotButton", "_quitShopButton", "_playerMoneyLabel", "_shopLevelLabel")]
+[node name="ShopHudController" type="Node" parent="." node_paths=PackedStringArray("_container", "_shopItemSpawnParent", "_equipItemSpawnParent", "_upgradeButton", "_rerollButton", "_lockButton", "_addSlotButton", "_quitShopButton", "_shopLevelLabel")]
 script = ExtResource("1_5xunh")
 _container = NodePath("../Container")
 _instoreItemPackedScene = ExtResource("2_7j4ye")
@@ -20,7 +21,6 @@ _rerollButton = NodePath("../Container/HBox Shop Buttons/RerollButton")
 _lockButton = NodePath("../Container/HBox Shop Buttons/LockButton")
 _addSlotButton = NodePath("../Container/HBox Shop Buttons/AddSlotButton")
 _quitShopButton = NodePath("../Container/BattleButton")
-_playerMoneyLabel = NodePath("../Container/VBox Player Status/Label Gold")
 _shopLevelLabel = NodePath("../Container/HBox Shop Buttons/Label ShopLevel")
 
 [node name="Container" type="Control" parent="."]
@@ -174,32 +174,27 @@ custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 texture = ExtResource("3_nlrg2")
 
-[node name="VBox Player Status" type="VBoxContainer" parent="Container"]
+[node name="VBox Player Status" parent="Container" instance=ExtResource("5_3laas")]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = 6
 anchor_left = 1.0
+anchor_top = 0.5
 anchor_right = 1.0
-offset_left = -185.0
-offset_top = 178.0
-offset_right = -27.0
-offset_bottom = 595.0
+anchor_bottom = 0.5
+offset_left = -269.0
+offset_top = -237.0
+offset_right = -40.0
+offset_bottom = 197.0
 grow_horizontal = 0
-
-[node name="Label" type="Label" parent="Container/VBox Player Status"]
-layout_mode = 2
-text = "Player Status"
-
-[node name="Label Gold" type="Label" parent="Container/VBox Player Status"]
-layout_mode = 2
-text = "Gold: N/A"
+grow_vertical = 2
 
 [node name="VBox Active Factions" parent="Container" instance=ExtResource("5_jthwe")]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 42.0
-offset_top = -50.0
-offset_right = 149.0
-offset_bottom = 54.0
+offset_left = 50.0
+offset_top = -106.0
+offset_right = 191.0
+offset_bottom = 106.0
 grow_vertical = 2

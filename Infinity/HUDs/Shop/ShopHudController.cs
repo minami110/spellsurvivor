@@ -36,9 +36,6 @@ public partial class ShopHudController : Node
     private Button _quitShopButton = null!;
 
     [Export]
-    private Label _playerMoneyLabel = null!;
-
-    [Export]
     private Label _shopLevelLabel = null!;
 
     public override void _Ready()
@@ -71,11 +68,6 @@ public partial class ShopHudController : Node
         });
         var d04 = _addSlotButton.PressedAsObservable().Subscribe(_ => { Main.Shop.AddItemSlot(); });
 
-
-        // Player Money の変更を監視
-        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
-        var d10 = playerState.Money.Subscribe(this, (x, state) => state._playerMoneyLabel.Text = $"$ {x}");
-
         // Player Inventory
         var playerNode = this.GetPlayerNode();
         var d20 = playerNode.ChildOrderChangedAsObservable().Subscribe(OnEquippedMinionChanged);
@@ -97,7 +89,7 @@ public partial class ShopHudController : Node
             }
         });
 
-        Disposable.Combine(d00, d01, d02, d03, d04, d10, d20, d30, d31, d40).AddTo(this);
+        Disposable.Combine(d00, d01, d02, d03, d04, d20, d30, d31, d40).AddTo(this);
     }
 
     private void OnEquippedMinionChanged(Unit _)

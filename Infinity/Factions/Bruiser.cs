@@ -14,18 +14,18 @@ public partial class Bruiser : FactionBase
     {
         var value = level switch
         {
-            >= 6 => 450,
-            >= 4 => 150,
-            >= 2 => 50,
-            _ => 0
+            >= 6 => 450u,
+            >= 4 => 150u,
+            >= 2 => 50u,
+            _ => 0u
         };
 
-        if (value == 0)
+        if (value == 0u)
         {
             return;
         }
 
-        var effect = new AddMaxHealthEffect { Value = value };
+        var effect = new Heart { Amount = value };
         AddEffactToPlayer(effect);
     }
 }

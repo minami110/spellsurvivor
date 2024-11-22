@@ -60,13 +60,15 @@ public partial class SniperRifle : WeaponBase
             prj.PenetrateWall = false;
         }
 
+        AddProjectile(prj, GlobalPosition);
+
+        // Note: AddTo はシーン内にないとエラーになるので, AddProjectile の後に呼ぶ
         // ToDo: 暫定実装, 敵にヒットするたびにダメージを半分にする
         prj.Hit
             .Where(x => x.HitNode is EnemyBase)
             .Subscribe(prj, (x, s) => { s.Damage *= 0.5f; })
             .AddTo(prj);
 
-        AddProjectile(prj, GlobalPosition);
         RestartCoolDown();
     }
 }

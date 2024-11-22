@@ -42,7 +42,8 @@ public partial class Book : WeaponBase
             // Loop の i 番目の弾丸の角度を計算する
             var offset = 360f * i / level;
 
-            prj.AddChild(new Orbit { Target = OwnedEntity, Radius = _radius, OffsetDeg = offset, Speed = speed });
+            prj.AddChild(
+                new Orbit { Target = (Node2D)OwnedEntity, Radius = _radius, OffsetDeg = offset, Speed = speed });
 
             AddProjectile(prj, GlobalPosition);
         }

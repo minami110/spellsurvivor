@@ -109,7 +109,7 @@ public partial class WeaponBase : Node2D
     /// <summary>
     /// この武器を所有している Entity
     /// </summary>
-    public Node2D OwnedEntity { get; private set; } = null!;
+    public IEntity OwnedEntity { get; private set; } = null!;
 
     /// <summary>
     /// Effect の解決後の Cooldown のフレーム数
@@ -154,8 +154,8 @@ public partial class WeaponBase : Node2D
                 AddChild(frameTimer);
             }
 
-            // 親が Node2D であることを確認してキャッシュしておく
-            var parent = GetParentOrNull<Node2D>();
+            // 親が IEntity であることを確認しこの武器の所有者として設定する
+            var parent = GetParentOrNull<IEntity>();
             OwnedEntity = parent ?? throw new ApplicationException("WeaponBase は IEntity の子ノードでなければなりません");
 
             // ToDo: 仮

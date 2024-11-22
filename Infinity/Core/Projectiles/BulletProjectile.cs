@@ -58,8 +58,7 @@ public partial class BulletProjectile : BaseProjectile
                 return;
             }
 
-            // ToDo: IEntity に雑にキャスト
-            entity.ApplayDamage(Damage, (IEntity)Weapon.OwnedEntity, Weapon);
+            entity.ApplayDamage(Damage, Weapon.OwnedEntity, Weapon);
             SendHitInfo(body);
 
             // ToDo: Knockback 処理, 型があいまい

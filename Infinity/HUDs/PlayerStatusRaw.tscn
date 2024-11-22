@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtn1ftiauj8m6"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/PlayerStatusRaw.cs" id="1_xt4lj"]
+
+[node name="PlayerStatusRaw" type="HBoxContainer"]
+script = ExtResource("1_xt4lj")
+
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+
+[node name="Value" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "  "

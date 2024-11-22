@@ -87,8 +87,8 @@ public partial class PlayerController : Node
 
     private bool TryPossesFromPlayerTag()
     {
-        // Pawn が指定されていない場合, ツリー内に存在する "Player" グループに所属する最初のノードを取得する
-        var node = GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayer);
+        // Pawn が指定されていない場合, ツリー内に存在する "Pawn" グループに所属する最初のノードを取得する
+        var node = GetTree().GetFirstNodeInGroup(GroupNames.Pawn);
         return node is IPawn pawn && Possess(pawn);
     }
 
