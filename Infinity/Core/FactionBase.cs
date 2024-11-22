@@ -82,7 +82,12 @@ public partial class FactionBase : Node
         _publishedEffects.Add(effect);
 
         // PlayerState に Effect を追加
-        var ps = GetParent().GetNode<PlayerState>("PlayerState");
+        var ps = GetParent().FindFirstChild<PlayerState>();
+        if (ps is null)
+        {
+            throw new ApplicationException("Failed to find PlayerState");
+        }
+
         ps.AddEffect(effect);
     }
 
