@@ -30,11 +30,11 @@ public sealed partial class InGameHUD : CanvasLayer
 
     public override void _Ready()
     {
-        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
+        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
 
         // Subscribe player health
-        var d1 = playerState.Health.Subscribe(OnHealthChanged);
-        var d2 = playerState.MaxHealth.Subscribe(OnHealthChanged);
+        var d1 = playerState.Health.ChangedCurrentValue.Subscribe(OnHealthChanged);
+        var d2 = playerState.Health.ChangedMaxValue.Subscribe(OnHealthChanged);
 
         // Subscribe wave info
         var ws = Main.WaveState;
@@ -95,16 +95,16 @@ public sealed partial class InGameHUD : CanvasLayer
         Show();
     }
 
-    private void OnHealthChanged(float _)
+    private void OnHealthChanged(uint _)
     {
-        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(Constant.GroupNamePlayerState);
+        var playerState = (PlayerState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
 
         // Update health bar
         _healthBar.MinValue = 0f;
-        _healthBar.MaxValue = playerState.MaxHealth.CurrentValue;
+        _healthBar.MaxValue = playerState.Health.MaxValue;
         _healthBar.Value = playerState.Health.CurrentValue;
 
         // Update health text
-        _healthText.Text = $"{playerState.Health.CurrentValue} / {playerState.MaxHealth.CurrentValue}";
+        _healthText.Text = $"{playerState.Health.CurrentValue} / {playerState.Health.MaxValue}";
     }
 }

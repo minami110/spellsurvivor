@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://3cf1cbaj3tc7"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/PlayerStatusHudManager.cs" id="1_0jnv0"]
+[ext_resource type="PackedScene" uid="uid://dtn1ftiauj8m6" path="res://Infinity/HUDs/PlayerStatusRaw.tscn" id="2_4p6m6"]
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="2_f2iiu"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pbqkq"]
+font_size = 26
+
+[node name="PlayerStatusHud" type="VBoxContainer"]
+offset_right = 121.0
+offset_bottom = 90.0
+
+[node name="Manager" type="Node" parent="." node_paths=PackedStringArray("_money", "_maxHealth", "_moveSpeed", "_dodgeRate")]
+script = ExtResource("1_0jnv0")
+_money = NodePath("../Money")
+_maxHealth = NodePath("../MaxHealth")
+_moveSpeed = NodePath("../MoveSpeed")
+_dodgeRate = NodePath("../Dodge")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "stats"
+label_settings = SubResource("LabelSettings_pbqkq")
+horizontal_alignment = 1
+
+[node name="Money" parent="." instance=ExtResource("2_4p6m6")]
+layout_mode = 2
+Icon = ExtResource("2_f2iiu")
+Label = "Money"
+DefaultValue = "0"
+Prefix = "$"
+NonDefaultFontColor = Color(1, 1, 1, 1)
+
+[node name="MaxHealth" parent="." instance=ExtResource("2_4p6m6")]
+layout_mode = 2
+Icon = ExtResource("2_f2iiu")
+Label = "MaxHealth"
+DefaultValue = "100"
+
+[node name="MoveSpeed" parent="." instance=ExtResource("2_4p6m6")]
+layout_mode = 2
+Icon = ExtResource("2_f2iiu")
+Label = "Speed"
+DefaultValue = "100"
+
+[node name="Dodge" parent="." instance=ExtResource("2_4p6m6")]
+layout_mode = 2
+Icon = ExtResource("2_f2iiu")
+Label = "Dodge"
+DefaultValue = "0"
+Suffix = "%"
