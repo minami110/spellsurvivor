@@ -69,7 +69,7 @@ public sealed class EntityHealth : ReadOnlyEntityHealth, IDisposable
     public void SetCurrentValue(uint value)
     {
         var newValue = Math.Clamp(value, 0u, MaxValue);
-        if (newValue != value)
+        if (newValue != _currentValue)
         {
             _currentValue = newValue;
             _changedCurrentValue.OnNext(newValue);
@@ -81,7 +81,7 @@ public sealed class EntityHealth : ReadOnlyEntityHealth, IDisposable
     {
         if (value != _maxValue)
         {
-            if (value < CurrentValue)
+            if (value < _currentValue)
             {
                 throw new NotImplementedException("MaxValue cannot be less than CurrentValue");
             }
