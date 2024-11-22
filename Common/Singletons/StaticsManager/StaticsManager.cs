@@ -106,7 +106,7 @@ public partial class StaticsManager : CanvasLayer
         var victim = report.Victim;
 
         // プレイヤーがダメージを受けた場合 
-        if (victim.IsInGroup(Constant.GroupNamePlayer))
+        if (victim.IsInGroup(GroupNames.Player))
         {
             _instance.PopUpDamageHud(DamageTakeOwner.Player, report.Amount, report.Position, report.IsDead);
         }

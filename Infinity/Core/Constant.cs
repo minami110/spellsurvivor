@@ -21,13 +21,18 @@ public static class Constant
 
     public const uint FACTION_MAX_LEVEL = PLAYER_INVENTORY_MAX_SLOT;
 
-
-    public static readonly StringName GroupNamePlayer = new("Player");
-    public static readonly StringName GroupNamePlayerState = new("PlayerState");
+    // ToDo: GroupNames に移動する
     public static readonly StringName GroupNameMinion = new("Minion");
     public static readonly StringName GroupNameFaction = new("Faction");
     public static readonly StringName GroupNameWeapon = new("Weapon");
     public static readonly StringName GroupNameProjectile = new("Projectile");
     public static readonly StringName GroupNamePickableItem = new("PickableItem");
     public static readonly StringName GroupNameEnemy = new("Enemy");
+}
+
+public static class GroupNames
+{
+    public static readonly StringName Player = new("Player");
+    public static readonly StringName PlayerState = new("PlayerState");
+    public static readonly StringName Pawn = new("Pawn");
 }
