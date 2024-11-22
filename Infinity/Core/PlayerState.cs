@@ -11,16 +11,15 @@ namespace fms;
 /// </summary>
 public partial class PlayerState : Node
 {
-    private readonly ReactiveProperty<float> _dodgeRate = new();
+    private readonly EntityAttribute<float> _dodgeRate;
     private readonly HashSet<EffectBase> _effects = new();
-    private readonly ReactiveProperty<float> _health = new();
-    private readonly ReactiveProperty<float> _maxHealth = new();
+    private readonly EntityHealth _health;
     private readonly ReactiveProperty<uint> _money = new();
-    private readonly ReactiveProperty<float> _moveSpeed = new();
-
-    private bool _isDirty;
+    private readonly EntityAttribute<float> _moveSpeed;
 
     // ===== Begin Stats =====
+
+    private bool _isDirty;
 
     /// <summary>
     /// 現在の所持金
@@ -30,35 +29,44 @@ public partial class PlayerState : Node
     /// <summary>
     /// 現在の移動速度
     /// </summary>
-    public ReadOnlyReactiveProperty<float> MoveSpeed => _moveSpeed;
-
-    /// <summary>
-    /// 現在の体力
-    /// </summary>
-    public ReadOnlyReactiveProperty<float> Health => _health;
-
-    /// <summary>
-    /// 最大体力
-    /// </summary>
-    public ReadOnlyReactiveProperty<float> MaxHealth => _maxHealth;
+    public ReadOnlyEntityAttribute<float> MoveSpeed => _moveSpeed;
 
     /// <summary>
     /// 回避率 (0.0 ~ 1.0), 1 を超えた値は 1 に丸められる
     /// </summary>
-    public ReadOnlyReactiveProperty<float> DodgeRate => _dodgeRate;
+    public ReadOnlyEntityAttribute<float> DodgeRate => _dodgeRate;
 
+    /// <summary>
+    /// 現在の体力, 最大体力
+    /// </summary>
+    public ReadOnlyEntityHealth Health => _health;
+
+    // Parameterless constructor for Godot
+    private PlayerState()
+    {
+        _health = new EntityHealth(0u, 0u);
+        _moveSpeed = new EntityAttribute<float>(0f);
+        _dodgeRate = new EntityAttribute<float>(0f);
+    }
+
+    public PlayerState(uint baseMoveSpeed, uint baseMaxHealth)
+    {
+        _health = new EntityHealth(baseMaxHealth, baseMaxHealth);
+        _moveSpeed = new EntityAttribute<float>(baseMoveSpeed);
+        _dodgeRate = new EntityAttribute<float>(0f);
+    }
 
     public override void _Notification(int what)
     {
         if (what == NotificationEnterTree)
         {
-            AddToGroup(Constant.GroupNamePlayerState);
+            AddToGroup(GroupNames.PlayerState);
 
             // Note: Process を override していないのでここで手動で有効化する
             SetProcess(true);
 
-            // Disposable 関連
-            var d = Disposable.Combine(_money, _moveSpeed, _health, _maxHealth, _dodgeRate);
+            // Reactive Properties の Dispose をまとめる
+            var d = Disposable.Combine(_money, _moveSpeed, _health, _dodgeRate);
             d.AddTo(this);
         }
         else if (what == NotificationProcess)
@@ -73,13 +81,41 @@ public partial class PlayerState : Node
         _isDirty = true;
     }
 
-    public void Reset()
+    public void AddMoney(uint amount)
     {
-        _health.Value = 0f;
-        _maxHealth.Value = 0f;
-        _money.Value = 0;
-        _moveSpeed.Value = 0f;
-        _effects.Clear();
+        _money.Value += amount;
+    }
+
+    public void ApplyDamage(uint amount)
+    {
+        if (_health.CurrentValue < amount)
+        {
+            _health.SetCurrentValue(0u);
+        }
+        else
+        {
+            _health.SetCurrentValue(_health.CurrentValue - amount);
+        }
+    }
+
+    public void Heal(uint amount)
+    {
+        _health.SetCurrentValue(_health.CurrentValue + amount);
+    }
+
+    public void ReduceMoney(uint amount)
+    {
+        if (_money.Value < amount)
+        {
+            throw new NotImplementedException("所持金が足りません");
+        }
+
+        _money.Value -= amount;
+    }
+
+    public void ResetToMaxHealth()
+    {
+        _health.ResetToMaxValue();
     }
 
     private void SolveEffect()
@@ -104,11 +140,8 @@ public partial class PlayerState : Node
         _isDirty = false;
 
         // スタートとなるパラメーターを用意
-        var maxHealth = 0f;
-        var health = 0f;
-        var damage = 0f;
-        var money = 0;
-        var moveSpeed = 0f;
+        var maxHealth = _health.DefaultMaxValue;
+        var moveSpeed = _moveSpeed.CurrentValue;
         var dodgeRate = 0f;
 
         // IsSolved が false のエフェクトを解決する
@@ -116,34 +149,14 @@ public partial class PlayerState : Node
         {
             switch (effect)
             {
-                case MoneyEffect moneyEffect:
-                {
-                    money += moneyEffect.Value;
-                    break;
-                }
                 case Wing wing:
                 {
                     moveSpeed += wing.Amount;
                     break;
                 }
-                case AddHealthEffect addHealthEffect:
+                case Heart heart:
                 {
-                    health += addHealthEffect.Value;
-                    break;
-                }
-                case AddMaxHealthEffect addMaxHealthEffect:
-                {
-                    maxHealth += addMaxHealthEffect.Value;
-                    break;
-                }
-                case PhysicalDamageEffect physicalDamageEffect:
-                {
-                    damage += physicalDamageEffect.Value;
-                    break;
-                }
-                case HealEffect healEffect:
-                {
-                    health += healEffect.Value;
+                    maxHealth += heart.Amount;
                     break;
                 }
                 case Dodge dodgeEffect:
@@ -154,17 +167,9 @@ public partial class PlayerState : Node
             }
         }
 
-        // ダメージの計算
-        health -= damage;
-
-        // 最大体力と体力の計算
-        health = Mathf.Min(health, maxHealth);
-
         // 最終的な値を計算する
-        _maxHealth.Value = maxHealth;
-        _health.Value = health;
-        _money.Value = (uint)Math.Max(0, money);
-        _moveSpeed.Value = moveSpeed;
-        _dodgeRate.Value = Mathf.Clamp(dodgeRate, 0f, 1f);
+        _health.SetMaxValue(maxHealth);
+        _moveSpeed.SetCurrentValue(moveSpeed);
+        _dodgeRate.SetCurrentValue(Mathf.Clamp(dodgeRate, 0f, 1f));
     }
 }
