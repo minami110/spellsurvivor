@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://dndrw60tkxjwx"]
+[gd_scene load_steps=37 format=3 uid="uid://dndrw60tkxjwx"]
 
 [ext_resource type="Texture2D" uid="uid://d0b6eo4xkswld" path="res://Infinity/HUDs/BG/prop/bucket.png" id="4_i6nut"]
 [ext_resource type="Texture2D" uid="uid://5wxxe8amn5t0" path="res://Infinity/HUDs/BG/prop/generator.png" id="4_qfl6a"]
@@ -24,6 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://c4dpueuu5subx" path="res://Infinity/HUDs/BG/tabletframe.png" id="15_a2f1p"]
 [ext_resource type="Texture2D" uid="uid://boliw1ltfe0l" path="res://Infinity/HUDs/BG/hudwindow.png" id="16_cpprl"]
 [ext_resource type="Texture2D" uid="uid://nol2ro1sggyi" path="res://Infinity/HUDs/BG/tabletparts.png" id="17_bxnp8"]
+[ext_resource type="Texture2D" uid="uid://j12hc7k13e7q" path="res://Infinity/Player/fumomaster/fsvSprite.png" id="20_22unv"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_rtxtm"]
 diffuse_texture = ExtResource("5_2inhk")
@@ -232,6 +233,12 @@ position = Vector2(791, 797)
 scale = Vector2(0.227, 0.227)
 texture = ExtResource("17_bxnp8")
 
+[node name="Sprite2D_4" type="Sprite2D" parent="CRT (3)"]
+modulate = Color(0.942691, 0.961067, 0.956077, 1)
+position = Vector2(1308, 829)
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("20_22unv")
+
 [node name="InGameHUD (3)" parent="." instance=ExtResource("6_fbv8a")]
 layer = 3
 
@@ -243,6 +250,7 @@ layer = 4
 
 [node name="Tooltip Toast (8)" type="CanvasLayer" parent="."]
 layer = 8
+visible = false
 
 [node name="TooltipToast" parent="Tooltip Toast (8)" instance=ExtResource("9_n1574")]
 

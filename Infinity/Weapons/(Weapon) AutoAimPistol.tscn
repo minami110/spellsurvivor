@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cmr1iekscwraj"]
+[gd_scene load_steps=7 format=3 uid="uid://cmr1iekscwraj"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/AutoAimPistol.cs" id="1_p2onu"]
 [ext_resource type="PackedScene" uid="uid://bh75eb2lfndkv" path="res://Infinity/Projectiles/(Projectile) EnergyOrb.tscn" id="2_ctqn5"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="3_t4nq4"]
 [ext_resource type="Texture2D" uid="uid://cf8sqsunyrjpl" path="res://Common/Resources/Textures/Emoji/gun.png" id="4_m5utu"]
+[ext_resource type="Texture2D" uid="uid://dwmiasfejahx" path="res://Common/Resources/Noise/flashlight_trail.png" id="5_skwwb"]
+[ext_resource type="Texture2D" uid="uid://dfml0xprgkyv0" path="res://Common/Resources/Noise/laser_trail.png" id="6_tqv18"]
 
 [node name="AutoAimPistol" type="Node2D"]
 script = ExtResource("1_p2onu")
@@ -23,3 +25,21 @@ texture_filter = 1
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("4_m5utu")
 flip_h = true
+
+[node name="PointLight2D" type="PointLight2D" parent="AimToNearEnemy/Sprite"]
+position = Vector2(822.5, 21.19)
+scale = Vector2(4.4496, 1.46152)
+energy = 0.73
+range_layer_min = -5
+shadow_enabled = true
+texture = ExtResource("5_skwwb")
+texture_scale = 1.33
+
+[node name="PointLight2D_2" type="PointLight2D" parent="AimToNearEnemy/Sprite"]
+position = Vector2(2000, -10)
+scale = Vector2(11.4161, 0.709643)
+color = Color(0.437941, 0.882968, 0.46112, 1)
+energy = 6.14
+range_layer_min = -5
+texture = ExtResource("6_tqv18")
+texture_scale = 1.33

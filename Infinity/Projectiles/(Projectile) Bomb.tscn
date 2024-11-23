@@ -1,13 +1,36 @@
-[gd_scene load_steps=5 format=3 uid="uid://c03ya53oowgc4"]
+[gd_scene load_steps=10 format=3 uid="uid://c03ya53oowgc4"]
 
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/BulletProjectile.cs" id="1_1pitn"]
 [ext_resource type="Texture2D" uid="uid://cos3d4b1k4o1q" path="res://Common/Resources/Textures/Emoji/bomb.png" id="1_fwdk2"]
+[ext_resource type="Texture2D" uid="uid://67vc2iwr5o7t" path="res://Common/Resources/Noise/Noisepixel.png" id="3_ykc8q"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
 
+[sub_resource type="Gradient" id="Gradient_junoa"]
+offsets = PackedFloat32Array(0, 0.32538, 1)
+colors = PackedColorArray(1, 0.553333, 0.33, 1, 0.63, 0.483, 0.4095, 1, 0.31, 0.20925, 0.155, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_i4oob"]
+gradient = SubResource("Gradient_junoa")
+
+[sub_resource type="Curve" id="Curve_ps3x3"]
+_data = [Vector2(0, 0.361813), 0.0, 0.0, 0, 0, Vector2(0.558882, 0.413972), 0.0, 0.0, 0, 0, Vector2(0.974052, 0.52136), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_rwvo0"]
+curve = SubResource("Curve_ps3x3")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jnvr1"]
 particle_flag_disable_z = true
-gravity = Vector3(0, 98, 0)
+angle_min = -276.2
+angle_max = 117.5
+spread = 50.294
+initial_velocity_min = 8.72
+initial_velocity_max = 45.31
+gravity = Vector3(0, 0, 0)
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_rwvo0")
+color_ramp = SubResource("GradientTexture1D_i4oob")
 
 [node name="Bomb" type="Area2D"]
 collision_layer = 0
@@ -36,4 +59,7 @@ shape = SubResource("CircleShape2D_jrj0e")
 debug_color = Color(1, 0, 0, 0)
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+amount = 2
 process_material = SubResource("ParticleProcessMaterial_jnvr1")
+texture = ExtResource("3_ykc8q")
+lifetime = 0.2

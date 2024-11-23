@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://cntnfk7uhqmi2"]
 
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/BulletProjectile.cs" id="1_50one"]
-[ext_resource type="Texture2D" uid="uid://b5pb2hrc4yrh6" path="res://Common/Resources/Textures/Noita/Spell_light_bullet.png" id="2_h6tpy"]
+[ext_resource type="Texture2D" uid="uid://cbk3as24oq1y8" path="res://Common/Resources/Noise/magic_bullet.png" id="2_abul8"]
 [ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="3_3h0m2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8lutl"]
@@ -22,7 +22,7 @@ point_count = 3
 curve = SubResource("Curve_cil4y")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s04f0"]
-lifetime_randomness = 0.2
+lifetime_randomness = 0.49
 particle_flag_disable_z = true
 angle_min = -628.9
 angle_max = 117.0
@@ -33,7 +33,8 @@ initial_velocity_max = 253.06
 gravity = Vector3(0, 0, 0)
 radial_accel_min = -27.55
 radial_accel_max = -27.55
-scale_max = 2.0
+scale_min = 0.0
+scale_max = 1.3
 scale_curve = SubResource("CurveTexture_54qvn")
 color_ramp = SubResource("GradientTexture1D_bbh82")
 
@@ -62,7 +63,7 @@ script = ExtResource("1_50one")
 metadata/_edit_group_ = true
 
 [node name="Sprite" type="TextureRect" parent="."]
-self_modulate = Color(0.718989, 0, 0.255318, 1)
+self_modulate = Color(0.740938, 0.749247, 0.930695, 1)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -75,7 +76,7 @@ offset_bottom = 15.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(15, 15)
-texture = ExtResource("2_h6tpy")
+texture = ExtResource("2_abul8")
 expand_mode = 1
 
 [node name="DamageCollision" type="CollisionShape2D" parent="."]
