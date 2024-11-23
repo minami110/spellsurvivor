@@ -8,7 +8,7 @@ resource_local_to_scene = true
 shader = ExtResource("2_jktux")
 shader_parameter/hit = 0.0
 shader_parameter/offset = Vector2(30, 30)
-shader_parameter/modulate = Color(0, 0, 1, 1)
+shader_parameter/modulate = Color(0, 0, 0, 0.513726)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qqwno"]
 resource_local_to_scene = true

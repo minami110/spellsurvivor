@@ -1,7 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://cyy8ynm6ig6cq"]
+[gd_scene load_steps=23 format=3 uid="uid://cyy8ynm6ig6cq"]
 
 [ext_resource type="Script" path="res://Infinity/Player/BasePlayerPawn.cs" id="1_vdmmf"]
 [ext_resource type="Script" path="res://Infinity/Core/PlayerState.cs" id="2_2yr66"]
+[ext_resource type="Texture2D" uid="uid://blgbgt6cnbdwf" path="res://Common/Resources/Noise/dust.png" id="2_6giq5"]
 [ext_resource type="Script" path="res://Infinity/Player/CameraController.cs" id="2_xvrt4"]
 [ext_resource type="Script" path="res://Infinity/Player/HiHi/HiHiAnimator.cs" id="3_tw7gc"]
 [ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="4_xlwt1"]
@@ -14,8 +15,31 @@
 [ext_resource type="Texture2D" uid="uid://qao6il7sl0c" path="res://Infinity/Player/HiHi/arm.png" id="9_3tai8"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="12_pnyqx"]
 
+[sub_resource type="Gradient" id="Gradient_djook"]
+colors = PackedColorArray(1, 1, 1, 0.345098, 0, 0, 0, 0.670588)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mi450"]
+gradient = SubResource("Gradient_djook")
+
+[sub_resource type="Curve" id="Curve_mn2s4"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.542914, 0.834317), -0.825518, -0.825518, 0, 0, Vector2(0.852295, 0.613406), 0.0, 0.0, 0, 0, Vector2(1, 0.38329), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_ra6et"]
+curve = SubResource("Curve_mn2s4")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jhx5f"]
+particle_flag_disable_z = true
+angle_min = -720.0
+angle_max = 684.5
+gravity = Vector3(0, 0, 0)
+scale_min = 1.5
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_ra6et")
+color_ramp = SubResource("GradientTexture1D_mi450")
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_5leg6"]
-radius = 223.0
+radius = 320.306
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k2kdc"]
 shader = ExtResource("5_2qhgr")
@@ -29,6 +53,13 @@ radius = 20.0
 collision_mask = 16
 script = ExtResource("1_vdmmf")
 _moveSpeed = 175.0
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+position = Vector2(2, -2)
+amount = 15
+process_material = SubResource("ParticleProcessMaterial_jhx5f")
+texture = ExtResource("2_6giq5")
+lifetime = 2.0
 
 [node name="MainCamera" type="Camera2D" parent="."]
 unique_name_in_owner = true
