@@ -65,11 +65,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
     public bool Knockbacking => _knockbackTimer > 0u;
 
     /// <summary>
-    /// 現在死亡しているかどうか
-    /// </summary>
-    public bool IsDead { get; private set; }
-
-    /// <summary>
     /// Enemy が現在目指している方向 (Animator などから参照される)
     /// </summary>
     public Vector2 TargetVelocity { get; private protected set; }
@@ -315,6 +310,11 @@ public partial class EnemyBase : RigidBody2D, IEntity
         sm.SetShaderParameter("hit", value);
     }
 
+    /// <summary>
+    /// 現在死亡しているかどうか
+    /// </summary>
+    public bool IsDead { get; private set; }
+
     void IEntity.AddEffect(string effectName)
     {
         throw new NotImplementedException();
@@ -334,4 +334,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
         State.SolveEffect();
         OnTakeDamage(amount, instigator, causer);
     }
+
+
+    Vector2 IEntity.Position => GlobalPosition;
 }

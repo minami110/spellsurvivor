@@ -1,4 +1,5 @@
-﻿using fms.Projectile;
+﻿using System;
+using fms.Projectile;
 using Godot;
 using R3;
 
@@ -10,18 +11,6 @@ namespace fms.Weapon;
 public partial class Hocho : WeaponBase
 {
     /// <summary>
-    /// 攻撃を実行する際の敵の検索範囲
-    /// </summary>
-    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
-    private float _maxRange = 100f;
-
-    /// <summary>
-    /// 敵を狙う速度の感度 (0 ~ 1), 1 で最速, 0 で全然狙えない
-    /// </summary>
-    [Export(PropertyHint.Range, "0.01,1.0,0.01")]
-    private float _rotateSensitivity = 0.3f;
-
-    /// <summary>
     /// 突き刺し回数
     /// </summary>
     [Export(PropertyHint.Range, "1,10")]
@@ -30,6 +19,23 @@ public partial class Hocho : WeaponBase
         get;
         set => field = Mathf.Clamp(value, 1, 10);
     } = 1;
+
+    // ==== Aim Settings ====
+
+    [ExportGroup("Aim Settings")]
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private float _minRange;
+
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    private float _maxRange = 100f;
+
+    /// <summary>
+    /// 敵を狙う速度の感度 (0 ~ 1), 1 で最速, 0 で全然狙えない
+    /// </summary>
+    [Export(PropertyHint.Range, "0,1")]
+    private float _rotateSensitivity = 0.3f;
+
+    // ==== Animation Settings ====
 
     // 攻撃前の構えるアニメーションの距離
     [ExportGroup("Animation")]
@@ -48,28 +54,94 @@ public partial class Hocho : WeaponBase
     [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
     private uint _pushDuration = 10;
 
-    private AimToNearEnemy AimToNearEnemy => GetNode<AimToNearEnemy>("AimToNearEnemy");
+    private AimEntity? _aimEntity;
+    private IDisposable? _tweenPlayingDisposable;
+    private IDisposable? _waitEnterEntityDisposable;
+
+    private AimEntity AimEntity
+    {
+        get
+        {
+            if (_aimEntity is not null)
+            {
+                return _aimEntity;
+            }
+
+            // 初回アクセスのキャッシュ
+            var a = this.FindFirstChild<AimEntity>();
+            _aimEntity = a ?? throw new ApplicationException($"Failed to find AimEntity node in {Name}");
+            return _aimEntity;
+        }
+    }
 
     private protected StaticDamage StaticDamage => GetNode<StaticDamage>("%StaticDamage");
 
     public override void _Ready()
     {
-        AimToNearEnemy.SearchRadius = _maxRange;
-        AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
+        AimEntity.Mode = AimEntity.TargetMode.NearestEntity;
+        AimEntity.MinRange = _minRange;
+        AimEntity.MaxRange = _maxRange;
+        AimEntity.RotateSensitivity = _rotateSensitivity;
+    }
+
+    public override void _ExitTree()
+    {
+        _tweenPlayingDisposable?.Dispose();
+        _waitEnterEntityDisposable?.Dispose();
     }
 
     private protected override void OnCoolDownCompleted(uint level)
     {
-        if (AimToNearEnemy.IsAiming)
+        // クールダウン終了時に範囲内に敵がいれば攻撃アニメーションを実行
+        if (AimEntity.IsAiming)
         {
             PlayAttackAnimation();
         }
+        // そうでない場合は敵が入ってくるのを待つ
         else
         {
-            AimToNearEnemy.EnteredAnyEnemy
-                .Take(1)
-                .Subscribe(this, (_, state) => { state.PlayAttackAnimation(); })
-                .AddTo(this);
+            if (_waitEnterEntityDisposable is not null)
+            {
+                throw new InvalidProgramException($"_waitEnterEntityDisposable is already exist in {Name}");
+            }
+
+            // 範囲内に敵が入ってきたら攻撃アニメーションを実行
+            // 確実に当ててほしいので, 5度以内になるまで待機する
+            // 待機中に目標を見失った場合はまた敵の侵入を待機する 
+            // Note: AwaitOperation.Drop により, 待機中に来る通知は無視される
+            _waitEnterEntityDisposable = AimEntity.EnteredAnyEntity
+                .SubscribeAwait(async (_, token) =>
+                {
+                    // 狙いを定めるまで待機する
+                    var failed = false;
+                    while (true)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        if (!AimEntity.IsAiming)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        await this.NextPhysicsFrameAsync();
+                        var diff = Mathf.Abs(AimEntity.AngleDiff);
+                        if (diff < 0.0872665f) // 5°
+                        {
+                            break;
+                        }
+                    }
+
+                    if (!failed)
+                    {
+                        _waitEnterEntityDisposable?.Dispose();
+                        _waitEnterEntityDisposable = null;
+                        PlayAttackAnimation();
+                    }
+                }, AwaitOperation.Drop);
         }
     }
 
@@ -82,8 +154,13 @@ public partial class Hocho : WeaponBase
 
     private void PlayAttackAnimation()
     {
+        if (_tweenPlayingDisposable is not null)
+        {
+            throw new InvalidProgramException($"Tween is already playing in {Name}");
+        }
+
         // A. 包丁のひきはじめ, 通常時よりも感度を下げる
-        AimToNearEnemy.RotateSensitivity = _rotateSensitivity * 0.5f;
+        AimEntity.RotateSensitivity = _rotateSensitivity * 0.5f;
 
         // Sprite に対して Tween で突き刺しアニメーション
         var sprite = GetNode<Node2D>("%SpriteRoot");
@@ -99,7 +176,7 @@ public partial class Hocho : WeaponBase
 
         // B. ナイフを前に突き出すアニメーション, この段階でエイム感度をほぼ 0 にする
         {
-            t.TweenCallback(Callable.From(() => { AimToNearEnemy.RotateSensitivity = 0.001f; }));
+            t.TweenCallback(Callable.From(() => { AimEntity.RotateSensitivity = 0.001f; }));
             for (var i = 0; i < PushCount; i++)
             {
                 RegisterPushAnimation(t, sprite);
@@ -110,15 +187,19 @@ public partial class Hocho : WeaponBase
         t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
 
         // D. Tween の終了後の処理
-        t.FinishedAsObservable()
+        _tweenPlayingDisposable = t.FinishedAsObservable()
             .Take(1)
             .Subscribe(this, (_, state) =>
             {
                 // 通常の感度に戻す
-                state.AimToNearEnemy.RotateSensitivity = _rotateSensitivity;
+                state.AimEntity.RotateSensitivity = _rotateSensitivity;
+                // クールダウンを再開する
                 state.RestartCoolDown();
-            })
-            .AddTo(this);
+
+                // Disposable を開放
+                state._tweenPlayingDisposable?.Dispose();
+                state._tweenPlayingDisposable = null;
+            });
     }
 
     private void RegisterPushAnimation(Tween tween, Node2D sprite)

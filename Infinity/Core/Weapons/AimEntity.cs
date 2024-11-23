@@ -7,23 +7,19 @@ namespace fms;
 
 /// <summary>
 /// 近くの敵を狙う関連の計算を行うノード
-/// Note: Collision がセットアップされていなくても自動で生成されます
 /// </summary>
+[Tool]
 [GlobalClass]
-[Obsolete("Use AimEntity instead")]
-public partial class AimToNearEnemy : Area2D
+public partial class AimEntity : Area2D
 {
     /// <summary>
     /// 対象とするターゲットのタイプ
     /// </summary>
     [Export]
-    private AimTarget Target { get; set; } = AimTarget.Nearest;
+    public TargetMode Mode { get; set; } = TargetMode.NearestEntity;
 
-    /// <summary>
-    /// 敵を検索する範囲 (px)
-    /// </summary>
     [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
-    public float SearchRadius
+    public float MinRange
     {
         get;
         set
@@ -33,7 +29,22 @@ public partial class AimToNearEnemy : Area2D
                 return;
             }
 
-            if (IsNodeReady())
+            field = value;
+        }
+    }
+
+    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    public float MaxRange
+    {
+        get;
+        set
+        {
+            if (Math.Abs(field - value) <= 0.0001f)
+            {
+                return;
+            }
+
+            if (Engine.IsEditorHint() || IsNodeReady())
             {
                 UpdateCollisionRadius(value);
             }
@@ -43,51 +54,58 @@ public partial class AimToNearEnemy : Area2D
     } = 100f;
 
     /// <summary>
-    /// 子の回転を更新するかどうか
-    /// </summary>
-    [Export]
-    private bool UpdateRotation { get; set; } = true;
-
-    /// <summary>
     /// 子の回転が有効な場合の回転感度
     /// </summary>
     [Export(PropertyHint.Range, "0,1")]
     public float RotateSensitivity { get; set; } = 0.3f;
 
-    public enum AimTarget
+    public enum TargetMode
     {
-        Nearest,
-        Farthest
+        NearestEntity,
+        FarthestEntity
     }
 
-    private readonly Subject<Unit> _enteredAnyEnemy = new();
+    private readonly Subject<IEntity> _enteredAnyEntity = new();
 
     /// <summary>
     /// 範囲内に存在する敵のリスト
     /// </summary>
-    public readonly List<EnemyBase> Enemies = new();
+    public readonly List<IEntity> Entities = new();
+
+    private IEntity? _farthestEntity;
+
+    private IEntity? _nearestEntity;
 
     private Vector2? _prevPosition;
-
     private float _restAngle;
-
     private float _targetAngle;
-    public Observable<Unit> EnteredAnyEnemy => _enteredAnyEnemy;
+
+    /// <summary>
+    /// 現在狙っている対象との角度差 (Rad)
+    /// </summary>
+    public float AngleDiff => Mathf.AngleDifference(Rotation, _targetAngle);
+
+    public Observable<IEntity> EnteredAnyEntity => _enteredAnyEntity;
 
     /// <summary>
     /// 現在狙っている(有効な敵が存在する)かどうか
     /// </summary>
-    public bool IsAiming { get; private set; }
+    public bool IsAiming => TargetEntity is not null;
 
     /// <summary>
-    /// 範囲内の最も近い敵, 存在しない場合は null
     /// </summary>
-    public EnemyBase? NearestEnemy { get; private set; }
-
-    /// <summary>
-    /// 範囲内の最も遠い敵, 存在しない場合は null
-    /// </summary>
-    public EnemyBase? FarthestEnemy { get; private set; }
+    public IEntity? TargetEntity
+    {
+        get
+        {
+            return Mode switch
+            {
+                TargetMode.NearestEntity => _nearestEntity,
+                TargetMode.FarthestEntity => _farthestEntity,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+    }
 
     public override void _EnterTree()
     {
@@ -99,14 +117,24 @@ public partial class AimToNearEnemy : Area2D
         CollisionMask = Constant.LAYER_MOB;
 
         // 子の Shape を初期化する
-        UpdateCollisionRadius(SearchRadius);
+        UpdateCollisionRadius(MaxRange);
+
+        if (Engine.IsEditorHint())
+        {
+            return;
+        }
 
         // Disposable 関連
-        _enteredAnyEnemy.AddTo(this);
+        _enteredAnyEntity.AddTo(this);
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        if (Engine.IsEditorHint())
+        {
+            return;
+        }
+
         if (_prevPosition.HasValue)
         {
             var vel = GlobalPosition - _prevPosition.Value;
@@ -117,7 +145,14 @@ public partial class AimToNearEnemy : Area2D
             }
         }
 
-        UpdateNearAndFarEnemy();
+        SearchTarget();
+
+        // 通知をおくる
+        if (TargetEntity is not null)
+        {
+            _enteredAnyEntity.OnNext(TargetEntity);
+        }
+
         AimAtTarget();
         UpdateSpriteFlip();
 
@@ -126,39 +161,63 @@ public partial class AimToNearEnemy : Area2D
 
     private void AimAtTarget()
     {
-        var targetEnemy = Target == AimTarget.Nearest ? NearestEnemy : FarthestEnemy;
-
-        if (targetEnemy is not null)
+        if (TargetEntity is not null)
         {
-            IsAiming = true;
-            if (!UpdateRotation)
-            {
-                return;
-            }
-
-            RotateTowards(targetEnemy.GlobalPosition);
+            UpdateRotationToTargetEntity(TargetEntity.Position);
         }
         else
         {
-            IsAiming = false;
-            if (!UpdateRotation)
-            {
-                return;
-            }
-
-            RotateTowardsRestAngle();
+            UpdateRotationToRest();
         }
     }
 
-    private void RotateTowards(Vector2 targetPosition)
+    private void SearchTarget()
     {
-        var targetAngle = Mathf.Atan2(targetPosition.Y - GlobalPosition.Y, targetPosition.X - GlobalPosition.X);
-        Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotateSensitivity);
-    }
+        var bodies = GetOverlappingBodies();
+        var center = GlobalPosition;
+        var minThreshold = MinRange * MinRange;
 
-    private void RotateTowardsRestAngle()
-    {
-        Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
+        var minLen = float.MaxValue;
+        var maxLen = float.MinValue;
+
+        Entities.Clear();
+        _nearestEntity = null;
+        _farthestEntity = null;
+
+        foreach (var o in bodies)
+        {
+            if (o is not IEntity entity)
+            {
+                continue;
+            }
+
+            if (entity.IsDead)
+            {
+                continue;
+            }
+
+            var distance = center.DistanceSquaredTo(entity.Position);
+
+            // Min Range に満たない場合は無視
+            if (distance < minThreshold)
+            {
+                continue;
+            }
+
+            Entities.Add(entity);
+
+            if (distance < minLen)
+            {
+                minLen = distance;
+                _nearestEntity = entity;
+            }
+
+            if (distance > maxLen)
+            {
+                maxLen = distance;
+                _farthestEntity = entity;
+            }
+        }
     }
 
     private void UpdateCollisionRadius(float radius)
@@ -191,50 +250,25 @@ public partial class AimToNearEnemy : Area2D
         }
     }
 
-    private void UpdateNearAndFarEnemy()
+    private void UpdateRotationToRest()
     {
-        NearestEnemy = null;
-        FarthestEnemy = null;
-        Enemies.Clear();
-
-        var bodies = GetOverlappingBodies();
-        var centerPosition = GlobalPosition;
-
-        var minLen = float.MaxValue;
-        var maxLen = float.MinValue;
-
-        foreach (var o in bodies)
+        if (RotateSensitivity <= 0f)
         {
-            if (o is not EnemyBase e)
-            {
-                continue;
-            }
-
-            if (e.IsDead)
-            {
-                continue;
-            }
-
-            Enemies.Add(e);
-
-            var distance = centerPosition.DistanceSquaredTo(e.GlobalPosition);
-            if (distance < minLen)
-            {
-                minLen = distance;
-                NearestEnemy = e;
-            }
-
-            if (distance > maxLen)
-            {
-                maxLen = distance;
-                FarthestEnemy = e;
-            }
+            return;
         }
 
-        if (NearestEnemy is not null || FarthestEnemy is not null)
+        Rotation = Mathf.LerpAngle(Rotation, _restAngle, RotateSensitivity);
+    }
+
+    private void UpdateRotationToTargetEntity(Vector2 targetPosition)
+    {
+        if (RotateSensitivity <= 0f)
         {
-            _enteredAnyEnemy.OnNext(Unit.Default);
+            return;
         }
+
+        _targetAngle = Mathf.Atan2(targetPosition.Y - GlobalPosition.Y, targetPosition.X - GlobalPosition.X);
+        Rotation = Mathf.LerpAngle(Rotation, _targetAngle, RotateSensitivity);
     }
 
     private void UpdateSpriteFlip()

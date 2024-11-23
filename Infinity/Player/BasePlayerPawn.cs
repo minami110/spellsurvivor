@@ -148,4 +148,8 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
         };
         StaticsManager.CommitDamage(info);
     }
+
+    bool IEntity.IsDead => throw new NotImplementedException();
+
+    Vector2 IEntity.Position => GlobalPosition;
 }

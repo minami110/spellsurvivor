@@ -5,6 +5,16 @@ namespace fms;
 public interface IEntity
 {
     /// <summary>
+    /// Indicates whether the entity is dead.
+    /// </summary>
+    bool IsDead { get; }
+
+    /// <summary>
+    /// Gets the current golobal position of this entity
+    /// </summary>
+    Vector2 Position { get; }
+
+    /// <summary>
     /// エフェクトを追加
     /// </summary>
     void AddEffect(string effectName);
