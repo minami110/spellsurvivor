@@ -3,11 +3,11 @@ using Godot;
 namespace fms.Weapon;
 
 /// <summary>
-/// Editor 専用の Drawer
+/// <see cref="PiercingWeapon" />> の Editor での Drawer
 /// </summary>
 [Tool]
 [GlobalClass]
-public partial class HochoEditorDrawer : Node2D
+public partial class PiercingWeaponEditorDrawer : Node2D
 {
     private GodotObject? _hocho;
 
