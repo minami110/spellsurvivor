@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cogfcwp2vrio"]
 
-[ext_resource type="Script" path="res://Infinity/Weapons/Hocho.cs" id="1_bb5sa"]
+[ext_resource type="Script" path="res://Infinity/Weapons/PiercingWeapon.cs" id="1_bb5sa"]
 [ext_resource type="Script" path="res://Infinity/Weapons/EditorDrawer/HochoEditorDrawer.cs" id="2_u4hc5"]
 [ext_resource type="Texture2D" uid="uid://ck28tr5m24hp0" path="res://Infinity/Weapons/Textures/wood_spear.png" id="3_i6cbw"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_86pk3"]

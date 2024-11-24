@@ -6,9 +6,9 @@ using R3;
 namespace fms.Weapon;
 
 /// <summary>
-/// ダガータイプの突き刺しアニメーションを持つ近接武器
+/// 包丁のような突き刺しアニメーションを持つ近接武器のベースクラス
 /// </summary>
-public partial class Hocho : WeaponBase
+public partial class PiercingWeapon : WeaponBase
 {
     /// <summary>
     /// 突き刺し回数

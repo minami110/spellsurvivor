@@ -45,8 +45,8 @@ public partial class HochoEditorDrawer : Node2D
             return;
         }
 
-        var minRange = (float)_hocho.Get(Hocho.PropertyName._minRange);
-        var maxRange = (float)_hocho.Get(Hocho.PropertyName._maxRange);
+        var minRange = (float)_hocho.Get(PiercingWeapon.PropertyName._minRange);
+        var maxRange = (float)_hocho.Get(PiercingWeapon.PropertyName._maxRange);
 
         var minRangeColor = new Color(1, 0, 0, 0.5f);
         var maxRangeColor = new Color(0, 1, 0, 0.5f);
@@ -72,8 +72,8 @@ public partial class HochoEditorDrawer : Node2D
         var size = ((RectangleShape2D)cs.Shape).Size;
 
         // 矩形の描写
-        var preAttackDistance = (uint)_hocho.Get(Hocho.PropertyName._preAttackDistance);
-        var pushDistance = (uint)_hocho.Get(Hocho.PropertyName._pushDistance);
+        var preAttackDistance = (uint)_hocho.Get(PiercingWeapon.PropertyName._preAttackDistance);
+        var pushDistance = (uint)_hocho.Get(PiercingWeapon.PropertyName._pushDistance);
         ;
 
         // Push 時の当たり判定の描写
