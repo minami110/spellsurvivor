@@ -16,7 +16,7 @@ _maxRange = 85.0
 BaseDamage = 20.0
 BaseCoolDownFrame = 50
 
-[node name="HochoEditorDrawer" type="Node2D" parent="."]
+[node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]
 script = ExtResource("2_k1plt")
 
 [node name="AimEntity" type="Area2D" parent="."]

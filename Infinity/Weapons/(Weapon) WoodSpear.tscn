@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="5_us2io"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5kth8"]
-size = Vector2(39, 12)
+size = Vector2(30, 12)
 
 [node name="WoodSpear" type="Node2D"]
 script = ExtResource("1_bb5sa")
@@ -17,7 +17,7 @@ _rotateSensitivity = 0.1
 _pushDistance = 45
 BaseCoolDownFrame = 50
 
-[node name="HochoEditorDrawer" type="Node2D" parent="."]
+[node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]
 script = ExtResource("2_u4hc5")
 
 [node name="AimEntity" type="Area2D" parent="."]
@@ -40,6 +40,6 @@ monitorable = false
 script = ExtResource("4_86pk3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AimEntity/SpriteRoot/StaticDamage"]
-position = Vector2(91.5, 2)
+position = Vector2(87, 2)
 shape = SubResource("RectangleShape2D_5kth8")
 debug_color = Color(0, 0.6, 0.701961, 0)
