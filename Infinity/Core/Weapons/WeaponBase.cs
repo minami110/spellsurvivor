@@ -37,7 +37,7 @@ public partial class WeaponBase : Node2D
             field = value;
 
             // 実行中の EnterTree 後のみ実行する
-            if (!Engine.IsEditorHint() && IsNodeReady())
+            if (IsNodeReady())
             {
                 // Update Frame Timer
                 FrameTimer.WaitFrame = SolvedCoolDownFrame;
@@ -50,6 +50,12 @@ public partial class WeaponBase : Node2D
     /// </summary>
     [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
     public uint Knockback { get; set; } = 20u;
+
+    /// <summary>
+    /// クールダウン, アニメーションどちらにも作用する速度倍率
+    /// </summary>
+    [Export(PropertyHint.Range, "0,2,,or_greater")]
+    public float SpeedRate { get; set; } = 1f;
 
     // ---------- Animation Parameters ----------
 
