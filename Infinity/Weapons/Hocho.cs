@@ -23,10 +23,10 @@ public partial class Hocho : WeaponBase
     // ==== Aim Settings ====
 
     [ExportGroup("Aim Settings")]
-    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    [Export(PropertyHint.Range, "0,100,,or_greater,suffix:px")]
     private float _minRange;
 
-    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
+    [Export(PropertyHint.Range, "0,200,,or_greater,suffix:px")]
     private float _maxRange = 100f;
 
     /// <summary>
@@ -39,8 +39,8 @@ public partial class Hocho : WeaponBase
 
     // 攻撃前の構えるアニメーションの距離
     [ExportGroup("Animation")]
-    [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
-    private uint _preAttackDistance = 10;
+    [Export(PropertyHint.Range, "0,100,,or_greater,suffix:px")]
+    private uint _preAttackDistance = 10u;
 
     // 攻撃前の構えるアニメーションのフレーム数
     [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
@@ -48,7 +48,7 @@ public partial class Hocho : WeaponBase
 
     // 突き刺しアニメーションの距離
     [Export(PropertyHint.Range, "0,9999,1,suffix:px")]
-    private uint _pushDistance = 40;
+    private uint _pushDistance = 40u;
 
     // 突き刺しアニメーションのフレーム数
     [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
