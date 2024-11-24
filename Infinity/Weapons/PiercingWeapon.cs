@@ -46,11 +46,19 @@ public partial class PiercingWeapon : WeaponBase
     // 攻撃前の構えるアニメーションのフレーム数
     [ExportGroup("Animation")]
     [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
-    private uint _preAttackDuration = 4;
+    private uint _beginAttackDuration = 5u;
 
     // 突き刺しアニメーションのフレーム数
     [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
-    private uint _pushDuration = 10;
+    private uint _pushFrontDuration = 12u;
+
+    // 突き刺したあと手前に戻すアニメーションのフレーム数
+    [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
+    private uint _pushBackDuration = 4u;
+
+    // すべての攻撃終了後の待機フレーム数
+    [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
+    private uint _endAttackDuration = 20u;
 
     private AimEntity? _aimEntity;
     private IDisposable? _tweenPlayingDisposable;
@@ -73,6 +81,17 @@ public partial class PiercingWeapon : WeaponBase
     }
 
     private protected StaticDamage StaticDamage => GetNode<StaticDamage>("%StaticDamage");
+
+    public override uint BaseAnimationFrames
+    {
+        get
+        {
+            var preAttack = _beginAttackDuration; // 攻撃前の構えるアニメーション
+            var push = (uint)((_pushFrontDuration + _pushBackDuration) * PushCount); // 突き刺しアニメーション時間 * 突き刺し回数
+            var endAttack = _endAttackDuration; // 通常の感度に戻すアニメーション
+            return preAttack + push + endAttack;
+        }
+    }
 
     public override void _Ready()
     {
@@ -167,7 +186,7 @@ public partial class PiercingWeapon : WeaponBase
         // A. 攻撃前のナイフを構えるアニメーション
         {
             var dist = _preAttackDistance * -1f;
-            var dul = _preAttackDuration / 60d;
+            var dul = _beginAttackDuration / 60d / SpeedRate;
             t.TweenProperty(sprite, "position", new Vector2(dist, 0), dul)
                 .SetEase(Tween.EaseType.InOut);
         }
@@ -182,7 +201,10 @@ public partial class PiercingWeapon : WeaponBase
         }
 
         // C. すぐに他の敵を狙わないようなアニメの遊び
-        t.TweenProperty(sprite, "position", new Vector2(0, 0), 0.2d);
+        {
+            var dul = _endAttackDuration / 60d / SpeedRate;
+            t.TweenProperty(sprite, "position", new Vector2(0, 0), dul);
+        }
 
         // D. Tween の終了後の処理
         _tweenPlayingDisposable = t.FinishedAsObservable()
@@ -204,17 +226,26 @@ public partial class PiercingWeapon : WeaponBase
     {
         // 突き刺しアニメーション
         var dist = (float)_pushDistance;
-        var totalDulation = _pushDuration / 60d;
-        var backDulation = 0.08f;
-        var pushDulation = Mathf.Max(totalDulation - 0.08f, 0.01f);
 
+        // ToDo: ゲーム側から武器速度 <see cref="SpeedRate"/> が変更された場合, StaticDamage では
+        // 対応しきれないような速度になるので, 一定値以上であれば Static Damage の On / Off ではなく
+        // RectAreaProjectile を生成すること 
         tween.TweenCallback(Callable.From(() => { StaticDamage.Disabled = false; })); // ダメージを有効化
-        tween.TweenProperty(sprite, "position", new Vector2(dist, 0), pushDulation)
-            .SetTrans(Tween.TransitionType.Back)
-            .SetEase(Tween.EaseType.InOut);
+
+        // 突き刺し
+        {
+            var dul = _pushFrontDuration / 60d / SpeedRate;
+            tween.TweenProperty(sprite, "position", new Vector2(dist, 0), dul)
+                .SetTrans(Tween.TransitionType.Back)
+                .SetEase(Tween.EaseType.InOut);
+        }
+
+        tween.TweenCallback(Callable.From(() => { StaticDamage.Disabled = true; })); // ダメージを無効化
 
         // 手元に戻すアニメーション
-        tween.TweenCallback(Callable.From(() => { StaticDamage.Disabled = true; })); // ダメージを無効化
-        tween.TweenProperty(sprite, "position", new Vector2(3, 0), backDulation);
+        {
+            var dul = _pushBackDuration / 60d / SpeedRate;
+            tween.TweenProperty(sprite, "position", new Vector2(3, 0), dul);
+        }
     }
 }
