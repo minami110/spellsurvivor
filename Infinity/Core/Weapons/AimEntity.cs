@@ -8,7 +8,6 @@ namespace fms;
 /// <summary>
 /// 近くの敵を狙う関連の計算を行うノード
 /// </summary>
-[Tool]
 [GlobalClass]
 public partial class AimEntity : Area2D
 {
@@ -44,12 +43,12 @@ public partial class AimEntity : Area2D
                 return;
             }
 
-            if (Engine.IsEditorHint() || IsNodeReady())
+            field = value;
+
+            if (IsNodeReady())
             {
                 UpdateCollisionRadius(value);
             }
-
-            field = value;
         }
     } = 100f;
 
@@ -119,22 +118,12 @@ public partial class AimEntity : Area2D
         // 子の Shape を初期化する
         UpdateCollisionRadius(MaxRange);
 
-        if (Engine.IsEditorHint())
-        {
-            return;
-        }
-
         // Disposable 関連
         _enteredAnyEntity.AddTo(this);
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (Engine.IsEditorHint())
-        {
-            return;
-        }
-
         if (_prevPosition.HasValue)
         {
             var vel = GlobalPosition - _prevPosition.Value;
