@@ -21,9 +21,6 @@ BaseCoolDownFrame = 50
 script = ExtResource("2_u4hc5")
 
 [node name="AimEntity" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 4
-monitorable = false
 script = ExtResource("5_us2io")
 
 [node name="SpriteRoot" type="Node2D" parent="AimEntity"]
