@@ -8,6 +8,11 @@ using R3;
 
 namespace fms.Projectile;
 
+/// <summary>
+/// Area2D を継承したダメージを与える静的な Projectile
+/// Note: 性質上メチャクチャ早い武器モーションだと敵を拾いきれないので, ある程度の速度になったら
+/// <see cref="AreaProjectile" /> の使用を検討してください
+/// </summary>
 [GlobalClass]
 public partial class StaticDamage : Area2D
 {

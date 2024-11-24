@@ -11,10 +11,10 @@ size = Vector2(30, 12)
 
 [node name="WoodSpear" type="Node2D"]
 script = ExtResource("1_bb5sa")
+_pushDistance = 45
 _minRange = 85.0
 _maxRange = 140.0
 _rotateSensitivity = 0.1
-_pushDistance = 45
 BaseCoolDownFrame = 50
 
 [node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]

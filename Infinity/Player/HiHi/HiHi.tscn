@@ -56,6 +56,7 @@ _moveSpeed = 0.12
 _zoomSpeed = 0.45
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CameraController"]
+visible = false
 shape = SubResource("CircleShape2D_5leg6")
 debug_color = Color(1, 1, 1, 0)
 

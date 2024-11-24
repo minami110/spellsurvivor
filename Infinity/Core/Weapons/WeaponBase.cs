@@ -54,8 +54,8 @@ public partial class WeaponBase : Node2D
     /// <summary>
     /// クールダウン, アニメーションどちらにも作用する速度倍率
     /// </summary>
-    [Export(PropertyHint.Range, "0,2,,or_greater")]
-    public float SpeedRate { get; set; } = 1f;
+    [Export(PropertyHint.Range, "0.001,2,,or_greater")]
+    public float BaseSpeedRate { get; set; } = 1f;
 
     // ---------- Animation Parameters ----------
 
@@ -103,9 +103,6 @@ public partial class WeaponBase : Node2D
     // 現在武器に付与されている Effect
     private readonly HashSet<EffectBase> _effects = [];
 
-    // クールダウンの削減率 (範囲: 0 ~ 1 / デフォルト: 0)
-    private float _coolDownReduceRate;
-
     // Effect の変更があったかどうか
     private bool _isDirtyEffect;
 
@@ -123,11 +120,12 @@ public partial class WeaponBase : Node2D
     /// <summary>
     /// Effect の解決後の Cooldown のフレーム数
     /// </summary>
+    [Obsolete]
     public uint SolvedCoolDownFrame
     {
         get
         {
-            var coolDown = (uint)Mathf.Floor(BaseCoolDownFrame * (1f - _coolDownReduceRate));
+            var coolDown = (uint)Mathf.Ceil(BaseCoolDownFrame / SpeedRate);
             return Math.Max(coolDown, 1u);
         }
     }
@@ -143,9 +141,16 @@ public partial class WeaponBase : Node2D
     public ReadOnlyReactiveProperty<uint> CoolDownLeft => FrameTimer.FrameLeft;
 
     /// <summary>
+    /// エフェクト適用前のベースのアニメーションフレーム数
+    /// </summary>
+    public virtual uint BaseAnimationFrames => 1u;
+
+    /// <summary>
     /// 武器のダメージ量 (エフェクトを適用した後の値)
     /// </summary>
     public uint Damage { get; private set; }
+
+    public float SpeedRate { get; private set; }
 
     // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装
     public override void _Notification(int what)
@@ -176,6 +181,7 @@ public partial class WeaponBase : Node2D
             // ToDO: 
             // エフェクト解決が行われない場合の最終敵なステータスをここで更新しておく
             Damage = (uint)BaseDamage;
+            SpeedRate = BaseSpeedRate;
         }
         else if (what == NotificationReady)
         {
@@ -246,7 +252,8 @@ public partial class WeaponBase : Node2D
             return;
         }
 
-        FrameTimer.WaitFrame = SolvedCoolDownFrame;
+
+        FrameTimer.WaitFrame = (uint)Mathf.Ceil(BaseCoolDownFrame / SpeedRate);
         FrameTimer.OneShot = true;
         FrameTimer.Start();
         OnStartAttack();
@@ -298,7 +305,7 @@ public partial class WeaponBase : Node2D
 
         // タイマーを再開する
         FrameTimer.OneShot = true;
-        FrameTimer.WaitFrame = SolvedCoolDownFrame;
+        FrameTimer.WaitFrame = (uint)Mathf.Ceil(BaseCoolDownFrame / SpeedRate);
         FrameTimer.Start();
     }
 
@@ -325,7 +332,7 @@ public partial class WeaponBase : Node2D
 
         // 値を初期化する
         var damage = (uint)BaseDamage;
-        var reduceCoolDownRate = 0f;
+        var speedRate = BaseSpeedRate;
 
         foreach (var effect in _effects)
         {
@@ -337,10 +344,10 @@ public partial class WeaponBase : Node2D
                     damage += strengthEffect.Amount;
                     break;
                 }
-                // クールダウンを減少させるエフェクト
-                case ReduceCoolDownRate reduceCoolDownRateEffect:
+                // Haset (武器の速度)
+                case Haste haste:
                 {
-                    reduceCoolDownRate += reduceCoolDownRateEffect.Value;
+                    speedRate += haste.Amount;
                     break;
                 }
             }
@@ -348,7 +355,7 @@ public partial class WeaponBase : Node2D
 
         // 値を更新
         Damage = damage;
-        _coolDownReduceRate = Math.Max(reduceCoolDownRate, 0);
+        SpeedRate = Math.Max(speedRate, 0.001f);
 
         OnSolveEffect(_effects);
     }
