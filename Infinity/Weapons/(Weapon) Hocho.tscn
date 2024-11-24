@@ -1,38 +1,44 @@
-[gd_scene load_steps=6 format=3 uid="uid://donsa3j8b5ra4"]
+[gd_scene load_steps=7 format=3 uid="uid://donsa3j8b5ra4"]
 
-[ext_resource type="Script" path="res://Infinity/Weapons/Hocho.cs" id="1_3f756"]
-[ext_resource type="Texture2D" uid="uid://c2edxtyae4q6n" path="res://Common/Resources/Textures/Emoji/hocho.png" id="3_ynyre"]
-[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="3_yvvuh"]
+[ext_resource type="Script" path="res://Infinity/Weapons/PiercingWeapon.cs" id="1_3f756"]
+[ext_resource type="Script" path="res://Infinity/Weapons/EditorDrawer/PiercingWeaponEditorDrawer.cs" id="2_k1plt"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="2_wdvku"]
+[ext_resource type="Texture2D" uid="uid://bqd7lbp5qxwvo" path="res://Infinity/Weapons/Textures/hocho.png" id="3_xu3dq"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_u34iq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5kth8"]
-size = Vector2(56, 13)
+size = Vector2(38, 15)
 
 [node name="Hocho" type="Node2D"]
 script = ExtResource("1_3f756")
+_minRange = 15.0
+_maxRange = 85.0
 BaseDamage = 20.0
 BaseCoolDownFrame = 50
 
-[node name="AimToNearEnemy" type="Area2D" parent="."]
-script = ExtResource("3_yvvuh")
+[node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]
+script = ExtResource("2_k1plt")
 
-[node name="SpriteRoot" type="Node2D" parent="AimToNearEnemy"]
+[node name="AimEntity" type="Area2D" parent="."]
+script = ExtResource("2_wdvku")
+
+[node name="SpriteRoot" type="Node2D" parent="AimEntity"]
 unique_name_in_owner = true
 
-[node name="Sprite" type="Sprite2D" parent="AimToNearEnemy/SpriteRoot"]
+[node name="Sprite" type="Sprite2D" parent="AimEntity/SpriteRoot"]
 unique_name_in_owner = true
-position = Vector2(23, 0)
+position = Vector2(18, 0)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_ynyre")
+texture = ExtResource("3_xu3dq")
 
-[node name="StaticDamage" type="Area2D" parent="AimToNearEnemy/SpriteRoot"]
+[node name="StaticDamage" type="Area2D" parent="AimEntity/SpriteRoot"]
 unique_name_in_owner = true
 collision_layer = 0
 collision_mask = 4
 monitorable = false
 script = ExtResource("4_u34iq")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AimToNearEnemy/SpriteRoot/StaticDamage"]
-position = Vector2(29, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AimEntity/SpriteRoot/StaticDamage"]
+position = Vector2(30, 4)
 shape = SubResource("RectangleShape2D_5kth8")
 debug_color = Color(0, 0.6, 0.701961, 0)

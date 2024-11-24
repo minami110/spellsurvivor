@@ -8,7 +8,7 @@ namespace fms.Weapon;
 
 /// <summary>
 /// </summary>
-public partial class AorticKnife : Hocho
+public partial class AorticKnife : PiercingWeapon
 {
     private uint _lifestealAmount;
     private float _lifeStealRate;

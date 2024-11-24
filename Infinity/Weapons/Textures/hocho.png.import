@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2edxtyae4q6n"
-path="res://.godot/imported/hocho.png-39e2461098868d2812b235becf8fc0c1.ctex"
+uid="uid://bqd7lbp5qxwvo"
+path="res://.godot/imported/hocho.png-04316ed19a31142c6cc396d703042956.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Emoji/hocho.png"
-dest_files=["res://.godot/imported/hocho.png-39e2461098868d2812b235becf8fc0c1.ctex"]
+source_file="res://Infinity/Weapons/Textures/hocho.png"
+dest_files=["res://.godot/imported/hocho.png-04316ed19a31142c6cc396d703042956.ctex"]
 
 [params]
 

@@ -45,9 +45,8 @@ public partial class Hornet : EnemyBase
     public override void _Ready()
     {
         // Weapon 内部にある FrameTimer の初期化/購読を行う
-        // Note: Weapon 側の実装で必ずこの名前で生成されています
-        var frameTimer = _weapon.GetNode<FrameTimer>("FrameTimer");
-        frameTimer.TimeOut.Subscribe(this, (_, state) => { state.Attack(); })
+        var frameTimer = _weapon.FindFirstChild<FrameTimer>();
+        frameTimer!.TimeOut.Subscribe(this, (_, state) => { state.Attack(); })
             .AddTo(this);
     }
 

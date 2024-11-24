@@ -26,29 +26,36 @@ public partial class WeaponBase : Node2D
     [Export(PropertyHint.Range, "1,9999,1,suffix:frames")]
     public uint BaseCoolDownFrame
     {
-        get => _baseCoolDownFrame;
+        get;
         set
         {
-            if (_baseCoolDownFrame == value)
+            if (field == value)
             {
                 return;
             }
 
-            _baseCoolDownFrame = value;
+            field = value;
 
+            // 実行中の EnterTree 後のみ実行する
             if (IsNodeReady())
             {
                 // Update Frame Timer
                 FrameTimer.WaitFrame = SolvedCoolDownFrame;
             }
         }
-    }
+    } = 10u;
 
     /// <summary>
     /// 武器が敵に与えるノックバック量
     /// </summary>
     [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
     public uint Knockback { get; set; } = 20u;
+
+    /// <summary>
+    /// クールダウン, アニメーションどちらにも作用する速度倍率
+    /// </summary>
+    [Export(PropertyHint.Range, "0,2,,or_greater")]
+    public float SpeedRate { get; set; } = 1f;
 
     // ---------- Animation Parameters ----------
 
@@ -74,11 +81,17 @@ public partial class WeaponBase : Node2D
     public bool AutoStart { get; set; } = true;
 
     /// <summary>
+    /// エディタ上でデバッグ情報を描画するかどうか
+    /// </summary>
+    [Export]
+    public bool DrawDebugInfoInEditor { get; private set; } = true;
+
+    /// <summary>
     /// 現在の武器の Level
     /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
     /// </summary>
     [Export(PropertyHint.Range, "1,5")]
-    public uint Level { get; set; } = 1;
+    public uint Level { get; set; } = 1u;
 
     /// <summary>
     /// Minion が所属する Faction
@@ -87,12 +100,8 @@ public partial class WeaponBase : Node2D
     [Export]
     public FactionType Faction { get; set; }
 
-    private static readonly NodePath FrameTimerPath = new("FrameTimer");
-
     // 現在武器に付与されている Effect
-    private readonly HashSet<EffectBase> _effects = new();
-
-    private uint _baseCoolDownFrame = 10u;
+    private readonly HashSet<EffectBase> _effects = [];
 
     // クールダウンの削減率 (範囲: 0 ~ 1 / デフォルト: 0)
     private float _coolDownReduceRate;
@@ -126,7 +135,7 @@ public partial class WeaponBase : Node2D
     /// <summary>
     /// FrameTimer を取得
     /// </summary>
-    private FrameTimer FrameTimer => GetNode<FrameTimer>(FrameTimerPath);
+    private FrameTimer FrameTimer { get; set; } = null!;
 
     /// <summary>
     /// 次の攻撃までの残りフレームを取得
@@ -147,12 +156,14 @@ public partial class WeaponBase : Node2D
             AddToGroup(Constant.GroupNameWeapon);
 
             // FrameTimer が存在していなかったら作成する
-            if (GetNodeOrNull<FrameTimer>(FrameTimerPath) == null)
+            var frametimer = this.FindFirstChild<FrameTimer>();
+            if (frametimer is null)
             {
-                var frameTimer = new FrameTimer();
-                frameTimer.Name = FrameTimerPath.ToString();
-                AddChild(frameTimer);
+                frametimer = new FrameTimer();
+                AddChild(frametimer);
             }
+
+            FrameTimer = frametimer;
 
             // 親が IEntity であることを確認しこの武器の所有者として設定する
             var parent = GetParentOrNull<IEntity>();
