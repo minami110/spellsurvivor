@@ -8,12 +8,6 @@ using R3;
 
 namespace fms;
 
-public static class WeaponAttributeNames
-{
-    public const string DamageRate = "DamageRate";
-    public const string SpeedRate = "SpeedRate";
-}
-
 /// <summary>
 /// Weapon のベースクラス
 /// </summary>

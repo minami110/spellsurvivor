@@ -1,5 +1,7 @@
 ﻿using Godot;
 
+// ReSharper disable InconsistentNaming
+
 namespace fms;
 
 public static class Constant
@@ -36,4 +38,23 @@ public static class GroupNames
     public static readonly StringName PlayerState = new("PlayerState");
     public static readonly StringName Pawn = new("Pawn");
     public static readonly StringName Effect = new("Effect");
+}
+
+public static class EntityAttributeNames
+{
+    public const string MaxHealth = "MaxHealth";
+    public const string MoveSpeed = "MoveSpeed";
+    public const string DodgeRate = "DodgeRate";
+}
+
+public static class WeaponAttributeNames
+{
+    public const string DamageRate = "DamageRate";
+    public const string SpeedRate = "SpeedRate";
+
+    // 武器固有のやつ
+    public const string LifestealAmount = "LifestealAmount";
+    public const string LifestealRate = "LifestealRate";
+    public const string BounceCount = "BounceCount";
+    public const string BounceDamageRate = "BounceDamageRate";
 }

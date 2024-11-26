@@ -39,12 +39,12 @@ public partial class AorticKnife : PiercingWeapon
         _lifestealAmount = 0;
         _lifeStealRate = 0f;
 
-        if (attributes.TryGetValue("LifestealAmount", out var lifestealAmount))
+        if (attributes.TryGetValue(WeaponAttributeNames.LifestealAmount, out var lifestealAmount))
         {
             _lifestealAmount = (uint)lifestealAmount;
         }
 
-        if (attributes.TryGetValue("LifeStealRate", out var lifeStealRate))
+        if (attributes.TryGetValue(WeaponAttributeNames.LifestealRate, out var lifeStealRate))
         {
             _lifeStealRate = (float)lifeStealRate;
         }

@@ -5,10 +5,10 @@
 /// </summary>
 public partial class TrickshotBounce : EffectBase
 {
-    private const string _KEY_COUNT = "BounceCount";
-    private const string _KEY_MULTIPLIER = "BounceDamageMultiplier";
+    private const string _KEY_COUNT = WeaponAttributeNames.BounceCount;
+    private const string _KEY_MULTIPLIER = WeaponAttributeNames.BounceDamageRate;
     public required uint BounceCount { get; init; }
-    public required float BounceDamageMultiplier { get; init; }
+    public required float BounceDamageRate { get; init; }
 
     public override void _EnterTree()
     {
@@ -23,11 +23,11 @@ public partial class TrickshotBounce : EffectBase
 
         if (Dictionary.TryGetAttribute(_KEY_MULTIPLIER, out var v2))
         {
-            Dictionary.SetAttribute(_KEY_MULTIPLIER, (float)v2 + BounceDamageMultiplier);
+            Dictionary.SetAttribute(_KEY_MULTIPLIER, (float)v2 + BounceDamageRate);
         }
         else
         {
-            Dictionary.SetAttribute(_KEY_MULTIPLIER, BounceDamageMultiplier);
+            Dictionary.SetAttribute(_KEY_MULTIPLIER, BounceDamageRate);
         }
     }
 
@@ -40,7 +40,7 @@ public partial class TrickshotBounce : EffectBase
 
         if (Dictionary.TryGetAttribute(_KEY_MULTIPLIER, out var v2))
         {
-            Dictionary.SetAttribute(_KEY_MULTIPLIER, (float)v2 - BounceDamageMultiplier);
+            Dictionary.SetAttribute(_KEY_MULTIPLIER, (float)v2 - BounceDamageRate);
         }
     }
 }

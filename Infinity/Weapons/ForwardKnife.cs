@@ -75,12 +75,12 @@ public partial class ForwardKnife : WeaponBase
         BounceCount = 0;
         BounceDamageMul = 0f;
 
-        if (attributes.TryGetValue("TrickShotCount", out var trickShotCount))
+        if (attributes.TryGetValue(WeaponAttributeNames.BounceCount, out var trickShotCount))
         {
             BounceCount = (int)trickShotCount;
         }
 
-        if (attributes.TryGetValue("TrickShotDamageMul", out var trickShotDamageMul))
+        if (attributes.TryGetValue(WeaponAttributeNames.BounceDamageRate, out var trickShotDamageMul))
         {
             BounceDamageMul = (float)trickShotDamageMul;
         }

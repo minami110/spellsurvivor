@@ -2,8 +2,8 @@
 
 public partial class Lifesteal : EffectBase
 {
-    private const string _KEY_AMOUNT = "LifestealAmount";
-    private const string _KEY_RATE = "LifestealRate";
+    private const string _KEY_AMOUNT = WeaponAttributeNames.LifestealAmount;
+    private const string _KEY_RATE = WeaponAttributeNames.LifestealRate;
     public required uint Amount { get; init; }
     public required float Rate { get; init; }
 

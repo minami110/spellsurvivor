@@ -5,13 +5,6 @@ using R3;
 
 namespace fms;
 
-public static class EntityAttributeNames
-{
-    public const string MaxHealth = "MaxHealth";
-    public const string MoveSpeed = "MoveSpeed";
-    public const string DodgeRate = "DodgeRate";
-}
-
 public interface IAttributeDictionary
 {
     void SetAttribute(string key, Variant value);

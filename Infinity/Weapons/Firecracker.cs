@@ -78,12 +78,12 @@ public partial class Firecracker : WeaponBase
         TrickShotCount = 0;
         TrickShotDamageMul = 0f;
 
-        if (attributes.TryGetValue("TrickShotCount", out var trickShotCount))
+        if (attributes.TryGetValue(WeaponAttributeNames.BounceCount, out var trickShotCount))
         {
             TrickShotCount = (int)trickShotCount;
         }
 
-        if (attributes.TryGetValue("TrickShotDamageMul", out var trickShotDamageMul))
+        if (attributes.TryGetValue(WeaponAttributeNames.BounceDamageRate, out var trickShotDamageMul))
         {
             TrickShotDamageMul = (float)trickShotDamageMul;
         }

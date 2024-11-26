@@ -55,7 +55,7 @@ public partial class Trickshot : FactionBase
         {
             Duration = 0u,
             BounceCount = (uint)bounceCount,
-            BounceDamageMultiplier = bounceDamageMultiplier
+            BounceDamageRate = bounceDamageMultiplier
         });
     }
 }
