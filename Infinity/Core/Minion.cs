@@ -1,12 +1,10 @@
-﻿using System;
-using fms.Faction;
+﻿using fms.Faction;
 using Godot;
-using R3;
 
 namespace fms;
 
 /// <summary>
-/// Player が所有済みの Minion の情報
+/// Shop アイテム
 /// </summary>
 [GlobalClass]
 public partial class Minion : Node
@@ -14,19 +12,11 @@ public partial class Minion : Node
     [Export]
     private MinionCoreData CoreData { get; set; } = null!;
 
-    private readonly ReactiveProperty<uint> _levelRp = new(1);
-
     private WeaponBase? _weapon;
-
-    private IDisposable? _weaponSubscription;
 
     /// <summary>
     /// </summary>
     public string Id => CoreData.Id;
-
-    /// <summary>
-    /// </summary>
-    public ReadOnlyReactiveProperty<uint> Level => _levelRp;
 
     public bool IsMaxLevel => _levelRp.Value >= Constant.MINION_MAX_LEVEL;
 
@@ -48,20 +38,12 @@ public partial class Minion : Node
         get => _weapon;
         private set
         {
-            // 前の装備
-            if (_weapon is not null)
-            {
-                _weaponSubscription?.Dispose();
-                _weaponSubscription = null;
-            }
-
             _weapon = value;
 
             // 新しい装備
             if (_weapon is not null)
             {
                 _weapon.MinionId = Id;
-                _weaponSubscription = _levelRp.Subscribe(x => { _weapon.Level = x; });
             }
         }
     }
@@ -94,7 +76,7 @@ public partial class Minion : Node
             }
 
             // Set Level
-            SetLevel(1);
+            SetWeaponLevel(1);
 
             // Spawn Weapon
             SpawnWeapon();
@@ -143,7 +125,7 @@ public partial class Minion : Node
             }
 
             RemoveWeapon();
-            SetLevel(0);
+            SetWeaponLevel(0);
         }
     }
 
@@ -168,15 +150,12 @@ public partial class Minion : Node
         Weapon = null;
     }
 
-    public void SetLevel(uint level)
+    public void SetWeaponLevel(uint level)
     {
-        _levelRp.Value = Math.Clamp(level, Constant.MINION_MIN_LEVEL, Constant.MINION_MAX_LEVEL);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-        _levelRp.Dispose();
+        if (_weapon is not null)
+        {
+            _weapon.State.SetLevel(level);
+        }
     }
 
     private void SpawnWeapon()
@@ -190,7 +169,6 @@ public partial class Minion : Node
         Weapon = CoreData.WeaponPackedScene.Instantiate<WeaponBase>();
         Weapon.MinionId = Id;
         Weapon.Faction = Faction;
-        Weapon.Level = _levelRp.Value;
         Weapon.AutoStart = false;
         AddSibling(Weapon);
     }

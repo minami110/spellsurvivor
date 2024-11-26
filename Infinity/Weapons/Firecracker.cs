@@ -142,8 +142,8 @@ public partial class Firecracker : WeaponBase
             { "ThrowSpeed", _throwSpeed },
             { "BombLife", _bombLife },
             // Area
-            { "Knockback", Knockback },
-            { "BaseDamage", BaseDamage },
+            { "Knockback", State.Knockback.CurrentValue },
+            { "BaseDamage", State.Damage.CurrentValue },
             { "AreaRadius", _areaRadius },
             { "AreaDamageSpan", _areaDamageSpan },
             { "AreaLife", _areaLife },

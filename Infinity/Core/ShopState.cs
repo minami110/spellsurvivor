@@ -142,7 +142,7 @@ public partial class ShopState : Node
         var minions = player.FindChildren("*", nameof(Minion), false, false);
         if (minions.Any(m => m == minion))
         {
-            minion.SetLevel(minion.Level.CurrentValue + 1);
+            minion.SetWeaponLevel(minion.Level.CurrentValue + 1);
             return;
         }
 

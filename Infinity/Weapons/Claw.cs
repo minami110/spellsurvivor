@@ -72,7 +72,8 @@ public partial class Claw : WeaponBase
         // スタック数に応じてクールダウンを短く設定する
         // 0: 60f, 1: 50f, 2: 40f, 3: 30f, 4: 20f, 5: 10f
         var newCoolDown = 60u - _enemyHitStacks * 10u;
-        BaseCoolDownFrame = newCoolDown;
+        throw new NotImplementedException();
+        // BaseCoolDownFrame = newCoolDown;
 
         // GUI を更新する
         UpdateStackLabel();
@@ -103,8 +104,8 @@ public partial class Claw : WeaponBase
         // 弾生成
         var prj = new RectAreaProjectile();
         {
-            prj.Damage = BaseDamage;
-            prj.Knockback = Knockback;
+            prj.Damage = State.Damage.CurrentValue;
+            prj.Knockback = State.Knockback.CurrentValue;
             prj.LifeFrame = 30u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
             prj.DamageEveryXFrames = 0u; // 一度ダメージを与えて消滅する
             prj.Size = _damageSize;

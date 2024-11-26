@@ -65,7 +65,6 @@ public partial class Incandescent : FactionBase
             }
 
             var weapon = scene.Instantiate<Heat>();
-            weapon.Level = 1u;
             weapon.AutoStart = false;
             CallDeferred(Node.MethodName.AddSibling, weapon); // 親が Busy なことがあるので CallDeferred で追加
         }

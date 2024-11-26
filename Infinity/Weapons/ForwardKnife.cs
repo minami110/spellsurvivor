@@ -134,8 +134,8 @@ public partial class ForwardKnife : WeaponBase
         // Main の Projectile
         var prjMain = _projectile.Instantiate<BaseProjectile>();
         {
-            prjMain.Damage = BaseDamage;
-            prjMain.Knockback = Knockback;
+            prjMain.Damage = State.Damage.CurrentValue;
+            prjMain.Knockback = State.Knockback.CurrentValue;
             prjMain.LifeFrame = _life;
 
             // Get Player's aim direction
@@ -147,8 +147,9 @@ public partial class ForwardKnife : WeaponBase
         {
             var payload = new Dictionary
             {
-                { "BaseDamage", BaseDamage },
-                { "Knockback", Knockback },
+                // ToDo: Trickshot に Effect 適用後の値をのせてもいい?
+                { "BaseDamage", State.Damage.CurrentValue },
+                { "Knockback", State.Knockback.CurrentValue },
                 { "Speed", _speed },
                 { "Life", _life },
                 { "TrickShotCount", BounceCount },

@@ -33,9 +33,8 @@ public partial class Hornet : EntityEnemy
         if (weapon == null)
         {
             weapon = new WeaponBase();
+            weapon.Set(WeaponBase.PropertyName._cooldown, _baseCoolDownFrame);
             AddChild(weapon);
-
-            weapon.BaseCoolDownFrame = _baseCoolDownFrame;
         }
 
         _weapon = weapon;

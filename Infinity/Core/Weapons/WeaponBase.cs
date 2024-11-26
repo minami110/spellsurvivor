@@ -11,60 +11,32 @@ namespace fms;
 /// <summary>
 /// Weapon のベースクラス
 /// </summary>
-public partial class WeaponBase : Node2D, IAttributeDictionary
+public partial class WeaponBase : Node2D
 {
-    /// <summary>
-    /// 武器の基礎ダメージ量
-    /// </summary>
-    [Export(PropertyHint.Range, "0,9999,1")]
-    public float BaseDamage { get; set; } = 10f;
+    [ExportGroup("Base Status")]
+    [Export(PropertyHint.Range, "0,10,")]
+    private uint _level = 1u;
 
-    /// <summary>
-    /// 武器の Cooldown にかかる基礎フレーム数
-    /// </summary>
-    [Export(PropertyHint.Range, "1,9999,1,suffix:frames")]
-    public uint BaseCoolDownFrame
-    {
-        get;
-        set
-        {
-            if (field == value)
-            {
-                return;
-            }
+    [Export(PropertyHint.Range, "0,10,")]
+    private uint _damage = 10u;
 
-            field = value;
+    [Export(PropertyHint.Range, "0,10,,suffix:frames")]
+    private uint _cooldown = 10u;
 
-            // 実行中の EnterTree 後のみ実行する
-            if (IsNodeReady())
-            {
-                // Update Frame Timer
-                FrameTimer.WaitFrame = SolvedCoolDownFrame;
-            }
-        }
-    } = 10u;
+    [Export(PropertyHint.Range, "0,100,0.1,suffix:%")]
+    private float _cooldownRate = 100f;
 
-    /// <summary>
-    /// 武器が敵に与えるノックバック量
-    /// </summary>
-    [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
-    public uint Knockback { get; set; } = 20u;
-
-    /// <summary>
-    /// クールダウン, アニメーションどちらにも作用する速度倍率
-    /// </summary>
-    [Export(PropertyHint.Range, "0.001,2,,or_greater")]
-    public float BaseSpeedRate { get; set; } = 1f;
+    [Export(PropertyHint.Range, "0,10,,suffix:px/s")]
+    private uint _knockback = 20u;
 
     // ---------- Animation Parameters ----------
 
     /// <summary>
-    /// ToDo: こっちでもっておくべきか検討する
     /// <see cref="WeaponPositionAnimator" /> により自動で位置を調整するかどうか
     /// </summary>
     [ExportGroup("Animation")]
     [Export]
-    public bool AutoPositioning { get; set; } = true;
+    public bool AutoPositioning { get; private set; } = true;
 
     // ---------- Debug Parameters ----------
 
@@ -86,20 +58,11 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
     public bool DrawDebugInfoInEditor { get; private set; } = true;
 
     /// <summary>
-    /// 現在の武器の Level
-    /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
-    /// </summary>
-    [Export(PropertyHint.Range, "1,5")]
-    public uint Level { get; set; } = 1u;
-
-    /// <summary>
     /// Minion が所属する Faction
     /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
     /// </summary>
     [Export]
     public FactionType Faction { get; set; }
-
-    private readonly Dictionary<string, Variant> _attributes = new();
 
     /// <summary>
     /// 武器の Id
@@ -111,19 +74,6 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
     /// この武器を所有している Entity
     /// </summary>
     public IEntity OwnedEntity { get; private set; } = null!;
-
-    /// <summary>
-    /// Effect の解決後の Cooldown のフレーム数
-    /// </summary>
-    [Obsolete]
-    public uint SolvedCoolDownFrame
-    {
-        get
-        {
-            var coolDown = (uint)Mathf.Ceil(BaseCoolDownFrame / SpeedRate);
-            return Math.Max(coolDown, 1u);
-        }
-    }
 
     /// <summary>
     /// FrameTimer を取得
@@ -138,14 +88,9 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
     /// <summary>
     /// エフェクト適用前のベースのアニメーションフレーム数
     /// </summary>
-    public virtual uint BaseAnimationFrames => 1u;
+    public virtual uint BaseAnimationFrames => 0u;
 
-    /// <summary>
-    /// 武器のダメージ量 (エフェクトを適用した後の値)
-    /// </summary>
-    public uint Damage { get; private set; }
-
-    public float SpeedRate { get; private set; }
+    public WeaponState State { get; private set; } = null!;
 
     // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装
     public override void _Notification(int what)
@@ -154,6 +99,15 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
         {
             // Weapon group に所属する
             AddToGroup(Constant.GroupNameWeapon);
+
+            // Create WeaponState
+            State = new WeaponState(
+                _level,
+                _damage,
+                _cooldown,
+                _cooldownRate * 0.01f,
+                _knockback
+            );
 
             // FrameTimer が存在していなかったら作成する
             var frametimer = this.FindFirstChild<FrameTimer>();
@@ -172,17 +126,12 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
             // ToDo: 仮
             // 手前に見えるようにする
             ZIndex = 10;
-
-            // ToDO: 
-            // エフェクト解決が行われない場合の最終敵なステータスをここで更新しておく
-            Damage = (uint)BaseDamage;
-            SpeedRate = BaseSpeedRate;
         }
         else if (what == NotificationReady)
         {
             // 武器のクールダウンが完了時のコールバックを登録
             FrameTimer.TimeOut
-                .Subscribe(this, (_, state) => { state.OnCoolDownCompleted(state.Level); })
+                .Subscribe(this, (_, state) => { state.OnCoolDownCompleted(state.State.Level.CurrentValue); })
                 .AddTo(this);
 
             if (AutoStart)
@@ -231,11 +180,10 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
             return;
         }
 
-
-        FrameTimer.WaitFrame = (uint)Mathf.Ceil(BaseCoolDownFrame / SpeedRate);
+        FrameTimer.WaitFrame = State.Cooldown.CurrentValue;
         FrameTimer.OneShot = true;
         FrameTimer.Start();
-        OnStartAttack();
+        OnStartAttack(State.Level.CurrentValue);
     }
 
     /// <summary>
@@ -260,11 +208,10 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
         RestartCoolDown();
     }
 
-
     /// <summary>
     /// 武器が起動したときに呼び出されるメソッド, 通常はバトルウェーブ開始時に呼ばれる
     /// </summary>
-    private protected virtual void OnStartAttack()
+    private protected virtual void OnStartAttack(uint level)
     {
     }
 
@@ -285,42 +232,7 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
 
         // タイマーを再開する
         FrameTimer.OneShot = true;
-        FrameTimer.WaitFrame = (uint)Mathf.Ceil(BaseCoolDownFrame / SpeedRate);
+        FrameTimer.WaitFrame = State.Cooldown.CurrentValue;
         FrameTimer.Start();
-    }
-
-    private void OnUpdateAnyAttribute()
-    {
-        // Damage
-        {
-            // Damage Rate
-            if (_attributes.TryGetValue(WeaponAttributeNames.DamageRate, out var v))
-            {
-                var damage = BaseDamage + BaseDamage * (float)v;
-                Damage = (uint)damage;
-            }
-        }
-
-        // Speed
-        {
-            if (_attributes.TryGetValue(WeaponAttributeNames.SpeedRate, out var v))
-            {
-                var speedRate = BaseSpeedRate + (float)v;
-                SpeedRate = Math.Max(speedRate, 0.001f);
-            }
-        }
-
-        OnUpdateAnyAttribute(_attributes);
-    }
-
-    bool IAttributeDictionary.TryGetAttribute(string key, out Variant value)
-    {
-        return _attributes.TryGetValue(key, out value);
-    }
-
-    void IAttributeDictionary.SetAttribute(string key, Variant value)
-    {
-        _attributes[key] = value;
-        OnUpdateAnyAttribute();
     }
 }

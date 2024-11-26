@@ -162,15 +162,15 @@ public partial class PiercingWeapon : WeaponBase
         }
     }
 
-    private protected override void OnStartAttack()
+    private protected override void OnStartAttack(uint level)
     {
         StaticDamage.Disabled = true;
-        StaticDamage.Damage = Damage;
-        StaticDamage.Knockback = Knockback;
     }
 
     private void PlayAttackAnimation()
     {
+        var animationSpeedRate = State.Cooldown.Rate;
+
         if (_tweenPlayingDisposable is not null)
         {
             throw new InvalidProgramException($"Tween is already playing in {Name}");
@@ -186,7 +186,7 @@ public partial class PiercingWeapon : WeaponBase
         // A. 攻撃前のナイフを構えるアニメーション
         {
             var dist = _preAttackDistance * -1f;
-            var dul = _beginAttackDuration / 60d / SpeedRate;
+            var dul = _beginAttackDuration / 60d / animationSpeedRate;
             t.TweenProperty(sprite, "position", new Vector2(dist, 0), dul)
                 .SetEase(Tween.EaseType.InOut);
         }
@@ -202,7 +202,7 @@ public partial class PiercingWeapon : WeaponBase
 
         // C. すぐに他の敵を狙わないようなアニメの遊び
         {
-            var dul = _endAttackDuration / 60d / SpeedRate;
+            var dul = _endAttackDuration / 60d / animationSpeedRate;
             t.TweenProperty(sprite, "position", new Vector2(0, 0), dul);
         }
 
@@ -224,17 +224,24 @@ public partial class PiercingWeapon : WeaponBase
 
     private void RegisterPushAnimation(Tween tween, Node2D sprite)
     {
+        var animationSpeedRate = State.Cooldown.Rate;
+
         // 突き刺しアニメーション
         var dist = (float)_pushDistance;
 
         // ToDo: ゲーム側から武器速度 <see cref="SpeedRate"/> が変更された場合, StaticDamage では
         // 対応しきれないような速度になるので, 一定値以上であれば Static Damage の On / Off ではなく
         // RectAreaProjectile を生成すること 
-        tween.TweenCallback(Callable.From(() => { StaticDamage.Disabled = false; })); // ダメージを有効化
+        tween.TweenCallback(Callable.From(() =>
+        {
+            StaticDamage.Damage = State.Damage.CurrentValue;
+            StaticDamage.Knockback = State.Knockback.CurrentValue;
+            StaticDamage.Disabled = false;
+        })); // ダメージを有効化
 
         // 突き刺し
         {
-            var dul = _pushFrontDuration / 60d / SpeedRate;
+            var dul = _pushFrontDuration / 60d / animationSpeedRate;
             tween.TweenProperty(sprite, "position", new Vector2(dist, 0), dul)
                 .SetTrans(Tween.TransitionType.Back)
                 .SetEase(Tween.EaseType.InOut);
@@ -244,7 +251,7 @@ public partial class PiercingWeapon : WeaponBase
 
         // 手元に戻すアニメーション
         {
-            var dul = _pushBackDuration / 60d / SpeedRate;
+            var dul = _pushBackDuration / 60d / animationSpeedRate;
             tween.TweenProperty(sprite, "position", new Vector2(3, 0), dul);
         }
     }

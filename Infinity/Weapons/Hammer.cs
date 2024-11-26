@@ -86,9 +86,9 @@ public partial class Hammer : WeaponBase
         // アニメーションに合うようにエリア攻撃の弾を生成する
         var prj = new CircleAreaProjectile();
         {
-            prj.Damage = BaseDamage;
-            prj.Knockback = Knockback;
-            prj.LifeFrame = 30u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
+            prj.Damage = State.Damage.CurrentValue;
+            prj.Knockback = State.Knockback.CurrentValue;
+            prj.LifeFrame = 10u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
             prj.DamageEveryXFrames = 0u; // 一度ダメージを与えたら消滅する
             prj.Radius = _damageRadius;
             prj.Offset = new Vector2(0, 0); // この武器の中心からのオフセット

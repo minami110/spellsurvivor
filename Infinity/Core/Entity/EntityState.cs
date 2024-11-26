@@ -5,12 +5,6 @@ using R3;
 
 namespace fms;
 
-public interface IAttributeDictionary
-{
-    void SetAttribute(string key, Variant value);
-    bool TryGetAttribute(string key, out Variant value);
-}
-
 /// <summary>
 /// Entity の体力やバフなどを管理するクラス
 /// </summary>

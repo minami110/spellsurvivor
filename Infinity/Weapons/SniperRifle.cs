@@ -52,8 +52,8 @@ public partial class SniperRifle : WeaponBase
     {
         var prj = _projectile.Instantiate<BulletProjectile>();
         {
-            prj.Damage = BaseDamage;
-            prj.Knockback = Knockback;
+            prj.Damage = State.Damage.CurrentValue;
+            prj.Knockback = State.Knockback.CurrentValue;
             prj.LifeFrame = _life;
             prj.ConstantForce = AimToNearEnemy.GlobalTransform.X * _speed;
             prj.PenetrateEnemy = true;
