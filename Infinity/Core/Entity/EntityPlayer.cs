@@ -5,7 +5,7 @@ using Range = Godot.Range;
 
 namespace fms;
 
-public partial class BasePlayerPawn : CharacterBody2D, IEntity
+public partial class EntityPlayer : CharacterBody2D, IEntity
 {
     [ExportGroup("Base Status")]
     [Export(PropertyHint.Range, "0,100,")]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://bfke7q0b0owyb"]
 
-[ext_resource type="Script" path="res://Infinity/Player/BasePlayerPawn.cs" id="1_petec"]
+[ext_resource type="Script" path="res://Infinity/Core/Entity/EntityPlayer.cs" id="1_petec"]
 [ext_resource type="Script" path="res://Infinity/Player/MeMe/MeMeAnimator.cs" id="3_kjji6"]
 [ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="4_tkpes"]
 [ext_resource type="Script" path="res://Common/Singletons/PlayerController/PhysicsBody2DPawn.cs" id="5_6vvia"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=17 format=3 uid="uid://cyy8ynm6ig6cq"]
 
-[ext_resource type="Script" path="res://Infinity/Player/BasePlayerPawn.cs" id="1_vdmmf"]
+[ext_resource type="Script" path="res://Infinity/Core/Entity/EntityPlayer.cs" id="1_vdmmf"]
 [ext_resource type="Script" path="res://Common/Singletons/PlayerController/PhysicsBody2DPawn.cs" id="2_ce18s"]
 [ext_resource type="Script" path="res://Infinity/Player/CameraController.cs" id="2_xvrt4"]
 [ext_resource type="Script" path="res://Infinity/Player/HiHi/HiHiAnimator.cs" id="3_tw7gc"]
