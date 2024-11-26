@@ -33,7 +33,7 @@ public partial class ShopSellingItem : VBoxContainer
         // Subscribe 
         var d1 = _buyButton.PressedAsObservable().Subscribe(this, (_, t) => t.OnPressedBuyButton());
         var playerState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
-        var d2 = playerState.Money.Subscribe(OnChangedPlayerMoney);
+        var d2 = playerState.Money.ChangedCurrentValue.Subscribe(OnChangedPlayerMoney);
 
         Disposable.Combine(d1, d2).AddTo(this);
 

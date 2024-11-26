@@ -126,11 +126,6 @@ public partial class Main : Node
                 var reward = state._waveState.CurrentWaveConfig.Reward;
                 state._entityState.AddMoney((uint)reward);
             }
-            else
-            {
-                // PlayerController の初期化
-                ResetPlayerState();
-            }
 
             // Shop のリロール
             state._shopState.RefreshInStoreMinions();
@@ -154,11 +149,5 @@ public partial class Main : Node
         {
             _instance = null;
         }
-    }
-
-    private void ResetPlayerState()
-    {
-        // Plauer を初期化する
-        _entityState.AddMoney(_gameSettings.StartMoney);
     }
 }

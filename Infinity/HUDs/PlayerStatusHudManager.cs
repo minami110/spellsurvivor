@@ -28,7 +28,8 @@ public partial class PlayerStatusHudManager : Node
         }
 
         // Money
-        playerState.Money.Subscribe(this, (v, state) => { state._money.Value = v.ToString(); }).AddTo(this);
+        playerState.Money.ChangedCurrentValue.Subscribe(this, (v, state) => { state._money.Value = v.ToString(); })
+            .AddTo(this);
 
         // MaxHealth
         playerState.Health.ChangedMaxValue.Subscribe(this, (v, state) => { state._maxHealth.Value = v.ToString(); })

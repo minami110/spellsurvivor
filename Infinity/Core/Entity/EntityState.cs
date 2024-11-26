@@ -14,7 +14,8 @@ public partial class EntityState : Node
     private readonly EntityAttribute<float> _dodgeRate;
     private readonly HashSet<EffectBase> _effects = new();
     private readonly EntityHealth _health;
-    private readonly ReactiveProperty<uint> _money = new();
+
+    private readonly EntityAttribute<uint> _money;
     private readonly EntityAttribute<float> _moveSpeed;
 
     // ===== Begin Stats =====
@@ -24,9 +25,7 @@ public partial class EntityState : Node
     /// <summary>
     /// 現在の所持金
     /// </summary>
-    // ToDo: これは Entity State ではないので, Main / Shop などの Game 側で管理する
-    [Obsolete]
-    public ReadOnlyReactiveProperty<uint> Money => _money;
+    public ReadOnlyEntityAttribute<uint> Money => _money;
 
     /// <summary>
     /// 現在の移動速度
@@ -46,13 +45,15 @@ public partial class EntityState : Node
     // Parameterless constructor for Godot
     private EntityState()
     {
+        _money = new EntityAttribute<uint>(0u);
         _health = new EntityHealth(0u, 0u);
         _moveSpeed = new EntityAttribute<float>(0f);
         _dodgeRate = new EntityAttribute<float>(0f);
     }
 
-    public EntityState(uint maxHealth, uint moveSpeed, float dodgeRate)
+    public EntityState(uint money, uint maxHealth, uint moveSpeed, float dodgeRate)
     {
+        _money = new EntityAttribute<uint>(money);
         _health = new EntityHealth(maxHealth, maxHealth);
         _moveSpeed = new EntityAttribute<float>(moveSpeed);
         _dodgeRate = new EntityAttribute<float>(dodgeRate);
@@ -64,14 +65,16 @@ public partial class EntityState : Node
         {
             // Note: Process を override していないのでここで手動で有効化する
             SetProcess(true);
-
-            // Reactive Properties の Dispose をまとめる
-            var d = Disposable.Combine(_money, _moveSpeed, _health, _dodgeRate);
-            d.AddTo(this);
         }
         else if (what == NotificationProcess)
         {
             SolveEffect();
+        }
+        else if (what == NotificationExitTree)
+        {
+            // Reactive Properties の Dispose をまとめる
+            var d = Disposable.Combine(_money, _moveSpeed, _health, _dodgeRate);
+            d.Dispose();
         }
     }
 
@@ -81,10 +84,9 @@ public partial class EntityState : Node
         _isDirty = true;
     }
 
-    [Obsolete]
     public void AddMoney(uint amount)
     {
-        _money.Value += amount;
+        _money.SetCurrentValue(_money.CurrentValue + amount);
     }
 
     public void ApplyDamage(uint amount)
@@ -104,15 +106,14 @@ public partial class EntityState : Node
         _health.SetCurrentValue(_health.CurrentValue + amount);
     }
 
-    [Obsolete]
     public void ReduceMoney(uint amount)
     {
-        if (_money.Value < amount)
+        if (_money.CurrentValue < amount)
         {
             throw new NotImplementedException("所持金が足りません");
         }
 
-        _money.Value -= amount;
+        _money.SetCurrentValue(_money.CurrentValue - amount);
     }
 
     public void ResetToMaxHealth()
