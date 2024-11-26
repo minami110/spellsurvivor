@@ -52,7 +52,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// <summary>
     /// 現在の State
     /// </summary>
-    internal EnemyState State = null!;
+    internal EntityState State = null!;
 
     /// <summary>
     /// スポーンしてからの経過フレーム数
@@ -221,10 +221,10 @@ public partial class EnemyBase : RigidBody2D, IEntity
     {
         // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
         //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
-        var health = BaseHealth + (Level - 1) * 5f;
-        var speed = GD.Randfn(BaseSpeed, _randomSpeed);
+        var health = (uint)(BaseHealth + (Level - 1) * 5f);
+        var speed = (uint)GD.Randfn(BaseSpeed, _randomSpeed);
 
-        State = new EnemyState((uint)speed, (uint)health);
+        State = new EntityState(0u, health, speed, 0u);
     }
 
     /// <summary>
@@ -331,7 +331,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
         }
 
         State.ApplyDamage((uint)amount);
-        State.SolveEffect();
         OnTakeDamage(amount, instigator, causer);
     }
 
