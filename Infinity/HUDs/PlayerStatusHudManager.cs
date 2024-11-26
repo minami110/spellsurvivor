@@ -47,6 +47,6 @@ public partial class PlayerStatusHudManager : Node
             // % 表記にするために 100 倍する
             state._dodgeRate.Value = (v * 100f).ToString(CultureInfo.InvariantCulture);
         }).AddTo(this);
-        _dodgeRate.DefaultValue = playerState.DodgeRate.CurrentValue.ToString(CultureInfo.InvariantCulture);
+        _dodgeRate.DefaultValue = (playerState.DodgeRate.DefaultValue * 100f).ToString(CultureInfo.InvariantCulture);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using fms.Effect;
-using fms.Weapon;
 using Godot;
 
 namespace fms.Faction;

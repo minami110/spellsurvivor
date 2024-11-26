@@ -26,17 +26,20 @@ public partial class FactionBase : Node
 
             field = newLevel;
 
-            if (IsNodeReady())
+            // Ready 前 (Editor での代入) の場合は終わり
+            if (!IsNodeReady())
             {
-                // レベルアップ時に以前のレベルまでに発行済のエフェクトすべてを削除する
-                foreach (var effect in _publishedEffects)
-                {
-                    effect.QueueFree();
-                }
-
-                _publishedEffects.Clear();
-                OnLevelChanged(newLevel);
+                return;
             }
+
+            // レベルアップ時に以前のレベルまでに発行済のエフェクトすべてを削除する
+            foreach (var effect in _publishedEffects)
+            {
+                effect.QueueFree();
+            }
+
+            _publishedEffects.Clear();
+            OnLevelChanged(newLevel);
         }
     }
 
@@ -64,10 +67,7 @@ public partial class FactionBase : Node
         }
         else if (what == NotificationReady)
         {
-            if (Level != 0)
-            {
-                OnLevelChanged(Level);
-            }
+            OnLevelChanged(Level);
         }
     }
 
@@ -96,7 +96,7 @@ public partial class FactionBase : Node
         _publishedEffects.Add(effect);
 
         // Weapon に Effect を追加
-        weapon.AddEffect(effect);
+        weapon.AddChild(effect);
     }
 
     /// <summary>

@@ -15,6 +15,7 @@ public partial class EffectBase : Node
     {
         if (what == NotificationEnterTree)
         {
+            AddToGroup(GroupNames.Effect);
             var dictionary = GetParentOrNull<IAttributeDictionary>();
             Dictionary = dictionary ??
                          throw new ApplicationException(

@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using fms.Effect;
-using fms.Weapon;
 using Godot;
 using Heat = fms.Weapon.Heat;
 

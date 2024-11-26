@@ -1,5 +1,4 @@
-﻿using fms.Weapon;
-using Godot;
+﻿using Godot;
 
 namespace fms.Faction;
 

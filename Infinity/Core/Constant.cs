@@ -35,4 +35,5 @@ public static class GroupNames
     public static readonly StringName Player = new("Player");
     public static readonly StringName PlayerState = new("PlayerState");
     public static readonly StringName Pawn = new("Pawn");
+    public static readonly StringName Effect = new("Effect");
 }

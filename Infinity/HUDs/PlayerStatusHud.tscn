@@ -48,5 +48,4 @@ DefaultValue = "100"
 layout_mode = 2
 Icon = ExtResource("2_f2iiu")
 Label = "Dodge"
-DefaultValue = "0"
 Suffix = "%"

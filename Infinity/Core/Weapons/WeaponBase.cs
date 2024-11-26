@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using fms.Faction;
 using fms.Projectile;
 using Godot;
+using Godot.Collections;
 using R3;
 
 namespace fms;
@@ -105,13 +105,7 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
     [Export]
     public FactionType Faction { get; set; }
 
-    private readonly Godot.Collections.Dictionary<string, Variant> _attributes = new();
-
-    // 現在武器に付与されている Effect
-    private readonly HashSet<EffectBase> _effects = [];
-
-    // Effect の変更があったかどうか
-    private bool _isDirtyEffect;
+    private readonly Dictionary<string, Variant> _attributes = new();
 
     /// <summary>
     /// 武器の Id
@@ -208,12 +202,6 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
         }
     }
 
-    public virtual void AddEffect(EffectBase effect)
-    {
-        _effects.Add(effect);
-        _isDirtyEffect = true;
-    }
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AddProjectile(BaseProjectile projectile)
     {
@@ -286,7 +274,7 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
     {
     }
 
-    private protected virtual void OnUpdateAnyAttribute(Godot.Collections.Dictionary<string, Variant> attributes)
+    private protected virtual void OnUpdateAnyAttribute(Dictionary<string, Variant> attributes)
     {
     }
 
