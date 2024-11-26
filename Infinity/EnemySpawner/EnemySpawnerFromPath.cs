@@ -68,7 +68,7 @@ public partial class EnemySpawnerFromPath : EnemySpawnerBase
         var samplePosition = _spawnPath.GlobalPosition;
 
         // Add scene
-        var enemy = packedScene.Instantiate<EnemyBase>();
+        var enemy = packedScene.Instantiate<EntityEnemy>();
         enemy.Level = level;
 
         _enemySpawnRoot.AddChild(enemy);

@@ -36,7 +36,7 @@ public partial class GunTurretBody : AreaProjectile
         // ToDo: 一番近い敵を選択する 
         var target = bodies[0];
 
-        if (target is EnemyBase enemy)
+        if (target is EntityEnemy enemy)
         {
             // タレットが発射する弾を生成
             var prj = BulletPackedScene.Instantiate<BaseProjectile>();

@@ -4,7 +4,7 @@ using Range = Godot.Range;
 
 namespace fms;
 
-public partial class EnemyBase : RigidBody2D, IEntity
+public partial class EntityEnemy : RigidBody2D, IEntity
 {
     /// <summary>
     /// 体力の基礎値
@@ -94,7 +94,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
                     // SetProcess(false);
                     SetPhysicsProcess(false);
 
-                    GD.PrintErr($"[{nameof(EnemyBase)}] Player node is not found");
+                    GD.PrintErr($"[{nameof(EntityEnemy)}] Player node is not found");
                     return;
                 }
 

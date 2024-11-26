@@ -111,7 +111,7 @@ public partial class StaticDamage : Area2D
             SendHitInfo(body);
 
             // ToDo: Knockback 処理, 型があいまい
-            if (body is EnemyBase enemy)
+            if (body is EntityEnemy enemy)
             {
                 if (Knockback > 0)
                 {

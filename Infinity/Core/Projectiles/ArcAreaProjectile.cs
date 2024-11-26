@@ -146,7 +146,7 @@ public partial class ArcAreaProjectile : CircleAreaProjectile
 
                 // ToDo: Knockback 処理, 型があいまい
                 // Note: 死んでても死亡時アニメーションがあるのでノックバックを与える
-                if (body is EnemyBase enemy)
+                if (body is EntityEnemy enemy)
                 {
                     if (Knockback > 0)
                     {

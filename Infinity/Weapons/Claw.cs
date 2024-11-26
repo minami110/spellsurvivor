@@ -118,7 +118,7 @@ public partial class Claw : WeaponBase
         // Projectile が Enemy にヒットしたら Stack を一つ貯める
         // Prj は貫通するが, 一つの Prj につき 1回だけ Stack を貯められるので Take(1) を入れている
         prj.Hit
-            .Where(x => x.HitNode is EnemyBase)
+            .Where(x => x.HitNode is EntityEnemy)
             .Take(1)
             .Subscribe(this, (_, s) =>
             {

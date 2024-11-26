@@ -8,7 +8,7 @@ namespace fms.Enemy;
 /// <summary>
 /// 遠距離からプレイヤーに射撃を行う敵
 /// </summary>
-public partial class Hornet : EnemyBase
+public partial class Hornet : EntityEnemy
 {
     [Export(PropertyHint.Range, "0,10000,1")]
     private int _minAttackDistance = 180;
