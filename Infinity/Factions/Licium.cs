@@ -32,11 +32,11 @@ public partial class Licium : FactionBase
             {
                 case >= 3:
                     // 30% の確率で 5 ダメージ回復
-                    AddEffectToWeapon(weapon, new Lifesteal { Amount = 5u, Rate = 0.3f });
+                    AddEffectToWeapon(weapon, new Lifesteal { Duration = 0u, Amount = 5u, Rate = 0.3f });
                     break;
                 case >= 1:
                     // 10% の確率で 5 ダメージ回復
-                    AddEffectToWeapon(weapon, new Lifesteal { Amount = 5u, Rate = 0.1f });
+                    AddEffectToWeapon(weapon, new Lifesteal { Duration = 0u, Amount = 5u, Rate = 0.1f });
                     break;
             }
         }

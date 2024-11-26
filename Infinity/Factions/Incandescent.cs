@@ -12,6 +12,7 @@ namespace fms.Faction;
 [GlobalClass]
 public partial class Incandescent : FactionBase
 {
+    // Lv4. で装備する Heat のパス
     private string _heatWeaponPath = "res://Infinity/Weapons/(Weapon) Heat.tscn";
 
     // Lv.2 以上で有効な効果がある
@@ -19,7 +20,7 @@ public partial class Incandescent : FactionBase
 
     private protected override void OnLevelChanged(uint level)
     {
-        // Lv2: 兄弟にある Incandescent の Weapon に Strength (+5) を付与
+        // Lv2: 兄弟にある Incandescent の Weapon に Strength (+ 10%) を付与
         if (level >= 2u)
         {
             var nodes = this.GetSiblings();
@@ -35,15 +36,15 @@ public partial class Incandescent : FactionBase
                     continue;
                 }
 
-                AddEffectToWeapon(weapon, new Strength { Amount = 5u });
+                AddEffectToWeapon(weapon, new Strength { Duration = 0u, Rate = 0.1f });
             }
         }
 
         // Lv3. プレイヤーに Wing (+10), Dodge (+10%) を付与
         if (level >= 3u)
         {
-            AddEffactToPlayer(new Wing { Amount = 10u });
-            AddEffactToPlayer(new Dodge { Rate = 0.1f });
+            AddEffactToPlayer(new Wing { Duration = 0u, Amount = 10u });
+            AddEffactToPlayer(new Dodge { Duration = 0u, Rate = 0.1f });
         }
 
         // Lv4. Heat Lv.1 をプレイヤーに装備

@@ -26,7 +26,7 @@ public partial class Bruiser : FactionBase
             return;
         }
 
-        var effect = new Heart { Amount = value };
+        var effect = new Heart { Duration = 0u, Amount = value };
         AddEffactToPlayer(effect);
     }
 }

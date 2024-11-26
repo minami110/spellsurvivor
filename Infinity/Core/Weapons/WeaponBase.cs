@@ -299,6 +299,7 @@ public partial class WeaponBase : Node2D, IAttributeDictionary
     {
         // Damage
         {
+            // Damage Rate
             if (_attributes.TryGetValue(WeaponAttributeNames.DamageRate, out var v))
             {
                 var damage = BaseDamage + BaseDamage * (float)v;

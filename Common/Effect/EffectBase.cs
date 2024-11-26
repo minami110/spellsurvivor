@@ -5,10 +5,8 @@ namespace fms;
 
 public partial class EffectBase : Node
 {
-    [Export]
-    public uint Duration;
-
     private uint _lifeTime;
+    public required uint Duration { get; init; }
     private protected IAttributeDictionary Dictionary { get; private set; } = null!;
 
     public override void _Notification(int what)

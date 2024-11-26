@@ -1,11 +1,13 @@
 ﻿namespace fms.Effect;
 
 /// <summary>
+/// Weapon Effect: Strength
+/// DamageRate を増やす
 /// https://scrapbox.io/FUMOSurvivor/Strength
 /// </summary>
 public partial class Strength : EffectBase
 {
-    public required uint Amount { get; init; }
+    public required float Rate { get; init; }
 
     public override void _EnterTree()
     {
@@ -13,11 +15,11 @@ public partial class Strength : EffectBase
 
         if (Dictionary.TryGetAttribute(_KEY, out var v))
         {
-            Dictionary.SetAttribute(_KEY, (float)v + Amount);
+            Dictionary.SetAttribute(_KEY, (float)v + Rate);
         }
         else
         {
-            Dictionary.SetAttribute(_KEY, Amount);
+            Dictionary.SetAttribute(_KEY, Rate);
         }
     }
 
@@ -27,7 +29,7 @@ public partial class Strength : EffectBase
 
         if (Dictionary.TryGetAttribute(_KEY, out var v))
         {
-            Dictionary.SetAttribute(_KEY, (float)v - Amount);
+            Dictionary.SetAttribute(_KEY, (float)v - Rate);
         }
     }
 }
