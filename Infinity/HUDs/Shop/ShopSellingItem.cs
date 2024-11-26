@@ -22,13 +22,13 @@ public partial class ShopSellingItem : VBoxContainer
 
     private bool _isSoldOut;
 
-    public Minion Minion { get; internal set; } = null!;
+    public WeaponCard WeaponCard { get; internal set; } = null!;
 
     public override void _Ready()
     {
-        _iconTextureRect.Texture = Minion.Sprite;
-        _nameLabel.Text = Minion.FriendlyName;
-        _buyButton.Text = $"${Minion.Price}";
+        _iconTextureRect.Texture = WeaponCard.Sprite;
+        _nameLabel.Text = WeaponCard.FriendlyName;
+        _buyButton.Text = $"${WeaponCard.Price}";
 
         // Subscribe 
         var d1 = _buyButton.PressedAsObservable().Subscribe(this, (_, t) => t.OnPressedBuyButton());
@@ -54,7 +54,7 @@ public partial class ShopSellingItem : VBoxContainer
 
     private void OnChangedPlayerMoney(uint money)
     {
-        if (money < Minion.Price)
+        if (money < WeaponCard.Price)
         {
             _buyButton.Modulate = new Color(1, 0, 0);
             _buyButton.Disabled = true;
@@ -71,7 +71,7 @@ public partial class ShopSellingItem : VBoxContainer
     private void OnPressedBuyButton()
     {
         // GameMode に通知する
-        Main.Shop.BuyWeaponCard(Minion);
+        Main.Shop.BuyWeaponCard(WeaponCard);
     }
 
     private void ShowToolTip()
@@ -81,10 +81,10 @@ public partial class ShopSellingItem : VBoxContainer
             return;
         }
 
-        var text = $"{Minion.FriendlyName}\n";
-        text += $"Tier: {Minion.Tier}\n";
-        text += $"Faction: ${Minion.Faction}\n";
-        text += $"{Minion.Description}\n";
+        var text = $"{WeaponCard.FriendlyName}\n";
+        text += $"Tier: {WeaponCard.Tier}\n";
+        text += $"Faction: ${WeaponCard.Faction}\n";
+        text += $"{WeaponCard.Description}\n";
 
         ToolTipToast.Text = text;
         ToolTipToast.Show();

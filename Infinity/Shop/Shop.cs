@@ -12,12 +12,12 @@ public partial class ShopState : Node
     [Export]
     public ShopConfig Config { get; private set; } = null!;
 
-    private readonly List<Minion> _inStoreMinions = new();
+    private readonly List<WeaponCard> _inStoreMinions = new();
     private readonly Subject<Unit> _inStoreMinionsUpdatedSubject = new();
 
     private readonly ReactiveProperty<int> _levelRp = new(1);
 
-    private readonly Dictionary<int, List<Minion>> _runtimeMinionPool = new();
+    private readonly Dictionary<int, List<WeaponCard>> _runtimeMinionPool = new();
 
     private int _itemSlotCount;
 
@@ -32,7 +32,7 @@ public partial class ShopState : Node
 
     /// <summary>
     /// </summary>
-    public IReadOnlyList<Minion> InStoreMinions => _inStoreMinions;
+    public IReadOnlyList<WeaponCard> InStoreMinions => _inStoreMinions;
 
     public bool IsLocked { get; set; }
 
@@ -81,11 +81,11 @@ public partial class ShopState : Node
                     GD.Print($"  Loaded: {path} => {minionCoreData.Name}");
                     if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
                     {
-                        list = new List<Minion>();
+                        list = new List<WeaponCard>();
                         _runtimeMinionPool[minionCoreData.Tier] = list;
                     }
 
-                    list.Add(new Minion(minionCoreData));
+                    list.Add(new WeaponCard(minionCoreData));
                 }
 
                 fileName = dir.GetNext();
@@ -121,34 +121,34 @@ public partial class ShopState : Node
     /// <summary>
     /// WeaponCard をショップから購入
     /// </summary>
-    /// <param name="minion"></param>
-    public void BuyWeaponCard(Minion minion)
+    /// <param name="weaponCard"></param>
+    public void BuyWeaponCard(WeaponCard weaponCard)
     {
-        if (!_inStoreMinions.Contains(minion))
+        if (!_inStoreMinions.Contains(weaponCard))
         {
             throw new InvalidProgramException("購入対象の WeaponCard が現在販売されていません");
         }
 
         // ショップから排除する
-        _inStoreMinions.Remove(minion);
+        _inStoreMinions.Remove(weaponCard);
         _inStoreMinionsUpdatedSubject.OnNext(Unit.Default);
 
         // ToDo: 外部化していいかも
         // プレイヤーのお金を減らす
         var playerState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
-        playerState.ReduceMoney(minion.Price);
+        playerState.ReduceMoney(weaponCard.Price);
 
         // Player がすでに Minion を所持していたらレベルを上げる
         var player = this.GetPlayerNode();
-        var minions = player.FindChildren("*", nameof(Minion), false, false);
-        if (minions.Any(m => m == minion))
+        var minions = player.FindChildren("*", nameof(WeaponCard), false, false);
+        if (minions.Any(m => m == weaponCard))
         {
-            minion.AddWeaponLevel(1u);
+            weaponCard.AddWeaponLevel(1u);
             return;
         }
 
         // Playerは まだ所有していないので子にする
-        player.AddChild(minion);
+        player.AddChild(weaponCard);
     }
 
     public void RefreshInStoreMinions()
@@ -186,7 +186,7 @@ public partial class ShopState : Node
             }
 
             // ティアが決定したので Minion を選択する
-            Minion? minion = null;
+            WeaponCard? minion = null;
             if (_runtimeMinionPool.TryGetValue(targetTier, out var minions))
             {
                 // List から ランダムに Minion を取り出す, 最大レベルの場合はスキップする
@@ -216,22 +216,22 @@ public partial class ShopState : Node
     /// <summary>
     /// Minion をショップに売却
     /// </summary>
-    /// <param name="minion"></param>
-    public void SellItem(Minion minion)
+    /// <param name="weaponCard"></param>
+    public void SellItem(WeaponCard weaponCard)
     {
         var player = this.GetPlayerNode();
-        var minions = player.FindChildren("*", nameof(Minion), false, false);
-        if (minions.Any(m => m == minion))
+        var minions = player.FindChildren("*", nameof(WeaponCard), false, false);
+        if (minions.Any(m => m == weaponCard))
         {
             // ミニオンをプレイヤーの手持ちから取り除く
-            player.RemoveChild(minion);
+            player.RemoveChild(weaponCard);
             // 次も Ready してほしいのでフラグを立てておく
-            minion.RequestReady();
+            weaponCard.RequestReady();
 
             // プレイヤーのお金を増やす
             // TODO: 売却価格を売値と同じにしています
             var playerState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
-            playerState.AddMoney(minion.Price);
+            playerState.AddMoney(weaponCard.Price);
         }
     }
 

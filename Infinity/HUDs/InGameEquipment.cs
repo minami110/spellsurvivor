@@ -19,11 +19,11 @@ public partial class InGameEquipment : VBoxContainer
 
     public override void _Ready()
     {
-        Minion? targetMinion = null;
+        WeaponCard? targetMinion = null;
         var nodes = GetTree().GetNodesInGroup(Constant.GroupNameMinion);
         foreach (var node in nodes)
         {
-            if (node is not Minion minion)
+            if (node is not WeaponCard minion)
             {
                 continue;
             }

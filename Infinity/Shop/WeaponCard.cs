@@ -4,10 +4,9 @@ using Godot;
 namespace fms;
 
 /// <summary>
-/// Shop アイテム
+/// Shop で販売している Weapon
 /// </summary>
-[GlobalClass]
-public partial class Minion : Node
+public partial class WeaponCard : Node
 {
     [Export]
     private MinionCoreData CoreData { get; set; } = null!;
@@ -32,11 +31,11 @@ public partial class Minion : Node
     /// </summary>
     public FactionType Faction => CoreData.Faction;
 
-    private Minion()
+    private WeaponCard()
     {
     }
 
-    public Minion(MinionCoreData data)
+    public WeaponCard(MinionCoreData data)
     {
         CoreData = data;
     }
