@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using fms.Weapon;
 using Godot;
 
 namespace fms.Faction;
@@ -29,10 +28,10 @@ public partial class FactionBase : Node
 
             if (IsNodeReady())
             {
-                // 発行済のエフェクトすべてを削除する
+                // レベルアップ時に以前のレベルまでに発行済のエフェクトすべてを削除する
                 foreach (var effect in _publishedEffects)
                 {
-                    effect.Dispose();
+                    effect.QueueFree();
                 }
 
                 _publishedEffects.Clear();
@@ -81,14 +80,14 @@ public partial class FactionBase : Node
         // 発行済みエフェクトとしてマークしておく
         _publishedEffects.Add(effect);
 
-        // PlayerState に Effect を追加
+        // PlayerState の子にに Effect を追加
         var ps = GetParent().FindFirstChild<EntityState>();
         if (ps is null)
         {
             throw new ApplicationException("Failed to find PlayerState");
         }
 
-        ps.AddEffect(effect);
+        ps.AddChild(effect);
     }
 
     private protected void AddEffectToWeapon(WeaponBase weapon, EffectBase effect)

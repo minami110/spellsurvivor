@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using fms.Effect;
 using fms.Projectile;
 using Godot;
 using Godot.Collections;
@@ -75,23 +73,19 @@ public partial class Firecracker : WeaponBase
         }
     }
 
-    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    private protected override void OnUpdateAnyAttribute(Dictionary<string, Variant> attributes)
     {
         TrickShotCount = 0;
         TrickShotDamageMul = 0f;
 
-        foreach (var effect in effects)
+        if (attributes.TryGetValue("TrickShotCount", out var trickShotCount))
         {
-            switch (effect)
-            {
-                // この武器は Trickshot に対応しているので拾う
-                case TrickshotBounce trickshotBounceCount:
-                {
-                    TrickShotCount += trickshotBounceCount.BounceCount;
-                    TrickShotDamageMul += trickshotBounceCount.BounceDamageMultiplier;
-                    break;
-                }
-            }
+            TrickShotCount = (int)trickShotCount;
+        }
+
+        if (attributes.TryGetValue("TrickShotDamageMul", out var trickShotDamageMul))
+        {
+            TrickShotDamageMul = (float)trickShotDamageMul;
         }
     }
 

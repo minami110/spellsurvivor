@@ -1,5 +1,4 @@
 ﻿using fms.Effect;
-using fms.Weapon;
 using Godot;
 
 namespace fms.Faction;
@@ -53,6 +52,6 @@ public partial class Trickshot : FactionBase
     private void AddTrickshotEffect(WeaponBase weapon, int bounceCount, float bounceDamageMultiplier)
     {
         AddEffectToWeapon(weapon, new TrickshotBounce
-            { BounceCount = bounceCount, BounceDamageMultiplier = bounceDamageMultiplier });
+            { BounceCount = (uint)bounceCount, BounceDamageMultiplier = bounceDamageMultiplier });
     }
 }

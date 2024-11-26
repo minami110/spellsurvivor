@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using fms.Effect;
 using fms.Faction;
 using fms.Projectile;
 using Godot;
 using R3;
 
-namespace fms.Weapon;
+namespace fms;
+
+public static class WeaponAttributeNames
+{
+    public const string DamageRate = "DamageRate";
+    public const string SpeedRate = "SpeedRate";
+}
 
 /// <summary>
 /// Weapon のベースクラス
 /// </summary>
-public partial class WeaponBase : Node2D
+public partial class WeaponBase : Node2D, IAttributeDictionary
 {
     /// <summary>
     /// 武器の基礎ダメージ量
@@ -99,6 +104,8 @@ public partial class WeaponBase : Node2D
     /// </summary>
     [Export]
     public FactionType Faction { get; set; }
+
+    private readonly Godot.Collections.Dictionary<string, Variant> _attributes = new();
 
     // 現在武器に付与されている Effect
     private readonly HashSet<EffectBase> _effects = [];
@@ -198,16 +205,6 @@ public partial class WeaponBase : Node2D
             {
                 StopAttack();
             }
-
-            // Note: Godot では override していないと Process が動かない
-            //       Notification で使いたいのでここでマニュアル有効化する
-            SetProcess(true);
-        }
-        else if (what == NotificationProcess)
-        {
-            // ToDo: ショップでも裏で動いてるのへんかも?
-            // こっちで対応するより, Shop にいるときは削除 みたいな上位からの実装があったほうが素直かも
-            SolveEffect();
         }
     }
 
@@ -281,14 +278,15 @@ public partial class WeaponBase : Node2D
         RestartCoolDown();
     }
 
-    private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
-    {
-    }
 
     /// <summary>
     /// 武器が起動したときに呼び出されるメソッド, 通常はバトルウェーブ開始時に呼ばれる
     /// </summary>
     private protected virtual void OnStartAttack()
+    {
+    }
+
+    private protected virtual void OnUpdateAnyAttribute(Godot.Collections.Dictionary<string, Variant> attributes)
     {
     }
 
@@ -309,54 +307,37 @@ public partial class WeaponBase : Node2D
         FrameTimer.Start();
     }
 
-    private void SolveEffect()
+    private void OnUpdateAnyAttribute()
     {
-        if (_effects.Count == 0)
+        // Damage
         {
-            return;
-        }
-
-        // Dispose されたエフェクトを削除
-        var count = _effects.RemoveWhere(effect => effect.IsDisposed);
-        if (count > 0)
-        {
-            _isDirtyEffect = true;
-        }
-
-        if (!_isDirtyEffect)
-        {
-            return;
-        }
-
-        _isDirtyEffect = false;
-
-        // 値を初期化する
-        var damage = (uint)BaseDamage;
-        var speedRate = BaseSpeedRate;
-
-        foreach (var effect in _effects)
-        {
-            switch (effect)
+            if (_attributes.TryGetValue(WeaponAttributeNames.DamageRate, out var v))
             {
-                // Strength (武器ダメージ)
-                case Strength strengthEffect:
-                {
-                    damage += strengthEffect.Amount;
-                    break;
-                }
-                // Haset (武器の速度)
-                case Haste haste:
-                {
-                    speedRate += haste.Amount;
-                    break;
-                }
+                var damage = BaseDamage + BaseDamage * (float)v;
+                Damage = (uint)damage;
             }
         }
 
-        // 値を更新
-        Damage = damage;
-        SpeedRate = Math.Max(speedRate, 0.001f);
+        // Speed
+        {
+            if (_attributes.TryGetValue(WeaponAttributeNames.SpeedRate, out var v))
+            {
+                var speedRate = BaseSpeedRate + (float)v;
+                SpeedRate = Math.Max(speedRate, 0.001f);
+            }
+        }
 
-        OnSolveEffect(_effects);
+        OnUpdateAnyAttribute(_attributes);
+    }
+
+    bool IAttributeDictionary.TryGetAttribute(string key, out Variant value)
+    {
+        return _attributes.TryGetValue(key, out value);
+    }
+
+    void IAttributeDictionary.SetAttribute(string key, Variant value)
+    {
+        _attributes[key] = value;
+        OnUpdateAnyAttribute();
     }
 }
