@@ -47,7 +47,7 @@ public partial class ShopHudController : Node
         _lockButton.Text = Main.Shop.IsLocked ? "Unlock" : "Lock";
 
         // ボタンのバインドを更新
-        var d00 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.Shop.RefreshInStoreMinions(); });
+        var d00 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.Shop.RefreshWeaponCards(); });
         var d01 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.Shop.UpgradeShopLevel(); });
         var d02 = _quitShopButton.PressedAsObservable().Subscribe(_ =>
         {

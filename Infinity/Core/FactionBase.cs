@@ -67,6 +67,18 @@ public partial class FactionBase : Node
         }
         else if (what == NotificationReady)
         {
+            // すでに兄弟に 同じ Faction が存在する場合はそっちに合体して自分は消える
+            var siblings = GetParent().GetChildren();
+            foreach (var sibling in siblings)
+            {
+                if (sibling is FactionBase faction && faction != this && faction.GetType() == GetType())
+                {
+                    faction.Level += Level;
+                    QueueFree();
+                    return;
+                }
+            }
+
             OnLevelChanged(Level);
         }
     }
@@ -96,7 +108,7 @@ public partial class FactionBase : Node
         _publishedEffects.Add(effect);
 
         // Weapon に Effect を追加
-        weapon.AddChild(effect);
+        weapon.State.AddChild(effect);
     }
 
     /// <summary>

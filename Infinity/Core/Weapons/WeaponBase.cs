@@ -17,16 +17,16 @@ public partial class WeaponBase : Node2D
     [Export(PropertyHint.Range, "0,10,")]
     private uint _level = 1u;
 
-    [Export(PropertyHint.Range, "0,10,")]
+    [Export(PropertyHint.Range, "0,9999,")]
     private uint _damage = 10u;
 
-    [Export(PropertyHint.Range, "0,10,,suffix:frames")]
+    [Export(PropertyHint.Range, "0,9999,,suffix:frames")]
     private uint _cooldown = 10u;
 
-    [Export(PropertyHint.Range, "0,100,0.1,suffix:%")]
+    [Export(PropertyHint.Range, "0,500,0.1,suffix:%")]
     private float _cooldownRate = 100f;
 
-    [Export(PropertyHint.Range, "0,10,,suffix:px/s")]
+    [Export(PropertyHint.Range, "0,9999,,suffix:px/s")]
     private uint _knockback = 20u;
 
     /// <summary>
@@ -34,7 +34,7 @@ public partial class WeaponBase : Node2D
     /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
     /// </summary>
     [Export]
-    public FactionType Faction { get; set; }
+    public FactionType Faction { get; private set; }
 
     // ---------- Animation Parameters ----------
 
@@ -104,29 +104,34 @@ public partial class WeaponBase : Node2D
             );
 
             // FrameTimer が存在していなかったら作成する
-            var frametimer = this.FindFirstChild<FrameTimer>();
-            if (frametimer is null)
             {
-                frametimer = new FrameTimer();
-                AddChild(frametimer);
+                var frametimer = this.FindFirstChild<FrameTimer>();
+                if (frametimer is null)
+                {
+                    frametimer = new FrameTimer();
+                    AddChild(frametimer);
+                }
+
+                FrameTimer = frametimer;
             }
 
-            FrameTimer = frametimer;
-
-            // 親が IEntity であることを確認しこの武器の所有者として設定する
-            var parent = GetParentOrNull<IEntity>();
-            OwnedEntity = parent ?? throw new ApplicationException("WeaponBase は IEntity の子ノードでなければなりません");
+            // 武器のクールダウンが完了時のコールバックを登録
+            FrameTimer.TimeOut
+                .Subscribe(this, (_, self) => { self.OnCoolDownCompleted(self.State.Level.CurrentValue); })
+                .AddTo(this);
 
             // ToDo: 仮
             // 手前に見えるようにする
             ZIndex = 10;
+
+            // 親が IEntity であることを確認しこの武器の所有者として設定する
+            var parent = GetParentOrNull<IEntity>();
+            OwnedEntity = parent ?? throw new ApplicationException("WeaponBase は IEntity の子ノードでなければなりません");
         }
         else if (what == NotificationReady)
         {
-            // 武器のクールダウンが完了時のコールバックを登録
-            FrameTimer.TimeOut
-                .Subscribe(this, (_, state) => { state.OnCoolDownCompleted(state.State.Level.CurrentValue); })
-                .AddTo(this);
+            // 兄弟に Faction を作成またはレベルアップ
+            CreateFactions();
 
             if (AutoStart)
             {
@@ -136,6 +141,10 @@ public partial class WeaponBase : Node2D
             {
                 StopAttack();
             }
+        }
+        else if (what == NotificationExitTree)
+        {
+            // 兄弟の Faction のレベルを下げる
         }
     }
 
@@ -159,6 +168,11 @@ public partial class WeaponBase : Node2D
         AddProjectile(projectile);
     }
 
+    /// <summary>
+    /// Faction (シナジー) に所属しているかどうか
+    /// </summary>
+    /// <param name="factionType"></param>
+    /// <returns></returns>
     public bool IsBelongTo(FactionType factionType)
     {
         return Faction.HasFlag(factionType);
@@ -228,5 +242,43 @@ public partial class WeaponBase : Node2D
         FrameTimer.OneShot = true;
         FrameTimer.WaitFrame = State.Cooldown.CurrentValue;
         FrameTimer.Start();
+    }
+
+    // 所属している Faction を作成する
+    private void CreateFactions()
+    {
+        foreach (var faction in FactionUtil.GetFactionTypes())
+        {
+            if (!IsBelongTo(faction))
+            {
+                continue;
+            }
+
+            var f = FactionUtil.CreateFaction(faction);
+            f.Level++; // 1
+
+            // 呼び出しタイミングによっては Parent が busy なので CallDeferred で追加する
+            // 重複して Faction が存在する場合, Faction 側で勝手に合体するのでこちらでは気にしない
+            CallDeferred(Node.MethodName.AddSibling, f);
+        }
+    }
+
+    private void LevelDownFactions()
+    {
+        foreach (var faction in FactionUtil.GetFactionTypes())
+        {
+            if (!IsBelongTo(faction))
+            {
+                continue;
+            }
+
+            // すでに Faction が存在していたらレベルを下げる
+            var s = this.FindSibling("*", faction.ToString());
+            if (s.Count > 0)
+            {
+                var f = (FactionBase)s[0];
+                f.Level--;
+            }
+        }
     }
 }

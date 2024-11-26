@@ -7,7 +7,7 @@ using R3;
 
 namespace fms;
 
-public partial class ShopState : Node
+public partial class Shop : Node
 {
     [Export]
     public ShopConfig Config { get; private set; } = null!;
@@ -36,20 +36,20 @@ public partial class ShopState : Node
 
     public bool IsLocked { get; set; }
 
-    public ShopState(ShopConfig config) : this()
+    public Shop(ShopConfig config) : this()
     {
         Config = config;
     }
 
     // Parameterless constructor for Godot Editor
-    private ShopState()
+    private Shop()
     {
     }
 
     public override void _EnterTree()
     {
         // Set Name (for debugging)
-        Name = nameof(ShopState);
+        Name = nameof(Shop);
 
         // Construct Runtime Minion Pool
         _runtimeMinionPool.Clear();
@@ -151,7 +151,11 @@ public partial class ShopState : Node
         player.AddChild(weaponCard);
     }
 
-    public void RefreshInStoreMinions()
+    /// <summary>
+    /// 現在のショップのアイテムをリフレッシュする
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    public void RefreshWeaponCards()
     {
         // ショップがロックされているときは Refresh しない
         if (IsLocked)

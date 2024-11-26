@@ -7,7 +7,6 @@
 [resource]
 script = ExtResource("3_pobxp")
 WeaponPackedScene = ExtResource("2_4uv82")
-Faction = 64
 Tier = 1
 Price = 5
 Name = "動脈剣"
