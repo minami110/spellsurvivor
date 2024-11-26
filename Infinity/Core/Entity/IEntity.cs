@@ -15,11 +15,6 @@ public interface IEntity
     Vector2 Position { get; }
 
     /// <summary>
-    /// エフェクトを追加
-    /// </summary>
-    void AddEffect(string effectName);
-
-    /// <summary>
     /// ダメージを与える
     /// </summary>
     /// <param name="amount"></param>
@@ -30,23 +25,6 @@ public interface IEntity
     /// <summary>
     /// </summary>
     void ApplayKnockback(in Vector2 direction, float strength)
-    {
-    }
-
-    void GetProperty(string identifier)
-    {
-    }
-
-    bool Kill()
-    {
-        return false;
-    }
-
-    /// <summary>
-    /// </summary>
-    /// <param name="identifier"></param>
-    /// <param name="value"></param>
-    void SetProperty(string identifier, Variant value)
     {
     }
 }

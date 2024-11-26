@@ -1,4 +1,3 @@
-using System;
 using Godot;
 using R3;
 using Range = Godot.Range;
@@ -314,11 +313,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// 現在死亡しているかどうか
     /// </summary>
     public bool IsDead { get; private set; }
-
-    void IEntity.AddEffect(string effectName)
-    {
-        throw new NotImplementedException();
-    }
 
     /// <summary>
     /// プレイヤーなどからダメージを受けるときの処理

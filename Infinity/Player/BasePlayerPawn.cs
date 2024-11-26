@@ -107,11 +107,6 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
         StaticsManager.CommitDamage(info);
     }
 
-    void IEntity.AddEffect(string effectName)
-    {
-        throw new NotImplementedException();
-    }
-
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
         if (amount == 0f)
