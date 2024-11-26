@@ -71,8 +71,8 @@ public partial class Gyrocopter : WeaponBase
             {
                 var prj = _mainProjectile.Instantiate<BulletProjectile>();
 
-                prj.Damage = BaseDamage;
-                prj.Knockback = Knockback;
+                prj.Damage = State.Damage.CurrentValue;
+                prj.Knockback = State.Knockback.CurrentValue;
                 prj.LifeFrame = _lifeMain;
 
                 var dir = enemies[i].GlobalPosition - GlobalPosition;
@@ -89,8 +89,8 @@ public partial class Gyrocopter : WeaponBase
 
                 var prj = _subProjectile.Instantiate<BulletProjectile>();
 
-                prj.Damage = BaseDamage * 0.5f; // メインの半分の威力にする
-                prj.Knockback = Knockback;
+                prj.Damage = State.Damage.CurrentValue * 0.5f; // メインの半分の威力にする
+                prj.Knockback = State.Knockback.CurrentValue;
                 prj.LifeFrame = _lifeSub;
 
                 var dir = enemies[i].GlobalPosition - GlobalPosition;

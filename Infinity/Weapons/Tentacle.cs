@@ -36,8 +36,8 @@ public partial class Tentacle : WeaponBase
     private protected override void OnCoolDownCompleted(uint level)
     {
         var prj = _projectile.Instantiate<TentacleBody>();
-        prj.Damage = BaseDamage;
-        prj.Knockback = Knockback;
+        prj.Damage = State.Damage.CurrentValue;
+        prj.Knockback = State.Knockback.CurrentValue;
         prj.LifeFrame = _tentackeAliveFrame; // 触手の生存フレーム
         prj.DamageEveryXFrames = _tentackeAttackSpan; // 触手が生成されてからダメージを与えるまでのフレーム (繰り返す)
         prj.DetectionRadius = _enemyDetectionRadius;

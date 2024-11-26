@@ -1,6 +1,5 @@
 using System;
 using fms.Projectile;
-using fms.Weapon;
 using Godot;
 using R3;
 
@@ -9,7 +8,7 @@ namespace fms.Enemy;
 /// <summary>
 /// 遠距離からプレイヤーに射撃を行う敵
 /// </summary>
-public partial class Hornet : EnemyBase
+public partial class Hornet : EntityEnemy
 {
     [Export(PropertyHint.Range, "0,10000,1")]
     private int _minAttackDistance = 180;
@@ -34,9 +33,8 @@ public partial class Hornet : EnemyBase
         if (weapon == null)
         {
             weapon = new WeaponBase();
+            weapon.Set(WeaponBase.PropertyName._cooldown, _baseCoolDownFrame);
             AddChild(weapon);
-
-            weapon.BaseCoolDownFrame = _baseCoolDownFrame;
         }
 
         _weapon = weapon;

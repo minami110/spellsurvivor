@@ -27,7 +27,7 @@ public partial class EnemyAnimator : Node
     private bool _invertFlipDirection;
 
     private Vector2 _defaultScale = Vector2.One;
-    private EnemyBase _enemy = null!;
+    private EntityEnemy _enemy = null!;
 
     private float _puniLocation;
     private Sprite2D _sprite = null!;
@@ -41,7 +41,7 @@ public partial class EnemyAnimator : Node
             return;
         }
 
-        var enemy = GetParentOrNull<EnemyBase>();
+        var enemy = GetParentOrNull<EntityEnemy>();
         _enemy = enemy ?? throw new InvalidProgramException("親に EnemyBase が見つかりませんでした");
 
         var sprite = GetNodeOrNull<Sprite2D>("../Sprite");

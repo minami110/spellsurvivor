@@ -10,7 +10,7 @@ public partial class ParasiteAreaDamage : AreaProjectile
 {
     private State _state = State.SearchEnemy;
 
-    private EnemyBase? _targetEnemy;
+    private EntityEnemy? _targetEnemy;
 
     internal uint DamageRadius;
 
@@ -74,11 +74,11 @@ public partial class ParasiteAreaDamage : AreaProjectile
     {
         // 最も近い敵を検索する
         var distance = float.MaxValue;
-        EnemyBase? nearest = null;
+        EntityEnemy? nearest = null;
         var bodies = GetNode<Area2D>("EnemySearchField").GetOverlappingBodies();
         foreach (var body in bodies)
         {
-            if (body is not EnemyBase enemy)
+            if (body is not EntityEnemy enemy)
             {
                 continue;
             }

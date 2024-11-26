@@ -21,19 +21,20 @@ public partial class ShopOwnItem : VBoxContainer
     [Export]
     private Control _toolTipControl = null!;
 
-    public Minion Minion { get; set; } = null!;
+    public WeaponCard WeaponCard { get; set; } = null!;
 
     public override void _Ready()
     {
-        _icon.Texture = Minion.Sprite;
-        _name.Text = Minion.FriendlyName;
+        _icon.Texture = WeaponCard.Sprite;
+        _name.Text = WeaponCard.FriendlyName;
 
         // Subscribe level
-        var d1 = Minion.Level.Subscribe(this, (x, t) => { t._level.Text = $"(Lv.{x})"; });
+        var d1 = WeaponCard.Weapon.State.Level.ChangedCurrentValue
+            .Subscribe(this, (x, t) => { t._level.Text = $"(Lv.{x})"; });
 
         // ToDo: とりあえず買値と同じに..
-        _sellButton.Text = $"Sell ${Minion.Price}";
-        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.Shop.SellItem(Minion); });
+        _sellButton.Text = $"Sell ${WeaponCard.Price}";
+        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.Shop.SellItem(WeaponCard); });
 
         // Tooltip
         _toolTipControl.MouseEntered += ShowToolTip;
@@ -49,10 +50,9 @@ public partial class ShopOwnItem : VBoxContainer
 
     private void ShowToolTip()
     {
-        var text = $"{Minion.FriendlyName} Lv.{Minion.Level.CurrentValue}\n";
-        text += $"Tier: {Minion.Tier}\n";
-        text += $"Faction: ${Minion.Faction}\n";
-        text += $"{Minion.Description}\n";
+        var text = $"Tier: {WeaponCard.Tier}\n";
+        text += $"Faction: ${WeaponCard.Faction}\n";
+        text += $"{WeaponCard.Description}\n";
 
         ToolTipToast.Text = text;
         ToolTipToast.Show();

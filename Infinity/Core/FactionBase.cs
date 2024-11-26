@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using fms.Weapon;
 using Godot;
 
 namespace fms.Faction;
@@ -27,17 +26,20 @@ public partial class FactionBase : Node
 
             field = newLevel;
 
-            if (IsNodeReady())
+            // Ready 前 (Editor での代入) の場合は終わり
+            if (!IsNodeReady())
             {
-                // 発行済のエフェクトすべてを削除する
-                foreach (var effect in _publishedEffects)
-                {
-                    effect.Dispose();
-                }
-
-                _publishedEffects.Clear();
-                OnLevelChanged(newLevel);
+                return;
             }
+
+            // レベルアップ時に以前のレベルまでに発行済のエフェクトすべてを削除する
+            foreach (var effect in _publishedEffects)
+            {
+                effect.QueueFree();
+            }
+
+            _publishedEffects.Clear();
+            OnLevelChanged(newLevel);
         }
     }
 
@@ -65,10 +67,19 @@ public partial class FactionBase : Node
         }
         else if (what == NotificationReady)
         {
-            if (Level != 0)
+            // すでに兄弟に 同じ Faction が存在する場合はそっちに合体して自分は消える
+            var siblings = GetParent().GetChildren();
+            foreach (var sibling in siblings)
             {
-                OnLevelChanged(Level);
+                if (sibling is FactionBase faction && faction != this && faction.GetType() == GetType())
+                {
+                    faction.Level += Level;
+                    QueueFree();
+                    return;
+                }
             }
+
+            OnLevelChanged(Level);
         }
     }
 
@@ -81,14 +92,14 @@ public partial class FactionBase : Node
         // 発行済みエフェクトとしてマークしておく
         _publishedEffects.Add(effect);
 
-        // PlayerState に Effect を追加
+        // PlayerState の子にに Effect を追加
         var ps = GetParent().FindFirstChild<EntityState>();
         if (ps is null)
         {
             throw new ApplicationException("Failed to find PlayerState");
         }
 
-        ps.AddEffect(effect);
+        ps.AddChild(effect);
     }
 
     private protected void AddEffectToWeapon(WeaponBase weapon, EffectBase effect)
@@ -97,7 +108,7 @@ public partial class FactionBase : Node
         _publishedEffects.Add(effect);
 
         // Weapon に Effect を追加
-        weapon.AddEffect(effect);
+        weapon.State.AddChild(effect);
     }
 
     /// <summary>

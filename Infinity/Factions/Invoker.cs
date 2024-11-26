@@ -1,6 +1,4 @@
-﻿using fms.Effect;
-using fms.Weapon;
-using Godot;
+﻿using Godot;
 
 namespace fms.Faction;
 
@@ -26,7 +24,7 @@ public partial class Invoker : FactionBase
 
             if (level >= 2)
             {
-                AddEffectToWeapon(weapon, new AddManaRegeneration { Value = 1, Interval = 180 });
+                // AddEffectToWeapon(weapon, new AddManaRegeneration { Value = 1, Interval = 180 });
             }
         }
     }

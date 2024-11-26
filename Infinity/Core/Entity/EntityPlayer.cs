@@ -5,9 +5,12 @@ using Range = Godot.Range;
 
 namespace fms;
 
-public partial class BasePlayerPawn : CharacterBody2D, IEntity
+public partial class EntityPlayer : CharacterBody2D, IEntity
 {
     [ExportGroup("Base Status")]
+    [Export(PropertyHint.Range, "0,100,")]
+    private uint _money = 10u;
+
     [Export(PropertyHint.Range, "0,1000,1")]
     private uint _health = 100u;
 
@@ -27,6 +30,7 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
     {
         // Crate PlayerState
         State = new EntityState(
+            _money,
             _health,
             _moveSpeed,
             _dodgeRate * 0.01f
@@ -101,11 +105,6 @@ public partial class BasePlayerPawn : CharacterBody2D, IEntity
             IsDead = false
         };
         StaticsManager.CommitDamage(info);
-    }
-
-    void IEntity.AddEffect(string effectName)
-    {
-        throw new NotImplementedException();
     }
 
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)

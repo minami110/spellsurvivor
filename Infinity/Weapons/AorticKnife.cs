@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using fms.Effect;
 using Godot;
+using Godot.Collections;
 using R3;
 
 namespace fms.Weapon;
@@ -35,22 +34,19 @@ public partial class AorticKnife : PiercingWeapon
         }).AddTo(this);
     }
 
-    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    private protected override void OnUpdateAnyAttribute(Dictionary<string, Variant> attributes)
     {
         _lifestealAmount = 0;
         _lifeStealRate = 0f;
 
-        foreach (var effect in effects)
+        if (attributes.TryGetValue(WeaponAttributeNames.LifestealAmount, out var lifestealAmount))
         {
-            switch (effect)
-            {
-                case Lifesteal lifesteal:
-                {
-                    _lifestealAmount += lifesteal.Amount;
-                    _lifeStealRate += lifesteal.Rate;
-                    break;
-                }
-            }
+            _lifestealAmount = (uint)lifestealAmount;
+        }
+
+        if (attributes.TryGetValue(WeaponAttributeNames.LifestealRate, out var lifeStealRate))
+        {
+            _lifeStealRate = (float)lifeStealRate;
         }
     }
 }

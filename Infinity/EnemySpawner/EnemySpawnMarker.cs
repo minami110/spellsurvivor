@@ -41,7 +41,7 @@ public partial class EnemySpawnMarker : Node2D
 
         if (_timer >= LifeTime)
         {
-            var enemy = EnemyScene.Instantiate<EnemyBase>();
+            var enemy = EnemyScene.Instantiate<EntityEnemy>();
             enemy.Level = EnemyLevel;
             enemy.GlobalPosition = GlobalPosition;
             EnemeySpawnParent.AddChild(enemy);

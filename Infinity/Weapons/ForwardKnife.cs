@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using fms.Effect;
-using fms.Projectile;
+﻿using fms.Projectile;
 using Godot;
 using Godot.Collections;
 
@@ -72,23 +70,19 @@ public partial class ForwardKnife : WeaponBase
         RestartCoolDown();
     }
 
-    private protected override void OnSolveEffect(IReadOnlySet<EffectBase> effects)
+    private protected override void OnUpdateAnyAttribute(Dictionary<string, Variant> attributes)
     {
         BounceCount = 0;
         BounceDamageMul = 0f;
 
-        foreach (var effect in effects)
+        if (attributes.TryGetValue(WeaponAttributeNames.BounceCount, out var trickShotCount))
         {
-            switch (effect)
-            {
-                // この武器は Trickshot に対応しているので拾う
-                case TrickshotBounce trickshotBounceCount:
-                {
-                    BounceCount += trickshotBounceCount.BounceCount;
-                    BounceDamageMul += trickshotBounceCount.BounceDamageMultiplier;
-                    break;
-                }
-            }
+            BounceCount = (int)trickShotCount;
+        }
+
+        if (attributes.TryGetValue(WeaponAttributeNames.BounceDamageRate, out var trickShotDamageMul))
+        {
+            BounceDamageMul = (float)trickShotDamageMul;
         }
     }
 
@@ -140,8 +134,8 @@ public partial class ForwardKnife : WeaponBase
         // Main の Projectile
         var prjMain = _projectile.Instantiate<BaseProjectile>();
         {
-            prjMain.Damage = BaseDamage;
-            prjMain.Knockback = Knockback;
+            prjMain.Damage = State.Damage.CurrentValue;
+            prjMain.Knockback = State.Knockback.CurrentValue;
             prjMain.LifeFrame = _life;
 
             // Get Player's aim direction
@@ -153,8 +147,9 @@ public partial class ForwardKnife : WeaponBase
         {
             var payload = new Dictionary
             {
-                { "BaseDamage", BaseDamage },
-                { "Knockback", Knockback },
+                // ToDo: Trickshot に Effect 適用後の値をのせてもいい?
+                { "BaseDamage", State.Damage.CurrentValue },
+                { "Knockback", State.Knockback.CurrentValue },
                 { "Speed", _speed },
                 { "Life", _life },
                 { "TrickShotCount", BounceCount },

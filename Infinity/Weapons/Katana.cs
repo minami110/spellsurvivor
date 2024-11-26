@@ -46,11 +46,9 @@ public partial class Katana : WeaponBase
         }
     }
 
-    private protected override void OnStartAttack()
+    private protected override void OnStartAttack(uint level)
     {
         StaticDamage.Disabled = true;
-        StaticDamage.Damage = Damage;
-        StaticDamage.Knockback = Knockback;
     }
 
     private void PlayAttackAnimation()
@@ -74,6 +72,8 @@ public partial class Katana : WeaponBase
             // 突き刺し時は回転しないようにする
             AimToNearEnemy.RotateSensitivity = 0.01f;
             // ダメージを有効化
+            StaticDamage.Damage = State.Damage.CurrentValue;
+            StaticDamage.Knockback = State.Knockback.CurrentValue;
             StaticDamage.Disabled = false;
         }));
         t.TweenProperty(sprite, "position", new Vector2(5, -30), 0.05d)

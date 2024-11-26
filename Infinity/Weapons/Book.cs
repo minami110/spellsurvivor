@@ -21,11 +21,11 @@ public partial class Book : WeaponBase
             var prj = _projectile.Instantiate<BulletProjectile>();
             {
                 // ダメージ, ノックバック を設定する
-                prj.Damage = Damage;
-                prj.Knockback = Knockback;
+                prj.Damage = State.Damage.CurrentValue;
+                prj.Knockback = State.Knockback.CurrentValue;
 
                 // 武器の持つクールダウンに揃える (+2 はちらつき防止)
-                prj.LifeFrame = SolvedCoolDownFrame + 2;
+                prj.LifeFrame = State.Cooldown.CurrentValue + 2;
 
                 // 貫通設定
                 prj.PenetrateEnemy = true;
@@ -36,7 +36,7 @@ public partial class Book : WeaponBase
 
             // 武器の持つクールダウンにあわせて360度回転するような速度を設定する
             // Note: 360度 / クールダウン(フレーム) / 60 フレーム (= かかる秒数)
-            var speed = 360f / (SolvedCoolDownFrame / 60f);
+            var speed = 360f / (State.Cooldown.CurrentValue / 60f);
             speed *= _speedMultiplier;
 
             // Loop の i 番目の弾丸の角度を計算する

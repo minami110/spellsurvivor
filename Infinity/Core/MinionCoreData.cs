@@ -1,4 +1,3 @@
-using fms.Faction;
 using Godot;
 
 namespace fms;
@@ -11,12 +10,6 @@ public partial class MinionCoreData : Resource
 {
     [Export]
     public PackedScene WeaponPackedScene { get; private set; } = null!;
-
-    /// <summary>
-    /// Minion が所有する Faction のリスト (Flag)
-    /// </summary>
-    [Export(PropertyHint.Flags)]
-    public FactionType Faction { get; private set; }
 
     /// <summary>
     /// アイテムのティア

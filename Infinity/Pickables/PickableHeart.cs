@@ -60,7 +60,7 @@ public partial class PickableHeart : Node2D
         SoundManager.PlaySoundEffect(_pickSound);
 
         // Player を回復する
-        if (_targetNode is BasePlayerPawn player)
+        if (_targetNode is EntityPlayer player)
         {
             player.Heal(_healAmount);
         }

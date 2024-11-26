@@ -43,7 +43,7 @@ public partial class WaveState : Node
     public override void _EnterTree()
     {
         // Set Name (for debugging)
-        Name = nameof(ShopState);
+        Name = nameof(Shop);
     }
 
     public override void _Process(double delta)

@@ -3,6 +3,7 @@ using Vector2 = Godot.Vector2;
 
 namespace fms.Weapon;
 
+// Note: _draw を使用したいので Node2D を継承している
 /// <summary>
 /// <see cref="PiercingWeapon" />> の Editor での Drawer
 /// </summary>
@@ -10,7 +11,14 @@ namespace fms.Weapon;
 [GlobalClass]
 public partial class PiercingWeaponEditorDrawer : Node2D
 {
-    // Note: _draw を使用したいので Node2D を継承している
+    [Export]
+    private Color _minRangeColor = new(1, 0, 0, 0.2f);
+
+    [Export]
+    private Color _maxRangeColor = new(0, 1, 0);
+
+    [Export]
+    private Color _damageAreaColor = Colors.LawnGreen;
 
     private GodotObject? _hocho;
 
@@ -33,12 +41,15 @@ public partial class PiercingWeaponEditorDrawer : Node2D
     public override void _Draw()
     {
         _hocho ??= GetOwnerOrNull<GodotObject>();
-        if ((bool)_hocho.Get(WeaponBase.PropertyName.DrawDebugInfoInEditor))
+
+        if (!(bool)_hocho.Get(WeaponBase.PropertyName.DrawDebugInfoInEditor))
         {
-            DrawMinMaxRange();
-            DrawStaticDamageArea();
+            // 何も呼び出さないことで描写を消す
+            return;
         }
-        // 何も呼び出さないことで描写を消す
+
+        DrawMinMaxRange();
+        DrawStaticDamageArea();
     }
 
     private void DrawMinMaxRange()
@@ -51,14 +62,11 @@ public partial class PiercingWeaponEditorDrawer : Node2D
         var minRange = (float)_hocho.Get(PiercingWeapon.PropertyName._minRange);
         var maxRange = (float)_hocho.Get(PiercingWeapon.PropertyName._maxRange);
 
-        var minRangeColor = new Color(1, 0, 0, 0.2f);
-        var maxRangeColor = new Color(0, 1, 0);
-
         // MinRange が手前に来るように描写する
-        DrawCircle(Position, maxRange, maxRangeColor, false);
+        DrawCircle(Position, maxRange, _maxRangeColor, false);
         if (minRange > 0f)
         {
-            DrawCircle(Position, minRange, minRangeColor);
+            DrawCircle(Position, minRange, _minRangeColor);
         }
     }
 
@@ -84,7 +92,7 @@ public partial class PiercingWeaponEditorDrawer : Node2D
         size += new Vector2(preAttackDistance + pushDistance, 0);
 
         // 短径の4辺をつなぐようなラインを描写する
-        var color = Colors.LawnGreen;
+        var color = _damageAreaColor;
         var width = 0.5f;
         DrawDashedLine(origin + new Vector2(0, 0), origin + new Vector2(size.X, 0), color, width);
         DrawDashedLine(origin + new Vector2(size.X, 0), origin + size, color, width);

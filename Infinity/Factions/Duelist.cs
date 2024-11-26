@@ -1,4 +1,4 @@
-﻿using fms.Weapon;
+﻿using fms.Effect;
 using Godot;
 
 namespace fms.Faction;
@@ -50,6 +50,6 @@ public partial class Duelist : FactionBase
 
     private void AddReduceCoolDownEffect(WeaponBase weapon, float value)
     {
-        AddEffectToWeapon(weapon, new Haste { Amount = value });
+        AddEffectToWeapon(weapon, new Haste { Duration = 0u, Amount = value });
     }
 }

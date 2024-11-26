@@ -47,7 +47,7 @@ public partial class ShopHudController : Node
         _lockButton.Text = Main.Shop.IsLocked ? "Unlock" : "Lock";
 
         // ボタンのバインドを更新
-        var d00 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.Shop.RefreshInStoreMinions(); });
+        var d00 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.Shop.RefreshWeaponCards(); });
         var d01 = _upgradeButton.PressedAsObservable().Subscribe(_ => { Main.Shop.UpgradeShopLevel(); });
         var d02 = _quitShopButton.PressedAsObservable().Subscribe(_ =>
         {
@@ -102,12 +102,12 @@ public partial class ShopHudController : Node
 
         // Player が所有している Minion を取得する
         var playerNode = this.GetPlayerNode();
-        var minions = playerNode.FindChildren("*", nameof(Minion), false, false);
+        var minions = playerNode.FindChildren("*", nameof(WeaponCard), false, false);
         foreach (var minion in minions)
         {
             var node = _shopOwnItemPackedScene.Instantiate<ShopOwnItem>();
             {
-                node.Minion = (Minion)minion;
+                node.WeaponCard = (WeaponCard)minion;
             }
             _equipItemSpawnParent.AddChild(node);
         }
@@ -125,7 +125,7 @@ public partial class ShopHudController : Node
         {
             var node = _instoreItemPackedScene.Instantiate<ShopSellingItem>();
             {
-                node.Minion = item;
+                node.WeaponCard = item;
             }
             _shopItemSpawnParent.AddChild(node);
         }

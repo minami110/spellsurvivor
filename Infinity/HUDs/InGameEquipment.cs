@@ -1,4 +1,3 @@
-using fms.Weapon;
 using Godot;
 using R3;
 using Range = Godot.Range;
@@ -20,11 +19,11 @@ public partial class InGameEquipment : VBoxContainer
 
     public override void _Ready()
     {
-        Minion? targetMinion = null;
+        WeaponCard? targetMinion = null;
         var nodes = GetTree().GetNodesInGroup(Constant.GroupNameMinion);
         foreach (var node in nodes)
         {
-            if (node is not Minion minion)
+            if (node is not WeaponCard minion)
             {
                 continue;
             }
@@ -49,12 +48,12 @@ public partial class InGameEquipment : VBoxContainer
 
         _icon.Texture = targetMinion.Sprite;
         _name.Text = targetMinion.FriendlyName;
-        _levelLabel.Text = $"Lv.{Weapon.Level}";
+        _levelLabel.Text = $"Lv.{Weapon.State.Level.CurrentValue}";
 
         var d1 = Weapon.CoolDownLeft.Subscribe(this, (x, s) =>
         {
             var progress = s.GetNode<Range>("%CoolDownProgressBar");
-            progress.MaxValue = Weapon.SolvedCoolDownFrame;
+            progress.MaxValue = Weapon.State.Cooldown.CurrentValue;
             progress.Value = x;
         });
 

@@ -1,11 +1,10 @@
-using System;
 using Godot;
 using R3;
 using Range = Godot.Range;
 
 namespace fms;
 
-public partial class EnemyBase : RigidBody2D, IEntity
+public partial class EntityEnemy : RigidBody2D, IEntity
 {
     /// <summary>
     /// 体力の基礎値
@@ -52,7 +51,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// <summary>
     /// 現在の State
     /// </summary>
-    internal EnemyState State = null!;
+    internal EntityState State = null!;
 
     /// <summary>
     /// スポーンしてからの経過フレーム数
@@ -95,7 +94,7 @@ public partial class EnemyBase : RigidBody2D, IEntity
                     // SetProcess(false);
                     SetPhysicsProcess(false);
 
-                    GD.PrintErr($"[{nameof(EnemyBase)}] Player node is not found");
+                    GD.PrintErr($"[{nameof(EntityEnemy)}] Player node is not found");
                     return;
                 }
 
@@ -221,10 +220,10 @@ public partial class EnemyBase : RigidBody2D, IEntity
     {
         // ToDo: すべての Enemy 共通で雑にレベルでスケールする設定になっています
         //       (Base が 10 のとき) Lv.1 : 10, Lv.2 : 15, Lv.3 : 20, ...
-        var health = BaseHealth + (Level - 1) * 5f;
-        var speed = GD.Randfn(BaseSpeed, _randomSpeed);
+        var health = (uint)(BaseHealth + (Level - 1) * 5f);
+        var speed = (uint)GD.Randfn(BaseSpeed, _randomSpeed);
 
-        State = new EnemyState((uint)speed, (uint)health);
+        State = new EntityState(0u, health, speed, 0u);
     }
 
     /// <summary>
@@ -315,11 +314,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
     /// </summary>
     public bool IsDead { get; private set; }
 
-    void IEntity.AddEffect(string effectName)
-    {
-        throw new NotImplementedException();
-    }
-
     /// <summary>
     /// プレイヤーなどからダメージを受けるときの処理
     /// </summary>
@@ -331,7 +325,6 @@ public partial class EnemyBase : RigidBody2D, IEntity
         }
 
         State.ApplyDamage((uint)amount);
-        State.SolveEffect();
         OnTakeDamage(amount, instigator, causer);
     }
 
