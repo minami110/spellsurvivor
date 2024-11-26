@@ -22,6 +22,7 @@ public partial class ShopState : Node
     private int _itemSlotCount;
 
     /// <summary>
+    /// 現在のショップレベル, 排出するアイテムの ティア に影響する
     /// </summary>
     public ReadOnlyReactiveProperty<int> Level => _levelRp;
 
@@ -40,9 +41,9 @@ public partial class ShopState : Node
         Config = config;
     }
 
+    // Parameterless constructor for Godot Editor
     private ShopState()
     {
-        // Parameterless constructor for Godot Editor
     }
 
     public override void _EnterTree()
@@ -118,14 +119,14 @@ public partial class ShopState : Node
     }
 
     /// <summary>
-    /// Minion をショップから購入
+    /// WeaponCard をショップから購入
     /// </summary>
     /// <param name="minion"></param>
-    public void BuyItem(Minion minion)
+    public void BuyWeaponCard(Minion minion)
     {
         if (!_inStoreMinions.Contains(minion))
         {
-            throw new InvalidProgramException("購入対象の Minion が現在販売されていません");
+            throw new InvalidProgramException("購入対象の WeaponCard が現在販売されていません");
         }
 
         // ショップから排除する
@@ -142,7 +143,7 @@ public partial class ShopState : Node
         var minions = player.FindChildren("*", nameof(Minion), false, false);
         if (minions.Any(m => m == minion))
         {
-            minion.SetWeaponLevel(minion.Level.CurrentValue + 1);
+            minion.AddWeaponLevel(1u);
             return;
         }
 
@@ -193,10 +194,8 @@ public partial class ShopState : Node
                 foreach (var index in indexes)
                 {
                     var m = minions[index];
-                    if (m.IsMaxLevel)
-                    {
-                        continue;
-                    }
+
+                    // ToDo: 最大レベルに達している Minion は排出しない処理
 
                     minion = m;
                     break;
@@ -205,7 +204,7 @@ public partial class ShopState : Node
 
             if (minion == null)
             {
-                throw new NotImplementedException("有効な Minion が見つかりませんでした");
+                throw new NotImplementedException("Pool から排出可能な Minion が見つかりませんでした");
             }
 
             _inStoreMinions.Add(minion);

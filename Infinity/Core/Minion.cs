@@ -12,14 +12,6 @@ public partial class Minion : Node
     [Export]
     private MinionCoreData CoreData { get; set; } = null!;
 
-    private WeaponBase? _weapon;
-
-    /// <summary>
-    /// </summary>
-    public string Id => CoreData.Id;
-
-    public bool IsMaxLevel => _levelRp.Value >= Constant.MINION_MAX_LEVEL;
-
     public string FriendlyName => CoreData.Name;
 
     public int Tier => CoreData.Tier;
@@ -33,20 +25,7 @@ public partial class Minion : Node
     /// <summary>
     /// この Minion が装備している Weapon, InHand にない場合は所有していない
     /// </summary>
-    public WeaponBase? Weapon
-    {
-        get => _weapon;
-        private set
-        {
-            _weapon = value;
-
-            // 新しい装備
-            if (_weapon is not null)
-            {
-                _weapon.MinionId = Id;
-            }
-        }
-    }
+    public WeaponBase Weapon { get; private set; } = null!;
 
     /// <summary>
     /// この Minion の所属する Faction (Flag)
@@ -75,9 +54,6 @@ public partial class Minion : Node
                 AddToGroup(Constant.GroupNameMinion);
             }
 
-            // Set Level
-            SetWeaponLevel(1);
-
             // Spawn Weapon
             SpawnWeapon();
         }
@@ -85,7 +61,7 @@ public partial class Minion : Node
         {
             foreach (var faction in FactionUtil.GetFactionTypes())
             {
-                if (!IsBelongTo(faction))
+                if (!Weapon.IsBelongTo(faction))
                 {
                     continue;
                 }
@@ -110,7 +86,7 @@ public partial class Minion : Node
         {
             foreach (var faction in FactionUtil.GetFactionTypes())
             {
-                if (!IsBelongTo(faction))
+                if (!Weapon.IsBelongTo(faction))
                 {
                     continue;
                 }
@@ -123,51 +99,17 @@ public partial class Minion : Node
                     f.Level--;
                 }
             }
-
-            RemoveWeapon();
-            SetWeaponLevel(0);
         }
     }
 
-    /// <summary>
-    /// Minion が指定した Faction に所属しているかどうか
-    /// </summary>
-    /// <param name="faction"></param>
-    /// <returns></returns>
-    public bool IsBelongTo(FactionType faction)
+    public void AddWeaponLevel(uint level)
     {
-        return Faction.HasFlag(faction);
-    }
-
-    public void RemoveWeapon()
-    {
-        if (Weapon is null)
-        {
-            return;
-        }
-
-        Weapon.QueueFree();
-        Weapon = null;
-    }
-
-    public void SetWeaponLevel(uint level)
-    {
-        if (_weapon is not null)
-        {
-            _weapon.State.SetLevel(level);
-        }
+        Weapon.State.SetLevel(Weapon.State.Level.CurrentValue + level);
     }
 
     private void SpawnWeapon()
     {
-        // まだ装備していない場合ときは生成する
-        if (Weapon is not null)
-        {
-            return;
-        }
-
         Weapon = CoreData.WeaponPackedScene.Instantiate<WeaponBase>();
-        Weapon.MinionId = Id;
         Weapon.Faction = Faction;
         Weapon.AutoStart = false;
         AddSibling(Weapon);

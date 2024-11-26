@@ -29,7 +29,8 @@ public partial class ShopOwnItem : VBoxContainer
         _name.Text = Minion.FriendlyName;
 
         // Subscribe level
-        var d1 = Minion.Level.Subscribe(this, (x, t) => { t._level.Text = $"(Lv.{x})"; });
+        var d1 = Minion.Weapon.State.Level.ChangedCurrentValue
+            .Subscribe(this, (x, t) => { t._level.Text = $"(Lv.{x})"; });
 
         // ToDo: とりあえず買値と同じに..
         _sellButton.Text = $"Sell ${Minion.Price}";
@@ -49,8 +50,7 @@ public partial class ShopOwnItem : VBoxContainer
 
     private void ShowToolTip()
     {
-        var text = $"{Minion.FriendlyName} Lv.{Minion.Level.CurrentValue}\n";
-        text += $"Tier: {Minion.Tier}\n";
+        var text = $"Tier: {Minion.Tier}\n";
         text += $"Faction: ${Minion.Faction}\n";
         text += $"{Minion.Description}\n";
 

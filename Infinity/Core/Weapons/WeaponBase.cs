@@ -29,6 +29,13 @@ public partial class WeaponBase : Node2D
     [Export(PropertyHint.Range, "0,10,,suffix:px/s")]
     private uint _knockback = 20u;
 
+    /// <summary>
+    /// Minion が所属する Faction
+    /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
+    /// </summary>
+    [Export]
+    public FactionType Faction { get; set; }
+
     // ---------- Animation Parameters ----------
 
     /// <summary>
@@ -56,19 +63,6 @@ public partial class WeaponBase : Node2D
     /// </summary>
     [Export]
     public bool DrawDebugInfoInEditor { get; private set; } = true;
-
-    /// <summary>
-    /// Minion が所属する Faction
-    /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
-    /// </summary>
-    [Export]
-    public FactionType Faction { get; set; }
-
-    /// <summary>
-    /// 武器の Id
-    /// Note: Minion から勝手に代入されます
-    /// </summary>
-    public string MinionId { get; internal set; } = string.Empty;
 
     /// <summary>
     /// この武器を所有している Entity

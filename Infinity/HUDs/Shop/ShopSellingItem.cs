@@ -71,7 +71,7 @@ public partial class ShopSellingItem : VBoxContainer
     private void OnPressedBuyButton()
     {
         // GameMode に通知する
-        Main.Shop.BuyItem(Minion);
+        Main.Shop.BuyWeaponCard(Minion);
     }
 
     private void ShowToolTip()
