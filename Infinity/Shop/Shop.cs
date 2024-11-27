@@ -12,8 +12,8 @@ public partial class Shop : Node
     [Export]
     public ShopConfig Config { get; private set; } = null!;
 
-    private readonly List<WeaponCard> _inStoreMinions = new();
-    private readonly Subject<Unit> _inStoreMinionsUpdatedSubject = new();
+    private readonly List<WeaponCard> _inStoreWeaponCards = new();
+    private readonly Subject<Unit> _inStoreWeaponCardsUpdatedSubject = new();
 
     private readonly ReactiveProperty<int> _levelRp = new(1);
 
@@ -27,14 +27,19 @@ public partial class Shop : Node
     public ReadOnlyReactiveProperty<int> Level => _levelRp;
 
     /// <summary>
+    /// ショップで販売している WeaponCard が更新されたときに通知
     /// </summary>
-    public Observable<Unit> InStoreMinionsUpdated => _inStoreMinionsUpdatedSubject;
+    public Observable<Unit> InStoreWeaponCardsUpdated => _inStoreWeaponCardsUpdatedSubject;
 
     /// <summary>
+    /// 現在ショップで販売している WeaponCard のリスト
     /// </summary>
-    public IReadOnlyList<WeaponCard> InStoreMinions => _inStoreMinions;
+    public IReadOnlyList<WeaponCard> InStoreWeaponCards => _inStoreWeaponCards;
 
-    public bool IsLocked { get; set; }
+    /// <summary>
+    /// 品揃えの更新が現在ロックされているかどうか
+    /// </summary>
+    public bool Locked { get; set; }
 
     public Shop(ShopConfig config) : this()
     {
@@ -53,52 +58,7 @@ public partial class Shop : Node
 
         // Construct Runtime Minion Pool
         _runtimeMinionPool.Clear();
-
-        var searchDir = Config.ShopItemRootDir;
-
-        // Load Minion Data
-        this.DebugLog($"Start loading shop items from: {searchDir}");
-        using var dir = DirAccess.Open(searchDir);
-        if (dir != null)
-        {
-            dir.ListDirBegin();
-            var fileName = dir.GetNext();
-            while (fileName != string.Empty)
-            {
-                // Note: Godot 4.2.2
-                // Runtime で XXX.tres.remap となっていることがある (ランダム?)
-                // この場合 .remap を抜いたパスを読み込むとちゃんと行ける
-                // See https://github.com/godotengine/godot/issues/66014
-                if (fileName.EndsWith(".tres") || fileName.EndsWith(".tres.remap"))
-                {
-                    if (fileName.EndsWith(".remap"))
-                    {
-                        fileName = fileName.Replace(".remap", string.Empty);
-                    }
-
-                    var path = Path.Combine(searchDir, fileName);
-                    var minionCoreData = ResourceLoader.Load<MinionCoreData>(path);
-                    GD.Print($"  Loaded: {path} => {minionCoreData.Name}");
-                    if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
-                    {
-                        list = new List<WeaponCard>();
-                        _runtimeMinionPool[minionCoreData.Tier] = list;
-                    }
-
-                    list.Add(new WeaponCard(minionCoreData));
-                }
-
-                fileName = dir.GetNext();
-            }
-
-            dir.ListDirEnd();
-        }
-        else
-        {
-            throw new DirectoryNotFoundException($"Directory not found: {searchDir}");
-        }
-
-        this.DebugLog("Completed!");
+        LoadWeaponCards();
 
         // Default 
         _levelRp.Value = 1;
@@ -122,34 +82,20 @@ public partial class Shop : Node
     /// WeaponCard をショップから購入
     /// </summary>
     /// <param name="weaponCard"></param>
-    public void BuyWeaponCard(WeaponCard weaponCard)
+    public void BuyWeaponCard(IEntity entity, WeaponCard weaponCard)
     {
-        if (!_inStoreMinions.Contains(weaponCard))
+        if (!_inStoreWeaponCards.Contains(weaponCard))
         {
             throw new InvalidProgramException("購入対象の WeaponCard が現在販売されていません");
         }
 
         // ショップから排除する
-        _inStoreMinions.Remove(weaponCard);
-        _inStoreMinionsUpdatedSubject.OnNext(Unit.Default);
+        _inStoreWeaponCards.Remove(weaponCard);
+        _inStoreWeaponCardsUpdatedSubject.OnNext(Unit.Default);
 
-        // ToDo: 外部化していいかも
-        // プレイヤーのお金を減らす
-        var playerState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
-        playerState.ReduceMoney(weaponCard.Price);
-
-        // Player がすでに Minion を所持していたらレベルを上げる
-        var player = this.GetPlayerNode();
-        var minions = player.FindChildren("*", nameof(WeaponCard), false, false);
-        if (minions.Any(m => m == weaponCard))
-        {
-            weaponCard.AddWeaponLevel(1u);
-            return;
-        }
-
-        // Playerは まだ所有していないので子にする
-        player.AddChild(weaponCard);
+        weaponCard.OnBuy(entity);
     }
+
 
     /// <summary>
     /// 現在のショップのアイテムをリフレッシュする
@@ -158,25 +104,25 @@ public partial class Shop : Node
     public void RefreshWeaponCards()
     {
         // ショップがロックされているときは Refresh しない
-        if (IsLocked)
+        if (Locked)
         {
-            GD.Print("[ShopState] Shop is locked. Refresh skipped.");
+            this.DebugLog("Shop is locked. Refresh skipped.");
             return;
         }
 
-        _inStoreMinions.Clear();
+        _inStoreWeaponCards.Clear();
 
         // スロットカウントの数だけ Pool から Minion を取り出す
-        var tryCount = _itemSlotCount - _inStoreMinions.Count;
+        var tryCount = _itemSlotCount - _inStoreWeaponCards.Count;
         if (tryCount <= 0)
         {
-            GD.Print("[ShopState] No need to refresh. Refresh skipped.");
+            this.DebugLog("No need to refresh. Refresh skipped.");
             return;
         }
 
         for (var i = 0; i < tryCount; i++)
         {
-            // ティアを決定する
+            // はじめにティアのガチャを行う
             var targetTier = 1;
             for (; targetTier <= Constant.MINION_MAX_TIER; targetTier++)
             {
@@ -211,32 +157,19 @@ public partial class Shop : Node
                 throw new NotImplementedException("Pool から排出可能な Minion が見つかりませんでした");
             }
 
-            _inStoreMinions.Add(minion);
+            _inStoreWeaponCards.Add(minion);
         }
 
-        _inStoreMinionsUpdatedSubject.OnNext(Unit.Default);
+        _inStoreWeaponCardsUpdatedSubject.OnNext(Unit.Default);
     }
 
     /// <summary>
-    /// Minion をショップに売却
+    /// WeaponCard をショップに売却
     /// </summary>
     /// <param name="weaponCard"></param>
-    public void SellItem(WeaponCard weaponCard)
+    public void SellWeaponCard(IEntity entity, WeaponCard weaponCard)
     {
-        var player = this.GetPlayerNode();
-        var minions = player.FindChildren("*", nameof(WeaponCard), false, false);
-        if (minions.Any(m => m == weaponCard))
-        {
-            // ミニオンをプレイヤーの手持ちから取り除く
-            player.RemoveChild(weaponCard);
-            // 次も Ready してほしいのでフラグを立てておく
-            weaponCard.RequestReady();
-
-            // プレイヤーのお金を増やす
-            // TODO: 売却価格を売値と同じにしています
-            var playerState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
-            playerState.AddMoney(weaponCard.Price);
-        }
+        weaponCard.OnSell(entity);
     }
 
     public void UpgradeShopLevel()
@@ -246,6 +179,56 @@ public partial class Shop : Node
         {
             _levelRp.Value++;
         }
+    }
+
+    private void LoadWeaponCards()
+    {
+        var searchDir = Config.ShopItemRootDir;
+
+        // Load Minion Data
+        this.DebugLog($"Start loading shop items from: {searchDir}");
+        using var dir = DirAccess.Open(searchDir);
+        if (dir != null)
+        {
+            dir.ListDirBegin();
+            var fileName = dir.GetNext();
+            while (fileName != string.Empty)
+            {
+                // Note: Godot 4.2.2
+                // Runtime で XXX.tres.remap となっていることがある (ランダム?)
+                // この場合 .remap を抜いたパスを読み込むとちゃんと行ける
+                // See https://github.com/godotengine/godot/issues/66014
+                if (fileName.EndsWith(".tres") || fileName.EndsWith(".tres.remap"))
+                {
+                    if (fileName.EndsWith(".remap"))
+                    {
+                        fileName = fileName.Replace(".remap", string.Empty);
+                    }
+
+                    var path = Path.Combine(searchDir, fileName);
+                    var minionCoreData = ResourceLoader.Load<MinionCoreData>(path);
+                    GD.Print($"  Loaded: {path} => {minionCoreData.Name}");
+                    if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
+                    {
+                        list = new List<WeaponCard>();
+                        _runtimeMinionPool[minionCoreData.Tier] = list;
+                    }
+
+                    // WeaponCard を作成 (ツリーに入れずにメモリで管理しておく)
+                    list.Add(new WeaponCard(minionCoreData));
+                }
+
+                fileName = dir.GetNext();
+            }
+
+            dir.ListDirEnd();
+        }
+        else
+        {
+            throw new DirectoryNotFoundException($"Directory not found: {searchDir}");
+        }
+
+        this.DebugLog("Completed!");
     }
 
     private static int[] RangeShuffled(Random rng, int count)

@@ -34,7 +34,11 @@ public partial class ShopOwnItem : VBoxContainer
 
         // ToDo: とりあえず買値と同じに..
         _sellButton.Text = $"Sell ${WeaponCard.Price}";
-        var d2 = _sellButton.PressedAsObservable().Subscribe(_ => { Main.Shop.SellItem(WeaponCard); });
+        var d2 = _sellButton.PressedAsObservable().Subscribe(_ =>
+        {
+            var player = this.GetPlayerNode();
+            Main.Shop.SellWeaponCard((IEntity)player, WeaponCard);
+        });
 
         // Tooltip
         _toolTipControl.MouseEntered += ShowToolTip;

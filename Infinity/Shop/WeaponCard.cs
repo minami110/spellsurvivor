@@ -1,15 +1,20 @@
-﻿using fms.Faction;
+﻿using System;
+using fms.Faction;
 using Godot;
 
 namespace fms;
 
 /// <summary>
-/// Shop で販売している Weapon
+/// Shop で販売している Weapon Card
+/// プレイヤーなど Entity が所有している場合は、その Entity の子ノードとして配置され,
+/// 未所有の場合は Shop で管理しているメモリ上にのみ存在する
 /// </summary>
 public partial class WeaponCard : Node
 {
     [Export]
     private MinionCoreData CoreData { get; set; } = null!;
+
+    private IEntity? _ownedEntity;
 
     public string FriendlyName => CoreData.Name;
 
@@ -57,7 +62,51 @@ public partial class WeaponCard : Node
         }
     }
 
-    public void AddWeaponLevel(uint level)
+    internal void OnBuy(IEntity entity)
+    {
+        // 違うエンティティが所有している場合はエラー
+        if (_ownedEntity != null && _ownedEntity != entity)
+        {
+            throw new InvalidProgramException($"{nameof(WeaponCard)} is owned by another entity");
+        }
+
+        // プレイヤーのお金を減らす
+        var state = entity.State;
+        state.ReduceMoney(Price);
+
+        // すでに同じエンティティが所有している場合はレベルアップ
+        if (_ownedEntity == entity)
+        {
+            AddWeaponLevel(1u);
+            return;
+        }
+
+        // 新規購入
+        _ownedEntity = entity;
+        _ownedEntity.AddChild(this);
+    }
+
+    internal void OnSell(IEntity entity)
+    {
+        if (_ownedEntity == null)
+        {
+            throw new InvalidProgramException($"{nameof(WeaponCard)} is not owned by anyone");
+        }
+
+        if (_ownedEntity != entity)
+        {
+            throw new InvalidProgramException($"{nameof(WeaponCard)} is owned by another entity");
+        }
+
+        _ownedEntity.RemoveChild(this);
+        _ownedEntity = null;
+
+        // プレイヤーのお金を増やす
+        var state = entity.State;
+        state.AddMoney(Price); // ToDo: 売値を設定する
+    }
+
+    private void AddWeaponLevel(uint level)
     {
         Weapon.State.SetLevel(Weapon.State.Level.CurrentValue + level);
     }

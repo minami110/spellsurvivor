@@ -1,27 +1,21 @@
 [gd_scene load_steps=7 format=3 uid="uid://dvwlkv2f4pl2i"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopHudController.cs" id="1_5xunh"]
-[ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/InstoreMinionPanel.tscn" id="2_7j4ye"]
-[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="3_nlrg2"]
+[ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/SellingWeaponCard/WeaponCardButton.tscn" id="2_7j4ye"]
+[ext_resource type="PackedScene" uid="uid://hkhya7f6pxu0" path="res://Infinity/HUDs/Shop/SellingWeaponCard/SellingWeaponCardContainer.tscn" id="4_7hk4g"]
 [ext_resource type="PackedScene" uid="uid://3cf1cbaj3tc7" path="res://Infinity/HUDs/PlayerStatusHud.tscn" id="5_3laas"]
 [ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/ActiveFactionHud.tscn" id="5_jthwe"]
 [ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/OwnedMinionPanel.tscn" id="6_dux5n"]
 
 [node name="ShopHUD" type="CanvasLayer"]
 
-[node name="ShopHudController" type="Node" parent="." node_paths=PackedStringArray("_container", "_shopItemSpawnParent", "_equipItemSpawnParent", "_upgradeButton", "_rerollButton", "_lockButton", "_addSlotButton", "_quitShopButton", "_shopLevelLabel")]
+[node name="ShopHudController" type="Node" parent="." node_paths=PackedStringArray("_container", "_equipItemSpawnParent", "_quitShopButton")]
 script = ExtResource("1_5xunh")
 _container = NodePath("../Container")
 _instoreItemPackedScene = ExtResource("2_7j4ye")
 _shopOwnItemPackedScene = ExtResource("6_dux5n")
-_shopItemSpawnParent = NodePath("../Container/HBox Selling Item Parent")
 _equipItemSpawnParent = NodePath("../Container/HBox Equipment Item Parent")
-_upgradeButton = NodePath("../Container/HBox Shop Buttons/UpgradeButton")
-_rerollButton = NodePath("../Container/HBox Shop Buttons/RerollButton")
-_lockButton = NodePath("../Container/HBox Shop Buttons/LockButton")
-_addSlotButton = NodePath("../Container/HBox Shop Buttons/AddSlotButton")
 _quitShopButton = NodePath("../Container/BattleButton")
-_shopLevelLabel = NodePath("../Container/HBox Shop Buttons/Label ShopLevel")
 
 [node name="Container" type="Control" parent="."]
 layout_mode = 3
@@ -40,8 +34,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 4
-color = Color(0, 0, 0, 0.529412)
-metadata/_edit_lock_ = true
+color = Color(0, 0, 0, 0.223529)
 
 [node name="BattleButton" type="Button" parent="Container"]
 layout_mode = 1
@@ -59,54 +52,16 @@ grow_vertical = 0
 text = "Battle
 "
 
-[node name="HBox Shop Buttons" type="HBoxContainer" parent="Container"]
+[node name="SeliingWeaponCardContainer" parent="Container" instance=ExtResource("4_7hk4g")]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -142.5
-offset_top = -362.0
-offset_right = 143.5
-offset_bottom = -331.0
+offset_left = -579.5
+offset_top = 63.0
+offset_right = 579.5
+offset_bottom = 254.0
 grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Label ShopLevel" type="Label" parent="Container/HBox Shop Buttons"]
-layout_mode = 2
-text = "Lv.N/A"
-
-[node name="UpgradeButton" type="Button" parent="Container/HBox Shop Buttons"]
-layout_mode = 2
-text = "Upgrade ($N/A)"
-
-[node name="AddSlotButton" type="Button" parent="Container/HBox Shop Buttons"]
-layout_mode = 2
-text = "AddSlot($1)"
-
-[node name="RerollButton" type="Button" parent="Container/HBox Shop Buttons"]
-layout_mode = 2
-text = "Reroll ($1)"
-
-[node name="LockButton" type="Button" parent="Container/HBox Shop Buttons"]
-layout_mode = 2
-text = "Lock"
-
-[node name="HBox Selling Item Parent" type="HBoxContainer" parent="Container"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -403.0
-offset_top = -320.0
-offset_right = 403.0
-offset_bottom = -123.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
 
 [node name="HBox Equipment Item Parent" type="HBoxContainer" parent="Container"]
 layout_mode = 1
@@ -122,57 +77,6 @@ offset_bottom = 114.326
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
-
-[node name="HBox Bin Item Parent" type="HBoxContainer" parent="Container"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -403.0
-offset_top = 232.0
-offset_right = 403.0
-offset_bottom = 398.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="VBoxContainer9" type="VBoxContainer" parent="Container/HBox Bin Item Parent"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="Container/HBox Bin Item Parent/VBoxContainer9"]
-modulate = Color(0.136826, 0.136826, 0.136826, 1)
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-texture = ExtResource("3_nlrg2")
-
-[node name="VBoxContainer12" type="VBoxContainer" parent="Container/HBox Bin Item Parent"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="Container/HBox Bin Item Parent/VBoxContainer12"]
-modulate = Color(0.136826, 0.136826, 0.136826, 1)
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-texture = ExtResource("3_nlrg2")
-
-[node name="VBoxContainer10" type="VBoxContainer" parent="Container/HBox Bin Item Parent"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="Container/HBox Bin Item Parent/VBoxContainer10"]
-modulate = Color(0.136826, 0.136826, 0.136826, 1)
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-texture = ExtResource("3_nlrg2")
-
-[node name="VBoxContainer11" type="VBoxContainer" parent="Container/HBox Bin Item Parent"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="Container/HBox Bin Item Parent/VBoxContainer11"]
-modulate = Color(0.136826, 0.136826, 0.136826, 1)
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-texture = ExtResource("3_nlrg2")
 
 [node name="VBox Player Status" parent="Container" instance=ExtResource("5_3laas")]
 layout_mode = 1

@@ -1,7 +1,7 @@
 using Godot;
 using R3;
 
-namespace fms;
+namespace fms.HUD;
 
 public partial class ShopHudController : Node
 {
@@ -44,7 +44,7 @@ public partial class ShopHudController : Node
         _upgradeButton.Text = $"Upgrade (${Main.Shop.Config.UpgradeCost})";
         _rerollButton.Text = $"Reroll (${Main.Shop.Config.RerollCost})";
         _addSlotButton.Text = $"AddSlot (${Main.Shop.Config.AddSlotCost})";
-        _lockButton.Text = Main.Shop.IsLocked ? "Unlock" : "Lock";
+        _lockButton.Text = Main.Shop.Locked ? "Unlock" : "Lock";
 
         // ボタンのバインドを更新
         var d00 = _rerollButton.PressedAsObservable().Subscribe(_ => { Main.Shop.RefreshWeaponCards(); });
@@ -55,15 +55,15 @@ public partial class ShopHudController : Node
         });
         var d03 = _lockButton.PressedAsObservable().Subscribe(_ =>
         {
-            if (Main.Shop.IsLocked)
+            if (Main.Shop.Locked)
             {
                 _lockButton.Text = "Lock";
-                Main.Shop.IsLocked = false;
+                Main.Shop.Locked = false;
             }
             else
             {
                 _lockButton.Text = "Unlock";
-                Main.Shop.IsLocked = true;
+                Main.Shop.Locked = true;
             }
         });
         var d04 = _addSlotButton.PressedAsObservable().Subscribe(_ => { Main.Shop.AddItemSlot(); });
@@ -74,7 +74,7 @@ public partial class ShopHudController : Node
 
         // ShopState
         var d30 = Main.Shop.Level.Subscribe(x => { _shopLevelLabel.Text = $"Lv.{Main.Shop.Level}"; });
-        var d31 = Main.Shop.InStoreMinionsUpdated.Subscribe(OnInStoreMinionsUpdated);
+        var d31 = Main.Shop.InStoreWeaponCardsUpdated.Subscribe(OnInStoreMinionsUpdated);
 
         // WaveState
         var d40 = Main.WaveState.Phase.Subscribe(this, (x, state) =>
@@ -121,9 +121,9 @@ public partial class ShopHudController : Node
             old.QueueFree();
         }
 
-        foreach (var item in Main.Shop.InStoreMinions)
+        foreach (var item in Main.Shop.InStoreWeaponCards)
         {
-            var node = _instoreItemPackedScene.Instantiate<ShopSellingItem>();
+            var node = _instoreItemPackedScene.Instantiate<SellingWeaponCardButton>();
             {
                 node.WeaponCard = item;
             }

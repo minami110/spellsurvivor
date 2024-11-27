@@ -13,8 +13,6 @@ size = Vector2(38, 15)
 script = ExtResource("1_3f756")
 _pushDistance = 65
 _minRange = 15.0
-BaseDamage = 20.0
-BaseCoolDownFrame = 50
 
 [node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]
 script = ExtResource("2_k1plt")
