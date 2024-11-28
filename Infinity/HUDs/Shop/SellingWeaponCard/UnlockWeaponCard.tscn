@@ -7,7 +7,6 @@
 custom_minimum_size = Vector2(200, 140)
 offset_right = 200.0
 offset_bottom = 140.0
-mouse_default_cursor_shape = 2
 script = ExtResource("1_mekuu")
 
 [node name="BGSprite" type="ColorRect" parent="."]
@@ -36,10 +35,11 @@ grow_vertical = 2
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "Unlock"
+text = "SHOP_ADD_SLOT"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2

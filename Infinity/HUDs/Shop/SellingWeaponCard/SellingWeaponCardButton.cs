@@ -7,7 +7,7 @@ namespace fms.HUD;
 /// Shop で販売しているアイテム の HUD, Shop により自動で生成される
 /// </summary>
 [Tool]
-public partial class SellingWeaponCardButton : Button
+public partial class SellingWeaponCardButton : FmsButton
 {
     [Export]
     private string Title
@@ -135,18 +135,7 @@ public partial class SellingWeaponCardButton : Button
 
     private void OnChangedPlayerMoney(uint money)
     {
-        if (money < Price)
-        {
-            Modulate = new Color(1, 0, 0);
-            Disabled = true;
-            MouseDefaultCursorShape = CursorShape.Arrow;
-        }
-        else
-        {
-            Modulate = new Color(0, 1, 0);
-            Disabled = false;
-            MouseDefaultCursorShape = CursorShape.PointingHand;
-        }
+        Disabled = money < Price;
     }
 
     private void OnPressed()
@@ -160,9 +149,7 @@ public partial class SellingWeaponCardButton : Button
     private void SoldOut()
     {
         _isSoldOut = true;
-        Modulate = new Color(0.5f, 0.5f, 0.5f);
         Disabled = true;
-        MouseDefaultCursorShape = CursorShape.Arrow;
     }
 
     private void UpdateFaction()

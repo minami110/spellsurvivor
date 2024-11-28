@@ -149,29 +149,39 @@ layout_mode = 2
 size_flags_horizontal = 10
 
 [node name="WeaponCardButton0" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
 layout_mode = 2
+Price = 1
 Tier = 3
 
 [node name="WeaponCardButton1" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
 layout_mode = 2
 Tier = 5
 
 [node name="WeaponCardButton2" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="WeaponCardButton3" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
 [node name="WeaponCardButton4" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
 [node name="UnlockSlotButton0" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("3_ixxgk")]
+unique_name_in_owner = true
 layout_mode = 2
+Price = 1
 
 [node name="UnlockSlotButton1" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("3_ixxgk")]
+unique_name_in_owner = true
 layout_mode = 2
+Price = 1
 
 [node name="Description" type="Control" parent="."]
 custom_minimum_size = Vector2(700, 0)

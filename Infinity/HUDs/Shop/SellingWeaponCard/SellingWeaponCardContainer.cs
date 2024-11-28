@@ -14,7 +14,7 @@ public partial class SellingWeaponCardContainer : Control
         // Shop との バインド
         // Level
         Main.Shop.Level
-            .Subscribe(UpdateLevelUi)
+            .Subscribe(OnChangedShopLevel)
             .AddTo(this);
 
         // Upgrade Button
@@ -32,7 +32,24 @@ public partial class SellingWeaponCardContainer : Control
         // Shop Lock Button
         var lockButton = GetNode<LockButton>("%LockButton");
         lockButton.Locked
-            .Subscribe(x => { Main.Shop.Locked = x; })
+            .Subscribe(x =>
+            {
+                Main.Shop.Locked = x;
+                GetNode<BaseButton>("%RerollButton").Disabled = x;
+            })
+            .AddTo(this);
+
+        // Add Slot Button
+        var unlockSlotButton0 = GetNode<Button>("%UnlockSlotButton0");
+        unlockSlotButton0.PressedAsObservable()
+            .Subscribe(_ => { Main.Shop.AddItemSlot(_player); })
+            .AddTo(this);
+        var unlockSlotButton1 = GetNode<Button>("%UnlockSlotButton1");
+        unlockSlotButton1.PressedAsObservable()
+            .Subscribe(_ => { Main.Shop.AddItemSlot(_player); })
+            .AddTo(this);
+        Main.Shop.CardSlotCount
+            .Subscribe(OnChangedCardSlotCount)
             .AddTo(this);
 
         // Player とのバインド
@@ -41,28 +58,57 @@ public partial class SellingWeaponCardContainer : Control
             .AddTo(this);
     }
 
+    private void OnChangedCardSlotCount(uint cardSlotCount)
+    {
+        switch (cardSlotCount)
+        {
+            case 4:
+            {
+                GetNode<Button>("%UnlockSlotButton0").Hide();
+                GetNode<Button>("%WeaponCardButton3").Show();
+                break;
+            }
+            case 5:
+            {
+                GetNode<Button>("%UnlockSlotButton0").Hide();
+                GetNode<Button>("%UnlockSlotButton1").Hide();
+                GetNode<Button>("%WeaponCardButton3").Show();
+                GetNode<Button>("%WeaponCardButton4").Show();
+                break;
+            }
+        }
+    }
+
     private void OnChangedPlayerMoney(uint money)
     {
         // Update the player money text
         GetNode<Label>("%PlayerMoney").Text = $"{money.ToString()}";
 
         // お金がかかるボタンの Enable / Disable の切り替えを行う
-        var rerollButton = GetNode<Button>("%RerollButton");
+        var rerollButton = GetNode<FmsButton>("%RerollButton");
         rerollButton.Disabled = money < Main.Shop.Config.RerollCost;
-        var upgradeButton = GetNode<Button>("%UpgradeButton");
+        var upgradeButton = GetNode<FmsButton>("%UpgradeButton");
         upgradeButton.Disabled = money < Main.Shop.Config.UpgradeCost;
-        var unlockSlotButton0 = GetNode<Button>("%UnlockSlotButton0");
+        var unlockSlotButton0 = GetNode<FmsButton>("%UnlockSlotButton0");
         unlockSlotButton0.Disabled = money < Main.Shop.Config.AddSlotCost;
-        var unlockSlotButton1 = GetNode<Button>("%UnlockSlotButton1");
+        var unlockSlotButton1 = GetNode<FmsButton>("%UnlockSlotButton1");
         unlockSlotButton1.Disabled = money < Main.Shop.Config.AddSlotCost;
     }
 
-    private void UpdateLevelUi(uint shopLevel)
+    private void OnChangedShopLevel(uint shopLevel)
     {
         // Update the level text
         GetNode<Label>("%Level").Text = $"Lv {shopLevel.ToString()}";
         // Update odds labels
         UpdateOddsLabels(shopLevel);
+
+        if (shopLevel == Constant.SHOP_MAX_LEVEL)
+        {
+            var upgradeButton = GetNode<ShopActionButton>("%UpgradeButton");
+            upgradeButton.Title = "Max Level";
+            upgradeButton.Cost = 0u;
+            upgradeButton.Disabled = true;
+        }
     }
 
     private void UpdateOddsLabels(uint shopLevel)
@@ -101,6 +147,7 @@ public partial class SellingWeaponCardContainer : Control
                 4 => FmsColors.TierLegendary,
                 _ => label.Modulate
             };
+            label.Modulate *= 1.2f;
         }
     }
 }

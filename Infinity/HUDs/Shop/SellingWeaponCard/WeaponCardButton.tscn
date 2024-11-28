@@ -13,7 +13,6 @@ custom_minimum_size = Vector2(200, 140)
 offset_right = 200.0
 offset_bottom = 140.0
 tooltip_text = " "
-flat = true
 script = ExtResource("1_alr32")
 Title = "Weapon"
 Sprite = ExtResource("1_w4wu7")

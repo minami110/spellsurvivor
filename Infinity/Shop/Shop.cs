@@ -12,19 +12,21 @@ public partial class Shop : Node
     [Export]
     public ShopConfig Config { get; private set; } = null!;
 
+    private readonly ReactiveProperty<uint> _cardSlotCountRp = new(3);
+
     private readonly List<WeaponCard> _inStoreWeaponCards = new();
     private readonly Subject<Unit> _inStoreWeaponCardsUpdatedSubject = new();
-
     private readonly ReactiveProperty<uint> _levelRp = new(1);
 
     private readonly Dictionary<int, List<WeaponCard>> _runtimeMinionPool = new();
 
-    private int _itemSlotCount;
 
     /// <summary>
     /// 現在のショップレベル, 排出するアイテムの ティア に影響する
     /// </summary>
     public ReadOnlyReactiveProperty<uint> Level => _levelRp;
+
+    public ReadOnlyReactiveProperty<uint> CardSlotCount => _cardSlotCountRp;
 
     /// <summary>
     /// ショップで販売している WeaponCard が更新されたときに通知
@@ -62,19 +64,19 @@ public partial class Shop : Node
 
         // Default 
         _levelRp.Value = 1;
-        _itemSlotCount = 3;
     }
 
     public override void _ExitTree()
     {
         _levelRp.Dispose();
+        _cardSlotCountRp.Dispose();
     }
 
     public bool AddItemSlot(IEntity entity)
     {
-        if (_itemSlotCount < Constant.SHOP_MAX_ITEM_SLOT)
+        if (_cardSlotCountRp.Value < Constant.SHOP_MAX_ITEM_SLOT)
         {
-            _itemSlotCount++;
+            _cardSlotCountRp.Value++;
             entity.State.ReduceMoney(Config.AddSlotCost);
 
             return true;
@@ -113,7 +115,7 @@ public partial class Shop : Node
         _inStoreWeaponCards.Clear();
 
         // スロットカウントの数だけ Pool から Minion を取り出す
-        var tryCount = _itemSlotCount - _inStoreWeaponCards.Count;
+        var tryCount = _cardSlotCountRp.Value - _inStoreWeaponCards.Count;
         if (tryCount <= 0)
         {
             this.DebugLog("No need to refresh. Refresh skipped.");

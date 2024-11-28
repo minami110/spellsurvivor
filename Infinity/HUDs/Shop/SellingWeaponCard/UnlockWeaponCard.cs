@@ -1,11 +1,9 @@
-using System;
 using Godot;
-using R3;
 
 namespace fms.HUD;
 
 [Tool]
-public partial class UnlockWeaponCard : Button
+public partial class UnlockWeaponCard : FmsButton
 {
     [Export]
     private uint Price
@@ -14,48 +12,20 @@ public partial class UnlockWeaponCard : Button
         set
         {
             field = value;
-            if (IsNodeReady())
-            {
-                GetNode<Label>("%Price").Text = $"{value}";
-            }
+            UpdatePriceUi();
         }
     } = 5u;
 
     public override void _Ready()
     {
-        GetNode<Label>("%Price").Text = $"{Price}";
-
-        if (Engine.IsEditorHint())
-        {
-            return;
-        }
-
-        // Subscribe 
-        var d1 = this.PressedAsObservable().Subscribe(this, (_, s) => s.OnPressed());
-        var playerState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
-        var d2 = playerState.Money.ChangedCurrentValue.Subscribe(this, (x, s) => s.OnChangedPlayerMoney(x));
-
-        Disposable.Combine(d1, d2).AddTo(this);
+        UpdatePriceUi();
     }
 
-    private void OnChangedPlayerMoney(uint money)
+    private void UpdatePriceUi()
     {
-        if (money < Price)
+        if (IsNodeReady())
         {
-            Modulate = new Color(1, 0, 0);
-            Disabled = true;
-            MouseDefaultCursorShape = CursorShape.Arrow;
+            GetNode<Label>("%Price").Text = $"{Price}";
         }
-        else
-        {
-            Modulate = new Color(0, 1, 0);
-            Disabled = false;
-            MouseDefaultCursorShape = CursorShape.PointingHand;
-        }
-    }
-
-    private void OnPressed()
-    {
-        throw new NotImplementedException();
     }
 }

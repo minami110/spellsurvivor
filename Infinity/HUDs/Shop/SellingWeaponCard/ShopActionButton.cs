@@ -3,10 +3,10 @@ using Godot;
 namespace fms.HUD;
 
 [Tool]
-public partial class ShopActionButton : Button
+public partial class ShopActionButton : FmsButton
 {
     [Export]
-    private string Title
+    public string Title
     {
         get;
         set
@@ -17,7 +17,7 @@ public partial class ShopActionButton : Button
     } = string.Empty;
 
     [Export]
-    private uint Cost
+    public uint Cost
     {
         get;
         set
