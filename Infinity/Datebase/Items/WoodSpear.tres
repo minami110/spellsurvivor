@@ -14,4 +14,4 @@ Faction = 0
 TierType = 1
 Price = 5
 Sprite = ExtResource("1_d7wq5")
-Description = "ちょっと遠くの敵に攻撃"
+Description = "木でできた[color=red] おぞましい [/color]槍. 一定間隔で中距離の敵に自動攻撃."

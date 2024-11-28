@@ -1,15 +1,17 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://bwrvuumsylvne"]
+[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://bwrvuumsylvne"]
 
-[ext_resource type="PackedScene" uid="uid://bplb3ghk4ycic" path="res://Infinity/Weapons/(Weapon) PoisonMist.tscn" id="1_xkfvm"]
 [ext_resource type="Texture2D" uid="uid://cg4pdl81tg8pq" path="res://Common/Resources/Textures/Emoji/snake.png" id="2_mr1ib"]
 [ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_7flxl"]
 
 [resource]
 script = ExtResource("3_7flxl")
-WeaponPackedScene = ExtResource("1_xkfvm")
+Level = 1
+Damage = 10
+Cooldown = 10
+CooldownRate = 100.0
+Knockback = 20
 Faction = 7
-Tier = 2
+TierType = 1
 Price = 3
-Name = "毒沼"
-Description = "一定間隔で毒沼を生成"
 Sprite = ExtResource("2_mr1ib")
+Description = "一定間隔で毒沼を生成"
