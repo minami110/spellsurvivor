@@ -1,3 +1,4 @@
+using fms.Faction;
 using Godot;
 using Godot.Collections;
 using R3;
@@ -133,11 +134,10 @@ public partial class SellingWeaponCardButton : FmsButton
             {
                 if (WeaponCard is not null)
                 {
-                    var desc = WeaponCard.Description;
                     var dict = new Dictionary
                     {
                         { "Title", WeaponCard.FriendlyName },
-                        { "Description", desc },
+                        { "Description", WeaponCard.Description },
                         { "Price", WeaponCard.Price },
                         { "Tier", (uint)WeaponCard.TierType }
                     };
@@ -177,7 +177,6 @@ public partial class SellingWeaponCardButton : FmsButton
             Price = 0;
             Sprite = null;
             Tier = 0u;
-            // ToDo:
             Faction0 = "";
             Faction1 = "";
             Faction2 = "";
@@ -190,10 +189,35 @@ public partial class SellingWeaponCardButton : FmsButton
             Price = WeaponCard.Price;
             Sprite = WeaponCard.Sprite;
             Tier = WeaponCard.TierType;
-            // ToDo:
-            Faction0 = "";
-            Faction1 = "";
-            Faction2 = "";
+
+            var factions = WeaponCard.Faction;
+            var allFactions = FactionUtil.GetFactionTypes();
+            var index = 0;
+            foreach (var faction in allFactions)
+            {
+                if (index >= 3)
+                {
+                    break;
+                }
+
+                if (factions.HasFlag(faction))
+                {
+                    if (index == 0)
+                    {
+                        Faction0 = faction.ToString();
+                    }
+                    else if (index == 1)
+                    {
+                        Faction1 = faction.ToString();
+                    }
+                    else if (index == 2)
+                    {
+                        Faction2 = faction.ToString();
+                    }
+
+                    index++;
+                }
+            }
         }
     }
 

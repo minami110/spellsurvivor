@@ -14,5 +14,4 @@ Faction = 47
 TierType = 1
 Price = 3
 Sprite = ExtResource("1_se7o6")
-Description = "超短距離範囲攻撃
-攻撃力: 50"
+Description = "超短距離範囲攻撃"

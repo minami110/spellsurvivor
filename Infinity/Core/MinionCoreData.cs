@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using fms.Faction;
 using Godot;
 
@@ -76,7 +77,15 @@ public partial class MinionCoreData : Resource
         }
     }
 
-    public string Name => $"WEAPON_{Id.ToUpper()}";
+    public string Name
+    {
+        get
+        {
+            // FooBar => FOO_BAR
+            var idUppder = Regex.Replace(Id, @"(\p{Ll})(\p{Lu})", "$1_$2").ToUpper();
+            return $"WEAPON_{idUppder}";
+        }
+    }
 
     public string WeaponPackedScenePath => "res://Infinity/Weapons/(Weapon) " + Id + ".tscn";
 }

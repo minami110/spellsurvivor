@@ -14,5 +14,4 @@ Faction = 0
 TierType = 1
 Price = 3
 Sprite = ExtResource("2_cd5jy")
-Description = "プレイヤーの正面に常に攻撃を行う
-攻撃力: 50"
+Description = "プレイヤーの移動方向にナイフを投擲する"

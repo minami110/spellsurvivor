@@ -14,6 +14,4 @@ Faction = 47
 TierType = 1
 Price = 10
 Sprite = ExtResource("2_4g0so")
-Description = "範囲内にいる一番近い対象に自動で攻撃を行う
-攻撃力: 34
-範囲: 100"
+Description = "範囲内にいる一番近い対象に自動で攻撃を行う"

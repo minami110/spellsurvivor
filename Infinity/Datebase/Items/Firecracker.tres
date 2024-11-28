@@ -14,6 +14,4 @@ Faction = 4
 TierType = 1
 Price = 10
 Sprite = ExtResource("1_o1lhg")
-Description = "範囲内にいる一番近い対象に爆竹を投げる
-攻撃力: 34
-範囲: 100"
+Description = "範囲内にいる一番近い対象に爆弾を投擲, 敵にヒットするか時間制限で爆発し少しの間燃焼フィールドを生成する."

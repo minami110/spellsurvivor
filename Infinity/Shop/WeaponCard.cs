@@ -22,7 +22,19 @@ public partial class WeaponCard : Node
 
     public Texture2D Sprite => CoreData.Sprite;
 
-    public string Description => CoreData.Description;
+    public string Description
+    {
+        get
+        {
+            var desc = CoreData.Description;
+            desc += "\n\n";
+            desc += $"Damage: {CoreData.Damage}\n";
+            desc += $"Cooldown: {CoreData.Cooldown} frames\n";
+            desc += $"Speed: {CoreData.CooldownRate}%\n";
+            desc += $"Knockback: {CoreData.Knockback} px/s";
+            return desc;
+        }
+    }
 
     public WeaponBase Weapon { get; private set; } = null!;
 
@@ -30,6 +42,7 @@ public partial class WeaponCard : Node
     /// この Minion の所属する Faction (Flag)
     /// </summary>
     public FactionType Faction => CoreData.Faction;
+
 
     // parameterless constructor is required for Godot
     private WeaponCard()
