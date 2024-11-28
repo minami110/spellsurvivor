@@ -5,29 +5,56 @@ namespace fms.HUD;
 
 public partial class SellingWeaponCardContainer : Control
 {
+    private IEntity _player = null!;
+
     public override void _Ready()
     {
+        _player = (IEntity)this.GetPlayerNode();
+
         // Shop との バインド
         // Level
-        Main.Shop.Level.Subscribe(UpdateLevelUi).AddTo(this);
+        Main.Shop.Level
+            .Subscribe(UpdateLevelUi)
+            .AddTo(this);
 
         // Upgrade Button
         var upgradeButton = GetNode<Button>("%UpgradeButton");
         upgradeButton.PressedAsObservable()
-            .Subscribe(_ => { Main.Shop.UpgradeShopLevel(); })
+            .Subscribe(_ => { Main.Shop.UpgradeShopLevel(_player); })
             .AddTo(this);
 
         // Reroll Button
         var rerollButton = GetNode<Button>("%RerollButton");
         rerollButton.PressedAsObservable()
-            .Subscribe(_ => { Main.Shop.RefreshWeaponCards(); })
+            .Subscribe(_ => { Main.Shop.RerollWeaponCards(_player); })
+            .AddTo(this);
+
+        // Shop Lock Button
+        var lockButton = GetNode<LockButton>("%LockButton");
+        lockButton.Locked
+            .Subscribe(x => { Main.Shop.Locked = x; })
             .AddTo(this);
 
         // Player とのバインド
-        var player = (IEntity)this.GetPlayerNode();
-        player.State.Money.ChangedCurrentValue
-            .Subscribe(UpdatePlayerMoneyUi)
+        _player.State.Money.ChangedCurrentValue
+            .Subscribe(OnChangedPlayerMoney)
             .AddTo(this);
+    }
+
+    private void OnChangedPlayerMoney(uint money)
+    {
+        // Update the player money text
+        GetNode<Label>("%PlayerMoney").Text = $"{money.ToString()}";
+
+        // お金がかかるボタンの Enable / Disable の切り替えを行う
+        var rerollButton = GetNode<Button>("%RerollButton");
+        rerollButton.Disabled = money < Main.Shop.Config.RerollCost;
+        var upgradeButton = GetNode<Button>("%UpgradeButton");
+        upgradeButton.Disabled = money < Main.Shop.Config.UpgradeCost;
+        var unlockSlotButton0 = GetNode<Button>("%UnlockSlotButton0");
+        unlockSlotButton0.Disabled = money < Main.Shop.Config.AddSlotCost;
+        var unlockSlotButton1 = GetNode<Button>("%UnlockSlotButton1");
+        unlockSlotButton1.Disabled = money < Main.Shop.Config.AddSlotCost;
     }
 
     private void UpdateLevelUi(uint shopLevel)
@@ -65,7 +92,6 @@ public partial class SellingWeaponCardContainer : Control
                 label.Text = "0%";
             }
 
-
             label.Modulate = i switch
             {
                 0 => FmsColors.TierCommon,
@@ -76,11 +102,5 @@ public partial class SellingWeaponCardContainer : Control
                 _ => label.Modulate
             };
         }
-    }
-
-    private void UpdatePlayerMoneyUi(uint money)
-    {
-        // Update the player money text
-        GetNode<Label>("%PlayerMoney").Text = $"{money.ToString()}";
     }
 }

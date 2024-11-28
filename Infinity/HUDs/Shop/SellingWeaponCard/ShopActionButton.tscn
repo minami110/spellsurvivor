@@ -1,0 +1,63 @@
+[gd_scene load_steps=6 format=3 uid="uid://dgm4rl4k64nvu"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/SellingWeaponCard/ShopActionButton.cs" id="1_41al0"]
+[ext_resource type="Texture2D" uid="uid://dbmv3a2txvb04" path="res://Infinity/HUDs/Shop/coin.png" id="1_aofbn"]
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="2_woa0e"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1mj6x"]
+font_size = 14
+
+[sub_resource type="LabelSettings" id="LabelSettings_fsmay"]
+font_size = 10
+
+[node name="ShopActionButton" type="Button"]
+custom_minimum_size = Vector2(160, 50)
+offset_right = 160.0
+offset_bottom = 50.0
+script = ExtResource("1_41al0")
+Title = "タイトル"
+Sprite = ExtResource("2_woa0e")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = -3.035
+offset_bottom = -3.795
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "タイトル"
+label_settings = SubResource("LabelSettings_1mj6x")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_aofbn")
+expand_mode = 3
+
+[node name="Cost" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_fsmay")
+horizontal_alignment = 1
+
+[node name="Sprite" type="TextureRect" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+texture = ExtResource("2_woa0e")
+expand_mode = 3

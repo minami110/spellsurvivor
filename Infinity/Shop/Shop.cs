@@ -70,12 +70,17 @@ public partial class Shop : Node
         _levelRp.Dispose();
     }
 
-    public void AddItemSlot()
+    public bool AddItemSlot(IEntity entity)
     {
         if (_itemSlotCount < Constant.SHOP_MAX_ITEM_SLOT)
         {
             _itemSlotCount++;
+            entity.State.ReduceMoney(Config.AddSlotCost);
+
+            return true;
         }
+
+        return false;
     }
 
     /// <summary>
@@ -96,18 +101,13 @@ public partial class Shop : Node
         weaponCard.OnBuy(entity);
     }
 
-
-    /// <summary>
-    /// 現在のショップのアイテムをリフレッシュする
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
-    public void RefreshWeaponCards()
+    public bool RefreshWeaponCardsFromWave()
     {
         // ショップがロックされているときは Refresh しない
         if (Locked)
         {
             this.DebugLog("Shop is locked. Refresh skipped.");
-            return;
+            return false;
         }
 
         _inStoreWeaponCards.Clear();
@@ -117,7 +117,7 @@ public partial class Shop : Node
         if (tryCount <= 0)
         {
             this.DebugLog("No need to refresh. Refresh skipped.");
-            return;
+            return false;
         }
 
         for (var i = 0; i < tryCount; i++)
@@ -161,6 +161,19 @@ public partial class Shop : Node
         }
 
         _inStoreWeaponCardsUpdatedSubject.OnNext(Unit.Default);
+        return true;
+    }
+
+    /// <summary>
+    /// 現在のショップのアイテムをリフレッシュする
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    public void RerollWeaponCards(IEntity entity)
+    {
+        if (RefreshWeaponCardsFromWave())
+        {
+            entity.State.ReduceMoney(Config.RerollCost);
+        }
     }
 
     /// <summary>
@@ -172,13 +185,16 @@ public partial class Shop : Node
         weaponCard.OnSell(entity);
     }
 
-    public void UpgradeShopLevel()
+    public bool UpgradeShopLevel(IEntity entity)
     {
-        // ToDo: Level Up の値段を設定していない
         if (_levelRp.Value < Constant.SHOP_MAX_LEVEL)
         {
             _levelRp.Value++;
+            entity.State.ReduceMoney(Config.UpgradeCost);
+            return true;
         }
+
+        return false;
     }
 
     private void LoadWeaponCards()

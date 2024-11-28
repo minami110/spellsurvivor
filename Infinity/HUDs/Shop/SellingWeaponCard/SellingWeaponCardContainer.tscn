@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://hkhya7f6pxu0"]
+[gd_scene load_steps=13 format=3 uid="uid://hkhya7f6pxu0"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/SellingWeaponCard/SellingWeaponCardContainer.cs" id="1_cygno"]
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Resources/Fonts/Verdana.ttf" id="1_pdlr1"]
@@ -6,6 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/SellingWeaponCard/WeaponCardButton.tscn" id="2_xapsq"]
 [ext_resource type="PackedScene" uid="uid://dinrpamvghfdt" path="res://Infinity/HUDs/Shop/SellingWeaponCard/LockButton.tscn" id="3_ipre1"]
 [ext_resource type="PackedScene" uid="uid://d4nmnogr3ncsk" path="res://Infinity/HUDs/Shop/SellingWeaponCard/UnlockWeaponCard.tscn" id="3_ixxgk"]
+[ext_resource type="PackedScene" uid="uid://dgm4rl4k64nvu" path="res://Infinity/HUDs/Shop/SellingWeaponCard/ShopActionButton.tscn" id="5_o4h50"]
+[ext_resource type="Texture2D" uid="uid://cpbuqx37qhgf2" path="res://Infinity/HUDs/Shop/upgrade.png" id="6_ndq11"]
+[ext_resource type="Texture2D" uid="uid://tbgtbadnysw3" path="res://Infinity/HUDs/Shop/reroll.png" id="7_qyvi6"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_u0vm0"]
 font = ExtResource("1_pdlr1")
@@ -19,7 +22,7 @@ font_size = 24
 font_size = 25
 
 [node name="SeliingWeaponCardContainer" type="Control"]
-custom_minimum_size = Vector2(1159, 400)
+custom_minimum_size = Vector2(1215.54, 400)
 layout_mode = 3
 anchors_preset = 0
 offset_left = -2.0
@@ -84,9 +87,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -33.0
-offset_right = 33.0
-offset_bottom = 31.0
+offset_left = -32.7675
+offset_top = 8.0
+offset_right = 33.2325
+offset_bottom = 39.0
 grow_horizontal = 2
 metadata/_edit_group_ = true
 
@@ -113,32 +117,32 @@ grow_horizontal = 0
 
 [node name="HBox Selling Item Parent" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -578.5
-offset_top = 44.0
-offset_right = 578.5
-offset_bottom = 184.0
-grow_horizontal = 2
+offset_left = 9.0
+offset_top = 45.0
+offset_right = 1209.0
+offset_bottom = 185.0
 alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBox Selling Item Parent"]
-custom_minimum_size = Vector2(137.2, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="UpgradeButton" type="Button" parent="HBox Selling Item Parent/VBoxContainer"]
+[node name="UpgradeButton" parent="HBox Selling Item Parent/VBoxContainer" instance=ExtResource("5_o4h50")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Upgrade
-$1"
+size_flags_vertical = 3
+Title = "アップグレード"
+Cost = 1
+Sprite = ExtResource("6_ndq11")
 
-[node name="RerollButton" type="Button" parent="HBox Selling Item Parent/VBoxContainer"]
+[node name="RerollButton" parent="HBox Selling Item Parent/VBoxContainer" instance=ExtResource("5_o4h50")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Reroll
-$1"
+size_flags_vertical = 3
+Title = "リロール"
+Cost = 1
+Sprite = ExtResource("7_qyvi6")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBox Selling Item Parent"]
 layout_mode = 2
