@@ -78,7 +78,7 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="VBox Player Status" parent="Container" instance=ExtResource("5_3laas")]
+[node name="PlayerStatusContainer" parent="Container" instance=ExtResource("5_3laas")]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0

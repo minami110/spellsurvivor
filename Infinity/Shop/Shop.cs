@@ -15,7 +15,7 @@ public partial class Shop : Node
     private readonly List<WeaponCard> _inStoreWeaponCards = new();
     private readonly Subject<Unit> _inStoreWeaponCardsUpdatedSubject = new();
 
-    private readonly ReactiveProperty<int> _levelRp = new(1);
+    private readonly ReactiveProperty<uint> _levelRp = new(1);
 
     private readonly Dictionary<int, List<WeaponCard>> _runtimeMinionPool = new();
 
@@ -24,7 +24,7 @@ public partial class Shop : Node
     /// <summary>
     /// 現在のショップレベル, 排出するアイテムの ティア に影響する
     /// </summary>
-    public ReadOnlyReactiveProperty<int> Level => _levelRp;
+    public ReadOnlyReactiveProperty<uint> Level => _levelRp;
 
     /// <summary>
     /// ショップで販売している WeaponCard が更新されたときに通知

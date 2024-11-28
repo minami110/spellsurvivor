@@ -1,4 +1,5 @@
 using Godot;
+using R3;
 
 namespace fms.HUD;
 
@@ -6,7 +7,7 @@ namespace fms.HUD;
 public partial class LockButton : Button
 {
     [Export]
-    private bool Locked
+    private bool _locked
     {
         get;
         set
@@ -21,17 +22,33 @@ public partial class LockButton : Button
             {
                 UpdateUi();
             }
+
+            if (!Engine.IsEditorHint())
+            {
+                _lockedRp.Value = value;
+            }
         }
     } = false;
+
+    private readonly ReactiveProperty<bool> _lockedRp = new(false);
+
+    public ReadOnlyReactiveProperty<bool> Locked => _lockedRp;
 
     public override void _Ready()
     {
         UpdateUi();
+
+        if (Engine.IsEditorHint())
+        {
+            return;
+        }
+
+        _lockedRp.AddTo(this);
     }
 
     private void UpdateUi()
     {
-        if (Locked)
+        if (_locked)
         {
             GetNode<TextureRect>("UnlockedSprite").Hide();
             GetNode<TextureRect>("LockedSprite").Show();
