@@ -189,7 +189,6 @@ Price = 1
 
 [node name="WeaponDescriptionToast" parent="." instance=ExtResource("10_mw6sb")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
