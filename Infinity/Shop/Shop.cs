@@ -127,12 +127,14 @@ public partial class Shop : Node
         _inStoreWeaponCards.Clear();
 
         // スロットカウントの数だけ Pool から Minion を取り出す
-        var tryCount = _cardSlotCountRp.Value - _inStoreWeaponCards.Count;
+        var tryCount = _cardSlotCountRp.Value;
         if (tryCount <= 0)
         {
             this.DebugLog("No need to refresh. Refresh skipped.");
             return false;
         }
+
+        this.DebugLog($"Refreshing WeaponCards : {tryCount} slots");
 
         for (var i = 0; i < tryCount; i++)
         {
@@ -148,6 +150,8 @@ public partial class Shop : Node
 
                 break;
             }
+
+            this.DebugLog($"    Slot {i} Tier: {targetTier}");
 
             // ティアが決定したので Minion を選択する
             WeaponCard? minion = null;
@@ -166,11 +170,12 @@ public partial class Shop : Node
                 }
             }
 
-            if (minion == null)
+            if (minion is null)
             {
                 throw new NotImplementedException("Pool から排出可能な Minion が見つかりませんでした");
             }
 
+            this.DebugLog($"    Minion: {minion.Name}");
             _inStoreWeaponCards.Add(minion);
         }
 

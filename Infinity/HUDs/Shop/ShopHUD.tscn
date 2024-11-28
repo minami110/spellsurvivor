@@ -25,7 +25,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 4
-color = Color(0, 0, 0, 0.223529)
+color = Color(0, 0, 0, 0.592157)
 
 [node name="BattleButton" type="Button" parent="Container"]
 layout_mode = 1

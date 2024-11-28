@@ -10,8 +10,8 @@ Damage = 10
 Cooldown = 10
 CooldownRate = 100.0
 Knockback = 20
-Faction = 0
-TierType = 1
+Faction = 128
+TierType = 2
 Price = 5
 Sprite = ExtResource("1_w4as0")
 Description = "プレイヤーの周囲を回る[color=blue]神秘の[/color]トライアングル"

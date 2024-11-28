@@ -200,22 +200,43 @@ public partial class SellingWeaponCardButton : FmsButton
                     break;
                 }
 
-                if (factions.HasFlag(faction))
+                if (!factions.HasFlag(faction))
                 {
-                    if (index == 0)
-                    {
-                        Faction0 = faction.ToString();
-                    }
-                    else if (index == 1)
-                    {
-                        Faction1 = faction.ToString();
-                    }
-                    else if (index == 2)
-                    {
-                        Faction2 = faction.ToString();
-                    }
+                    continue;
+                }
 
-                    index++;
+                switch (index)
+                {
+                    case 0:
+                        Faction0 = faction.ToString();
+                        break;
+                    case 1:
+                        Faction1 = faction.ToString();
+                        break;
+                    case 2:
+                        Faction2 = faction.ToString();
+                        break;
+                }
+
+                index++;
+            }
+
+            if (index < 3)
+            {
+                for (var i = index; i < 3; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            Faction0 = "";
+                            break;
+                        case 1:
+                            Faction1 = "";
+                            break;
+                        case 2:
+                            Faction2 = "";
+                            break;
+                    }
                 }
             }
         }
