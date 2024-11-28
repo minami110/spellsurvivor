@@ -42,14 +42,56 @@ public partial class SellingWeaponCardContainer : Control
         // Add Slot Button
         var unlockSlotButton0 = GetNode<Button>("%UnlockSlotButton0");
         unlockSlotButton0.PressedAsObservable()
-            .Subscribe(_ => { Main.Shop.AddItemSlot(_player); })
+            .Subscribe(_ => { Main.Shop.BuyWeaponCardSlot(_player); })
             .AddTo(this);
         var unlockSlotButton1 = GetNode<Button>("%UnlockSlotButton1");
         unlockSlotButton1.PressedAsObservable()
-            .Subscribe(_ => { Main.Shop.AddItemSlot(_player); })
+            .Subscribe(_ => { Main.Shop.BuyWeaponCardSlot(_player); })
             .AddTo(this);
         Main.Shop.CardSlotCount
             .Subscribe(OnChangedCardSlotCount)
+            .AddTo(this);
+
+        // Shop で販売中のカードの更新
+        Main.Shop.InStoreWeaponCardsUpdated
+            .Subscribe(_ =>
+            {
+                var cards = Main.Shop.InStoreWeaponCards;
+                for (var i = 0; i < cards.Count; i++)
+                {
+                    var card = cards[i];
+                    var button = GetNode<SellingWeaponCardButton>($"%WeaponCardButton{i}");
+                    button.WeaponCard = card;
+                }
+            })
+            .AddTo(this);
+
+        // 販売中のカードの Tooltip 表示
+        for (var i = 0; i < 4; i++)
+        {
+            var button = GetNode<SellingWeaponCardButton>($"%WeaponCardButton{i}");
+            button.RequestShowInfo
+                .Subscribe(info =>
+                {
+                    // Show Tool tip
+                    var toast = GetNode<WeaponDescriptionToast>("%WeaponDescriptionToast");
+                    toast.Show();
+                    toast.Header = (string)info["Title"];
+                    toast.Description = (string)info["Description"];
+                })
+                .AddTo(this);
+            button.RequestHideInfo
+                .Subscribe(_ =>
+                {
+                    var toast = GetNode<WeaponDescriptionToast>("%WeaponDescriptionToast");
+                    toast.Hide();
+                })
+                .AddTo(this);
+        }
+
+        // ロックされたら Reroll ボタンを Disable にする
+        Main.Shop.CardSlotLocked
+            .Subscribe(x => { UpdateRerollButtonDisabled(); })
             .AddTo(this);
 
         // Player とのバインド
@@ -85,8 +127,7 @@ public partial class SellingWeaponCardContainer : Control
         GetNode<Label>("%PlayerMoney").Text = $"{money.ToString()}";
 
         // お金がかかるボタンの Enable / Disable の切り替えを行う
-        var rerollButton = GetNode<FmsButton>("%RerollButton");
-        rerollButton.Disabled = money < Main.Shop.Config.RerollCost;
+        UpdateRerollButtonDisabled();
         var upgradeButton = GetNode<FmsButton>("%UpgradeButton");
         upgradeButton.Disabled = money < Main.Shop.Config.UpgradeCost;
         var unlockSlotButton0 = GetNode<FmsButton>("%UnlockSlotButton0");
@@ -149,5 +190,13 @@ public partial class SellingWeaponCardContainer : Control
             };
             label.Modulate *= 1.2f;
         }
+    }
+
+    private void UpdateRerollButtonDisabled()
+    {
+        var button = GetNode<FmsButton>("%RerollButton");
+        var disabled = Main.Shop.CardSlotLocked.CurrentValue ||
+                       Main.Shop.Config.RerollCost > _player.State.Money.CurrentValue;
+        button.Disabled = disabled;
     }
 }

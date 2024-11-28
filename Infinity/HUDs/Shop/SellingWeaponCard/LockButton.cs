@@ -18,10 +18,7 @@ public partial class LockButton : Button
             }
 
             field = value;
-            if (IsNodeReady())
-            {
-                UpdateUi();
-            }
+            UpdateUi();
 
             if (!Engine.IsEditorHint())
             {
@@ -43,11 +40,20 @@ public partial class LockButton : Button
             return;
         }
 
+        this.PressedAsObservable()
+            .Subscribe(_ => { _locked = !_locked; })
+            .AddTo(this);
+
         _lockedRp.AddTo(this);
     }
 
     private void UpdateUi()
     {
+        if (!IsNodeReady())
+        {
+            return;
+        }
+
         if (_locked)
         {
             GetNode<TextureRect>("UnlockedSprite").Hide();

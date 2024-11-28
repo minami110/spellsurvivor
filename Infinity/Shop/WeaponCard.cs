@@ -18,7 +18,7 @@ public partial class WeaponCard : Node
 
     public string FriendlyName => CoreData.Name;
 
-    public int Tier => CoreData.Tier;
+    public uint Tier => CoreData.Tier;
 
     public uint Price => CoreData.Price;
 

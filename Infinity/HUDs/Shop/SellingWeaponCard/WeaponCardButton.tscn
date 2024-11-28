@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://cqihha4653xnh" path="res://Infinity/HUDs/Shop/SellingWeaponCard/FactionInfo.tscn" id="3_g7eg7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_fw5n2"]
-font_size = 20
 
 [node name="WeaponCardButton" type="Button"]
 custom_minimum_size = Vector2(200, 140)
@@ -14,11 +13,6 @@ offset_right = 200.0
 offset_bottom = 140.0
 tooltip_text = " "
 script = ExtResource("1_alr32")
-Title = "Weapon"
-Sprite = ExtResource("1_w4wu7")
-Faction0 = "foo"
-Faction1 = "bar"
-Faction2 = "baz"
 
 [node name="BGSprite" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -91,6 +85,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 
 [node name="CoinSprite" type="TextureRect" parent="VBoxContainer/TitleContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("3_231tv")
 expand_mode = 3

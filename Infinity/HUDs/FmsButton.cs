@@ -2,6 +2,10 @@ using Godot;
 
 namespace fms.HUD;
 
+/// <summary>
+/// 小要素すべてを暗くすることができるボタン
+/// Note: 公式が Disabled の override も Signal も用意していないのでこのようなハメになっている
+/// </summary>
 public partial class FmsButton : Button
 {
     [Export]

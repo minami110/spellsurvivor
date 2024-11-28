@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dgm4rl4k64nvu" path="res://Infinity/HUDs/Shop/SellingWeaponCard/ShopActionButton.tscn" id="5_o4h50"]
 [ext_resource type="Texture2D" uid="uid://cpbuqx37qhgf2" path="res://Infinity/HUDs/Shop/upgrade.png" id="6_ndq11"]
 [ext_resource type="Texture2D" uid="uid://tbgtbadnysw3" path="res://Infinity/HUDs/Shop/reroll.png" id="7_qyvi6"]
+[ext_resource type="PackedScene" uid="uid://c7eptu72o3sii" path="res://Infinity/HUDs/Shop/SellingWeaponCard/WeaponDescriptionToast.tscn" id="10_mw6sb"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_u0vm0"]
 font = ExtResource("1_pdlr1")
@@ -17,9 +18,6 @@ font_size = 30
 [sub_resource type="LabelSettings" id="LabelSettings_0cv2f"]
 font = ExtResource("1_pdlr1")
 font_size = 24
-
-[sub_resource type="LabelSettings" id="LabelSettings_mdop2"]
-font_size = 25
 
 [node name="SeliingWeaponCardContainer" type="Control"]
 custom_minimum_size = Vector2(1215.54, 400)
@@ -151,27 +149,33 @@ size_flags_horizontal = 10
 [node name="WeaponCardButton0" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
 unique_name_in_owner = true
 layout_mode = 2
-Price = 1
-Tier = 3
+tooltip_text = ""
 
 [node name="WeaponCardButton1" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
 unique_name_in_owner = true
 layout_mode = 2
-Tier = 5
+tooltip_text = ""
+Index = 1
 
 [node name="WeaponCardButton2" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = ""
+Index = 2
 
 [node name="WeaponCardButton3" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+tooltip_text = ""
+Index = 3
 
 [node name="WeaponCardButton4" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+tooltip_text = ""
+Index = 4
 
 [node name="UnlockSlotButton0" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("3_ixxgk")]
 unique_name_in_owner = true
@@ -183,54 +187,18 @@ unique_name_in_owner = true
 layout_mode = 2
 Price = 1
 
-[node name="Description" type="Control" parent="."]
-custom_minimum_size = Vector2(700, 0)
+[node name="WeaponDescriptionToast" parent="." instance=ExtResource("10_mw6sb")]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -250.0
+offset_left = -350.0
 offset_top = -200.0
-offset_right = 250.0
+offset_right = 350.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 0
-metadata/_edit_group_ = true
-
-[node name="BG" type="ColorRect" parent="Description"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_vertical = 4
-color = Color(0, 0, 0, 0.298039)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Description"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = 10.0
-offset_right = -10.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="WeaponName" type="Label" parent="Description/VBoxContainer"]
-layout_mode = 2
-text = "WeaponName"
-label_settings = SubResource("LabelSettings_mdop2")
-
-[node name="WeaponDescription" type="RichTextLabel" parent="Description/VBoxContainer"]
-layout_mode = 2
-bbcode_enabled = true
-text = "対象に向けて砲弾を発射し, [color=red]14[/color] ダメージを与える. 対象が倒されると周囲の敵に [color=red]20[/color]ダメージを与える爆発が発生する.
-
-Damage: 14
-Cooldown: 20 s
-Range: 30"
-fit_content = true

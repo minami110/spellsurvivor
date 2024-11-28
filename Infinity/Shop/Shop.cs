@@ -13,12 +13,13 @@ public partial class Shop : Node
     public ShopConfig Config { get; private set; } = null!;
 
     private readonly ReactiveProperty<uint> _cardSlotCountRp = new(3);
+    private readonly ReactiveProperty<bool> _cardSlotLockedRp = new(false);
 
-    private readonly List<WeaponCard> _inStoreWeaponCards = new();
+    private readonly List<WeaponCard?> _inStoreWeaponCards = new();
     private readonly Subject<Unit> _inStoreWeaponCardsUpdatedSubject = new();
     private readonly ReactiveProperty<uint> _levelRp = new(1);
 
-    private readonly Dictionary<int, List<WeaponCard>> _runtimeMinionPool = new();
+    private readonly Dictionary<uint, List<WeaponCard>> _runtimeMinionPool = new();
 
 
     /// <summary>
@@ -28,6 +29,8 @@ public partial class Shop : Node
 
     public ReadOnlyReactiveProperty<uint> CardSlotCount => _cardSlotCountRp;
 
+    public ReadOnlyReactiveProperty<bool> CardSlotLocked => _cardSlotLockedRp;
+
     /// <summary>
     /// ショップで販売している WeaponCard が更新されたときに通知
     /// </summary>
@@ -36,12 +39,12 @@ public partial class Shop : Node
     /// <summary>
     /// 現在ショップで販売している WeaponCard のリスト
     /// </summary>
-    public IReadOnlyList<WeaponCard> InStoreWeaponCards => _inStoreWeaponCards;
+    public IReadOnlyList<WeaponCard?> InStoreWeaponCards => _inStoreWeaponCards;
 
-    /// <summary>
-    /// 品揃えの更新が現在ロックされているかどうか
-    /// </summary>
-    public bool Locked { get; set; }
+    public bool Locked
+    {
+        set => _cardSlotLockedRp.Value = value;
+    }
 
     public Shop(ShopConfig config) : this()
     {
@@ -72,12 +75,39 @@ public partial class Shop : Node
         _cardSlotCountRp.Dispose();
     }
 
-    public bool AddItemSlot(IEntity entity)
+    /// <summary>
+    /// WeaponCard をショップから購入
+    /// </summary>
+    public void BuyWeaponCard(IEntity entity, int index)
+    {
+        var weaponCard = _inStoreWeaponCards[index];
+        if (weaponCard is null)
+        {
+            throw new InvalidOperationException("WeaponCard is sold out");
+        }
+
+        weaponCard.OnBuy(entity);
+
+        // WeaponCard の Index を null (売り切れ) にする
+        _inStoreWeaponCards[index] = null;
+        _inStoreWeaponCardsUpdatedSubject.OnNext(Unit.Default);
+    }
+
+    /// <summary>
+    /// Weapon Card 販売枠を一つ追加
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <returns></returns>
+    public bool BuyWeaponCardSlot(IEntity entity)
     {
         if (_cardSlotCountRp.Value < Constant.SHOP_MAX_ITEM_SLOT)
         {
             _cardSlotCountRp.Value++;
             entity.State.ReduceMoney(Config.AddSlotCost);
+
+            // 一個枠が増えたので null を販売する
+            _inStoreWeaponCards.Add(null);
+            _inStoreWeaponCardsUpdatedSubject.OnNext(Unit.Default);
 
             return true;
         }
@@ -85,28 +115,10 @@ public partial class Shop : Node
         return false;
     }
 
-    /// <summary>
-    /// WeaponCard をショップから購入
-    /// </summary>
-    /// <param name="weaponCard"></param>
-    public void BuyWeaponCard(IEntity entity, WeaponCard weaponCard)
-    {
-        if (!_inStoreWeaponCards.Contains(weaponCard))
-        {
-            throw new InvalidProgramException("購入対象の WeaponCard が現在販売されていません");
-        }
-
-        // ショップから排除する
-        _inStoreWeaponCards.Remove(weaponCard);
-        _inStoreWeaponCardsUpdatedSubject.OnNext(Unit.Default);
-
-        weaponCard.OnBuy(entity);
-    }
-
     public bool RefreshWeaponCardsFromWave()
     {
         // ショップがロックされているときは Refresh しない
-        if (Locked)
+        if (_cardSlotLockedRp.Value)
         {
             this.DebugLog("Shop is locked. Refresh skipped.");
             return false;
@@ -125,7 +137,7 @@ public partial class Shop : Node
         for (var i = 0; i < tryCount; i++)
         {
             // はじめにティアのガチャを行う
-            var targetTier = 1;
+            var targetTier = 1u;
             for (; targetTier <= Constant.MINION_MAX_TIER; targetTier++)
             {
                 var odds = Config.Odds[(Level.CurrentValue - 1) * Constant.MINION_MAX_TIER + targetTier - 1];

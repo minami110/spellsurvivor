@@ -15,7 +15,7 @@ public partial class MinionCoreData : Resource
     /// アイテムのティア
     /// </summary>
     [Export(PropertyHint.Range, "1,5,1")]
-    public int Tier { get; private set; } = 1;
+    public uint Tier { get; private set; } = 1;
 
     /// <summary>
     /// ショップで購入する際の値段
