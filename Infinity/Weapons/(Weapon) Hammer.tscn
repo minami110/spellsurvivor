@@ -1,15 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://cnt1krkwwjugi"]
+[gd_scene load_steps=5 format=3 uid="uid://cnt1krkwwjugi"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Hammer.cs" id="1_y4mha"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_bssf8"]
+[ext_resource type="Resource" uid="uid://bijbeix4ox0e" path="res://Infinity/Datebase/Items/Hammer.tres" id="2_tn2bf"]
 [ext_resource type="Texture2D" uid="uid://ck1nywcn7hjch" path="res://Infinity/Weapons/Textures/hammer.png" id="3_rmyeh"]
 
 [node name="Hammer" type="Node2D"]
 script = ExtResource("1_y4mha")
 _damageRadius = 110
-BaseDamage = 5.0
-BaseCoolDownFrame = 100
-Knockback = 50
+_config = ExtResource("2_tn2bf")
 
 [node name="AimToNearEnemy" type="Area2D" parent="."]
 collision_layer = 0

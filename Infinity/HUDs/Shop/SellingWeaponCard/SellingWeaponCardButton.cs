@@ -37,8 +37,8 @@ public partial class SellingWeaponCardButton : FmsButton
         }
     }
 
-    [Export(PropertyHint.Range, "1,5")]
-    private uint Tier
+    [Export]
+    private TierType Tier
     {
         get;
         set
@@ -46,7 +46,7 @@ public partial class SellingWeaponCardButton : FmsButton
             field = value;
             UpdateTierUi();
         }
-    } = 1u;
+    } = TierType.Common;
 
     [Export]
     private Texture2D? Sprite
@@ -139,7 +139,7 @@ public partial class SellingWeaponCardButton : FmsButton
                         { "Title", WeaponCard.FriendlyName },
                         { "Description", desc },
                         { "Price", WeaponCard.Price },
-                        { "Tier", WeaponCard.Tier }
+                        { "Tier", (uint)WeaponCard.TierType }
                     };
                     _requestShowInfo.OnNext(dict);
                 }
@@ -189,7 +189,7 @@ public partial class SellingWeaponCardButton : FmsButton
             Title = WeaponCard.FriendlyName;
             Price = WeaponCard.Price;
             Sprite = WeaponCard.Sprite;
-            Tier = WeaponCard.Tier;
+            Tier = WeaponCard.TierType;
             // ToDo:
             Faction0 = "";
             Faction1 = "";
@@ -239,12 +239,11 @@ public partial class SellingWeaponCardButton : FmsButton
         var c = GetNode<ColorRect>("%BGSprite");
         c.Color = Tier switch
         {
-            0u => Colors.Black, // 売り切れ時
-            1u => FmsColors.TierCommon,
-            2u => FmsColors.TierUncommon,
-            3u => FmsColors.TierRare,
-            4u => FmsColors.TierEpic,
-            5u => FmsColors.TierLegendary,
+            TierType.Common => FmsColors.TierCommon,
+            TierType.Uncommon => FmsColors.TierUncommon,
+            TierType.Rare => FmsColors.TierRare,
+            TierType.Epic => FmsColors.TierEpic,
+            TierType.Legendary => FmsColors.TierLegendary,
             _ => c.Color
         };
     }

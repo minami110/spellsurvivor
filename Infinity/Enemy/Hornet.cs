@@ -30,14 +30,7 @@ public partial class Hornet : EntityEnemy
     {
         // Weapon が存在していなかったら作成する
         var weapon = GetNodeOrNull<WeaponBase>("Weapon");
-        if (weapon == null)
-        {
-            weapon = new WeaponBase();
-            weapon.Set(WeaponBase.PropertyName._cooldown, _baseCoolDownFrame);
-            AddChild(weapon);
-        }
-
-        _weapon = weapon;
+        _weapon = weapon ?? throw new ApplicationException("Weapon が存在しません");
     }
 
     public override void _Ready()

@@ -1,3 +1,4 @@
+using fms.Faction;
 using Godot;
 
 namespace fms;
@@ -8,14 +9,44 @@ namespace fms;
 [GlobalClass]
 public partial class MinionCoreData : Resource
 {
+    /// <summary>
+    /// </summary>
+    [ExportGroup("Base Status")]
+    [Export(PropertyHint.Range, "0,10,")]
+    public uint Level { get; private set; } = 1u;
+
+    /// <summary>
+    /// </summary>
+    [Export(PropertyHint.Range, "0,9999,")]
+    public uint Damage { get; private set; } = 10u;
+
+    /// <summary>
+    /// </summary>
+    [Export(PropertyHint.Range, "0,9999,,suffix:frames")]
+    public uint Cooldown { get; private set; } = 10u;
+
+    /// <summary>
+    /// </summary>
+    [Export(PropertyHint.Range, "0,500,0.1,suffix:%")]
+    public float CooldownRate { get; private set; } = 100f;
+
+    /// <summary>
+    /// </summary>
+    [Export(PropertyHint.Range, "0,9999,,suffix:px/s")]
+    public uint Knockback { get; private set; } = 20u;
+
+    /// <summary>
+    /// アイテムの所属するシナジーのクラス
+    /// </summary>
     [Export]
-    public PackedScene WeaponPackedScene { get; private set; } = null!;
+    public FactionType Faction { get; private set; }
 
     /// <summary>
     /// アイテムのティア
     /// </summary>
-    [Export(PropertyHint.Range, "1,5,1")]
-    public uint Tier { get; private set; } = 1;
+    [ExportGroup("Shop Settings")]
+    [Export]
+    public TierType TierType { get; private set; } = TierType.Common;
 
     /// <summary>
     /// ショップで購入する際の値段
@@ -24,23 +55,14 @@ public partial class MinionCoreData : Resource
     public uint Price { get; private set; } = 10;
 
     /// <summary>
-    /// ユーザーに表示する名称 (ToDo: 要 Localize)
-    /// </summary>
-    [ExportGroup("For User Information")]
-    [Export]
-    public string Name { get; private set; } = string.Empty;
-
-    /// <summary>
-    /// ユーザーに表示する武器の説明 (ToDo: 要 Localize)
-    /// </summary>
-    [Export(PropertyHint.MultilineText)]
-    public string Description { get; private set; } = string.Empty;
-
-    /// <summary>
     /// Shop 画面などで表示するアイコン
     /// </summary>
     [Export]
     public Texture2D Sprite { get; private set; } = null!;
+
+    [ExportGroup("For User Setings")]
+    [Export(PropertyHint.MultilineText)]
+    public string Description { get; private set; } = string.Empty;
 
     public string Id
     {
@@ -53,4 +75,8 @@ public partial class MinionCoreData : Resource
             return fileName.Substring(0, fileName.LastIndexOf('.'));
         }
     }
+
+    public string Name => $"WEAPON_{Id.ToUpper()}";
+
+    public string WeaponPackedScenePath => "res://Infinity/Weapons/(Weapon) " + Id + ".tscn";
 }

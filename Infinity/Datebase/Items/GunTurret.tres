@@ -7,7 +7,6 @@
 [resource]
 script = ExtResource("3_qks0w")
 WeaponPackedScene = ExtResource("2_biaow")
-Faction = 0
 Tier = 1
 Price = 3
 Name = "タレット"

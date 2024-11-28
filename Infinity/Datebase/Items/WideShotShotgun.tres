@@ -1,15 +1,17 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://dgc4s6k2l0lk4"]
+[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://dgc4s6k2l0lk4"]
 
 [ext_resource type="Texture2D" uid="uid://c2wpoue220kop" path="res://Common/Resources/Textures/Nakagiri/WideShotShotgun.png" id="1_t8q65"]
-[ext_resource type="PackedScene" uid="uid://dgs24h2qo4gyf" path="res://Infinity/Weapons/(Weapon) WideShotShotgun.tscn" id="2_402gi"]
 [ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_qjhxu"]
 
 [resource]
 script = ExtResource("3_qjhxu")
-WeaponPackedScene = ExtResource("2_402gi")
+Level = 1
+Damage = 10
+Cooldown = 10
+CooldownRate = 100.0
+Knockback = 20
 Faction = 0
-Tier = 1
+TierType = 1
 Price = 3
-Name = "ショットガン"
-Description = "扇形に弾を射出"
 Sprite = ExtResource("1_t8q65")
+Description = "扇形に弾を射出"

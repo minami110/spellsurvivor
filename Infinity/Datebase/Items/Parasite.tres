@@ -1,15 +1,17 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://ddbl812oxaqit"]
+[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://ddbl812oxaqit"]
 
 [ext_resource type="Texture2D" uid="uid://5mgf28e054d7" path="res://Common/Resources/Textures/Emoji/japanese_ogre.png" id="1_hl37x"]
-[ext_resource type="PackedScene" uid="uid://slegkjhplb1s" path="res://Infinity/Weapons/(Weapon) Parasite.tscn" id="2_kf1n2"]
 [ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_rkj5s"]
 
 [resource]
 script = ExtResource("3_rkj5s")
-WeaponPackedScene = ExtResource("2_kf1n2")
+Level = 1
+Damage = 10
+Cooldown = 10
+CooldownRate = 100.0
+Knockback = 20
 Faction = 0
-Tier = 1
+TierType = 1
 Price = 3
-Name = "パラサイト"
-Description = "敵を追従する小さい鬼をゲーム開始時にスポーン"
 Sprite = ExtResource("1_hl37x")
+Description = "敵を追従する小さい鬼をゲーム開始時にスポーン"

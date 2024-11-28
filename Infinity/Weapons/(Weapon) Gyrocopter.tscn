@@ -1,15 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://ckmcgmqfjqo6s"]
+[gd_scene load_steps=6 format=3 uid="uid://ckmcgmqfjqo6s"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Gyrocopter.cs" id="1_vlwh6"]
 [ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) SparkBolt.tscn" id="2_a7bqb"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="3_4bldk"]
+[ext_resource type="Resource" uid="uid://d4gk8g1vxe2i1" path="res://Infinity/Datebase/Items/Gyrocopter.tres" id="3_p3mbt"]
 [ext_resource type="Texture2D" uid="uid://ctoyojvjd2wsq" path="res://Common/Resources/Textures/Emoji/helicopter.png" id="4_2s37q"]
 
 [node name="Gyrocopter" type="Node2D"]
 script = ExtResource("1_vlwh6")
 _mainProjectile = ExtResource("2_a7bqb")
 _subProjectile = ExtResource("2_a7bqb")
-BaseCoolDownFrame = 60
+_config = ExtResource("3_p3mbt")
 
 [node name="AimToNearEnemy" type="Area2D" parent="."]
 collision_layer = 0

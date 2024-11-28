@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://dvwlkv2f4pl2i"]
+[gd_scene load_steps=6 format=3 uid="uid://dvwlkv2f4pl2i"]
 
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopHudController.cs" id="1_5xunh"]
 [ext_resource type="PackedScene" uid="uid://hkhya7f6pxu0" path="res://Infinity/HUDs/Shop/SellingWeaponCard/SellingWeaponCardContainer.tscn" id="4_7hk4g"]
 [ext_resource type="PackedScene" uid="uid://3cf1cbaj3tc7" path="res://Infinity/HUDs/PlayerStatusHud.tscn" id="5_3laas"]
 [ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/ActiveFactionHud.tscn" id="5_jthwe"]
+[ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/OwnedMinionPanel.tscn" id="6_dux5n"]
 
 [node name="ShopHUD" type="CanvasLayer"]
 
@@ -61,9 +63,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -529.0
-offset_top = -40.675
+offset_top = 195.0
 offset_right = 529.0
-offset_bottom = 114.326
+offset_bottom = 350.001
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
@@ -92,3 +94,10 @@ offset_top = -198.0
 offset_right = 158.0
 offset_bottom = 14.0
 grow_vertical = 2
+
+[node name="Node" type="Node" parent="." node_paths=PackedStringArray("_container", "_equipItemSpawnParent", "_quitShopButton")]
+script = ExtResource("1_5xunh")
+_container = NodePath("../Container")
+_shopOwnItemPackedScene = ExtResource("6_dux5n")
+_equipItemSpawnParent = NodePath("../Container/HBox Equipment Item Parent")
+_quitShopButton = NodePath("../Container/BattleButton")

@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://cc0rh5i501pkg"]
+[gd_scene load_steps=4 format=3 uid="uid://cc0rh5i501pkg"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Book.cs" id="1_vqguh"]
 [ext_resource type="PackedScene" uid="uid://dc8rn6v6qs5uy" path="res://Infinity/Projectiles/(Projectile) BrassTriangle.tscn" id="2_ceugq"]
+[ext_resource type="Resource" uid="uid://b5yd1ajpdgy0g" path="res://Infinity/Datebase/Items/Book.tres" id="3_4kclj"]
 
 [node name="Book" type="Node2D"]
 script = ExtResource("1_vqguh")
 _projectile = ExtResource("2_ceugq")
-BaseDamage = 50.0
-BaseCoolDownFrame = 180
+_config = ExtResource("3_4kclj")
 AutoPositioning = false

@@ -36,29 +36,9 @@ public partial class ShopOwnItem : VBoxContainer
         _sellButton.Text = $"Sell ${WeaponCard.Price}";
         var d2 = _sellButton.PressedAsObservable().Subscribe(_ =>
         {
-            var player = this.GetPlayerNode();
-            Main.Shop.SellWeaponCard((IEntity)player, WeaponCard);
+            Main.Shop.SellWeaponCard(WeaponCard.Weapon.OwnedEntity, WeaponCard);
         });
 
-        // Tooltip
-        _toolTipControl.MouseEntered += ShowToolTip;
-        _toolTipControl.MouseExited += HideToolTip;
-
         Disposable.Combine(d1, d2).AddTo(this);
-    }
-
-    private void HideToolTip()
-    {
-        ToolTipToast.Hide();
-    }
-
-    private void ShowToolTip()
-    {
-        var text = $"Tier: {WeaponCard.Tier}\n";
-        text += $"Faction: ${WeaponCard.Faction}\n";
-        text += $"{WeaponCard.Description}\n";
-
-        ToolTipToast.Text = text;
-        ToolTipToast.Show();
     }
 }

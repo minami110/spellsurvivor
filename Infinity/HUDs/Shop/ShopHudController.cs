@@ -9,13 +9,7 @@ public partial class ShopHudController : Node
     private Control _container = null!;
 
     [Export]
-    private PackedScene _instoreItemPackedScene = null!;
-
-    [Export]
     private PackedScene _shopOwnItemPackedScene = null!;
-
-    [Export]
-    private Control _shopItemSpawnParent = null!;
 
     [Export]
     private Control _equipItemSpawnParent = null!;
@@ -35,9 +29,6 @@ public partial class ShopHudController : Node
         var playerNode = this.GetPlayerNode();
         var d20 = playerNode.ChildOrderChangedAsObservable().Subscribe(OnEquippedMinionChanged);
 
-        // ShopState
-        var d31 = Main.Shop.InStoreWeaponCardsUpdated.Subscribe(OnInStoreMinionsUpdated);
-
         // WaveState
         var d40 = Main.WaveState.Phase.Subscribe(this, (x, state) =>
         {
@@ -51,7 +42,7 @@ public partial class ShopHudController : Node
             }
         });
 
-        Disposable.Combine(d02, d20, d31, d40).AddTo(this);
+        Disposable.Combine(d02, d20, d40).AddTo(this);
     }
 
     private void OnEquippedMinionChanged(Unit _)
@@ -64,32 +55,18 @@ public partial class ShopHudController : Node
 
         // Player が所有している Minion を取得する
         var playerNode = this.GetPlayerNode();
-        var minions = playerNode.FindChildren("*", nameof(WeaponCard), false, false);
-        foreach (var minion in minions)
+        foreach (var n in playerNode.GetChildren())
         {
+            if (n is not WeaponCard weaponCard)
+            {
+                continue;
+            }
+
             var node = _shopOwnItemPackedScene.Instantiate<ShopOwnItem>();
             {
-                node.WeaponCard = (WeaponCard)minion;
+                node.WeaponCard = weaponCard;
             }
             _equipItemSpawnParent.AddChild(node);
-        }
-    }
-
-    private void OnInStoreMinionsUpdated(Unit _)
-    {
-        // すでに生成している ShopOwnItem を削除 する
-        foreach (var old in _shopItemSpawnParent.GetChildren())
-        {
-            old.QueueFree();
-        }
-
-        foreach (var item in Main.Shop.InStoreWeaponCards)
-        {
-            var node = _instoreItemPackedScene.Instantiate<SellingWeaponCardButton>();
-            {
-                node.WeaponCard = item;
-            }
-            _shopItemSpawnParent.AddChild(node);
         }
     }
 }

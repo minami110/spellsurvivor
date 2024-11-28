@@ -11,14 +11,12 @@ namespace fms;
 /// </summary>
 public partial class WeaponCard : Node
 {
-    [Export]
-    private MinionCoreData CoreData { get; set; } = null!;
-
     private IEntity? _ownedEntity;
+    private MinionCoreData CoreData { get; set; } = null!;
 
     public string FriendlyName => CoreData.Name;
 
-    public uint Tier => CoreData.Tier;
+    public TierType TierType => CoreData.TierType;
 
     public uint Price => CoreData.Price;
 
@@ -31,7 +29,7 @@ public partial class WeaponCard : Node
     /// <summary>
     /// この Minion の所属する Faction (Flag)
     /// </summary>
-    public FactionType Faction => Weapon.Faction;
+    public FactionType Faction => CoreData.Faction;
 
     // parameterless constructor is required for Godot
     private WeaponCard()
@@ -51,7 +49,9 @@ public partial class WeaponCard : Node
             AddToGroup(Constant.GroupNameMinion);
 
             // Spawn Weapon
-            Weapon = CoreData.WeaponPackedScene.Instantiate<WeaponBase>();
+            // ToDo: ここでロードする?
+            var packedScene = ResourceLoader.Load<PackedScene>(CoreData.WeaponPackedScenePath);
+            Weapon = packedScene.Instantiate<WeaponBase>();
             Weapon.AutoStart = false;
             AddSibling(Weapon);
         }

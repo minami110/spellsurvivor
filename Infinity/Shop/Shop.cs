@@ -238,10 +238,10 @@ public partial class Shop : Node
                     var path = Path.Combine(searchDir, fileName);
                     var minionCoreData = ResourceLoader.Load<MinionCoreData>(path);
                     GD.Print($"  Loaded: {path} => {minionCoreData.Name}");
-                    if (!_runtimeMinionPool.TryGetValue(minionCoreData.Tier, out var list))
+                    if (!_runtimeMinionPool.TryGetValue((uint)minionCoreData.TierType, out var list))
                     {
                         list = new List<WeaponCard>();
-                        _runtimeMinionPool[minionCoreData.Tier] = list;
+                        _runtimeMinionPool[(uint)minionCoreData.TierType] = list;
                     }
 
                     // WeaponCard を作成 (ツリーに入れずにメモリで管理しておく)

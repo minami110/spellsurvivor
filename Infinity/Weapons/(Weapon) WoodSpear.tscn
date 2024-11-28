@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://cogfcwp2vrio"]
+[gd_scene load_steps=8 format=3 uid="uid://cogfcwp2vrio"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/PiercingWeapon.cs" id="1_bb5sa"]
+[ext_resource type="Resource" uid="uid://cyaangjnv7j4l" path="res://Infinity/Datebase/Items/WoodSpear.tres" id="2_3xiph"]
 [ext_resource type="Script" path="res://Infinity/Weapons/EditorDrawer/PiercingWeaponEditorDrawer.cs" id="2_u4hc5"]
 [ext_resource type="Texture2D" uid="uid://ck28tr5m24hp0" path="res://Infinity/Weapons/Textures/wood_spear.png" id="3_i6cbw"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_86pk3"]
@@ -15,7 +16,7 @@ _pushDistance = 45
 _minRange = 85.0
 _maxRange = 140.0
 _rotateSensitivity = 0.1
-BaseCoolDownFrame = 50
+_config = ExtResource("2_3xiph")
 
 [node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]
 script = ExtResource("2_u4hc5")
