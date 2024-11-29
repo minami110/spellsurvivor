@@ -11,67 +11,68 @@ namespace fms;
 /// </summary>
 public partial class WeaponCard : Node
 {
+    private readonly WeaponConfig _config;
+    private readonly WeaponBase _weapon;
+
     private IEntity? _ownedEntity;
-    private WeaponConfig Config { get; set; } = null!;
 
-    public string FriendlyName => Config.Name;
+    public string FriendlyName => _config.Name;
 
-    public TierType TierType => Config.Tier;
+    public TierType TierType => _config.Tier;
 
-    public uint Price => Config.Price;
+    public uint Price => _config.Price;
 
-    public Texture2D Sprite => Config.Sprite;
+    public Texture2D Sprite => _config.Sprite;
 
     public string Description
     {
         get
         {
-            var desc = Config.Description;
+            var desc = _config.Description;
             desc += "\n\n";
-            desc += $"Damage: {Config.Damage}\n";
-            desc += $"Cooldown: {Config.Cooldown} frames\n";
-            desc += $"Speed: {Config.CooldownRate}%\n";
-            desc += $"Knockback: {Config.Knockback} px/s";
+            desc += $"Damage: {_config.Damage}\n";
+            desc += $"Cooldown: {_config.Cooldown} frames\n";
+            desc += $"Speed: {_config.CooldownRate}%\n";
+            desc += $"Knockback: {_config.Knockback} px/s";
             return desc;
         }
     }
 
-    public WeaponBase Weapon { get; private set; } = null!;
-
     /// <summary>
     /// この Minion の所属する Faction (Flag)
     /// </summary>
-    public FactionType Faction => Config.Faction;
+    public FactionType Faction => _config.Faction;
 
 
     // parameterless constructor is required for Godot
     private WeaponCard()
     {
+        throw new ApplicationException($"Do not use {nameof(WeaponCard)} directly in Editor");
     }
 
-    public WeaponCard(WeaponConfig config)
+    public WeaponCard(WeaponConfig config, WeaponBase weapon)
     {
-        Config = config;
+        _config = config;
+        _weapon = weapon;
     }
 
     public override void _Notification(int what)
     {
+        // Note: プレイヤーに購入されたとき初めてツリーに入る
         if (what == NotificationEnterTree)
         {
             // Set Group
             AddToGroup(Constant.GroupNameMinion);
 
-            // Spawn Weapon
-            // ToDo: ここでロードする?
-            var packedScene = ResourceLoader.Load<PackedScene>(Config.WeaponPackedScenePath);
-            Weapon = packedScene.Instantiate<WeaponBase>();
-            Weapon.AutoStart = false;
-            AddSibling(Weapon);
+            // Weapon も一緒に兄弟に追加しておく
+            _weapon.AutoStart = false;
+            AddSibling(_weapon);
         }
+        // Note: プレイヤーに売却されたときツリーから削除される
         else if (what == NotificationExitTree)
         {
-            // Remove Weapon
-            Weapon.QueueFree();
+            // Weapon も一緒にツリーから削除しておく
+            GetParent().RemoveChild(_weapon);
         }
     }
 
@@ -90,7 +91,9 @@ public partial class WeaponCard : Node
         // すでに同じエンティティが所有している場合はレベルアップ
         if (_ownedEntity == entity)
         {
-            AddWeaponLevel(1u);
+            // ToDo: 最大レベルに達している場合はエラー
+            var currentLevel = _weapon.State.Level.CurrentValue;
+            _weapon.State.SetLevel(currentLevel + 1u);
             return;
         }
 
@@ -118,10 +121,5 @@ public partial class WeaponCard : Node
         // プレイヤーのお金を増やす
         var state = entity.State;
         state.AddMoney(Price); // ToDo: 売値を設定する
-    }
-
-    private void AddWeaponLevel(uint level)
-    {
-        Weapon.State.SetLevel(Weapon.State.Level.CurrentValue + level);
     }
 }

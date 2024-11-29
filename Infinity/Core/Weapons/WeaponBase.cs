@@ -66,7 +66,9 @@ public partial class WeaponBase : Node2D
 
     public WeaponState State { get; private set; } = null!;
 
-    // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装
+    public WeaponConfig Config => _config;
+
+    // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装している
     public override void _Notification(int what)
     {
         if (what == NotificationEnterTree)

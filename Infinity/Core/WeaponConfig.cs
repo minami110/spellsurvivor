@@ -5,7 +5,7 @@ using Godot;
 namespace fms;
 
 /// <summary>
-/// <see cref="WeaponBase"/> の Stats を設定するためのリソース
+/// <see cref="WeaponBase" /> の Stats を設定するためのリソース
 /// </summary>
 [GlobalClass]
 public partial class WeaponConfig : Resource

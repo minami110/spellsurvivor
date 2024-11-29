@@ -244,7 +244,7 @@ public partial class Shop : Node
 
                     var path = Path.Combine(searchDir, fileName);
                     var config = ResourceLoader.Load<WeaponConfig>(path);
-                    GD.Print($"  Loaded: {config.Id} (tier: {config.Tier}, path: {path})");
+                    this.DebugLog($"  Loaded: {config.Id} (tier: {config.Tier}, path: {path})");
 
                     // ティアのリストがない場合は作成
                     if (!_runtimeMinionPool.TryGetValue((uint)config.Tier, out var list))
@@ -253,15 +253,16 @@ public partial class Shop : Node
                         _runtimeMinionPool[(uint)config.Tier] = list;
                     }
 
-                    // WeaponCard を作成
+                    // WeaponCard と Weapon を作成
                     // Note: ツリーには入れずに (AddChild はせずに) メモリでのみ管理しておく
-                    list.Add(new WeaponCard(config));
+                    var packedScene = ResourceLoader.Load<PackedScene>(config.WeaponPackedScenePath);
+                    var weapon = packedScene.Instantiate<WeaponBase>();
+
+                    list.Add(new WeaponCard(config, weapon));
                 }
 
                 fileName = dir.GetNext();
             }
-
-            dir.ListDirEnd();
         }
         else
         {

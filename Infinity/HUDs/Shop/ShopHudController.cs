@@ -53,18 +53,18 @@ public partial class ShopHudController : Node
             old.QueueFree();
         }
 
-        // Player が所有している Minion を取得する
+        // Player が所有している Weapon を取得する
         var playerNode = this.GetPlayerNode();
         foreach (var n in playerNode.GetChildren())
         {
-            if (n is not WeaponCard weaponCard)
+            if (n is not WeaponBase weapon)
             {
                 continue;
             }
 
             var node = _shopOwnItemPackedScene.Instantiate<ShopOwnItem>();
             {
-                node.WeaponCard = weaponCard;
+                node.Weapon = weapon;
             }
             _equipItemSpawnParent.AddChild(node);
         }
