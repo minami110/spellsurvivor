@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://bgoe131ylhqji"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://bgoe131ylhqji"]
 
 [ext_resource type="Texture2D" uid="uid://b450uj80h6cjs" path="res://Infinity/Weapons/Textures/sickle_sword.png" id="1_gpmc3"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_d2mbh"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_rx2ds"]
 
 [resource]
-script = ExtResource("3_d2mbh")
+script = ExtResource("2_rx2ds")
 Level = 1
 Damage = 10
 Cooldown = 10

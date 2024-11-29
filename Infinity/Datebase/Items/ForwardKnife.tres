@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://brkbpmer5vx5k"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://brkbpmer5vx5k"]
 
 [ext_resource type="Texture2D" uid="uid://bngagbi0xt2mu" path="res://Common/Resources/Textures/Emoji/dagger_knife.png" id="2_cd5jy"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_oigos"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_koinx"]
 
 [resource]
-script = ExtResource("3_oigos")
+script = ExtResource("2_koinx")
 Level = 1
 Damage = 10
 Cooldown = 10

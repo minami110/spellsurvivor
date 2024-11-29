@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://c0nirqtdouelk"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://c0nirqtdouelk"]
 
 [ext_resource type="Texture2D" uid="uid://dfxptabhlg1pr" path="res://Infinity/Weapons/Textures/katana.png" id="1_62k3s"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_ui5u8"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_lnxby"]
 
 [resource]
-script = ExtResource("3_ui5u8")
+script = ExtResource("2_lnxby")
 Level = 1
 Damage = 10
 Cooldown = 10

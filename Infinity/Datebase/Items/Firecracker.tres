@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://dvhlxwun6f8vf"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://dvhlxwun6f8vf"]
 
 [ext_resource type="Texture2D" uid="uid://cos3d4b1k4o1q" path="res://Common/Resources/Textures/Emoji/bomb.png" id="1_o1lhg"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_jy11s"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_kpd4g"]
 
 [resource]
-script = ExtResource("3_jy11s")
+script = ExtResource("2_kpd4g")
 Level = 1
 Damage = 10
 Cooldown = 10

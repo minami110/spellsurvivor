@@ -76,7 +76,7 @@ public partial class WeaponBase : Node2D
 
             // Create WeaponState
             State = new WeaponState(
-                _config.Level,
+                1u,
                 _config.Damage,
                 _config.Cooldown,
                 _config.Cooldown * 0.01f,

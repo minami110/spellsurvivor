@@ -12,26 +12,26 @@ namespace fms;
 public partial class WeaponCard : Node
 {
     private IEntity? _ownedEntity;
-    private WeaponConfig CoreData { get; set; } = null!;
+    private WeaponConfig Config { get; set; } = null!;
 
-    public string FriendlyName => CoreData.Name;
+    public string FriendlyName => Config.Name;
 
-    public TierType TierType => CoreData.TierType;
+    public TierType TierType => Config.Tier;
 
-    public uint Price => CoreData.Price;
+    public uint Price => Config.Price;
 
-    public Texture2D Sprite => CoreData.Sprite;
+    public Texture2D Sprite => Config.Sprite;
 
     public string Description
     {
         get
         {
-            var desc = CoreData.Description;
+            var desc = Config.Description;
             desc += "\n\n";
-            desc += $"Damage: {CoreData.Damage}\n";
-            desc += $"Cooldown: {CoreData.Cooldown} frames\n";
-            desc += $"Speed: {CoreData.CooldownRate}%\n";
-            desc += $"Knockback: {CoreData.Knockback} px/s";
+            desc += $"Damage: {Config.Damage}\n";
+            desc += $"Cooldown: {Config.Cooldown} frames\n";
+            desc += $"Speed: {Config.CooldownRate}%\n";
+            desc += $"Knockback: {Config.Knockback} px/s";
             return desc;
         }
     }
@@ -41,7 +41,7 @@ public partial class WeaponCard : Node
     /// <summary>
     /// この Minion の所属する Faction (Flag)
     /// </summary>
-    public FactionType Faction => CoreData.Faction;
+    public FactionType Faction => Config.Faction;
 
 
     // parameterless constructor is required for Godot
@@ -49,9 +49,9 @@ public partial class WeaponCard : Node
     {
     }
 
-    public WeaponCard(WeaponConfig data)
+    public WeaponCard(WeaponConfig config)
     {
-        CoreData = data;
+        Config = config;
     }
 
     public override void _Notification(int what)
@@ -63,7 +63,7 @@ public partial class WeaponCard : Node
 
             // Spawn Weapon
             // ToDo: ここでロードする?
-            var packedScene = ResourceLoader.Load<PackedScene>(CoreData.WeaponPackedScenePath);
+            var packedScene = ResourceLoader.Load<PackedScene>(Config.WeaponPackedScenePath);
             Weapon = packedScene.Instantiate<WeaponBase>();
             Weapon.AutoStart = false;
             AddSibling(Weapon);
@@ -94,7 +94,8 @@ public partial class WeaponCard : Node
             return;
         }
 
-        // 新規購入
+        // まだだれにも所有されていない場合は Entity の子ノードとして配置する
+        // Note: ここでこのクラスの EnterTree が呼ばれる
         _ownedEntity = entity;
         _ownedEntity.AddChild(this);
     }

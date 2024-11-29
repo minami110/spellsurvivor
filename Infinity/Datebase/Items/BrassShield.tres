@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://bg8rq1yk378n0"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://bg8rq1yk378n0"]
 
 [ext_resource type="Texture2D" uid="uid://drmuoam57gvyp" path="res://Infinity/Weapons/Textures/brass_shield.png" id="1_qfi0r"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_7bov0"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_11uuy"]
 
 [resource]
-script = ExtResource("3_7bov0")
+script = ExtResource("2_11uuy")
 Level = 1
 Damage = 10
 Cooldown = 10

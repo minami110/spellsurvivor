@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://s47ofvkuvr8t"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://s47ofvkuvr8t"]
 
 [ext_resource type="Texture2D" uid="uid://e38iw2qhlbeu" path="res://Infinity/Weapons/Textures/hooked_knife.png" id="1_7uw30"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_635i8"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_3pqjd"]
 
 [resource]
-script = ExtResource("3_635i8")
+script = ExtResource("2_3pqjd")
 Level = 1
 Damage = 10
 Cooldown = 10

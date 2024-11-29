@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://bijbeix4ox0e"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://bijbeix4ox0e"]
 
 [ext_resource type="Texture2D" uid="uid://ck1nywcn7hjch" path="res://Infinity/Weapons/Textures/hammer.png" id="1_tsnrs"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_migau"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_djbbt"]
 
 [resource]
-script = ExtResource("3_migau")
+script = ExtResource("2_djbbt")
 Level = 1
 Damage = 10
 Cooldown = 10

@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://dxy00fxyinowg"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://dxy00fxyinowg"]
 
 [ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/Textures/M14EBR.png" id="1_8l1vw"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_04dd8"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_3jw7m"]
 
 [resource]
-script = ExtResource("3_04dd8")
+script = ExtResource("2_3jw7m")
 Level = 1
 Damage = 10
 Cooldown = 10

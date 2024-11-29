@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://cyaangjnv7j4l"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://cyaangjnv7j4l"]
 
 [ext_resource type="Texture2D" uid="uid://ck28tr5m24hp0" path="res://Infinity/Weapons/Textures/wood_spear.png" id="1_d7wq5"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_kpp3r"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_bgude"]
 
 [resource]
-script = ExtResource("3_kpp3r")
+script = ExtResource("2_bgude")
 Level = 1
 Damage = 10
 Cooldown = 10

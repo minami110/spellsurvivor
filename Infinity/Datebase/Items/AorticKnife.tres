@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://brfw5ljx4q1nj"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://brfw5ljx4q1nj"]
 
 [ext_resource type="Texture2D" uid="uid://sd7hbmimvpff" path="res://Infinity/Weapons/Textures/aortic_knife.png" id="1_eur68"]
-[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_pobxp"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_rywsh"]
 
 [resource]
-script = ExtResource("3_pobxp")
+script = ExtResource("2_rywsh")
 Level = 1
 Damage = 10
 Cooldown = 10

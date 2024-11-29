@@ -44,7 +44,6 @@ text = "Battle
 "
 
 [node name="SeliingWeaponCardContainer" parent="Container" instance=ExtResource("4_7hk4g")]
-custom_minimum_size = Vector2(1215.54, 400)
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5

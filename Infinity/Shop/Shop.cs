@@ -38,6 +38,7 @@ public partial class Shop : Node
 
     /// <summary>
     /// 現在ショップで販売している WeaponCard のリスト
+    /// 売り切れの場合は null が入っている
     /// </summary>
     public IReadOnlyList<WeaponCard?> InStoreWeaponCards => _inStoreWeaponCards;
 
@@ -56,23 +57,19 @@ public partial class Shop : Node
     {
     }
 
-    public override void _EnterTree()
+    public override void _Notification(int what)
     {
-        // Set Name (for debugging)
-        Name = nameof(Shop);
+        if (what == NotificationEnterTree)
+        {
+            // Construct Runtime Minion Pool
 
-        // Construct Runtime Minion Pool
-        _runtimeMinionPool.Clear();
-        LoadWeaponCards();
-
-        // Default 
-        _levelRp.Value = 1;
-    }
-
-    public override void _ExitTree()
-    {
-        _levelRp.Dispose();
-        _cardSlotCountRp.Dispose();
+            LoadWeaponCards();
+        }
+        else if (what == NotificationPredelete)
+        {
+            _levelRp.Dispose();
+            _cardSlotCountRp.Dispose();
+        }
     }
 
     /// <summary>
@@ -83,7 +80,7 @@ public partial class Shop : Node
         var weaponCard = _inStoreWeaponCards[index];
         if (weaponCard is null)
         {
-            throw new InvalidOperationException("WeaponCard is sold out");
+            throw new InvalidOperationException($"Slot {index} is sold out");
         }
 
         weaponCard.OnBuy(entity);
@@ -216,8 +213,13 @@ public partial class Shop : Node
         return false;
     }
 
+    /// <summary>
+    /// このショップで販売する WeaponConfig を読み込み, Tier ごとに分類して Pool に格納する処理
+    /// </summary>
+    /// <exception cref="DirectoryNotFoundException"></exception>
     private void LoadWeaponCards()
     {
+        _runtimeMinionPool.Clear();
         var searchDir = Config.ShopItemRootDir;
 
         // Load Minion Data
@@ -232,7 +234,7 @@ public partial class Shop : Node
                 // Note: Godot 4.2.2
                 // Runtime で XXX.tres.remap となっていることがある (ランダム?)
                 // この場合 .remap を抜いたパスを読み込むとちゃんと行ける
-                // See https://github.com/godotengine/godot/issues/66014
+                // Issue: https://github.com/godotengine/godot/issues/66014
                 if (fileName.EndsWith(".tres") || fileName.EndsWith(".tres.remap"))
                 {
                     if (fileName.EndsWith(".remap"))
@@ -241,16 +243,19 @@ public partial class Shop : Node
                     }
 
                     var path = Path.Combine(searchDir, fileName);
-                    var minionCoreData = ResourceLoader.Load<WeaponConfig>(path);
-                    GD.Print($"  Loaded: {path} => {minionCoreData.Name}");
-                    if (!_runtimeMinionPool.TryGetValue((uint)minionCoreData.TierType, out var list))
+                    var config = ResourceLoader.Load<WeaponConfig>(path);
+                    GD.Print($"  Loaded: {config.Id} (tier: {config.Tier}, path: {path})");
+
+                    // ティアのリストがない場合は作成
+                    if (!_runtimeMinionPool.TryGetValue((uint)config.Tier, out var list))
                     {
                         list = new List<WeaponCard>();
-                        _runtimeMinionPool[(uint)minionCoreData.TierType] = list;
+                        _runtimeMinionPool[(uint)config.Tier] = list;
                     }
 
-                    // WeaponCard を作成 (ツリーに入れずにメモリで管理しておく)
-                    list.Add(new WeaponCard(minionCoreData));
+                    // WeaponCard を作成
+                    // Note: ツリーには入れずに (AddChild はせずに) メモリでのみ管理しておく
+                    list.Add(new WeaponCard(config));
                 }
 
                 fileName = dir.GetNext();
