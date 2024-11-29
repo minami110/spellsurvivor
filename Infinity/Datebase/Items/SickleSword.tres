@@ -5,13 +5,12 @@
 
 [resource]
 script = ExtResource("2_rx2ds")
-Level = 1
 Damage = 10
 Cooldown = 10
 CooldownRate = 100.0
 Knockback = 20
 Faction = 128
-TierType = 1
+Tier = 1
 Price = 5
 Sprite = ExtResource("1_gpmc3")
 Description = "薙ぎ"

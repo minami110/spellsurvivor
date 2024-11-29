@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Godot;
 
 namespace fms.Faction;
 
@@ -46,5 +47,24 @@ public static class FactionUtil
     public static IEnumerable<FactionType> GetFactionTypes()
     {
         return Enum.GetValues<FactionType>();
+    }
+
+    /// <summary>
+    /// Faction のアイコンを取得する
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <returns></returns>
+    public static Texture2D? GetTextureResouce(this FactionType faction)
+    {
+        var path = $"res://Common/Resources/Textures/Factions/{faction}.png";
+
+        // Is exist?
+        if (!ResourceLoader.Exists(path))
+        {
+            GD.PrintErr($"Failed to load texture: {path}");
+            return null;
+        }
+
+        return ResourceLoader.Load<Texture2D>(path);
     }
 }

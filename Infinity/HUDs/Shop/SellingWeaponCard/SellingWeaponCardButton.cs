@@ -11,6 +11,9 @@ namespace fms.HUD;
 public partial class SellingWeaponCardButton : FmsButton
 {
     [Export]
+    private string _toastKey = "Shop/SellingWeapon";
+
+    [Export]
     private uint Index { get; set; }
 
     [Export]
@@ -64,7 +67,7 @@ public partial class SellingWeaponCardButton : FmsButton
     }
 
     [Export]
-    private string Faction0
+    private FactionType Faction
     {
         get;
         set
@@ -72,33 +75,13 @@ public partial class SellingWeaponCardButton : FmsButton
             field = value;
             UpdateFactions();
         }
-    } = string.Empty;
-
-    [Export]
-    private string Faction1
-    {
-        get;
-        set
-        {
-            field = value;
-            UpdateFactions();
-        }
-    } = string.Empty;
-
-    [Export]
-    private string Faction2
-    {
-        get;
-        set
-        {
-            field = value;
-            UpdateFactions();
-        }
-    } = string.Empty;
+    }
 
     private readonly Subject<Unit> _requestHideInfo = new();
 
     private readonly Subject<Dictionary> _requestShowInfo = new();
+
+    private int _clickCount;
 
     internal WeaponCard? WeaponCard
     {
@@ -129,11 +112,12 @@ public partial class SellingWeaponCardButton : FmsButton
         var d2 = playerState.Money.ChangedCurrentValue.Subscribe(this, (x, s) => s.OnChangedPlayerMoney(x));
 
         // マウスが侵入したら Tooltip を表示
-        var d3 = this.MouseEnteredAsObservable()
+        var d3 = this.FocusEnteredAsObservable()
             .Subscribe(_ =>
             {
                 if (WeaponCard is not null)
                 {
+                    ToastManager.Instance.CommitFocusEntered(_toastKey);
                     var dict = new Dictionary
                     {
                         { "Title", WeaponCard.FriendlyName },
@@ -145,8 +129,15 @@ public partial class SellingWeaponCardButton : FmsButton
                 }
             });
 
-        var d4 = this.MouseExitedAsObservable()
-            .Subscribe(_ => _requestHideInfo.OnNext(Unit.Default));
+        var d4 = ToastManager.Instance.FocusEntered
+            .Subscribe(key =>
+            {
+                if (!key.StartsWith(_toastKey))
+                {
+                    _clickCount = 0;
+                    _requestHideInfo.OnNext(Unit.Default);
+                }
+            });
 
         Disposable.Combine(d1, d2, d3, d4, _requestShowInfo, _requestHideInfo).AddTo(this);
     }
@@ -160,6 +151,13 @@ public partial class SellingWeaponCardButton : FmsButton
     {
         if (IsSoldOut)
         {
+            return;
+        }
+
+        // Focus中にクリックされたとき (操作的にはダブルクリック) に購入する
+        if (_clickCount < 1)
+        {
+            _clickCount++;
             return;
         }
 
@@ -177,9 +175,7 @@ public partial class SellingWeaponCardButton : FmsButton
             Price = 0;
             Sprite = null;
             Tier = 0u;
-            Faction0 = "";
-            Faction1 = "";
-            Faction2 = "";
+            Faction = 0u;
             _requestHideInfo.OnNext(Unit.Default);
         }
         else
@@ -189,56 +185,7 @@ public partial class SellingWeaponCardButton : FmsButton
             Price = WeaponCard.Price;
             Sprite = WeaponCard.Sprite;
             Tier = WeaponCard.TierType;
-
-            var factions = WeaponCard.Faction;
-            var allFactions = FactionUtil.GetFactionTypes();
-            var index = 0;
-            foreach (var faction in allFactions)
-            {
-                if (index >= 3)
-                {
-                    break;
-                }
-
-                if (!factions.HasFlag(faction))
-                {
-                    continue;
-                }
-
-                switch (index)
-                {
-                    case 0:
-                        Faction0 = faction.ToString();
-                        break;
-                    case 1:
-                        Faction1 = faction.ToString();
-                        break;
-                    case 2:
-                        Faction2 = faction.ToString();
-                        break;
-                }
-
-                index++;
-            }
-
-            if (index < 3)
-            {
-                for (var i = index; i < 3; i++)
-                {
-                    switch (i)
-                    {
-                        case 0:
-                            Faction0 = "";
-                            break;
-                        case 1:
-                            Faction1 = "";
-                            break;
-                        case 2:
-                            Faction2 = "";
-                            break;
-                    }
-                }
-            }
+            Faction = WeaponCard.Faction;
         }
     }
 
@@ -249,9 +196,33 @@ public partial class SellingWeaponCardButton : FmsButton
             return;
         }
 
-        GetNode<FactionInfo>("%Faction0").Faction = Faction0;
-        GetNode<FactionInfo>("%Faction1").Faction = Faction1;
-        GetNode<FactionInfo>("%Faction2").Faction = Faction2;
+        var allFactions = FactionUtil.GetFactionTypes();
+        var index = 0;
+
+        foreach (var f in allFactions)
+        {
+            if (index >= 3)
+            {
+                break;
+            }
+
+            if (!Faction.HasFlag(f))
+            {
+                continue;
+            }
+
+            GetNode<FacionLabel>($"%FactionLabel{index}").Faction = f;
+
+            index++;
+        }
+
+        if (index < 3)
+        {
+            for (var i = index; i < 3; i++)
+            {
+                GetNode<FacionLabel>($"%FactionLabel{i}").Faction = 0u;
+            }
+        }
     }
 
     private void UpdatePriceUi()

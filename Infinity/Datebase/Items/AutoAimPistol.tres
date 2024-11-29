@@ -5,13 +5,12 @@
 
 [resource]
 script = ExtResource("2_m5tr0")
-Level = 1
 Damage = 10
 Cooldown = 10
 CooldownRate = 100.0
 Knockback = 20
 Faction = 47
-TierType = 1
+Tier = 1
 Price = 10
 Sprite = ExtResource("2_4g0so")
 Description = "範囲内にいる一番近い対象に自動で攻撃を行う"

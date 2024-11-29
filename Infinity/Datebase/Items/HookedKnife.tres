@@ -5,13 +5,12 @@
 
 [resource]
 script = ExtResource("2_3pqjd")
-Level = 1
 Damage = 10
 Cooldown = 10
 CooldownRate = 100.0
 Knockback = 20
 Faction = 128
-TierType = 1
-Price = 5
+Tier = 1
+Price = 1
 Sprite = ExtResource("1_7uw30")
 Description = "近距離攻撃"

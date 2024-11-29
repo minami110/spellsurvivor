@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 using Godot.Collections;
 using R3;
 
@@ -21,10 +22,7 @@ public partial class WeaponState : Node, IAttributeDictionary
     // Parameterless constructor for Godot
     private WeaponState()
     {
-        _level = new EntityAttribute<uint>(0u);
-        _damage = new DamageAttribute(0u, 1.0f);
-        _cooldown = new DamageAttribute(0u, 1.0f);
-        _knockback = new EntityAttribute<uint>(0u);
+        throw new InvalidOperationException("Do not use this constructor");
     }
 
     public WeaponState(uint level, uint damage, uint cooldown, float cooldownRate, uint knockback)
@@ -40,8 +38,8 @@ public partial class WeaponState : Node, IAttributeDictionary
         if (what == NotificationExitTree)
         {
             // Reactive Properties の Dispose をまとめる
-            var d = Disposable.Combine(_level, _damage, _cooldown, _knockback);
-            d.Dispose();
+            Disposable.Combine(_level, _damage, _cooldown, _knockback).Dispose();
+            ;
         }
     }
 

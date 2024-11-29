@@ -84,6 +84,7 @@ public partial class WeaponBase : Node2D
                 _config.Cooldown * 0.01f,
                 _config.Knockback
             );
+            AddChild(State);
 
             // FrameTimer が存在していなかったら作成する
             {
