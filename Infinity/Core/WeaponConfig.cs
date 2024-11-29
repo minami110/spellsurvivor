@@ -8,7 +8,7 @@ namespace fms;
 /// Minion のデータ Shop 販売
 /// </summary>
 [GlobalClass]
-public partial class MinionCoreData : Resource
+public partial class WeaponConfig : Resource
 {
     /// <summary>
     /// </summary>

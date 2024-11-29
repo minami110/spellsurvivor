@@ -14,7 +14,7 @@ namespace fms;
 public partial class WeaponBase : Node2D
 {
     [Export]
-    private MinionCoreData _config = null!;
+    private WeaponConfig _config = null!;
 
     // ---------- Animation Parameters ----------
 

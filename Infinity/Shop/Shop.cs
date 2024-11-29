@@ -241,7 +241,7 @@ public partial class Shop : Node
                     }
 
                     var path = Path.Combine(searchDir, fileName);
-                    var minionCoreData = ResourceLoader.Load<MinionCoreData>(path);
+                    var minionCoreData = ResourceLoader.Load<WeaponConfig>(path);
                     GD.Print($"  Loaded: {path} => {minionCoreData.Name}");
                     if (!_runtimeMinionPool.TryGetValue((uint)minionCoreData.TierType, out var list))
                     {

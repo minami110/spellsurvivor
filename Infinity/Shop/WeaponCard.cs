@@ -12,7 +12,7 @@ namespace fms;
 public partial class WeaponCard : Node
 {
     private IEntity? _ownedEntity;
-    private MinionCoreData CoreData { get; set; } = null!;
+    private WeaponConfig CoreData { get; set; } = null!;
 
     public string FriendlyName => CoreData.Name;
 
@@ -49,7 +49,7 @@ public partial class WeaponCard : Node
     {
     }
 
-    public WeaponCard(MinionCoreData data)
+    public WeaponCard(WeaponConfig data)
     {
         CoreData = data;
     }
