@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://s47ofvkuvr8t"]
 
 [ext_resource type="Texture2D" uid="uid://e38iw2qhlbeu" path="res://Infinity/Weapons/Textures/hooked_knife.png" id="1_7uw30"]
-[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_635i8"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_635i8"]
 
 [resource]
 script = ExtResource("3_635i8")

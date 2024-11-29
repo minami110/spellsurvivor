@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://ddbl812oxaqit"]
 
 [ext_resource type="Texture2D" uid="uid://5mgf28e054d7" path="res://Common/Resources/Textures/Emoji/japanese_ogre.png" id="1_hl37x"]
-[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_rkj5s"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_rkj5s"]
 
 [resource]
 script = ExtResource("3_rkj5s")

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://dgc4s6k2l0lk4"]
 
 [ext_resource type="Texture2D" uid="uid://c2wpoue220kop" path="res://Common/Resources/Textures/Nakagiri/WideShotShotgun.png" id="1_t8q65"]
-[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_qjhxu"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_qjhxu"]
 
 [resource]
 script = ExtResource("3_qjhxu")

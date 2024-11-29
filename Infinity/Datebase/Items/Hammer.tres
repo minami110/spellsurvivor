@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://bijbeix4ox0e"]
 
 [ext_resource type="Texture2D" uid="uid://ck1nywcn7hjch" path="res://Infinity/Weapons/Textures/hammer.png" id="1_tsnrs"]
-[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_migau"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_migau"]
 
 [resource]
 script = ExtResource("3_migau")

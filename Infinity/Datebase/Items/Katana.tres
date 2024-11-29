@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="MinionCoreData" load_steps=3 format=3 uid="uid://c0nirqtdouelk"]
 
 [ext_resource type="Texture2D" uid="uid://dfxptabhlg1pr" path="res://Infinity/Weapons/Textures/katana.png" id="1_62k3s"]
-[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_ui5u8"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_ui5u8"]
 
 [resource]
 script = ExtResource("3_ui5u8")
