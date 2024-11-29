@@ -190,6 +190,25 @@ public partial class WeaponBase : Node2D
     }
 
     /// <summary>
+    /// Shop 販売の UI 用の説明文を取得
+    /// </summary>
+    /// <returns></returns>
+    internal virtual string GetDescriptionForShop()
+    {
+        var desc = _config.Description;
+
+        desc += "\n\n";
+        desc += $"Damage: {_config.Damage}\n";
+
+        var totalFrames = _config.Cooldown + BaseAnimationFrames;
+        desc += $"Cooldown: {totalFrames}({_config.Cooldown} + {BaseAnimationFrames}) frames\n";
+        desc += $"Speed: {_config.CooldownRate}%\n";
+        desc += $"Knockback: {_config.Knockback} px/s";
+
+        return desc;
+    }
+
+    /// <summary>
     /// 武器のクールダウンが終了した時に呼び出されるメソッド
     /// </summary>
     /// <param name="level">現在の武器のレベル</param>

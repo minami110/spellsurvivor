@@ -46,7 +46,7 @@ public partial class PiercingWeapon : WeaponBase
     // 攻撃前の構えるアニメーションのフレーム数
     [ExportGroup("Animation")]
     [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
-    private uint _beginAttackDuration = 5u;
+    private uint _beginAttackDuration = 4u;
 
     // 突き刺しアニメーションのフレーム数
     [Export(PropertyHint.Range, "0,100,1,suffix:frames")]
@@ -105,6 +105,14 @@ public partial class PiercingWeapon : WeaponBase
     {
         _tweenPlayingDisposable?.Dispose();
         _waitEnterEntityDisposable?.Dispose();
+    }
+
+    internal override string GetDescriptionForShop()
+    {
+        var desc = base.GetDescriptionForShop() + "\n";
+        desc += $"Push Count: {PushCount}\n";
+        desc += $"Range: {_minRange} ~ {_maxRange} px";
+        return desc;
     }
 
     private protected override void OnCoolDownCompleted(uint level)

@@ -137,7 +137,7 @@ public partial class SellingWeaponCardButton : FmsButton
                     var dict = new Dictionary
                     {
                         { "Title", WeaponCard.FriendlyName },
-                        { "Description", WeaponCard.Description },
+                        { "Description", WeaponCard.DescriptionForShop },
                         { "Price", WeaponCard.Price },
                         { "Tier", (uint)WeaponCard.TierType }
                     };

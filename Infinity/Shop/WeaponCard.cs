@@ -24,19 +24,7 @@ public partial class WeaponCard : Node
 
     public Texture2D Sprite => _config.Sprite;
 
-    public string Description
-    {
-        get
-        {
-            var desc = _config.Description;
-            desc += "\n\n";
-            desc += $"Damage: {_config.Damage}\n";
-            desc += $"Cooldown: {_config.Cooldown} frames\n";
-            desc += $"Speed: {_config.CooldownRate}%\n";
-            desc += $"Knockback: {_config.Knockback} px/s";
-            return desc;
-        }
-    }
+    public string DescriptionForShop => _weapon.GetDescriptionForShop();
 
     /// <summary>
     /// この Minion の所属する Faction (Flag)
