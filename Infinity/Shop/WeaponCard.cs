@@ -18,7 +18,7 @@ public partial class WeaponCard : Node
 
     public string FriendlyName => _config.Name;
 
-    public TierType TierType => _config.Tier;
+    public TierType Tier => _config.Tier;
 
     public uint Price => _config.Price;
 
@@ -30,6 +30,11 @@ public partial class WeaponCard : Node
     /// この Minion の所属する Faction (Flag)
     /// </summary>
     public FactionType Faction => _config.Faction;
+
+    /// <summary>
+    /// Entity に所有されているかどうか
+    /// </summary>
+    public bool IsOwned => _ownedEntity != null;
 
 
     // parameterless constructor is required for Godot

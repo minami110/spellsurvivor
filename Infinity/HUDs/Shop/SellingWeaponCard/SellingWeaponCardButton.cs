@@ -123,7 +123,7 @@ public partial class SellingWeaponCardButton : FmsButton
                         { "Title", WeaponCard.FriendlyName },
                         { "Description", WeaponCard.DescriptionForShop },
                         { "Price", WeaponCard.Price },
-                        { "Tier", (uint)WeaponCard.TierType }
+                        { "Tier", (uint)WeaponCard.Tier }
                     };
                     _requestShowInfo.OnNext(dict);
                 }
@@ -184,7 +184,7 @@ public partial class SellingWeaponCardButton : FmsButton
             Title = WeaponCard.FriendlyName;
             Price = WeaponCard.Price;
             Sprite = WeaponCard.Sprite;
-            Tier = WeaponCard.TierType;
+            Tier = WeaponCard.Tier;
             Faction = WeaponCard.Faction;
         }
     }

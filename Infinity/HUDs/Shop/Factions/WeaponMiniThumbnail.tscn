@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0wmpqqfokn24"]
+
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="1_jpud1"]
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/Factions/WeaponMiniThumbnail.cs" id="1_nocsj"]
+
+[node name="WeaponMiniThumbnail" type="Control"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 3
+anchors_preset = 0
+focus_mode = 1
+script = ExtResource("1_nocsj")
+
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.508344, 0.113798, 0.280367, 1)
+
+[node name="Sprite" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_jpud1")
+expand_mode = 1
+stretch_mode = 5

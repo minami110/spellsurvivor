@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://d10mgs6imq3oy"]
+[gd_scene load_steps=7 format=3 uid="uid://d10mgs6imq3oy"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/Factions/FactionInfo.cs" id="1_4pawf"]
 [ext_resource type="Texture2D" uid="uid://bdq1qpduxq4y6" path="res://Common/Resources/Textures/Factions/Incandescent.png" id="1_yinm2"]
+[ext_resource type="PackedScene" uid="uid://b0wmpqqfokn24" path="res://Infinity/HUDs/Shop/Factions/WeaponMiniThumbnail.tscn" id="3_nhsf2"]
+[ext_resource type="PackedScene" uid="uid://bsdiedlpqu54o" path="res://Infinity/HUDs/Shop/Factions/WeaponMiniInfo.tscn" id="4_incfj"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_08u7j"]
 font_size = 24
@@ -9,11 +11,11 @@ font_size = 24
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jircu"]
 
 [node name="FactionInfo" type="Control"]
-custom_minimum_size = Vector2(280, 500)
+custom_minimum_size = Vector2(200, 500)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 280.0
-offset_bottom = 500.0
+offset_right = 249.0
+offset_bottom = 626.0
 script = ExtResource("1_4pawf")
 
 [node name="BG" type="ColorRect" parent="."]
@@ -97,3 +99,69 @@ layout_mode = 2
 bbcode_enabled = true
 text = "(6) 素材2個, 耐久値50のシールド"
 fit_content = true
+
+[node name="VSeparator_3" type="VSeparator" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_jircu")
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 116.97)
+layout_mode = 2
+columns = 4
+
+[node name="WeaponMiniThumbnail0" parent="VBoxContainer/GridContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="WeaponMiniThumbnail1" parent="VBoxContainer/GridContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="WeaponMiniThumbnail2" parent="VBoxContainer/GridContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="WeaponMiniThumbnail3" parent="VBoxContainer/GridContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="WeaponMiniThumbnail4" parent="VBoxContainer/GridContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="WeaponMiniThumbnail5" parent="VBoxContainer/GridContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="WeaponMiniThumbnail6" parent="VBoxContainer/GridContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="WeaponMiniThumbnail7" parent="VBoxContainer/GridContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="WeaponMiniInfo" parent="." instance=ExtResource("4_incfj")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 254.0
+offset_top = 342.0
+offset_right = 414.0
+offset_bottom = 452.0

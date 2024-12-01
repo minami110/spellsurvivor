@@ -90,7 +90,7 @@ public partial class OwnedWeaponInfo : Control
                 break;
             }
 
-            if (f == weaponFaction)
+            if (weaponFaction.HasFlag(f))
             {
                 var label = GetNode<FacionLabel>($"%FactionLabel{i}");
                 label.Faction = f;

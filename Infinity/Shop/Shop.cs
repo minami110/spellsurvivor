@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using fms.Faction;
 using Godot;
 using R3;
 
@@ -14,6 +15,8 @@ public partial class Shop : Node
 
     private readonly ReactiveProperty<uint> _cardSlotCountRp = new(3);
     private readonly ReactiveProperty<bool> _cardSlotLockedRp = new(false);
+
+    private readonly Dictionary<FactionType, List<WeaponCard>> _factionWeaponMap = new();
 
     private readonly List<WeaponCard?> _inStoreWeaponCards = new();
     private readonly Subject<Unit> _inStoreWeaponCardsUpdatedSubject = new();
@@ -110,6 +113,21 @@ public partial class Shop : Node
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 指定された Faction に属する Weapon のリストを取得する
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <returns></returns>
+    public IReadOnlyList<WeaponCard> GetWeaponsBelongTo(FactionType faction)
+    {
+        if (_factionWeaponMap.TryGetValue(faction, out var result))
+        {
+            return result;
+        }
+
+        return Array.Empty<WeaponCard>();
     }
 
     public bool RefreshWeaponCardsFromWave()
@@ -267,6 +285,29 @@ public partial class Shop : Node
         else
         {
             throw new DirectoryNotFoundException($"Directory not found: {searchDir}");
+        }
+
+        // 次に作成したティアごとに Faction => Weapon となる辞書を作成する
+        foreach (var (tier, cards) in _runtimeMinionPool)
+        {
+            foreach (var card in cards)
+            {
+                foreach (var f in FactionUtil.GetFactionTypes())
+                {
+                    if (!card.Faction.HasFlag(f))
+                    {
+                        continue;
+                    }
+
+                    if (!_factionWeaponMap.TryGetValue(f, out var list))
+                    {
+                        list = new List<WeaponCard>();
+                        _factionWeaponMap[f] = list;
+                    }
+
+                    list.Add(card);
+                }
+            }
         }
 
         this.DebugLog("Completed!");
