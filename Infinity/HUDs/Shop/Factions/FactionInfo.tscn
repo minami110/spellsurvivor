@@ -60,11 +60,11 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_jircu")
 
 [node name="Description" type="RichTextLabel" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
-text = "戦闘開始時: 古からつたわる怒りの拳を爆発させてステータスが変化する.
-
-メチャクチャでかい場合強く小さい場合弱くなる."
+text = "DescriptionDescriptionDescription
+DescriptionDescriptionDescription"
 fit_content = true
 
 [node name="VSeparator_2" type="VSeparator" parent="VBoxContainer"]
@@ -72,28 +72,32 @@ custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_jircu")
 
-[node name="Effect0" type="RichTextLabel" parent="VBoxContainer"]
+[node name="LevelDescription0" type="RichTextLabel" parent="VBoxContainer"]
+unique_name_in_owner = true
 modulate = Color(0.362829, 0.362829, 0.362829, 1)
 layout_mode = 2
 bbcode_enabled = true
 text = "(2) 素材1個, 耐久値25のシールド"
 fit_content = true
 
-[node name="Effect1" type="RichTextLabel" parent="VBoxContainer"]
+[node name="LevelDescription1" type="RichTextLabel" parent="VBoxContainer"]
+unique_name_in_owner = true
 modulate = Color(0.362829, 0.362829, 0.362829, 1)
 layout_mode = 2
 bbcode_enabled = true
 text = "(4) 素材2個, 耐久値50のシールド"
 fit_content = true
 
-[node name="Effect2" type="RichTextLabel" parent="VBoxContainer"]
+[node name="LevelDescription2" type="RichTextLabel" parent="VBoxContainer"]
+unique_name_in_owner = true
 modulate = Color(0.362829, 0.362829, 0.362829, 1)
 layout_mode = 2
 bbcode_enabled = true
 text = "(5) 素材2個, 耐久値50のシールド"
 fit_content = true
 
-[node name="Effect3" type="RichTextLabel" parent="VBoxContainer"]
+[node name="LevelDescription3" type="RichTextLabel" parent="VBoxContainer"]
+unique_name_in_owner = true
 modulate = Color(0.362829, 0.362829, 0.362829, 1)
 layout_mode = 2
 bbcode_enabled = true

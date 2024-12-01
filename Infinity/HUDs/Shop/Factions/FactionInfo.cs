@@ -4,6 +4,9 @@ using R3;
 
 namespace fms.HUD;
 
+/// <summary>
+/// 所有している武器の Faction にフォーカスされた際に, Faction の詳細情報を表示する Toast HUD
+/// </summary>
 public partial class FactionInfo : Control
 {
     [Export]
@@ -60,9 +63,50 @@ public partial class FactionInfo : Control
         // Faction Sprite
         GetNode<TextureRect>("%Sprite").Texture = Faction.GetTextureResouce();
 
-        // ToDo: Faction Description
+        // Faction major description
+        GetNode<RichTextLabel>("%Description").Text = Faction.GetMajorDescription();
 
-        // ToDo: Faction Level Description
+        // Faction level descriptions
+        var factionLevel = 0u;
+        {
+            // ToDo: Player の Faction Level へのアクセスがややまどろっこしい
+            var player = this.GetPlayerNode();
+            foreach (var n in player.GetChildren())
+            {
+                if (n is not FactionBase faction)
+                {
+                    continue;
+                }
+
+                if (faction.GetFactionType() == Faction)
+                {
+                    factionLevel = faction.Level;
+                }
+            }
+        }
+        var maxSlot = 4;
+        var currentSlot = 0;
+        var levelDescriptions = Faction.GetLevelDescriptions();
+        foreach (var (l, d) in levelDescriptions)
+        {
+            if (currentSlot >= maxSlot)
+            {
+                break;
+            }
+
+            var label = GetNode<RichTextLabel>($"%LevelDescription{currentSlot}");
+            label.Text = $"({l}) {d}";
+
+            label.Modulate = factionLevel < l ? new Color(0.5f, 0.5f, 0.5f) : new Color(1f, 1f, 1f);
+
+            label.Show();
+            currentSlot++;
+        }
+
+        for (var i = currentSlot; i < maxSlot; i++)
+        {
+            GetNode<RichTextLabel>($"%LevelDescription{i}").Hide();
+        }
 
         // Weapons list that belongs to this faction
         var weapons = Main.Shop.GetWeaponsBelongTo(Faction);

@@ -25,6 +25,8 @@ public enum FactionType
 
 public static class FactionUtil
 {
+    private static readonly Dictionary<FactionType, FactionBase> _defaultMap = new();
+
     public static FactionBase CreateFaction(FactionType faction)
     {
         return faction switch
@@ -44,9 +46,27 @@ public static class FactionUtil
         };
     }
 
+    public static FactionType GetFactionType(this FactionBase faction)
+    {
+        var type = faction.GetType().Name;
+        return Enum.Parse<FactionType>(type);
+    }
+
     public static IEnumerable<FactionType> GetFactionTypes()
     {
         return Enum.GetValues<FactionType>();
+    }
+
+    public static IDictionary<uint, string> GetLevelDescriptions(this FactionType faction)
+    {
+        var defaultFaction = GetDefaultFaction(faction);
+        return defaultFaction.LevelDescriptions;
+    }
+
+    public static string GetMajorDescription(this FactionType faction)
+    {
+        var defaultFaction = GetDefaultFaction(faction);
+        return defaultFaction.MainDescription;
     }
 
     /// <summary>
@@ -66,5 +86,16 @@ public static class FactionUtil
         }
 
         return ResourceLoader.Load<Texture2D>(path);
+    }
+
+    private static FactionBase GetDefaultFaction(FactionType faction)
+    {
+        if (!_defaultMap.TryGetValue(faction, out var factionBase))
+        {
+            factionBase = CreateFaction(faction);
+            _defaultMap[faction] = factionBase;
+        }
+
+        return factionBase;
     }
 }
