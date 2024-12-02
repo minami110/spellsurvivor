@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://d10mgs6imq3oy"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/Factions/FactionInfo.cs" id="1_4pawf"]
-[ext_resource type="Texture2D" uid="uid://bdq1qpduxq4y6" path="res://Common/Resources/Textures/Factions/Incandescent.png" id="1_yinm2"]
+[ext_resource type="Texture2D" uid="uid://bdq1qpduxq4y6" path="res://base/textures/factions/incandescent.png" id="1_yinm2"]
 [ext_resource type="PackedScene" uid="uid://b0wmpqqfokn24" path="res://Infinity/HUDs/Shop/Factions/WeaponMiniThumbnail.tscn" id="3_nhsf2"]
 [ext_resource type="PackedScene" uid="uid://bsdiedlpqu54o" path="res://Infinity/HUDs/Shop/Factions/WeaponMiniInfo.tscn" id="4_incfj"]
 
@@ -51,7 +51,7 @@ expand_mode = 3
 [node name="Name" type="Label" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Incandscent"
+text = "FactionName"
 label_settings = SubResource("LabelSettings_08u7j")
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer"]

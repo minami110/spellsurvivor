@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkewvcayicuv"
-path="res://.godot/imported/Licium.png-7232d037b15faa47b544e15d30a2dcbe.ctex"
+uid="uid://brfy1sfis4qgt"
+path="res://.godot/imported/damage.png-a03cababe0311e41e39b4bf7f6ba585b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Factions/Licium.png"
-dest_files=["res://.godot/imported/Licium.png-7232d037b15faa47b544e15d30a2dcbe.ctex"]
+source_file="res://base/textures/stats/damage.png"
+dest_files=["res://.godot/imported/damage.png-a03cababe0311e41e39b4bf7f6ba585b.ctex"]
 
 [params]
 

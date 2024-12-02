@@ -49,6 +49,7 @@ public partial class FactionBase : Node
     /// この Faction でなんらかの効果が有効になっているかどうか
     /// UI がこの値に応じて表示を切り替える
     /// </summary>
+    [Obsolete]
     public virtual bool IsActiveAnyEffect => Level >= 2u;
 
     public virtual string MainDescription => "Faction Description";

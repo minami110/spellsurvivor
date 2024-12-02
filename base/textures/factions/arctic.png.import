@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cw6kld22qnbgr"
-path="res://.godot/imported/Arctic.png-7ed50e10822a793428e4a24addc549e1.ctex"
+path="res://.godot/imported/arctic.png-61bbf6ee150dbb4bdb92bb13e59498a3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Factions/Arctic.png"
-dest_files=["res://.godot/imported/Arctic.png-7ed50e10822a793428e4a24addc549e1.ctex"]
+source_file="res://base/textures/factions/arctic.png"
+dest_files=["res://.godot/imported/arctic.png-61bbf6ee150dbb4bdb92bb13e59498a3.ctex"]
 
 [params]
 

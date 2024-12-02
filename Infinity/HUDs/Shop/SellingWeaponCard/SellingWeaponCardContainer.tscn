@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://hkhya7f6pxu0"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/SellingWeaponCard/SellingWeaponCardContainer.cs" id="1_cygno"]
-[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Resources/Fonts/Verdana.ttf" id="1_pdlr1"]
+[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://base/fonts/Verdana.ttf" id="1_pdlr1"]
 [ext_resource type="Texture2D" uid="uid://dbmv3a2txvb04" path="res://Infinity/HUDs/Shop/coin.png" id="2_div4g"]
 [ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/SellingWeaponCard/WeaponCardButton.tscn" id="2_xapsq"]
 [ext_resource type="PackedScene" uid="uid://dinrpamvghfdt" path="res://Infinity/HUDs/Shop/SellingWeaponCard/LockButton.tscn" id="3_ipre1"]

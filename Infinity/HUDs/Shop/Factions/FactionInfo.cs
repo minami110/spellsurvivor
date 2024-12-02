@@ -95,7 +95,7 @@ public partial class FactionInfo : Control
             }
 
             var label = GetNode<RichTextLabel>($"%LevelDescription{currentSlot}");
-            label.Text = $"({l}) {d}";
+            label.Text = $"({l}) {Tr(d)}";
 
             label.Modulate = factionLevel < l ? new Color(0.5f, 0.5f, 0.5f) : new Color(1f, 1f, 1f);
 

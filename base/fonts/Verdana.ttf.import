@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://b13jmbc8o7ebo"
-path="res://.godot/imported/Verdana.ttf-817e25f0dc374fc141680e7107302429.fontdata"
+path="res://.godot/imported/Verdana.ttf-f2fcb1b5baa64e82827ed5cb58a0c3c9.fontdata"
 
 [deps]
 
-source_file="res://Common/Resources/Fonts/Verdana.ttf"
-dest_files=["res://.godot/imported/Verdana.ttf-817e25f0dc374fc141680e7107302429.fontdata"]
+source_file="res://base/fonts/Verdana.ttf"
+dest_files=["res://.godot/imported/Verdana.ttf-f2fcb1b5baa64e82827ed5cb58a0c3c9.fontdata"]
 
 [params]
 
