@@ -16,9 +16,6 @@ public partial class Hornet : EntityEnemy
     [Export(PropertyHint.Range, "0,10000,1")]
     private int _maxAttackDistance = 400;
 
-    [Export(PropertyHint.Range, "1,9999,1")]
-    private uint _baseCoolDownFrame = 40u;
-
     [Export]
     private PackedScene _projectile = null!;
 

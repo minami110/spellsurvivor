@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://wiupgdkayb6y"]
+
+[ext_resource type="Texture2D" uid="uid://dp81ii06h01tw" path="res://Infinity/Weapons/Textures/shovel.png" id="1_gu5kg"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_yl8vp"]
+
+[resource]
+script = ExtResource("2_yl8vp")
+Damage = 15
+CooldownTime = 25
+AnimationSpeedRate = 100.0
+Knockback = 20
+Faction = 256
+Tier = 1
+Price = 5
+Sprite = ExtResource("1_gu5kg")
+Description = "近距離の敵に向かって突き刺し攻撃"

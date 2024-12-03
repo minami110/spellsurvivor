@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://dvhlxwun6f8vf"]
+
+[ext_resource type="Texture2D" uid="uid://tqk71fs4k5vf" path="res://Infinity/Weapons/Textures/grenade.png" id="1_vegwt"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_2be26"]
+
+[resource]
+script = ExtResource("2_2be26")
+Damage = 10
+CooldownTime = 120
+AnimationSpeedRate = 100.0
+Knockback = 20
+Faction = 256
+Tier = 2
+Price = 10
+Sprite = ExtResource("1_vegwt")
+Description = "範囲内にいる一番近い対象に爆弾を投擲, 敵にヒットするか時間制限で爆発し少しの間燃焼フィールドを生成する."

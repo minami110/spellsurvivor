@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkb7p5kr7rfbp"
-path="res://.godot/imported/M14EBR.png-66ed3cc4bf2ebd5ffc707528d93fed72.ctex"
+uid="uid://dp81ii06h01tw"
+path="res://.godot/imported/shovel.png-0c009a32f6cedffce3bf81c9617319ca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Weapons/Textures/M14EBR.png"
-dest_files=["res://.godot/imported/M14EBR.png-66ed3cc4bf2ebd5ffc707528d93fed72.ctex"]
+source_file="res://Infinity/Weapons/Textures/shovel.png"
+dest_files=["res://.godot/imported/shovel.png-0c009a32f6cedffce3bf81c9617319ca.ctex"]
 
 [params]
 

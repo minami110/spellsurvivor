@@ -1,6 +1,7 @@
 ﻿using System;
 using fms.Projectile;
 using Godot;
+using Godot.Collections;
 using R3;
 
 namespace fms.Weapon;
@@ -99,6 +100,9 @@ public partial class PiercingWeapon : WeaponBase
         AimEntity.MinRange = _minRange;
         AimEntity.MaxRange = _maxRange;
         AimEntity.RotateSensitivity = _rotateSensitivity;
+
+        // "ダメージを与えたとき" の処理用にイベントを登録
+        StaticDamage.Hit.Subscribe(this, (payload, state) => { state.OnHitAnyEntity(payload); }).AddTo(this);
     }
 
     public override void _ExitTree()
@@ -175,6 +179,28 @@ public partial class PiercingWeapon : WeaponBase
         StaticDamage.Disabled = true;
     }
 
+    private void OnHitAnyEntity(Dictionary info)
+    {
+        // Lifesteal の処理
+        var lifestealRate = State.LifestealRate.CurrentValue;
+        if (lifestealRate > 0f)
+        {
+            // ToDo: ライフスティールの対象かどうか?
+            // Player なら Enemy にあたったとき みたいな確認
+            // var hitEntity = (IEntity)(Node2D)payload["Entity"];
+
+            // ライフスティールの確率計算
+            var chance = Math.Clamp(lifestealRate, 0f, 1f);
+            if (GD.Randf() >= chance)
+            {
+                return;
+            }
+
+            // OwnedEntity (Player) を回復する
+            OwnedEntity.ApplayDamage(-5.0f, OwnedEntity, this);
+        }
+    }
+
     private void PlayAttackAnimation()
     {
         var animationSpeedRate = State.AttackSpeed.Rate;
@@ -232,7 +258,7 @@ public partial class PiercingWeapon : WeaponBase
 
     private void RegisterPushAnimation(Tween tween, Node2D sprite)
     {
-        var animationSpeedRate = State.AttackSpeed.Rate;
+        var rate = State.AttackSpeed.Rate;
 
         // 突き刺しアニメーション
         var dist = (float)_pushDistance;
@@ -249,7 +275,7 @@ public partial class PiercingWeapon : WeaponBase
 
         // 突き刺し
         {
-            var dul = _pushFrontDuration / 60d / animationSpeedRate;
+            var dul = _pushFrontDuration / 60d / rate;
             tween.TweenProperty(sprite, "position", new Vector2(dist, 0), dul)
                 .SetTrans(Tween.TransitionType.Back)
                 .SetEase(Tween.EaseType.InOut);
@@ -259,7 +285,7 @@ public partial class PiercingWeapon : WeaponBase
 
         // 手元に戻すアニメーション
         {
-            var dul = _pushBackDuration / 60d / animationSpeedRate;
+            var dul = _pushBackDuration / 60d / rate;
             tween.TweenProperty(sprite, "position", new Vector2(3, 0), dul);
         }
     }

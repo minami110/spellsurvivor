@@ -56,6 +56,17 @@ grow_vertical = 0
 text = "Battle
 "
 
+[node name="OwnedWeaponContainer" parent="Container" instance=ExtResource("2_q3lm0")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 263.0
+offset_top = -552.0
+offset_right = 263.0
+offset_bottom = -552.0
+grow_vertical = 0
+
 [node name="SeliingWeaponCardContainer" parent="Container" instance=ExtResource("4_7hk4g")]
 layout_mode = 1
 anchors_preset = 5
@@ -66,17 +77,6 @@ offset_top = 57.0
 offset_right = 607.768
 offset_bottom = 457.0
 grow_horizontal = 2
-
-[node name="OwnedWeaponContainer" parent="Container" instance=ExtResource("2_q3lm0")]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 273.0
-offset_top = -537.0
-offset_right = 273.0
-offset_bottom = -537.0
-grow_vertical = 0
 
 [node name="PlayerStatusContainer" parent="Container" instance=ExtResource("5_3laas")]
 layout_mode = 1

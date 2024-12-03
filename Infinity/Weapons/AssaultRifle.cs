@@ -4,7 +4,7 @@ using R3;
 
 namespace fms.Weapon;
 
-public partial class AutoAimPistol : WeaponBase
+public partial class AssaultRifle : WeaponBase
 {
     [Export]
     private PackedScene _projectile = null!;

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cos3d4b1k4o1q"
-path="res://.godot/imported/bomb.png-c96f6682d7c190eff172a1d6b4207b4a.ctex"
+uid="uid://dkb7p5kr7rfbp"
+path="res://.godot/imported/sniper_rifle.png-891ea9a99fca3321ffb5cbfa9b54de4d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Emoji/bomb.png"
-dest_files=["res://.godot/imported/bomb.png-c96f6682d7c190eff172a1d6b4207b4a.ctex"]
+source_file="res://Infinity/Weapons/Textures/sniper_rifle.png"
+dest_files=["res://.godot/imported/sniper_rifle.png-891ea9a99fca3321ffb5cbfa9b54de4d.ctex"]
 
 [params]
 

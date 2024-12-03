@@ -94,6 +94,17 @@ public partial class SellingWeaponCardContainer : Control
             .Subscribe(x => { UpdateRerollButtonDisabled(); })
             .AddTo(this);
 
+        // チート系のボタン
+        // ToDo: リリースでは削除するような仕組みを考える
+        var cheatAddMoneyButton = GetNode<Button>("%CheetAddMoneyButton");
+        cheatAddMoneyButton.PressedAsObservable()
+            .Subscribe(_ =>
+            {
+                var player = (IEntity)this.GetPlayerNode();
+                player.State.AddMoney(10u);
+            })
+            .AddTo(this);
+
         // Player とのバインド
         _player.State.Money.ChangedCurrentValue
             .Subscribe(OnChangedPlayerMoney)

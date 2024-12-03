@@ -26,6 +26,7 @@ unique_name_in_owner = true
 [node name="Sprite" type="Sprite2D" parent="AimToNearEnemy/SpriteRoot"]
 unique_name_in_owner = true
 position = Vector2(23, 0)
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("3_tgsp1")
 
 [node name="StaticDamage" type="Area2D" parent="AimToNearEnemy/SpriteRoot"]

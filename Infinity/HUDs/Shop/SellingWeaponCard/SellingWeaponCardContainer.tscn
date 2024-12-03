@@ -104,6 +104,11 @@ layout_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_0cv2f")
 
+[node name="CheetAddMoneyButton" type="Button" parent="CurrentMoneyContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "(CHEET) +10"
+
 [node name="LockButton" parent="." instance=ExtResource("3_ipre1")]
 unique_name_in_owner = true
 layout_mode = 1

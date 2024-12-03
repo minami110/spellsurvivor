@@ -52,10 +52,9 @@ public static class WeaponAttributeNames
 {
     public const string DamageRate = "DamageRate";
     public const string SpeedRate = "SpeedRate";
+    public const string LifestealRate = "LifestealRate";
 
     // 武器固有のやつ
-    public const string LifestealAmount = "LifestealAmount";
-    public const string LifestealRate = "LifestealRate";
     public const string BounceCount = "BounceCount";
     public const string BounceDamageRate = "BounceDamageRate";
 }

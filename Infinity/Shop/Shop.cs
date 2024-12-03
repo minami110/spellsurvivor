@@ -249,6 +249,13 @@ public partial class Shop : Node
             var fileName = dir.GetNext();
             while (fileName != string.Empty)
             {
+                // ToDo: 開発用の機能 ファイル名 _ 始まりのものはショップ排出で無視するようにする
+                if (fileName.StartsWith("_"))
+                {
+                    fileName = dir.GetNext();
+                    continue;
+                }
+
                 // Note: Godot 4.2.2
                 // Runtime で XXX.tres.remap となっていることがある (ランダム?)
                 // この場合 .remap を抜いたパスを読み込むとちゃんと行ける

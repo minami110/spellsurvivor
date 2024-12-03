@@ -5,13 +5,12 @@
 
 [resource]
 script = ExtResource("2_bgude")
-Level = 1
 Damage = 10
-Cooldown = 10
-CooldownRate = 100.0
+CooldownTime = 10
+AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 0
-TierType = 1
+Tier = 1
 Price = 5
 Sprite = ExtResource("1_d7wq5")
 Description = "木でできた[color=red] おぞましい [/color]槍. 一定間隔で中距離の敵に自動攻撃."

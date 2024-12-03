@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cf8sqsunyrjpl"
-path="res://.godot/imported/gun.png-2093cd382fe9614370cccfb36ce16429.ctex"
+uid="uid://clj0c5cvysi7o"
+path="res://.godot/imported/assault_rifle.png-f3340bb8d43aba93e34038bfdec2a639.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Emoji/gun.png"
-dest_files=["res://.godot/imported/gun.png-2093cd382fe9614370cccfb36ce16429.ctex"]
+source_file="res://Infinity/Weapons/Textures/assault_rifle.png"
+dest_files=["res://.godot/imported/assault_rifle.png-f3340bb8d43aba93e34038bfdec2a639.ctex"]
 
 [params]
 

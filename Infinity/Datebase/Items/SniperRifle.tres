@@ -1,17 +1,16 @@
 [gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://dxy00fxyinowg"]
 
-[ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/Textures/M14EBR.png" id="1_8l1vw"]
+[ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/Textures/sniper_rifle.png" id="1_8l1vw"]
 [ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_3jw7m"]
 
 [resource]
 script = ExtResource("2_3jw7m")
-Level = 1
 Damage = 10
 Cooldown = 10
 CooldownRate = 100.0
 Knockback = 20
 Faction = 0
-TierType = 2
+Tier = 5
 Price = 5
 Sprite = ExtResource("1_8l1vw")
 Description = "最も遠い敵に向かって貫通弾を発射"

@@ -7,17 +7,18 @@ namespace fms;
 
 public partial class WeaponState : Node, IAttributeDictionary
 {
-    private readonly DamageAttribute _attackSpeed;
+    private readonly EntityRateAttribute _attackSpeed;
     private readonly Dictionary<string, Variant> _attributes = new();
-    private readonly DamageAttribute _damage;
+    private readonly EntityRateAttribute _damage;
     private readonly EntityAttribute<uint> _knockback;
-
     private readonly EntityAttribute<uint> _level;
+    private readonly EntityAttribute<float> _lifestealRate;
 
     public ReadOnlyEntityAttribute<uint> Level => _level;
-    public ReadOnlyDamageAttribute Damage => _damage;
-    public ReadOnlyDamageAttribute AttackSpeed => _attackSpeed;
+    public ReadOnlyEntityRateAttribute Damage => _damage;
+    public ReadOnlyEntityRateAttribute AttackSpeed => _attackSpeed;
     public ReadOnlyEntityAttribute<uint> Knockback => _knockback;
+    public ReadOnlyEntityAttribute<float> LifestealRate => _lifestealRate;
 
     // Parameterless constructor for Godot
     private WeaponState()
@@ -25,12 +26,14 @@ public partial class WeaponState : Node, IAttributeDictionary
         throw new InvalidOperationException("Do not use this constructor");
     }
 
-    public WeaponState(uint level, uint damage, uint cooldown, float cooldownRate, uint knockback)
+    public WeaponState(uint level, uint damage, uint cooldown, float cooldownRate, uint knockback,
+        float lifestealRate = 0.0f)
     {
         _level = new EntityAttribute<uint>(level);
-        _damage = new DamageAttribute(damage, 1.0f);
-        _attackSpeed = new DamageAttribute(cooldown, cooldownRate);
+        _damage = new EntityRateAttribute(damage, 1.0f);
+        _attackSpeed = new EntityRateAttribute(cooldown, cooldownRate);
         _knockback = new EntityAttribute<uint>(knockback);
+        _lifestealRate = new EntityAttribute<float>(lifestealRate);
     }
 
     public override void _Notification(int what)
@@ -68,6 +71,14 @@ public partial class WeaponState : Node, IAttributeDictionary
             {
                 var newValue = _attackSpeed.DefaultRate + (float)v;
                 _attackSpeed.SetRate(newValue);
+            }
+        }
+        // Lifesteal Rate
+        {
+            if (_attributes.TryGetValue(WeaponAttributeNames.LifestealRate, out var v))
+            {
+                var newRate = _lifestealRate.DefaultValue + (float)v;
+                _lifestealRate.SetCurrentValue(newRate);
             }
         }
     }
