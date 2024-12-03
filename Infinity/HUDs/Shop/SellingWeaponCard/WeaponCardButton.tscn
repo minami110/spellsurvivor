@@ -1,0 +1,93 @@
+[gd_scene load_steps=6 format=3 uid="uid://drwbgsefq8p33"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/SellingWeaponCard/SellingWeaponCardButton.cs" id="1_alr32"]
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="1_w4wu7"]
+[ext_resource type="Texture2D" uid="uid://dbmv3a2txvb04" path="res://Infinity/HUDs/Shop/coin.png" id="3_231tv"]
+[ext_resource type="PackedScene" uid="uid://cplggj347xuqr" path="res://Infinity/HUDs/Factions/FactionLabel.tscn" id="3_o7mqv"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_fw5n2"]
+
+[node name="WeaponCardButton" type="Button"]
+custom_minimum_size = Vector2(200, 140)
+offset_right = 200.0
+offset_bottom = 140.0
+tooltip_text = " "
+script = ExtResource("1_alr32")
+
+[node name="BGSprite" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.219608, 0.219608, 0.219608, 1)
+
+[node name="CardSprite" type="TextureRect" parent="."]
+unique_name_in_owner = true
+modulate = Color(0.509286, 0.509286, 0.509286, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = -2.0
+offset_bottom = -33.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_w4wu7")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -118.0
+offset_right = -10.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+alignment = 2
+
+[node name="FactionLabel0" parent="VBoxContainer" instance=ExtResource("3_o7mqv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FactionLabel1" parent="VBoxContainer" instance=ExtResource("3_o7mqv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FactionLabel2" parent="VBoxContainer" instance=ExtResource("3_o7mqv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TitleContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer/TitleContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "WeaponName"
+label_settings = SubResource("LabelSettings_fw5n2")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="CoinSprite" type="TextureRect" parent="VBoxContainer/TitleContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("3_231tv")
+expand_mode = 3
+
+[node name="Price" type="Label" parent="VBoxContainer/TitleContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"

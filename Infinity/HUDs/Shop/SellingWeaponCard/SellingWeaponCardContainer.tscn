@@ -1,0 +1,213 @@
+[gd_scene load_steps=13 format=3 uid="uid://hkhya7f6pxu0"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/SellingWeaponCard/SellingWeaponCardContainer.cs" id="1_cygno"]
+[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://base/fonts/Verdana.ttf" id="1_pdlr1"]
+[ext_resource type="Texture2D" uid="uid://dbmv3a2txvb04" path="res://Infinity/HUDs/Shop/coin.png" id="2_div4g"]
+[ext_resource type="PackedScene" uid="uid://drwbgsefq8p33" path="res://Infinity/HUDs/Shop/SellingWeaponCard/WeaponCardButton.tscn" id="2_xapsq"]
+[ext_resource type="PackedScene" uid="uid://dinrpamvghfdt" path="res://Infinity/HUDs/Shop/SellingWeaponCard/LockButton.tscn" id="3_ipre1"]
+[ext_resource type="PackedScene" uid="uid://d4nmnogr3ncsk" path="res://Infinity/HUDs/Shop/SellingWeaponCard/UnlockWeaponCard.tscn" id="3_ixxgk"]
+[ext_resource type="PackedScene" uid="uid://dgm4rl4k64nvu" path="res://Infinity/HUDs/Shop/SellingWeaponCard/ShopActionButton.tscn" id="5_o4h50"]
+[ext_resource type="Texture2D" uid="uid://cpbuqx37qhgf2" path="res://Infinity/HUDs/Shop/upgrade.png" id="6_ndq11"]
+[ext_resource type="Texture2D" uid="uid://tbgtbadnysw3" path="res://Infinity/HUDs/Shop/reroll.png" id="7_qyvi6"]
+[ext_resource type="PackedScene" uid="uid://c7eptu72o3sii" path="res://Infinity/HUDs/Shop/SellingWeaponCard/WeaponDescriptionToast.tscn" id="10_mw6sb"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_u0vm0"]
+font = ExtResource("1_pdlr1")
+font_size = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_0cv2f"]
+font = ExtResource("1_pdlr1")
+font_size = 24
+
+[node name="SeliingWeaponCardContainer" type="Control"]
+custom_minimum_size = Vector2(1215.54, 400)
+layout_mode = 3
+anchors_preset = 0
+offset_left = -2.0
+offset_right = 1157.0
+offset_bottom = 400.0
+mouse_filter = 2
+script = ExtResource("1_cygno")
+
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 190.0
+grow_horizontal = 2
+size_flags_vertical = 4
+color = Color(0, 0, 0, 0.223529)
+
+[node name="Level" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 13.0
+offset_top = 4.0
+offset_right = 75.0
+offset_bottom = 42.0
+text = "Lv 1"
+label_settings = SubResource("LabelSettings_u0vm0")
+
+[node name="OddContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 9.0
+offset_right = 291.0
+offset_bottom = 49.0
+metadata/_edit_group_ = true
+
+[node name="TierRate0" type="Label" parent="OddContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "10%"
+
+[node name="TierRate1" type="Label" parent="OddContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "10%"
+
+[node name="TierRate2" type="Label" parent="OddContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "10%"
+
+[node name="TierRate3" type="Label" parent="OddContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "10%"
+
+[node name="TierRate4" type="Label" parent="OddContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "10%"
+
+[node name="CurrentMoneyContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -32.7675
+offset_top = 8.0
+offset_right = 33.2325
+offset_bottom = 39.0
+grow_horizontal = 2
+metadata/_edit_group_ = true
+
+[node name="CoinSprite" type="TextureRect" parent="CurrentMoneyContainer"]
+layout_mode = 2
+texture = ExtResource("2_div4g")
+expand_mode = 3
+
+[node name="PlayerMoney" type="Label" parent="CurrentMoneyContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_0cv2f")
+
+[node name="LockButton" parent="." instance=ExtResource("3_ipre1")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_right = 0.0
+grow_horizontal = 0
+
+[node name="HBox Selling Item Parent" type="HBoxContainer" parent="."]
+layout_mode = 1
+offset_left = 9.0
+offset_top = 45.0
+offset_right = 1209.0
+offset_bottom = 185.0
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox Selling Item Parent"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="UpgradeButton" parent="HBox Selling Item Parent/VBoxContainer" instance=ExtResource("5_o4h50")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+Title = "アップグレード"
+Cost = 1
+Sprite = ExtResource("6_ndq11")
+FocusKey = "Shop/WeaponCard/Upgrade"
+
+[node name="RerollButton" parent="HBox Selling Item Parent/VBoxContainer" instance=ExtResource("5_o4h50")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+Title = "リロール"
+Cost = 1
+Sprite = ExtResource("7_qyvi6")
+FocusKey = "Shop/WeaponCard/Reroll"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBox Selling Item Parent"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="WeaponCardButton0" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = ""
+FocusKey = "Shop/WeaponCard/WeaponCard"
+
+[node name="WeaponCardButton1" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = ""
+Index = 1
+FocusKey = "Shop/WeaponCard/WeaponCard"
+
+[node name="WeaponCardButton2" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = ""
+Index = 2
+FocusKey = "Shop/WeaponCard/WeaponCard"
+
+[node name="WeaponCardButton3" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+tooltip_text = ""
+Index = 3
+FocusKey = "Shop/WeaponCard/WeaponCard"
+
+[node name="WeaponCardButton4" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+tooltip_text = ""
+Index = 4
+FocusKey = "Shop/WeaponCard/WeaponCard"
+
+[node name="UnlockSlotButton0" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("3_ixxgk")]
+unique_name_in_owner = true
+layout_mode = 2
+Price = 1
+FocusKey = "Shop/WeaponCard/UnlockSlot"
+
+[node name="UnlockSlotButton1" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("3_ixxgk")]
+unique_name_in_owner = true
+layout_mode = 2
+Price = 1
+FocusKey = "Shop/WeaponCard/UnlockSlot"
+
+[node name="WeaponDescriptionToast" parent="." instance=ExtResource("10_mw6sb")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -350.0
+offset_top = -200.0
+offset_right = 350.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0

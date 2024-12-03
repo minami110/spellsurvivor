@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://5ck4fqkx4pvq"]
 
 [ext_resource type="Script" path="res://Common/Singletons/StaticsManager/DamageNumberHud.cs" id="1_mh137"]
-[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Resources/Fonts/Verdana.ttf" id="2_38xpl"]
+[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://base/fonts/Verdana.ttf" id="2_38xpl"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_27lmn"]
 font = ExtResource("2_38xpl")

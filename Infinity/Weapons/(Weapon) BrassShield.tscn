@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dc4v176yxxuu7"]
+[gd_scene load_steps=5 format=3 uid="uid://dc4v176yxxuu7"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/LargeShield.cs" id="1_ltaog"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_3lg82"]
+[ext_resource type="Resource" uid="uid://bg8rq1yk378n0" path="res://Infinity/Datebase/Items/BrassShield.tres" id="2_da4ea"]
 [ext_resource type="Texture2D" uid="uid://drmuoam57gvyp" path="res://Infinity/Weapons/Textures/brass_shield.png" id="3_adr66"]
 
 [node name="BrassShield" type="Node2D"]
@@ -13,9 +14,7 @@ _rotateSensitivity = 0.1
 _preAttackDuration = 10
 _pushDistance = 20
 _pushDuration = 4
-BaseDamage = 2.0
-BaseCoolDownFrame = 200
-Knockback = 200
+_config = ExtResource("2_da4ea")
 
 [node name="AimToNearEnemy" type="Area2D" parent="."]
 collision_layer = 0

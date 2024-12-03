@@ -1,15 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://cmr1iekscwraj"]
+[gd_scene load_steps=6 format=3 uid="uid://cmr1iekscwraj"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/AutoAimPistol.cs" id="1_p2onu"]
 [ext_resource type="PackedScene" uid="uid://bh75eb2lfndkv" path="res://Infinity/Projectiles/(Projectile) EnergyOrb.tscn" id="2_ctqn5"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="3_t4nq4"]
+[ext_resource type="Resource" uid="uid://dg1a0sshsyi4h" path="res://Infinity/Datebase/Items/AutoAimPistol.tres" id="3_vc804"]
 [ext_resource type="Texture2D" uid="uid://cf8sqsunyrjpl" path="res://Common/Resources/Textures/Emoji/gun.png" id="4_m5utu"]
 
 [node name="AutoAimPistol" type="Node2D"]
 script = ExtResource("1_p2onu")
 _projectile = ExtResource("2_ctqn5")
-BaseDamage = 50.0
-BaseCoolDownFrame = 30
+_config = ExtResource("3_vc804")
 
 [node name="AimToNearEnemy" type="Area2D" parent="."]
 collision_layer = 0

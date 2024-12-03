@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using fms.Effect;
 using Godot;
@@ -13,10 +13,18 @@ namespace fms.Faction;
 public partial class Incandescent : FactionBase
 {
     // Lv4. で装備する Heat のパス
-    private string _heatWeaponPath = "res://Infinity/Weapons/(Weapon) Heat.tscn";
+    private readonly PackedScene _heatWeapon =
+        ResourceLoader.Load<PackedScene>("res://Infinity/Weapons/(Weapon) Heat.tscn");
 
-    // Lv.2 以上で有効な効果がある
-    public override bool IsActiveAnyEffect => Level >= 2u;
+    public override string MainDescription => "FACTION_INCANDESCENT_DESC_MAIN";
+
+    public override IDictionary<uint, string> LevelDescriptions =>
+        new Dictionary<uint, string>
+        {
+            { 2u, "FACTION_INCANDESCENT_DESC_LEVEL2" },
+            { 3u, "プレイヤーに <stat type=move_speed value=10/>, <stat type=dodge value=10%/> を付与" },
+            { 4u, "プレイヤーにユニーク武器 Heat を装備" },
+        };
 
     private protected override void OnLevelChanged(uint level)
     {
@@ -57,14 +65,7 @@ public partial class Incandescent : FactionBase
                 return;
             }
 
-            // まだ持っていない場合は新たに生成してプレイヤーに追加
-            var scene = ResourceLoader.Load<PackedScene>(_heatWeaponPath);
-            if (scene is null)
-            {
-                throw new FileNotFoundException($"Heat weapon scene not found: {_heatWeaponPath}");
-            }
-
-            var weapon = scene.Instantiate<Heat>();
+            var weapon = _heatWeapon.Instantiate<Heat>();
             weapon.AutoStart = false;
             CallDeferred(Node.MethodName.AddSibling, weapon); // 親が Busy なことがあるので CallDeferred で追加
         }

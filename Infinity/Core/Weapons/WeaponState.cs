@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 using Godot.Collections;
 using R3;
 
@@ -6,8 +7,8 @@ namespace fms;
 
 public partial class WeaponState : Node, IAttributeDictionary
 {
+    private readonly DamageAttribute _attackSpeed;
     private readonly Dictionary<string, Variant> _attributes = new();
-    private readonly DamageAttribute _cooldown;
     private readonly DamageAttribute _damage;
     private readonly EntityAttribute<uint> _knockback;
 
@@ -15,23 +16,20 @@ public partial class WeaponState : Node, IAttributeDictionary
 
     public ReadOnlyEntityAttribute<uint> Level => _level;
     public ReadOnlyDamageAttribute Damage => _damage;
-    public ReadOnlyDamageAttribute Cooldown => _cooldown;
+    public ReadOnlyDamageAttribute AttackSpeed => _attackSpeed;
     public ReadOnlyEntityAttribute<uint> Knockback => _knockback;
 
     // Parameterless constructor for Godot
     private WeaponState()
     {
-        _level = new EntityAttribute<uint>(0u);
-        _damage = new DamageAttribute(0u, 1.0f);
-        _cooldown = new DamageAttribute(0u, 1.0f);
-        _knockback = new EntityAttribute<uint>(0u);
+        throw new InvalidOperationException("Do not use this constructor");
     }
 
     public WeaponState(uint level, uint damage, uint cooldown, float cooldownRate, uint knockback)
     {
         _level = new EntityAttribute<uint>(level);
         _damage = new DamageAttribute(damage, 1.0f);
-        _cooldown = new DamageAttribute(cooldown, cooldownRate);
+        _attackSpeed = new DamageAttribute(cooldown, cooldownRate);
         _knockback = new EntityAttribute<uint>(knockback);
     }
 
@@ -40,8 +38,7 @@ public partial class WeaponState : Node, IAttributeDictionary
         if (what == NotificationExitTree)
         {
             // Reactive Properties の Dispose をまとめる
-            var d = Disposable.Combine(_level, _damage, _cooldown, _knockback);
-            d.Dispose();
+            Disposable.Combine(_level, _damage, _attackSpeed, _knockback).Dispose();
         }
     }
 
@@ -61,7 +58,7 @@ public partial class WeaponState : Node, IAttributeDictionary
         {
             if (_attributes.TryGetValue(WeaponAttributeNames.DamageRate, out var v))
             {
-                var newValue = _damage.Rate + (float)v;
+                var newValue = _damage.DefaultRate + (float)v;
                 _damage.SetRate(newValue);
             }
         }
@@ -69,8 +66,8 @@ public partial class WeaponState : Node, IAttributeDictionary
         {
             if (_attributes.TryGetValue(WeaponAttributeNames.SpeedRate, out var v))
             {
-                var newValue = _cooldown.Rate + (float)v;
-                _cooldown.SetRate(newValue);
+                var newValue = _attackSpeed.DefaultRate + (float)v;
+                _attackSpeed.SetRate(newValue);
             }
         }
     }

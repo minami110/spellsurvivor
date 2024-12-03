@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 
 // ReSharper disable InconsistentNaming
 
@@ -57,4 +58,14 @@ public static class WeaponAttributeNames
     public const string LifestealRate = "LifestealRate";
     public const string BounceCount = "BounceCount";
     public const string BounceDamageRate = "BounceDamageRate";
+}
+
+[Obsolete("Use TierType.ToColor() instead.")]
+public static class FmsColors
+{
+    public static readonly Color TierCommon = new("#383838");
+    public static readonly Color TierUncommon = new("#354232");
+    public static readonly Color TierRare = new("#1e3252");
+    public static readonly Color TierEpic = new("#5f2473");
+    public static readonly Color TierLegendary = new("#9c5027");
 }

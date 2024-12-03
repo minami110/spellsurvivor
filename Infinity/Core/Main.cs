@@ -126,7 +126,7 @@ public partial class Main : Node
             }
 
             // Shop のリロール
-            self._shop.RefreshWeaponCards();
+            self._shop.RefreshWeaponCardsFromWave();
 
             // BGM をこもらせる (2000hz(Default) => 150hz)
             var tween = self.CreateTween();

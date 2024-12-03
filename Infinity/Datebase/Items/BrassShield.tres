@@ -1,15 +1,16 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://bg8rq1yk378n0"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://bg8rq1yk378n0"]
 
 [ext_resource type="Texture2D" uid="uid://drmuoam57gvyp" path="res://Infinity/Weapons/Textures/brass_shield.png" id="1_qfi0r"]
-[ext_resource type="PackedScene" uid="uid://dc4v176yxxuu7" path="res://Infinity/Weapons/(Weapon) BrassShield.tscn" id="2_jw827"]
-[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_7bov0"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_11uuy"]
 
 [resource]
-script = ExtResource("3_7bov0")
-WeaponPackedScene = ExtResource("2_jw827")
+script = ExtResource("2_11uuy")
+Damage = 10
+Cooldown = 10
+CooldownRate = 100.0
+Knockback = 20
 Faction = 128
 Tier = 1
-Price = 5
-Name = "BrassShield"
-Description = "周囲の敵に攻撃"
+Price = 1
 Sprite = ExtResource("1_qfi0r")
+Description = "周囲の敵に攻撃"

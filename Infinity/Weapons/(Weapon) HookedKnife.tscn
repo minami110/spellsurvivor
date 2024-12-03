@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cnn42q6cv3uhn"]
+[gd_scene load_steps=7 format=3 uid="uid://cnn42q6cv3uhn"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/PiercingWeapon.cs" id="1_ewj83"]
+[ext_resource type="Resource" uid="uid://s47ofvkuvr8t" path="res://Infinity/Datebase/Items/HookedKnife.tres" id="2_0wrqo"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_48nxa"]
 [ext_resource type="Texture2D" uid="uid://e38iw2qhlbeu" path="res://Infinity/Weapons/Textures/hooked_knife.png" id="3_dir6t"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_gscot"]
@@ -12,9 +13,7 @@ size = Vector2(45, 10)
 script = ExtResource("1_ewj83")
 _maxRange = 80.0
 _rotateSensitivity = 0.4
-BaseDamage = 5.0
-BaseCoolDownFrame = 8
-Knockback = 10
+_config = ExtResource("2_0wrqo")
 
 [node name="AimToNearEnemy" type="Area2D" parent="."]
 script = ExtResource("2_48nxa")

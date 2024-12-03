@@ -24,8 +24,6 @@ public partial class EntityPlayer : CharacterBody2D, IEntity
     [Export]
     private Vector2I _cameraLimit = new(550, 550);
 
-    private EntityState State { get; set; } = null!;
-
     public override void _EnterTree()
     {
         // Crate PlayerState
@@ -107,6 +105,8 @@ public partial class EntityPlayer : CharacterBody2D, IEntity
         StaticsManager.CommitDamage(info);
     }
 
+    public EntityState State { get; private set; } = null!;
+
     void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
     {
         if (amount == 0f)
@@ -151,4 +151,14 @@ public partial class EntityPlayer : CharacterBody2D, IEntity
     bool IEntity.IsDead => throw new NotImplementedException();
 
     Vector2 IEntity.Position => GlobalPosition;
+
+    void IGodotNode.AddChild(Node node)
+    {
+        AddChild(node);
+    }
+
+    void IGodotNode.RemoveChild(Node node)
+    {
+        RemoveChild(node);
+    }
 }

@@ -13,28 +13,8 @@ namespace fms;
 /// </summary>
 public partial class WeaponBase : Node2D
 {
-    [ExportGroup("Base Status")]
-    [Export(PropertyHint.Range, "0,10,")]
-    private uint _level = 1u;
-
-    [Export(PropertyHint.Range, "0,9999,")]
-    private uint _damage = 10u;
-
-    [Export(PropertyHint.Range, "0,9999,,suffix:frames")]
-    private uint _cooldown = 10u;
-
-    [Export(PropertyHint.Range, "0,500,0.1,suffix:%")]
-    private float _cooldownRate = 100f;
-
-    [Export(PropertyHint.Range, "0,9999,,suffix:px/s")]
-    private uint _knockback = 20u;
-
-    /// <summary>
-    /// Minion が所属する Faction
-    /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
-    /// </summary>
     [Export]
-    public FactionType Faction { get; private set; }
+    private WeaponConfig _config = null!;
 
     // ---------- Animation Parameters ----------
 
@@ -82,11 +62,13 @@ public partial class WeaponBase : Node2D
     /// <summary>
     /// エフェクト適用前のベースのアニメーションフレーム数
     /// </summary>
-    public virtual uint BaseAnimationFrames => 0u;
+    public virtual uint AnimationTime => 0u;
 
     public WeaponState State { get; private set; } = null!;
 
-    // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装
+    public WeaponConfig Config => _config;
+
+    // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装している
     public override void _Notification(int what)
     {
         if (what == NotificationEnterTree)
@@ -96,12 +78,13 @@ public partial class WeaponBase : Node2D
 
             // Create WeaponState
             State = new WeaponState(
-                _level,
-                _damage,
-                _cooldown,
-                _cooldownRate * 0.01f,
-                _knockback
+                1u,
+                _config.Damage,
+                _config.Cooldown,
+                _config.Cooldown * 0.01f,
+                _config.Knockback
             );
+            AddChild(State);
 
             // FrameTimer が存在していなかったら作成する
             {
@@ -144,7 +127,20 @@ public partial class WeaponBase : Node2D
         }
         else if (what == NotificationExitTree)
         {
-            // 兄弟の Faction のレベルを下げる
+            var sibs = GetParent().GetChildren();
+            foreach (var n in sibs)
+            {
+                if (n is not FactionBase f)
+                {
+                    continue;
+                }
+
+                var type = f.GetFactionType();
+                if (IsBelongTo(type))
+                {
+                    f.Level--;
+                }
+            }
         }
     }
 
@@ -175,7 +171,7 @@ public partial class WeaponBase : Node2D
     /// <returns></returns>
     public bool IsBelongTo(FactionType factionType)
     {
-        return Faction.HasFlag(factionType);
+        return _config.Faction.HasFlag(factionType);
     }
 
     /// <summary>
@@ -188,7 +184,7 @@ public partial class WeaponBase : Node2D
             return;
         }
 
-        FrameTimer.WaitFrame = State.Cooldown.CurrentValue;
+        FrameTimer.WaitFrame = State.AttackSpeed.CurrentValue;
         FrameTimer.OneShot = true;
         FrameTimer.Start();
         OnStartAttack(State.Level.CurrentValue);
@@ -205,6 +201,25 @@ public partial class WeaponBase : Node2D
         }
 
         FrameTimer.Stop();
+    }
+
+    /// <summary>
+    /// Shop 販売の UI 用の説明文を取得
+    /// </summary>
+    /// <returns></returns>
+    internal virtual string GetDescriptionForShop()
+    {
+        var desc = _config.Description;
+
+        desc += "\n\n";
+        desc += $"Damage: {_config.Damage}\n";
+
+        var totalFrames = _config.Cooldown + AnimationTime;
+        desc += $"Cooldown: {totalFrames}({_config.Cooldown} + {AnimationTime}) frames\n";
+        desc += $"Speed: {_config.CooldownRate}%\n";
+        desc += $"Knockback: {_config.Knockback} px/s";
+
+        return desc;
     }
 
     /// <summary>
@@ -240,7 +255,7 @@ public partial class WeaponBase : Node2D
 
         // タイマーを再開する
         FrameTimer.OneShot = true;
-        FrameTimer.WaitFrame = State.Cooldown.CurrentValue;
+        FrameTimer.WaitFrame = State.AttackSpeed.CurrentValue;
         FrameTimer.Start();
     }
 

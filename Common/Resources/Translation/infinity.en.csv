@@ -1,8 +1,33 @@
 keys,en
 TITLE_START_INFINITY, "Start Infinity"
+
 UI_SETTINGS,"Settings"
 UI_QUIT,"Quit"
 UI_GENERAL,"General"
 UI_AUDIO,"Audio"
 UI_GRAPHICS,"Graphics"
 UI_SHOW_DAMAGE,"Show Damage"
+
+SHOP_BUY,"Buy"
+SHOP_SELL,"Sell"
+
+STAT_DAMAGE,"Damage"
+STAT_DAMAGE_DESC,"Weapon damage"
+STAT_ATTACK_SPEED,"Attack Speed"
+STAT_ATTACK_SPEED_DESC,"Weapon attack speed (/s)"
+STAT_KNOCKBACK,"Knockback"
+STAT_KNOCKBACK_DESC,"Weapon knockback amount (/px)"
+
+FACTION_ARCTIC,"Arctic"
+FACTION_INCANDESCENT, "Incandescent"
+FACTION_INCANDESCENT_DESC_MAIN,"Incandescent main description"
+FACTION_INCANDESCENT_DESC_LEVEL2,"Added <stat type=damage value=10%/> to Incandescent weapons"
+FACTION_LICIUM,"Licium"
+
+WEAPON_SNIPER_RIFLE,"Sniper Rifle"
+WEAPON_HAMMER,"Hammer"
+WEAPON_BRASS_SHIELD,"Brass Shield"
+WEAPON_SICKLE_SWORD,"Sickle Sword"
+WEAPON_HOOKED_KNIFE,"Hooked Knife"
+WEAPON_BOOK,"Book"
+WEAPON_AORTIC_KNIFE,"Aortic Knife"

@@ -49,11 +49,6 @@ public partial class EntityEnemy : RigidBody2D, IEntity
     private protected Node2D _playerNode = null!;
 
     /// <summary>
-    /// 現在の State
-    /// </summary>
-    internal EntityState State = null!;
-
-    /// <summary>
     /// スポーンしてからの経過フレーム数
     /// </summary>
     internal uint Age { get; private set; }
@@ -310,6 +305,11 @@ public partial class EntityEnemy : RigidBody2D, IEntity
     }
 
     /// <summary>
+    /// 現在の State
+    /// </summary>
+    public EntityState State { get; private set; } = null!;
+
+    /// <summary>
     /// 現在死亡しているかどうか
     /// </summary>
     public bool IsDead { get; private set; }
@@ -328,6 +328,15 @@ public partial class EntityEnemy : RigidBody2D, IEntity
         OnTakeDamage(amount, instigator, causer);
     }
 
-
     Vector2 IEntity.Position => GlobalPosition;
+
+    void IGodotNode.AddChild(Node node)
+    {
+        AddChild(node);
+    }
+
+    void IGodotNode.RemoveChild(Node node)
+    {
+        RemoveChild(node);
+    }
 }
