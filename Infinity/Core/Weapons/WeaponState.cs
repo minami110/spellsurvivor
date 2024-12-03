@@ -39,7 +39,6 @@ public partial class WeaponState : Node, IAttributeDictionary
         {
             // Reactive Properties の Dispose をまとめる
             Disposable.Combine(_level, _damage, _attackSpeed, _knockback).Dispose();
-            ;
         }
     }
 
@@ -59,7 +58,7 @@ public partial class WeaponState : Node, IAttributeDictionary
         {
             if (_attributes.TryGetValue(WeaponAttributeNames.DamageRate, out var v))
             {
-                var newValue = _damage.Rate + (float)v;
+                var newValue = _damage.DefaultRate + (float)v;
                 _damage.SetRate(newValue);
             }
         }
@@ -67,7 +66,7 @@ public partial class WeaponState : Node, IAttributeDictionary
         {
             if (_attributes.TryGetValue(WeaponAttributeNames.SpeedRate, out var v))
             {
-                var newValue = _attackSpeed.Rate + (float)v;
+                var newValue = _attackSpeed.DefaultRate + (float)v;
                 _attackSpeed.SetRate(newValue);
             }
         }

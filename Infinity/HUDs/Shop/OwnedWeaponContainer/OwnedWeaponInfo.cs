@@ -46,8 +46,39 @@ public partial class OwnedWeaponInfo : Control
                 .AddTo(this);
         }
 
-        HideFactionInfo(Unit.Default);
-        HideStatInfo(Unit.Default);
+        // Sell Button
+        var sellButton = GetNode<BaseButton>("%SellButton");
+        sellButton.PressedAsObservable()
+            .Subscribe(_ =>
+            {
+                if (Weapon is null)
+                {
+                    return;
+                }
+
+                // ToDo: Card を検索しているが, 将来的に Card と Weapon は統合する
+                var player = this.GetPlayerNode();
+                var id = Weapon.Config.Id;
+                WeaponCard? targetCard = null;
+                foreach (var n in player.GetChildren())
+                {
+                    if (n is WeaponCard card)
+                    {
+                        if (card.Id == id)
+                        {
+                            targetCard = card;
+                            break;
+                        }
+                    }
+                }
+
+                if (targetCard is not null)
+                {
+                    Main.Shop.SellWeaponCard((IEntity)player, targetCard);
+                    ToastManager.Instance.CommitFocusEntered("Dummy"); // 自身を閉じるため新しい Focus を送る
+                }
+            })
+            .AddTo(this);
 
         UpdateUi();
     }
@@ -142,8 +173,17 @@ public partial class OwnedWeaponInfo : Control
             damage.CurrentValue = Weapon.State.Damage.CurrentValue;
 
             var attackSpeed = GetNode<WeaponStatLabel>("%AttackSpeed");
-            attackSpeed.DefaultValue = Weapon.State.AttackSpeed.DefaultValue;
-            attackSpeed.CurrentValue = Weapon.State.AttackSpeed.CurrentValue;
+            {
+                // ToDo: 内部化する
+                var baseCooldown = Weapon.State.AttackSpeed.DefaultValue;
+                var baseAnimation = Weapon.AnimationTime;
+                var baseRate = Weapon.State.AttackSpeed.DefaultRate;
+                var currentRate = Weapon.State.AttackSpeed.Rate;
+                var defaultAttackSpeed = (baseCooldown + baseAnimation) / baseRate;
+                var currentAttackSpeed = (baseCooldown + baseAnimation) / currentRate;
+                attackSpeed.DefaultValue = (uint)defaultAttackSpeed;
+                attackSpeed.CurrentValue = (uint)currentAttackSpeed;
+            }
 
             var knockback = GetNode<WeaponStatLabel>("%Knockback");
             knockback.DefaultValue = Weapon.State.Knockback.DefaultValue;

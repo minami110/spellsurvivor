@@ -62,7 +62,7 @@ public partial class WeaponBase : Node2D
     /// <summary>
     /// エフェクト適用前のベースのアニメーションフレーム数
     /// </summary>
-    public virtual uint BaseAnimationFrames => 0u;
+    public virtual uint AnimationTime => 0u;
 
     public WeaponState State { get; private set; } = null!;
 
@@ -127,7 +127,20 @@ public partial class WeaponBase : Node2D
         }
         else if (what == NotificationExitTree)
         {
-            // 兄弟の Faction のレベルを下げる
+            var sibs = GetParent().GetChildren();
+            foreach (var n in sibs)
+            {
+                if (n is not FactionBase f)
+                {
+                    continue;
+                }
+
+                var type = f.GetFactionType();
+                if (IsBelongTo(type))
+                {
+                    f.Level--;
+                }
+            }
         }
     }
 
@@ -201,8 +214,8 @@ public partial class WeaponBase : Node2D
         desc += "\n\n";
         desc += $"Damage: {_config.Damage}\n";
 
-        var totalFrames = _config.Cooldown + BaseAnimationFrames;
-        desc += $"Cooldown: {totalFrames}({_config.Cooldown} + {BaseAnimationFrames}) frames\n";
+        var totalFrames = _config.Cooldown + AnimationTime;
+        desc += $"Cooldown: {totalFrames}({_config.Cooldown} + {AnimationTime}) frames\n";
         desc += $"Speed: {_config.CooldownRate}%\n";
         desc += $"Knockback: {_config.Knockback} px/s";
 

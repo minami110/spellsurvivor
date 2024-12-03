@@ -63,6 +63,12 @@ public partial class ActiveFactionsManager : Node
                 continue;
             }
 
+            if (factionBase.Level == 0u)
+            {
+                // Note: 売却時 Level 0 の Faction が残っているのでそれは表示しないようにする
+                continue;
+            }
+
             var label = GetNode<ActiveFactionLabel>($"%FactionLabel{index}");
             label.Faction = factionBase;
             index++;

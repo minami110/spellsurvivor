@@ -1,11 +1,15 @@
 keys,en
 TITLE_START_INFINITY, "Start Infinity"
+
 UI_SETTINGS,"Settings"
 UI_QUIT,"Quit"
 UI_GENERAL,"General"
 UI_AUDIO,"Audio"
 UI_GRAPHICS,"Graphics"
 UI_SHOW_DAMAGE,"Show Damage"
+
+SHOP_BUY,"Buy"
+SHOP_SELL,"Sell"
 
 STAT_DAMAGE,"Damage"
 STAT_DAMAGE_DESC,"Weapon damage"

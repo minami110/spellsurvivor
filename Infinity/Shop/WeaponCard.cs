@@ -16,6 +16,8 @@ public partial class WeaponCard : Node
 
     private IEntity? _ownedEntity;
 
+    public string Id => _config.Id;
+
     public string FriendlyName => _config.Name;
 
     public TierType Tier => _config.Tier;
@@ -65,7 +67,7 @@ public partial class WeaponCard : Node
         else if (what == NotificationExitTree)
         {
             // Weapon も一緒にツリーから削除しておく
-            GetParent().RemoveChild(_weapon);
+            GetParent().CallDeferred(Node.MethodName.RemoveChild, _weapon);
         }
     }
 

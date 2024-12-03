@@ -82,7 +82,7 @@ public partial class PiercingWeapon : WeaponBase
 
     private protected StaticDamage StaticDamage => GetNode<StaticDamage>("%StaticDamage");
 
-    public override uint BaseAnimationFrames
+    public override uint AnimationTime
     {
         get
         {

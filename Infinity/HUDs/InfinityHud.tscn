@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dndrw60tkxjwx"]
+[gd_scene load_steps=22 format=3 uid="uid://dndrw60tkxjwx"]
 
 [ext_resource type="Texture2D" uid="uid://d0b6eo4xkswld" path="res://Infinity/HUDs/BG/prop/bucket.png" id="4_i6nut"]
 [ext_resource type="Texture2D" uid="uid://5wxxe8amn5t0" path="res://Infinity/HUDs/BG/prop/generator.png" id="4_qfl6a"]
@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://cn70mo64dy7mh" path="res://Infinity/HUDs/BattleResult/BattleResultHUD.tscn" id="7_7iy48"]
 [ext_resource type="Texture2D" uid="uid://2duwqvjml6rp" path="res://Infinity/HUDs/BG/BGground_R.png" id="7_j2gt1"]
 [ext_resource type="PackedScene" uid="uid://dvwlkv2f4pl2i" path="res://Infinity/HUDs/Shop/ShopHUD.tscn" id="8_an48t"]
-[ext_resource type="PackedScene" uid="uid://cwjfqs0u6t7wi" path="res://Infinity/HUDs/TooltipToast.tscn" id="9_n1574"]
 [ext_resource type="PackedScene" uid="uid://dh7nt37deh6b1" path="res://Common/Debugging/DebugHUD.tscn" id="10_orxi8"]
 [ext_resource type="Shader" path="res://Common/Resources/Shaders/pixelate.gdshader" id="13_vpxp3"]
 [ext_resource type="Shader" path="res://Common/Resources/Shaders/crt.gdshader" id="14_1hn5s"]
@@ -172,12 +171,6 @@ layer = 3
 
 [node name="ShopHUD (4)" parent="." instance=ExtResource("8_an48t")]
 layer = 4
-
-[node name="Tooltip Toast (8)" type="CanvasLayer" parent="."]
-layer = 8
-
-[node name="TooltipToast" parent="Tooltip Toast (8)" instance=ExtResource("9_n1574")]
-visible = false
 
 [node name="DebugHUD (20)" parent="." instance=ExtResource("10_orxi8")]
 layer = 20

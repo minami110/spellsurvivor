@@ -33,6 +33,7 @@ public partial class WeaponStatInfo : PanelContainer
         var desc = GetNode<Label>("%Description");
         desc.Text = $"STAT_{StatType.ToString().ToSnakeCase().ToUpper()}_DESC";
 
+        ResetSize();
         Show();
     }
 }

@@ -74,7 +74,7 @@ layout_mode = 2
 [node name="Title" type="Label" parent="VBoxContainer/TitleContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Weapon"
+text = "WeaponName"
 label_settings = SubResource("LabelSettings_fw5n2")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TitleContainer"]
