@@ -95,12 +95,19 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 StatType = 3
-_valueType = 1
+_inputType = 1
+Suffix = "s"
 
 [node name="Knockback" parent="PanelContainer/VBoxContainer/WeaponStatusContainer" instance=ExtResource("4_qnkgw")]
 unique_name_in_owner = true
 layout_mode = 2
 StatType = 4
+
+[node name="Lifesteal" parent="PanelContainer/VBoxContainer/WeaponStatusContainer" instance=ExtResource("4_qnkgw")]
+unique_name_in_owner = true
+layout_mode = 2
+StatType = 5
+Suffix = "%"
 
 [node name="SellButton" type="Button" parent="PanelContainer/VBoxContainer"]
 unique_name_in_owner = true

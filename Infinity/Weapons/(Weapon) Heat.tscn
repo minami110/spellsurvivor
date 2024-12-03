@@ -1,10 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://bj5oe2fhwhrwi"]
+[gd_scene load_steps=5 format=3 uid="uid://bj5oe2fhwhrwi"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Heat.cs" id="1_4f7b4"]
 [ext_resource type="Texture2D" uid="uid://6f728368m341" path="res://Infinity/Weapons/Textures/heat_bg.png" id="3_pcvhs"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="3_xmv1a"]
+
+[sub_resource type="Resource" id="Resource_mqgbk"]
+script = ExtResource("3_xmv1a")
+Damage = 5
+CooldownTime = 20
+AnimationSpeedRate = 100.0
+Knockback = 0
+Faction = 0
+Tier = 5
+Price = 10
+Sprite = ExtResource("3_pcvhs")
+Description = ""
 
 [node name="Heat" type="Node2D"]
 script = ExtResource("1_4f7b4")
+_config = SubResource("Resource_mqgbk")
 AutoPositioning = false
 
 [node name="Sprite" type="Sprite2D" parent="."]

@@ -61,6 +61,7 @@ public partial class WeaponCard : Node
 
             // Weapon も一緒に兄弟に追加しておく
             _weapon.AutoStart = false;
+            _weapon.RequestReady();
             AddSibling(_weapon);
         }
         // Note: プレイヤーに売却されたときツリーから削除される

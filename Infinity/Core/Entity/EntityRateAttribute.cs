@@ -4,7 +4,7 @@ using R3;
 
 namespace fms;
 
-public abstract class ReadOnlyDamageAttribute : ReadOnlyEntityAttribute<uint>
+public abstract class ReadOnlyEntityRateAttribute : ReadOnlyEntityAttribute<uint>
 {
     public abstract Observable<float> ChangedRate { get; }
 
@@ -19,7 +19,7 @@ public abstract class ReadOnlyDamageAttribute : ReadOnlyEntityAttribute<uint>
     public abstract float Rate { get; }
 }
 
-public sealed class DamageAttribute : ReadOnlyDamageAttribute
+public sealed class EntityRateAttribute : ReadOnlyEntityRateAttribute
 {
     private readonly BehaviorSubject<uint> _changedCurrentValue;
     private readonly BehaviorSubject<float> _changedRate;
@@ -45,7 +45,7 @@ public sealed class DamageAttribute : ReadOnlyDamageAttribute
 
     public override float Rate => _rate;
 
-    public DamageAttribute(uint value, float rate)
+    public EntityRateAttribute(uint value, float rate)
     {
         DefaultValue = value;
         DefaultRate = rate;

@@ -36,7 +36,8 @@ public partial class OwnedWeaponInfo : Control
         var damage = GetNode<WeaponStatLabel>("%Damage");
         var attackSpeed = GetNode<WeaponStatLabel>("%AttackSpeed");
         var knockback = GetNode<WeaponStatLabel>("%Knockback");
-        foreach (var n in new[] { damage, attackSpeed, knockback })
+        var lifeSteal = GetNode<WeaponStatLabel>("%Lifesteal");
+        foreach (var n in new[] { damage, attackSpeed, knockback, lifeSteal })
         {
             n.RequestShowInfo
                 .Subscribe(ShowStatInfo)
@@ -188,6 +189,10 @@ public partial class OwnedWeaponInfo : Control
             var knockback = GetNode<WeaponStatLabel>("%Knockback");
             knockback.DefaultValue = Weapon.State.Knockback.DefaultValue;
             knockback.CurrentValue = Weapon.State.Knockback.CurrentValue;
+
+            var lifesteal = GetNode<WeaponStatLabel>("%Lifesteal");
+            lifesteal.DefaultValue = (uint)(Weapon.State.LifestealRate.DefaultValue * 100f);
+            lifesteal.CurrentValue = (uint)(Weapon.State.LifestealRate.CurrentValue * 100f);
         }
 
         GetNode<Control>("PanelContainer").ResetSize();

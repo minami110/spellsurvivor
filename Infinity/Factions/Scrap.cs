@@ -9,8 +9,6 @@ namespace fms.Faction;
 [GlobalClass]
 public partial class Scrap : FactionBase
 {
-    public override bool IsActiveAnyEffect => Level >= 3;
-
     public override void _Ready()
     {
     }
