@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://bali3cj5bhs2q"]
+[gd_scene load_steps=11 format=3 uid="uid://bali3cj5bhs2q"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/InGameHUD.cs" id="1_6o03e"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="2_l31n5"]
 [ext_resource type="PackedScene" uid="uid://bycglxvkrnadg" path="res://Infinity/HUDs/InGameEquipment.tscn" id="4_1mss2"]
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://base/fonts/Verdana.ttf" id="4_hsb5i"]
 [ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/Factions/ActiveFactionHud.tscn" id="5_26dji"]
+[ext_resource type="PackedScene" uid="uid://3cf1cbaj3tc7" path="res://Infinity/HUDs/PlayerStatusHud.tscn" id="6_8q06y"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ntlvd"]
 font = ExtResource("4_hsb5i")
@@ -114,16 +115,13 @@ horizontal_alignment = 1
 
 [node name="ActiveFactionsHud" parent="Container" instance=ExtResource("5_26dji")]
 layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
+anchors_preset = 4
 anchor_top = 0.5
-anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -207.0
-offset_top = -242.0
-offset_right = -100.0
-offset_bottom = -57.0
-grow_horizontal = 0
+offset_left = 3.0
+offset_top = -224.0
+offset_right = 110.0
+offset_bottom = -39.0
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Container"]
@@ -137,3 +135,17 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_gyady")
 [node name="CurrentEquipment HUD Parent" type="HBoxContainer" parent="Container/Panel"]
 layout_mode = 2
 alignment = 1
+
+[node name="PlayerStatusHud" parent="Container" instance=ExtResource("6_8q06y")]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -196.0
+offset_top = -204.0
+offset_right = -64.0
+offset_bottom = -87.0
+grow_horizontal = 0
+grow_vertical = 2

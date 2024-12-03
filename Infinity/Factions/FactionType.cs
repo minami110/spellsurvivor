@@ -18,7 +18,8 @@ public enum FactionType
     Healer = 1 << 4,
     Scrap = 1 << 5,
     Licium = 1 << 6,
-    Incandescent = 1 << 7
+    Incandescent = 1 << 7,
+    Arctic = 1 << 8
 
     // Note: ↓ に新しい Faction を追加していく
 }
@@ -39,6 +40,7 @@ public static class FactionUtil
             FactionType.Scrap => new Scrap(),
             FactionType.Licium => new Licium(),
             FactionType.Incandescent => new Incandescent(),
+            FactionType.Arctic => new Arctic(),
 
             // Note: ↓ に新しい Faction を追加していく
 
