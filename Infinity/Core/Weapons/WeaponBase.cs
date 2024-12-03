@@ -81,7 +81,7 @@ public partial class WeaponBase : Node2D
                 1u,
                 _config.Damage,
                 _config.Cooldown,
-                _config.Cooldown * 0.01f,
+                1.0f,
                 _config.Knockback
             );
             AddChild(State);

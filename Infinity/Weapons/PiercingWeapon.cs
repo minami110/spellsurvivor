@@ -232,7 +232,7 @@ public partial class PiercingWeapon : WeaponBase
 
     private void RegisterPushAnimation(Tween tween, Node2D sprite)
     {
-        var animationSpeedRate = State.AttackSpeed.Rate;
+        var rate = State.AttackSpeed.Rate;
 
         // 突き刺しアニメーション
         var dist = (float)_pushDistance;
@@ -249,7 +249,7 @@ public partial class PiercingWeapon : WeaponBase
 
         // 突き刺し
         {
-            var dul = _pushFrontDuration / 60d / animationSpeedRate;
+            var dul = _pushFrontDuration / 60d / rate;
             tween.TweenProperty(sprite, "position", new Vector2(dist, 0), dul)
                 .SetTrans(Tween.TransitionType.Back)
                 .SetEase(Tween.EaseType.InOut);
@@ -259,7 +259,7 @@ public partial class PiercingWeapon : WeaponBase
 
         // 手元に戻すアニメーション
         {
-            var dul = _pushBackDuration / 60d / animationSpeedRate;
+            var dul = _pushBackDuration / 60d / rate;
             tween.TweenProperty(sprite, "position", new Vector2(3, 0), dul);
         }
     }
