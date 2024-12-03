@@ -5,13 +5,12 @@
 
 [resource]
 script = ExtResource("2_3jw7m")
-Level = 1
 Damage = 10
 Cooldown = 10
 CooldownRate = 100.0
 Knockback = 20
 Faction = 0
-TierType = 2
+Tier = 5
 Price = 5
 Sprite = ExtResource("1_8l1vw")
 Description = "最も遠い敵に向かって貫通弾を発射"

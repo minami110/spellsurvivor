@@ -80,8 +80,8 @@ public partial class WeaponBase : Node2D
             State = new WeaponState(
                 1u,
                 _config.Damage,
-                _config.Cooldown,
-                1.0f,
+                _config.CooldownTime,
+                _config.AnimationSpeedRate * 0.01f,
                 _config.Knockback
             );
             AddChild(State);
@@ -214,9 +214,9 @@ public partial class WeaponBase : Node2D
         desc += "\n\n";
         desc += $"Damage: {_config.Damage}\n";
 
-        var totalFrames = _config.Cooldown + AnimationTime;
-        desc += $"Cooldown: {totalFrames}({_config.Cooldown} + {AnimationTime}) frames\n";
-        desc += $"Speed: {_config.CooldownRate}%\n";
+        var totalFrames = _config.CooldownTime + AnimationTime;
+        desc += $"Cooldown: {totalFrames}({_config.CooldownTime} + {AnimationTime}) frames\n";
+        desc += $"Speed: {_config.AnimationSpeedRate}%\n";
         desc += $"Knockback: {_config.Knockback} px/s";
 
         return desc;

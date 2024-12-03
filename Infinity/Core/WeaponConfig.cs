@@ -24,12 +24,13 @@ public partial class WeaponConfig : Resource
     /// バトル中はこのフレーム待機 => アニメーション再生時間 の2つが実際の武器の攻撃頻度となる
     /// </remarks>
     [Export(PropertyHint.Range, "0,9999,,suffix:frames")]
-    public uint Cooldown { get; private set; } = 10u;
+    public uint CooldownTime { get; private set; } = 10u;
 
     /// <summary>
+    /// CooldownTime, AnimationTime にかかる速度の倍率
     /// </summary>
     [Export(PropertyHint.Range, "0,500,0.1,suffix:%")]
-    public float CooldownRate { get; private set; } = 100f;
+    public float AnimationSpeedRate { get; private set; } = 100f;
 
     /// <summary>
     /// </summary>

@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://Infinity/Weapons/PiercingWeapon.cs" id="1_ewj83"]
 [ext_resource type="Resource" uid="uid://s47ofvkuvr8t" path="res://Infinity/Datebase/Items/HookedKnife.tres" id="2_0wrqo"]
-[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="2_48nxa"]
 [ext_resource type="Texture2D" uid="uid://e38iw2qhlbeu" path="res://Infinity/Weapons/Textures/hooked_knife.png" id="3_dir6t"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="3_xjvl1"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_gscot"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5kth8"]
@@ -15,26 +15,26 @@ _maxRange = 80.0
 _rotateSensitivity = 0.4
 _config = ExtResource("2_0wrqo")
 
-[node name="AimToNearEnemy" type="Area2D" parent="."]
-script = ExtResource("2_48nxa")
+[node name="AimEntity" type="Area2D" parent="."]
+script = ExtResource("3_xjvl1")
 
-[node name="SpriteRoot" type="Node2D" parent="AimToNearEnemy"]
+[node name="SpriteRoot" type="Node2D" parent="AimEntity"]
 unique_name_in_owner = true
 
-[node name="Sprite" type="Sprite2D" parent="AimToNearEnemy/SpriteRoot"]
+[node name="Sprite" type="Sprite2D" parent="AimEntity/SpriteRoot"]
 unique_name_in_owner = true
 position = Vector2(18.505, -1.655)
 scale = Vector2(0.42, 0.42)
 texture = ExtResource("3_dir6t")
 
-[node name="StaticDamage" type="Area2D" parent="AimToNearEnemy/SpriteRoot"]
+[node name="StaticDamage" type="Area2D" parent="AimEntity/SpriteRoot"]
 unique_name_in_owner = true
 collision_layer = 0
 collision_mask = 4
 monitorable = false
 script = ExtResource("4_gscot")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AimToNearEnemy/SpriteRoot/StaticDamage"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AimEntity/SpriteRoot/StaticDamage"]
 position = Vector2(23.5, 0)
 shape = SubResource("RectangleShape2D_5kth8")
 debug_color = Color(0, 0.6, 0.701961, 0)
