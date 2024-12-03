@@ -6,8 +6,8 @@
 [resource]
 script = ExtResource("2_kvbxi")
 Damage = 20
-Cooldown = 50
-CooldownRate = 100.0
+CooldownTime = 10
+AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 192
 Tier = 2

@@ -5,13 +5,12 @@
 
 [resource]
 script = ExtResource("2_g0rvg")
-Level = 1
 Damage = 10
-Cooldown = 10
-CooldownRate = 100.0
+CooldownTime = 10
+AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 0
-TierType = 1
+Tier = 1
 Price = 3
 Sprite = ExtResource("1_hl37x")
 Description = "敵を追従する小さい鬼をゲーム開始時にスポーン"

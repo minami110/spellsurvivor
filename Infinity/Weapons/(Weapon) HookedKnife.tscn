@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cnn42q6cv3uhn"]
+[gd_scene load_steps=8 format=3 uid="uid://cnn42q6cv3uhn"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/PiercingWeapon.cs" id="1_ewj83"]
 [ext_resource type="Resource" uid="uid://s47ofvkuvr8t" path="res://Infinity/Datebase/Items/HookedKnife.tres" id="2_0wrqo"]
 [ext_resource type="Texture2D" uid="uid://e38iw2qhlbeu" path="res://Infinity/Weapons/Textures/hooked_knife.png" id="3_dir6t"]
+[ext_resource type="Script" path="res://Infinity/Weapons/EditorDrawer/PiercingWeaponEditorDrawer.cs" id="3_q5yxp"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="3_xjvl1"]
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_gscot"]
 
@@ -14,6 +15,9 @@ script = ExtResource("1_ewj83")
 _maxRange = 80.0
 _rotateSensitivity = 0.4
 _config = ExtResource("2_0wrqo")
+
+[node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]
+script = ExtResource("3_q5yxp")
 
 [node name="AimEntity" type="Area2D" parent="."]
 script = ExtResource("3_xjvl1")

@@ -5,13 +5,12 @@
 
 [resource]
 script = ExtResource("2_kpd4g")
-Level = 1
 Damage = 10
-Cooldown = 10
-CooldownRate = 100.0
+CooldownTime = 10
+AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 4
-TierType = 1
+Tier = 1
 Price = 10
 Sprite = ExtResource("1_o1lhg")
 Description = "範囲内にいる一番近い対象に爆弾を投擲, 敵にヒットするか時間制限で爆発し少しの間燃焼フィールドを生成する."

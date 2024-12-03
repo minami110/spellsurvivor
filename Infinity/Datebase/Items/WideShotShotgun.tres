@@ -6,8 +6,8 @@
 [resource]
 script = ExtResource("2_royfd")
 Damage = 10
-Cooldown = 10
-CooldownRate = 100.0
+CooldownTime = 10
+AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 0
 Tier = 1
