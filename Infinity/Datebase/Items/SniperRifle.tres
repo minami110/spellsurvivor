@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://dxy00fxyinowg"]
 
-[ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/Textures/M14EBR.png" id="1_8l1vw"]
+[ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/Textures/sniper_rifle.png" id="1_8l1vw"]
 [ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_3jw7m"]
 
 [resource]

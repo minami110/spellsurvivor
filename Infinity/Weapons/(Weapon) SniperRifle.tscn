@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) SparkBolt.tscn" id="2_gpmga"]
 [ext_resource type="Resource" uid="uid://dxy00fxyinowg" path="res://Infinity/Datebase/Items/SniperRifle.tres" id="3_a1xjh"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="3_hpiyo"]
-[ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/Textures/M14EBR.png" id="4_p1vhi"]
+[ext_resource type="Texture2D" uid="uid://dkb7p5kr7rfbp" path="res://Infinity/Weapons/Textures/sniper_rifle.png" id="4_p1vhi"]
 
 [node name="SniperRifle" type="Node2D"]
 script = ExtResource("1_4mwl3")
