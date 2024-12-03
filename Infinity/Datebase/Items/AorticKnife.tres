@@ -5,9 +5,9 @@
 
 [resource]
 script = ExtResource("2_rywsh")
-Damage = 10
-Cooldown = 10
-CooldownRate = 100.0
+Damage = 3
+CooldownTime = 10
+AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 64
 Tier = 1

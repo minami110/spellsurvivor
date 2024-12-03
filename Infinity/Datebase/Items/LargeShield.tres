@@ -1,16 +1,16 @@
 [gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://deakyfk7qdd8e"]
 
-[ext_resource type="Texture2D" uid="uid://byoy7hwlrmc5c" path="res://Common/Resources/Textures/Emoji/shield.png" id="1_iv48p"]
+[ext_resource type="Texture2D" uid="uid://bl3jh37ly2rmp" path="res://Infinity/Weapons/Textures/large_shield.png" id="1_lxfof"]
 [ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_i0qit"]
 
 [resource]
 script = ExtResource("2_i0qit")
 Damage = 10
-Cooldown = 10
-CooldownRate = 100.0
+CooldownTime = 10
+AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 0
 Tier = 1
 Price = 5
-Sprite = ExtResource("1_iv48p")
+Sprite = ExtResource("1_lxfof")
 Description = "周囲の敵に攻撃"
