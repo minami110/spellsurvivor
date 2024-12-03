@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dvwlkv2f4pl2i"]
+[gd_scene load_steps=7 format=3 uid="uid://dvwlkv2f4pl2i"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/ShopHudController.cs" id="1_5xunh"]
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/DummyFocusContainer.cs" id="1_ccpb7"]
 [ext_resource type="PackedScene" uid="uid://cy2sbeagpwyat" path="res://Infinity/HUDs/Shop/OwnedWeaponContainer/OwnedWeaponContainer.tscn" id="2_q3lm0"]
 [ext_resource type="PackedScene" uid="uid://hkhya7f6pxu0" path="res://Infinity/HUDs/Shop/SellingWeaponCard/SellingWeaponCardContainer.tscn" id="4_7hk4g"]
 [ext_resource type="PackedScene" uid="uid://3cf1cbaj3tc7" path="res://Infinity/HUDs/PlayerStatusHud.tscn" id="5_3laas"]
-[ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/ActiveFactionHud.tscn" id="5_jthwe"]
+[ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/Factions/ActiveFactionHud.tscn" id="5_jthwe"]
 
 [node name="ShopHUD" type="CanvasLayer"]
 
@@ -17,7 +18,18 @@ grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_lock_ = true
 
-[node name="BG" type="ColorRect" parent="Container"]
+[node name="DummyFocusContainer" type="Control" parent="Container"]
+auto_translate_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+script = ExtResource("1_ccpb7")
+
+[node name="BGColor" type="ColorRect" parent="Container/DummyFocusContainer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,7 +37,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 4
-color = Color(0, 0, 0, 0.592157)
+mouse_filter = 2
+color = Color(0, 0, 0, 0.615686)
 
 [node name="BattleButton" type="Button" parent="Container"]
 layout_mode = 1
@@ -59,10 +72,10 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 188.0
-offset_top = -767.0
-offset_right = 721.0
-offset_bottom = -31.0
+offset_left = 273.0
+offset_top = -537.0
+offset_right = 273.0
+offset_bottom = -537.0
 grow_vertical = 0
 
 [node name="PlayerStatusContainer" parent="Container" instance=ExtResource("5_3laas")]
@@ -79,16 +92,12 @@ offset_bottom = 251.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="VBox Active Factions" parent="Container" instance=ExtResource("5_jthwe")]
+[node name="ActiveFactionHud" parent="Container" instance=ExtResource("5_jthwe")]
 layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 17.0
-offset_top = -198.0
-offset_right = 158.0
-offset_bottom = 14.0
-grow_vertical = 2
+offset_left = 34.0
+offset_top = 257.0
+offset_right = 534.0
+offset_bottom = 802.0
 
 [node name="Control" type="Node" parent="." node_paths=PackedStringArray("_container", "_quitShopButton")]
 script = ExtResource("1_5xunh")

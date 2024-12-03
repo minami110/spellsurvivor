@@ -7,61 +7,41 @@
 [node name="OwnedWeaponContainer" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 525.0
-offset_bottom = 816.0
 mouse_filter = 2
 script = ExtResource("1_j3jw6")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -308.0
-offset_right = 204.0
-grow_vertical = 0
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+columns = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="OwnedWeapon0" parent="VBoxContainer/HBoxContainer" instance=ExtResource("1_sp7rg")]
+[node name="OwnedWeapon0" parent="GridContainer" instance=ExtResource("1_sp7rg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OwnedWeapon1" parent="VBoxContainer/HBoxContainer" instance=ExtResource("1_sp7rg")]
+[node name="OwnedWeapon1" parent="GridContainer" instance=ExtResource("1_sp7rg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer_2" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="OwnedWeapon2" parent="VBoxContainer/HBoxContainer_2" instance=ExtResource("1_sp7rg")]
+[node name="OwnedWeapon2" parent="GridContainer" instance=ExtResource("1_sp7rg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OwnedWeapon3" parent="VBoxContainer/HBoxContainer_2" instance=ExtResource("1_sp7rg")]
+[node name="OwnedWeapon3" parent="GridContainer" instance=ExtResource("1_sp7rg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer_3" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="OwnedWeapon4" parent="VBoxContainer/HBoxContainer_3" instance=ExtResource("1_sp7rg")]
+[node name="OwnedWeapon4" parent="GridContainer" instance=ExtResource("1_sp7rg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OwnedWeapon5" parent="VBoxContainer/HBoxContainer_3" instance=ExtResource("1_sp7rg")]
+[node name="OwnedWeapon5" parent="GridContainer" instance=ExtResource("1_sp7rg")]
 unique_name_in_owner = true
 layout_mode = 2
 
 [node name="OwnedWeaponInfo" parent="." instance=ExtResource("3_o8lab")]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 11
-anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 0
-grow_vertical = 2
+offset_left = 204.0
+offset_right = 204.0

@@ -9,7 +9,7 @@ public partial class WeaponStatLabel : HBoxContainer
     private string _toastKey = "Shop/OwnedWeapon/Stat";
 
     [Export]
-    public string StatType
+    public WeaponStatusType StatType
     {
         get;
         set
@@ -17,7 +17,10 @@ public partial class WeaponStatLabel : HBoxContainer
             field = value;
             UpdateUi();
         }
-    } = string.Empty;
+    } = WeaponStatusType.Damage;
+
+    [Export]
+    private ValueType _valueType = ValueType.Raw;
 
     [Export]
     public uint DefaultValue
@@ -42,8 +45,8 @@ public partial class WeaponStatLabel : HBoxContainer
     }
 
     private readonly Subject<Unit> _requestHideInfo = new();
-    private readonly Subject<string> _requestShowInfo = new();
-    public Observable<string> RequestShowInfo => _requestShowInfo;
+    private readonly Subject<WeaponStatusType> _requestShowInfo = new();
+    public Observable<WeaponStatusType> RequestShowInfo => _requestShowInfo;
     public Observable<Unit> RequestHideInfo => _requestHideInfo;
 
     public override void _Ready()
@@ -59,11 +62,6 @@ public partial class WeaponStatLabel : HBoxContainer
         this.FocusEnteredAsObservable()
             .Subscribe(_ =>
             {
-                if (StatType == string.Empty)
-                {
-                    return;
-                }
-
                 ToastManager.Instance.CommitFocusEntered(_toastKey);
                 _requestShowInfo.OnNext(StatType);
             })
@@ -91,19 +89,18 @@ public partial class WeaponStatLabel : HBoxContainer
             return;
         }
 
-        if (StatType == string.Empty)
-        {
-            Hide();
-            return;
-        }
-
         var sprite = GetNode<TextureRect>("Sprite");
-        sprite.Texture = GD.Load<Texture2D>($"res://Common/Resources/Textures/Stats/{StatType}.png");
+        sprite.Texture = GD.Load<Texture2D>($"res://base/textures/stats/{StatType.ToString().ToSnakeCase()}.png");
 
         var valueLabel = GetNode<Label>("Value");
         if (DefaultValue == CurrentValue)
         {
-            valueLabel.Text = DefaultValue.ToString();
+            valueLabel.Text = _valueType switch
+            {
+                ValueType.Raw => DefaultValue.ToString(),
+                ValueType.FrameSpeed => $"{DefaultValue / 60f:0.00}",
+                _ => valueLabel.Text
+            };
             valueLabel.Modulate = Colors.White;
         }
         else
@@ -111,16 +108,32 @@ public partial class WeaponStatLabel : HBoxContainer
             var isSign = CurrentValue > DefaultValue;
             if (isSign)
             {
-                valueLabel.Text = $"{CurrentValue} (+ {CurrentValue - DefaultValue})";
+                valueLabel.Text = _valueType switch
+                {
+                    ValueType.Raw => $"{CurrentValue} (+ {CurrentValue - DefaultValue})",
+                    ValueType.FrameSpeed => $"{CurrentValue / 60f:0.00} (+ {(CurrentValue - DefaultValue) / 60f:0.00})",
+                    _ => valueLabel.Text
+                };
                 valueLabel.Modulate = Colors.Green;
             }
             else
             {
-                valueLabel.Text = $"{CurrentValue} (- {DefaultValue - CurrentValue})";
+                valueLabel.Text = _valueType switch
+                {
+                    ValueType.Raw => $"{CurrentValue} (- {DefaultValue - CurrentValue})",
+                    ValueType.FrameSpeed => $"{CurrentValue / 60f:0.00} (- {(DefaultValue - CurrentValue) / 60f:0.00})",
+                    _ => valueLabel.Text
+                };
                 valueLabel.Modulate = Colors.Red;
             }
         }
 
         Show();
+    }
+
+    private enum ValueType
+    {
+        Raw,
+        FrameSpeed
     }
 }

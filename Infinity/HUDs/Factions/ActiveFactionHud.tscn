@@ -1,0 +1,78 @@
+[gd_scene load_steps=4 format=3 uid="uid://28gdcb4eskv"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/Factions/ActiveFactionsManager.cs" id="1_5cyrl"]
+[ext_resource type="PackedScene" uid="uid://yd8bxkivrglc" path="res://Infinity/HUDs/Factions/ActiveFactionLabel.tscn" id="2_4uuoa"]
+[ext_resource type="PackedScene" uid="uid://d10mgs6imq3oy" path="res://Infinity/HUDs/Factions/FactionInfo.tscn" id="3_axf3i"]
+
+[node name="ActiveFactionsHud" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="ActiveFactionsManager" type="Node" parent="."]
+script = ExtResource("1_5cyrl")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 222.0
+offset_bottom = 545.0
+mouse_filter = 2
+theme_override_constants/separation = 5
+
+[node name="FactionLabel0" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionLabel1" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionLabel2" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionLabel3" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionLabel4" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionLabel5" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionLabel6" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionLabel7" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionLabel8" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionLabel9" parent="VBoxContainer" instance=ExtResource("2_4uuoa")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FactionInfo" parent="." instance=ExtResource("3_axf3i")]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 126.0
+offset_right = 126.0
+size_flags_horizontal = 8
+FocusKey = "ActiveFactionLabel/FactionInfo"

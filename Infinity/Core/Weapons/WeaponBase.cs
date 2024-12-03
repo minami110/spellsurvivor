@@ -171,7 +171,7 @@ public partial class WeaponBase : Node2D
             return;
         }
 
-        FrameTimer.WaitFrame = State.Cooldown.CurrentValue;
+        FrameTimer.WaitFrame = State.AttackSpeed.CurrentValue;
         FrameTimer.OneShot = true;
         FrameTimer.Start();
         OnStartAttack(State.Level.CurrentValue);
@@ -242,7 +242,7 @@ public partial class WeaponBase : Node2D
 
         // タイマーを再開する
         FrameTimer.OneShot = true;
-        FrameTimer.WaitFrame = State.Cooldown.CurrentValue;
+        FrameTimer.WaitFrame = State.AttackSpeed.CurrentValue;
         FrameTimer.Start();
     }
 

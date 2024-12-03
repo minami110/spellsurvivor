@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Infinity/HUDs/Shop/SellingWeaponCard/SellingWeaponCardButton.cs" id="1_alr32"]
 [ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="1_w4wu7"]
 [ext_resource type="Texture2D" uid="uid://dbmv3a2txvb04" path="res://Infinity/HUDs/Shop/coin.png" id="3_231tv"]
-[ext_resource type="PackedScene" uid="uid://cplggj347xuqr" path="res://Infinity/HUDs/Shop/Factions/FactionLabel.tscn" id="3_o7mqv"]
+[ext_resource type="PackedScene" uid="uid://cplggj347xuqr" path="res://Infinity/HUDs/Factions/FactionLabel.tscn" id="3_o7mqv"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_fw5n2"]
 

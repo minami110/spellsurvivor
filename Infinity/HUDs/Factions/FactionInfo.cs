@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using fms.Faction;
 using Godot;
 using R3;
@@ -10,7 +11,9 @@ namespace fms.HUD;
 public partial class FactionInfo : Control
 {
     [Export]
-    private uint _weaponMiniThumbnailCount = 8u;
+    public string FocusKey { get; private set; } = string.Empty;
+
+    private int _weaponMiniThumbnailCount;
 
     public FactionType Faction
     {
@@ -18,12 +21,15 @@ public partial class FactionInfo : Control
         set
         {
             field = value;
-            OnChangedFaction();
+            UpdateUi();
         }
     }
 
     public override void _Ready()
     {
+        var nodes = FindChildren("WeaponMiniThumbnail*");
+        _weaponMiniThumbnailCount = nodes.Count;
+
         for (var i = 0; i < _weaponMiniThumbnailCount; i++)
         {
             var thumbnail = GetNode<WeaponMiniThumbnail>($"%WeaponMiniThumbnail{i}");
@@ -36,6 +42,7 @@ public partial class FactionInfo : Control
         }
 
         HideWeaponInfo(Unit.Default);
+        UpdateUi();
     }
 
     private void HideWeaponInfo(Unit _)
@@ -43,8 +50,68 @@ public partial class FactionInfo : Control
         GetNode<WeaponMiniInfo>("%WeaponMiniInfo").Weapon = null;
     }
 
+    private bool ReplaceStatToBbcode(string input, out string output)
+    {
+        // Syntax: <stat type=move_speed value=10 /> を置換する
+        // Note: 4.3 時点で用意されている bbcode の拡張ではこういうことができない
 
-    private void OnChangedFaction()
+        output = input;
+
+        var pattern = @"<stat\s+(?<attributes>.*?)\/>";
+        var match = Regex.Match(input, pattern);
+        var type = string.Empty;
+        var value = string.Empty;
+
+        if (match.Success)
+        {
+            var attributesString = match.Groups["attributes"].Value;
+            var attributes = attributesString.Split(' ');
+            foreach (var attr in attributes)
+            {
+                var parts = attr.Split('=');
+                if (parts.Length != 2)
+                {
+                    continue;
+                }
+
+                var k = parts[0];
+                var v = parts[1];
+                switch (k)
+                {
+                    case "type":
+                        type = v;
+                        break;
+                    case "value":
+                        value = v;
+                        break;
+                }
+            }
+        }
+
+        if (type != string.Empty)
+        {
+            var tooltip = Tr($"STAT_{type.ToUpper()}");
+            var path = $"res://base/textures/stats/{type}.png";
+            output = input.Replace(match.Value, $"[img width=16 tooltip={tooltip}]{path}[/img] {value}");
+            return true;
+        }
+
+        return false;
+    }
+
+    private void ShowWeaponInfo(WeaponCard weapon)
+    {
+        // 表示する前に WeaponMiniInfo の位置を調整する
+        var firstThumb = GetNode<Control>("%WeaponMiniThumbnail0");
+        var gridStartPositionY = firstThumb.GlobalPosition.Y;
+        var weaponMiniInfo = GetNode<WeaponMiniInfo>("%WeaponMiniInfo");
+        weaponMiniInfo.GlobalPosition = new Vector2(weaponMiniInfo.GlobalPosition.X, gridStartPositionY);
+
+        // 表示する
+        weaponMiniInfo.Weapon = weapon;
+    }
+
+    private void UpdateUi()
     {
         if (!IsNodeReady())
         {
@@ -95,8 +162,14 @@ public partial class FactionInfo : Control
             }
 
             var label = GetNode<RichTextLabel>($"%LevelDescription{currentSlot}");
-            label.Text = $"({l}) {Tr(d)}";
+            var levelDesc = Tr(d);
 
+            while (ReplaceStatToBbcode(levelDesc, out var replaced))
+            {
+                levelDesc = replaced;
+            }
+
+            label.Text = $"({l}) {levelDesc}";
             label.Modulate = factionLevel < l ? new Color(0.5f, 0.5f, 0.5f) : new Color(1f, 1f, 1f);
 
             label.Show();
@@ -123,12 +196,8 @@ public partial class FactionInfo : Control
             }
         }
 
-
+        // 表示する
+        GetNode<Control>("PanelContainer").ResetSize();
         Show();
-    }
-
-    private void ShowWeaponInfo(WeaponCard weapon)
-    {
-        GetNode<WeaponMiniInfo>("%WeaponMiniInfo").Weapon = weapon;
     }
 }

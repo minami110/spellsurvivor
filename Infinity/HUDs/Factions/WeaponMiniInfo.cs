@@ -56,6 +56,7 @@ public partial class WeaponMiniInfo : Control
             GetNode<Label>($"%Faction{i}").Hide();
         }
 
+        ResetSize();
         Show();
     }
 }

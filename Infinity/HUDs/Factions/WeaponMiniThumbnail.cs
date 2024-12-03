@@ -9,7 +9,7 @@ namespace fms.HUD;
 public partial class WeaponMiniThumbnail : Control
 {
     [Export]
-    private string _focusKey = "Shop/OwnedWeapon/Faction/Weapon";
+    private string _focusKey = "WeaponMiniThumbnail";
 
     private readonly Subject<Unit> _requestHideInfo = new();
     private readonly Subject<WeaponCard> _requestShowInfo = new();
@@ -30,6 +30,8 @@ public partial class WeaponMiniThumbnail : Control
 
     public override void _Ready()
     {
+        _focusKey = GetOwner<FactionInfo>().FocusKey + "/" + _focusKey;
+
         this.MouseEnteredAsObservable()
             .Subscribe(_ => { Modulate = _baseModulate + new Color(.05f, .05f, .05f); })
             .AddTo(this);

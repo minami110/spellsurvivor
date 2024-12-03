@@ -26,3 +26,11 @@ public static class TierTypeExtension
         };
     }
 }
+
+public enum WeaponStatusType : uint
+{
+    Level = 1u,
+    Damage,
+    AttackSpeed,
+    Knockback
+}

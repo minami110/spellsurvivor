@@ -76,7 +76,7 @@ public static class FactionUtil
     /// <returns></returns>
     public static Texture2D? GetTextureResouce(this FactionType faction)
     {
-        var path = $"res://Common/Resources/Textures/Factions/{faction}.png";
+        var path = $"res://base/textures/factions/{faction.ToString().ToLower()}.png";
 
         // Is exist?
         if (!ResourceLoader.Exists(path))

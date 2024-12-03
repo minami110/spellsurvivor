@@ -7,8 +7,8 @@ namespace fms;
 
 public partial class WeaponState : Node, IAttributeDictionary
 {
+    private readonly DamageAttribute _attackSpeed;
     private readonly Dictionary<string, Variant> _attributes = new();
-    private readonly DamageAttribute _cooldown;
     private readonly DamageAttribute _damage;
     private readonly EntityAttribute<uint> _knockback;
 
@@ -16,7 +16,7 @@ public partial class WeaponState : Node, IAttributeDictionary
 
     public ReadOnlyEntityAttribute<uint> Level => _level;
     public ReadOnlyDamageAttribute Damage => _damage;
-    public ReadOnlyDamageAttribute Cooldown => _cooldown;
+    public ReadOnlyDamageAttribute AttackSpeed => _attackSpeed;
     public ReadOnlyEntityAttribute<uint> Knockback => _knockback;
 
     // Parameterless constructor for Godot
@@ -29,7 +29,7 @@ public partial class WeaponState : Node, IAttributeDictionary
     {
         _level = new EntityAttribute<uint>(level);
         _damage = new DamageAttribute(damage, 1.0f);
-        _cooldown = new DamageAttribute(cooldown, cooldownRate);
+        _attackSpeed = new DamageAttribute(cooldown, cooldownRate);
         _knockback = new EntityAttribute<uint>(knockback);
     }
 
@@ -38,7 +38,7 @@ public partial class WeaponState : Node, IAttributeDictionary
         if (what == NotificationExitTree)
         {
             // Reactive Properties の Dispose をまとめる
-            Disposable.Combine(_level, _damage, _cooldown, _knockback).Dispose();
+            Disposable.Combine(_level, _damage, _attackSpeed, _knockback).Dispose();
             ;
         }
     }
@@ -67,8 +67,8 @@ public partial class WeaponState : Node, IAttributeDictionary
         {
             if (_attributes.TryGetValue(WeaponAttributeNames.SpeedRate, out var v))
             {
-                var newValue = _cooldown.Rate + (float)v;
-                _cooldown.SetRate(newValue);
+                var newValue = _attackSpeed.Rate + (float)v;
+                _attackSpeed.SetRate(newValue);
             }
         }
     }

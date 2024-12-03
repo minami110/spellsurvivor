@@ -12,14 +12,12 @@ public partial class OwnedWeaponInfo : Control
         set
         {
             field = value;
-            OnChangedWeapon();
+            UpdateUi();
         }
     }
 
     public override void _Ready()
     {
-        OnChangedWeapon();
-
         // Faction Toast
         var count = 3;
         for (var i = 0; i < count; i++)
@@ -36,15 +34,22 @@ public partial class OwnedWeaponInfo : Control
 
         // Weapon Stat Toast
         var damage = GetNode<WeaponStatLabel>("%Damage");
-        damage.RequestShowInfo
-            .Subscribe(ShowStatInfo)
-            .AddTo(this);
-        damage.RequestHideInfo
-            .Subscribe(HideStatInfo)
-            .AddTo(this);
+        var attackSpeed = GetNode<WeaponStatLabel>("%AttackSpeed");
+        var knockback = GetNode<WeaponStatLabel>("%Knockback");
+        foreach (var n in new[] { damage, attackSpeed, knockback })
+        {
+            n.RequestShowInfo
+                .Subscribe(ShowStatInfo)
+                .AddTo(this);
+            n.RequestHideInfo
+                .Subscribe(HideStatInfo)
+                .AddTo(this);
+        }
 
         HideFactionInfo(Unit.Default);
         HideStatInfo(Unit.Default);
+
+        UpdateUi();
     }
 
     private void HideFactionInfo(Unit _)
@@ -54,10 +59,36 @@ public partial class OwnedWeaponInfo : Control
 
     private void HideStatInfo(Unit _)
     {
-        GetNode<Control>("%WeaponStatInfo").Hide();
+        var statInfo = GetNode<WeaponStatInfo>("%WeaponStatInfo");
+        statInfo.StatType = 0u;
     }
 
-    private void OnChangedWeapon()
+    private void ShowFactionInfo(FactionType faction)
+    {
+        var factionInfo = GetNode<FactionInfo>("%FactionInfo");
+
+        if (faction != 0u)
+        {
+            var firstItem = GetNode<Control>("%FactionLabel0");
+            var y = firstItem.GlobalPosition.Y;
+            factionInfo.GlobalPosition = new Vector2(factionInfo.GlobalPosition.X, y);
+        }
+
+        factionInfo.Faction = faction;
+    }
+
+    private void ShowStatInfo(WeaponStatusType statType)
+    {
+        // Toast の位置を調整
+        var statInfo = GetNode<WeaponStatInfo>("%WeaponStatInfo");
+        var firstItem = GetNode<Control>("%Damage");
+        var y = firstItem.GlobalPosition.Y;
+        statInfo.GlobalPosition = new Vector2(statInfo.GlobalPosition.X, y);
+
+        statInfo.StatType = statType;
+    }
+
+    private void UpdateUi()
     {
         if (!IsNodeReady())
         {
@@ -105,20 +136,21 @@ public partial class OwnedWeaponInfo : Control
         }
 
         // Stats
-        var damage = GetNode<WeaponStatLabel>("%Damage");
-        damage.DefaultValue = Weapon.State.Damage.DefaultValue;
-        damage.CurrentValue = Weapon.State.Damage.CurrentValue;
+        {
+            var damage = GetNode<WeaponStatLabel>("%Damage");
+            damage.DefaultValue = Weapon.State.Damage.DefaultValue;
+            damage.CurrentValue = Weapon.State.Damage.CurrentValue;
 
+            var attackSpeed = GetNode<WeaponStatLabel>("%AttackSpeed");
+            attackSpeed.DefaultValue = Weapon.State.AttackSpeed.DefaultValue;
+            attackSpeed.CurrentValue = Weapon.State.AttackSpeed.CurrentValue;
+
+            var knockback = GetNode<WeaponStatLabel>("%Knockback");
+            knockback.DefaultValue = Weapon.State.Knockback.DefaultValue;
+            knockback.CurrentValue = Weapon.State.Knockback.CurrentValue;
+        }
+
+        GetNode<Control>("PanelContainer").ResetSize();
         Show();
-    }
-
-    private void ShowFactionInfo(FactionType faction)
-    {
-        GetNode<FactionInfo>("%FactionInfo").Faction = faction;
-    }
-
-    private void ShowStatInfo(string statType)
-    {
-        GetNode<Control>("%WeaponStatInfo").Show();
     }
 }

@@ -1,0 +1,153 @@
+[gd_scene load_steps=6 format=3 uid="uid://d10mgs6imq3oy"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/Factions/FactionInfo.cs" id="1_4pawf"]
+[ext_resource type="StyleBox" uid="uid://dpw14xk1wvjna" path="res://Infinity/HUDs/Factions/StyleBoxFlat_OldPc.tres" id="2_hmv05"]
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="2_jrapu"]
+[ext_resource type="PackedScene" uid="uid://b0wmpqqfokn24" path="res://Infinity/HUDs/Factions/WeaponMiniThumbnail.tscn" id="3_nhsf2"]
+[ext_resource type="PackedScene" uid="uid://bsdiedlpqu54o" path="res://Infinity/HUDs/Factions/WeaponMiniInfo.tscn" id="4_incfj"]
+
+[node name="FactionInfo" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_4pawf")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 215.0
+offset_bottom = 325.0
+theme_override_styles/panel = ExtResource("2_hmv05")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Sprite" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("2_jrapu")
+expand_mode = 3
+
+[node name="Name" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "FactionName"
+
+[node name="Description" type="RichTextLabel" parent="PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+bbcode_enabled = true
+text = "main desc"
+fit_content = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LevelDescription0" type="RichTextLabel" parent="PanelContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0.362829, 0.362829, 0.362829, 1)
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+bbcode_enabled = true
+text = "(2) level desc"
+fit_content = true
+
+[node name="LevelDescription1" type="RichTextLabel" parent="PanelContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0.362829, 0.362829, 0.362829, 1)
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+bbcode_enabled = true
+text = "(2) level desc"
+fit_content = true
+
+[node name="LevelDescription2" type="RichTextLabel" parent="PanelContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0.362829, 0.362829, 0.362829, 1)
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+bbcode_enabled = true
+text = "(2) level desc"
+fit_content = true
+
+[node name="LevelDescription3" type="RichTextLabel" parent="PanelContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0.362829, 0.362829, 0.362829, 1)
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+bbcode_enabled = true
+text = "(2) level desc
+"
+fit_content = true
+
+[node name="WeaponContainer" type="GridContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
+columns = 4
+
+[node name="WeaponMiniThumbnail0" parent="PanelContainer/VBoxContainer/WeaponContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WeaponMiniThumbnail1" parent="PanelContainer/VBoxContainer/WeaponContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WeaponMiniThumbnail2" parent="PanelContainer/VBoxContainer/WeaponContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WeaponMiniThumbnail3" parent="PanelContainer/VBoxContainer/WeaponContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WeaponMiniThumbnail4" parent="PanelContainer/VBoxContainer/WeaponContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WeaponMiniThumbnail5" parent="PanelContainer/VBoxContainer/WeaponContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WeaponMiniThumbnail6" parent="PanelContainer/VBoxContainer/WeaponContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WeaponMiniThumbnail7" parent="PanelContainer/VBoxContainer/WeaponContainer" instance=ExtResource("3_nhsf2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WeaponMiniInfo" parent="." instance=ExtResource("4_incfj")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 200.0
+offset_right = 360.0
+offset_bottom = 110.0

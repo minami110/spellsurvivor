@@ -26,6 +26,7 @@ anchors_preset = 0
 offset_left = -2.0
 offset_right = 1157.0
 offset_bottom = 400.0
+mouse_filter = 2
 script = ExtResource("1_cygno")
 
 [node name="BG" type="ColorRect" parent="."]
@@ -133,6 +134,7 @@ size_flags_vertical = 3
 Title = "アップグレード"
 Cost = 1
 Sprite = ExtResource("6_ndq11")
+FocusKey = "Shop/WeaponCard/Upgrade"
 
 [node name="RerollButton" parent="HBox Selling Item Parent/VBoxContainer" instance=ExtResource("5_o4h50")]
 unique_name_in_owner = true
@@ -141,6 +143,7 @@ size_flags_vertical = 3
 Title = "リロール"
 Cost = 1
 Sprite = ExtResource("7_qyvi6")
+FocusKey = "Shop/WeaponCard/Reroll"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBox Selling Item Parent"]
 layout_mode = 2
@@ -150,18 +153,21 @@ size_flags_horizontal = 10
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = ""
+FocusKey = "Shop/WeaponCard/WeaponCard"
 
 [node name="WeaponCardButton1" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = ""
 Index = 1
+FocusKey = "Shop/WeaponCard/WeaponCard"
 
 [node name="WeaponCardButton2" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = ""
 Index = 2
+FocusKey = "Shop/WeaponCard/WeaponCard"
 
 [node name="WeaponCardButton3" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
 unique_name_in_owner = true
@@ -169,6 +175,7 @@ visible = false
 layout_mode = 2
 tooltip_text = ""
 Index = 3
+FocusKey = "Shop/WeaponCard/WeaponCard"
 
 [node name="WeaponCardButton4" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("2_xapsq")]
 unique_name_in_owner = true
@@ -176,16 +183,19 @@ visible = false
 layout_mode = 2
 tooltip_text = ""
 Index = 4
+FocusKey = "Shop/WeaponCard/WeaponCard"
 
 [node name="UnlockSlotButton0" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("3_ixxgk")]
 unique_name_in_owner = true
 layout_mode = 2
 Price = 1
+FocusKey = "Shop/WeaponCard/UnlockSlot"
 
 [node name="UnlockSlotButton1" parent="HBox Selling Item Parent/HBoxContainer" instance=ExtResource("3_ixxgk")]
 unique_name_in_owner = true
 layout_mode = 2
 Price = 1
+FocusKey = "Shop/WeaponCard/UnlockSlot"
 
 [node name="WeaponDescriptionToast" parent="." instance=ExtResource("10_mw6sb")]
 unique_name_in_owner = true

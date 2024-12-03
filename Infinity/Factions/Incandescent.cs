@@ -22,9 +22,8 @@ public partial class Incandescent : FactionBase
         new Dictionary<uint, string>
         {
             { 2u, "FACTION_INCANDESCENT_DESC_LEVEL2" },
-            { 3u, "プレイヤーに Wing +10, Dodge 10% を付与" },
+            { 3u, "プレイヤーに <stat type=move_speed value=10/>, <stat type=dodge value=10%/> を付与" },
             { 4u, "プレイヤーにユニーク武器 Heat を装備" },
-            { 5u, "FACTION_INCANDESCENT" }
         };
 
     private protected override void OnLevelChanged(uint level)

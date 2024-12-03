@@ -11,9 +11,6 @@ namespace fms.HUD;
 public partial class SellingWeaponCardButton : FmsButton
 {
     [Export]
-    private string _toastKey = "Shop/SellingWeapon";
-
-    [Export]
     private uint Index { get; set; }
 
     [Export]
@@ -117,7 +114,6 @@ public partial class SellingWeaponCardButton : FmsButton
             {
                 if (WeaponCard is not null)
                 {
-                    ToastManager.Instance.CommitFocusEntered(_toastKey);
                     var dict = new Dictionary
                     {
                         { "Title", WeaponCard.FriendlyName },
@@ -132,7 +128,7 @@ public partial class SellingWeaponCardButton : FmsButton
         var d4 = ToastManager.Instance.FocusEntered
             .Subscribe(key =>
             {
-                if (!key.StartsWith(_toastKey))
+                if (!key.StartsWith(FocusKey))
                 {
                     _clickCount = 0;
                     _requestHideInfo.OnNext(Unit.Default);

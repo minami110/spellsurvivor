@@ -14,6 +14,9 @@ public partial class FmsButton : Button
     [Export]
     public Color DisabledColor { get; set; } = new(0.5f, 0.5f, 0.5f);
 
+    [Export]
+    protected string FocusKey { get; private set; } = string.Empty;
+
     public new bool Disabled
     {
         get => base.Disabled;
@@ -21,6 +24,14 @@ public partial class FmsButton : Button
         {
             base.Disabled = value;
             Modulate = value ? DisabledColor : EnabledColor;
+        }
+    }
+
+    public override void _Notification(int what)
+    {
+        if (what == NotificationFocusEnter)
+        {
+            ToastManager.Instance.CommitFocusEntered(FocusKey);
         }
     }
 }

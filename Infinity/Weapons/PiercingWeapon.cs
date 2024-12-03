@@ -177,7 +177,7 @@ public partial class PiercingWeapon : WeaponBase
 
     private void PlayAttackAnimation()
     {
-        var animationSpeedRate = State.Cooldown.Rate;
+        var animationSpeedRate = State.AttackSpeed.Rate;
 
         if (_tweenPlayingDisposable is not null)
         {
@@ -232,7 +232,7 @@ public partial class PiercingWeapon : WeaponBase
 
     private void RegisterPushAnimation(Tween tween, Node2D sprite)
     {
-        var animationSpeedRate = State.Cooldown.Rate;
+        var animationSpeedRate = State.AttackSpeed.Rate;
 
         // 突き刺しアニメーション
         var dist = (float)_pushDistance;

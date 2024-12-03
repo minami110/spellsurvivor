@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cplggj347xuqr"]
 
-[ext_resource type="Script" path="res://Infinity/HUDs/Shop/Factions/FacionLabel.cs" id="1_2kx3o"]
+[ext_resource type="Script" path="res://Infinity/HUDs/Factions/FacionLabel.cs" id="1_2kx3o"]
 [ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="1_2wwbt"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_0pqtt"]

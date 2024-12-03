@@ -26,7 +26,7 @@ public partial class InGameEquipment : VBoxContainer
         var d1 = Weapon.CoolDownLeft.Subscribe(this, (x, s) =>
         {
             var progress = s.GetNode<Range>("%CoolDownProgressBar");
-            progress.MaxValue = Weapon.State.Cooldown.CurrentValue;
+            progress.MaxValue = Weapon.State.AttackSpeed.CurrentValue;
             progress.Value = x;
         });
 

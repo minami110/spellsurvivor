@@ -25,7 +25,7 @@ public partial class Book : WeaponBase
                 prj.Knockback = State.Knockback.CurrentValue;
 
                 // 武器の持つクールダウンに揃える (+2 はちらつき防止)
-                prj.LifeFrame = State.Cooldown.CurrentValue + 2;
+                prj.LifeFrame = State.AttackSpeed.CurrentValue + 2;
 
                 // 貫通設定
                 prj.PenetrateEnemy = true;
@@ -36,7 +36,7 @@ public partial class Book : WeaponBase
 
             // 武器の持つクールダウンにあわせて360度回転するような速度を設定する
             // Note: 360度 / クールダウン(フレーム) / 60 フレーム (= かかる秒数)
-            var speed = 360f / (State.Cooldown.CurrentValue / 60f);
+            var speed = 360f / (State.AttackSpeed.CurrentValue / 60f);
             speed *= _speedMultiplier;
 
             // Loop の i 番目の弾丸の角度を計算する

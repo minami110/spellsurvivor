@@ -19,6 +19,11 @@ public class ToastManager
 
     public void CommitFocusEntered(string key)
     {
+        if (key == string.Empty)
+        {
+            return;
+        }
+
         _focusEntered.OnNext(key);
     }
 }
