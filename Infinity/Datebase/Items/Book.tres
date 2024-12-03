@@ -5,9 +5,9 @@
 
 [resource]
 script = ExtResource("2_sgd3f")
-Damage = 10
-Cooldown = 10
-CooldownRate = 100.0
+Damage = 50
+CooldownTime = 180
+AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 128
 Tier = 2

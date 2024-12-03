@@ -59,14 +59,20 @@ alignment = 2
 [node name="FactionLabel0" parent="VBoxContainer" instance=ExtResource("3_o7mqv")]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 0
+mouse_filter = 2
 
 [node name="FactionLabel1" parent="VBoxContainer" instance=ExtResource("3_o7mqv")]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 0
+mouse_filter = 2
 
 [node name="FactionLabel2" parent="VBoxContainer" instance=ExtResource("3_o7mqv")]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 0
+mouse_filter = 2
 
 [node name="TitleContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
