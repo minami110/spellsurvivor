@@ -25,7 +25,7 @@ public partial class Slime : MeleeEnemy
             // 自身の場所に分裂する
             for (var i = 0u; i < _splitCount; i++)
             {
-                var slime = _splitScene.Instantiate<EnemyBase>();
+                var slime = _splitScene.Instantiate<EntityEnemy>();
 
                 // Level はそのまま引き継ぐ 
                 slime.Level = Level;

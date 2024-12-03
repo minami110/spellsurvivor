@@ -41,8 +41,8 @@ public partial class Heat : WeaponBase
         // 円形の攻撃を行う
         var prj = new CircleAreaProjectile();
         {
-            prj.Damage = Damage;
-            prj.Knockback = Knockback;
+            prj.Damage = State.Damage.CurrentValue;
+            prj.Knockback = State.Knockback.CurrentValue;
             prj.LifeFrame = 5u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
             prj.DamageEveryXFrames = 0u; // 一度ダメージを与えて消滅する
             prj.Radius = Radius;

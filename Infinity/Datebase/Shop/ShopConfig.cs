@@ -6,13 +6,13 @@ namespace fms;
 public partial class ShopConfig : FmsResource
 {
     [Export]
-    public int RerollCost { get; private set; } = 1;
+    public uint RerollCost { get; private set; } = 1u;
 
     [Export]
-    public int UpgradeCost { get; private set; } = 1;
+    public uint UpgradeCost { get; private set; } = 1;
 
     [Export]
-    public int AddSlotCost { get; private set; } = 1;
+    public uint AddSlotCost { get; private set; } = 1u;
 
     [Export(PropertyHint.Dir)]
     public string ShopItemRootDir { get; private set; } = string.Empty;

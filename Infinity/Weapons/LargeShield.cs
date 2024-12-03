@@ -111,9 +111,9 @@ public partial class LargeShield : WeaponBase
     {
         var prj = new ArcAreaProjectile();
         {
-            prj.Damage = Damage;
-            prj.Knockback = Knockback;
-            prj.LifeFrame = 30u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
+            prj.Damage = State.Damage.CurrentValue;
+            prj.Knockback = State.Knockback.CurrentValue;
+            prj.LifeFrame = 10u; // Note: 一発シバいたら終わりの当たり判定なので寿命は短めな雑な値
             prj.DamageEveryXFrames = 0u; // 一度ダメージを与えたら消滅する
             prj.Radius = _damageRadius;
             prj.AngleLimit = _angleLimit;

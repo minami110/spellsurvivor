@@ -1,0 +1,43 @@
+[gd_scene load_steps=8 format=3 uid="uid://bmkn545cgh1b3"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/PiercingWeapon.cs" id="1_m44cq"]
+[ext_resource type="Resource" uid="uid://wiupgdkayb6y" path="res://Infinity/Datebase/Items/Shovel.tres" id="2_fx7e0"]
+[ext_resource type="Script" path="res://Infinity/Weapons/EditorDrawer/PiercingWeaponEditorDrawer.cs" id="3_3ionp"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="4_7oox3"]
+[ext_resource type="Texture2D" uid="uid://dp81ii06h01tw" path="res://Infinity/Weapons/Textures/shovel.png" id="5_4c0v1"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="6_87wb6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5kth8"]
+size = Vector2(38, 30)
+
+[node name="Shovel" type="Node2D"]
+script = ExtResource("1_m44cq")
+_pushDistance = 55
+_minRange = 15.0
+_config = ExtResource("2_fx7e0")
+
+[node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]
+script = ExtResource("3_3ionp")
+
+[node name="AimEntity" type="Area2D" parent="."]
+script = ExtResource("4_7oox3")
+
+[node name="SpriteRoot" type="Node2D" parent="AimEntity"]
+unique_name_in_owner = true
+
+[node name="Sprite" type="Sprite2D" parent="AimEntity/SpriteRoot"]
+unique_name_in_owner = true
+position = Vector2(14, 3)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("5_4c0v1")
+
+[node name="StaticDamage" type="Area2D" parent="AimEntity/SpriteRoot"]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("6_87wb6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AimEntity/SpriteRoot/StaticDamage"]
+position = Vector2(40, 0)
+shape = SubResource("RectangleShape2D_5kth8")
+debug_color = Color(0, 0.6, 0.701961, 0)

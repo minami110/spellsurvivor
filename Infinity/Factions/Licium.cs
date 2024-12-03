@@ -1,5 +1,5 @@
-﻿using fms.Effect;
-using fms.Weapon;
+﻿using System.Collections.Generic;
+using fms.Effect;
 using Godot;
 
 namespace fms.Faction;
@@ -11,7 +11,14 @@ namespace fms.Faction;
 [GlobalClass]
 public partial class Licium : FactionBase
 {
-    public override bool IsActiveAnyEffect => Level >= 1u;
+    public override string MainDescription => "FACTION_LICIUM_DESC_MAIN";
+
+    public override IDictionary<uint, string> LevelDescriptions =>
+        new Dictionary<uint, string>
+        {
+            { 1u, "FACTION_LICIUM_DESC_LEVEL1" },
+            { 3u, "FACTION_LICIUM_DESC_LEVEL3" }
+        };
 
     private protected override void OnLevelChanged(uint level)
     {
@@ -32,12 +39,12 @@ public partial class Licium : FactionBase
             switch (level)
             {
                 case >= 3:
-                    // 30% の確率で 5 ダメージ回復
-                    AddEffectToWeapon(weapon, new Lifesteal { Amount = 5u, Rate = 0.3f });
+                    // 30% の確率で発生
+                    AddEffectToWeapon(weapon, new Lifesteal { Duration = 0u, Rate = 0.3f });
                     break;
                 case >= 1:
-                    // 10% の確率で 5 ダメージ回復
-                    AddEffectToWeapon(weapon, new Lifesteal { Amount = 5u, Rate = 0.1f });
+                    // 10% の確率で発生
+                    AddEffectToWeapon(weapon, new Lifesteal { Duration = 0u, Rate = 0.1f });
                     break;
             }
         }

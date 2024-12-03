@@ -29,8 +29,8 @@ public partial class PoisonMist : WeaponBase
     private protected override void OnCoolDownCompleted(uint level)
     {
         var prj = new CircleAreaProjectile();
-        prj.Damage = BaseDamage;
-        prj.Knockback = Knockback;
+        prj.Damage = State.Damage.CurrentValue;
+        prj.Knockback = State.Knockback.CurrentValue;
         prj.LifeFrame = _aliveFrame;
         prj.DamageEveryXFrames = _attackSpan;
 

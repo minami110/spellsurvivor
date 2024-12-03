@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://bvgqcktvhhjy5"]
+
+[ext_resource type="StyleBox" uid="uid://dpw14xk1wvjna" path="res://Infinity/HUDs/Factions/StyleBoxFlat_OldPc.tres" id="1_13uip"]
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/OwnedWeaponContainer/WeaponStatInfo.cs" id="2_fg3vf"]
+
+[node name="WeaponStatInfo" type="PanelContainer"]
+offset_right = 196.0
+offset_bottom = 78.0
+theme_override_styles/panel = ExtResource("1_13uip")
+script = ExtResource("2_fg3vf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "攻撃力"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Description" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.699653, 0.699653, 0.699653, 1)
+theme_override_font_sizes/font_size = 12
+text = "通常攻撃で与えるダメージ量"

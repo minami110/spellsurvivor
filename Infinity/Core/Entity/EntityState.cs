@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
-using fms.Effect;
 using Godot;
+using Godot.Collections;
 using R3;
 
 namespace fms;
@@ -9,24 +8,19 @@ namespace fms;
 /// <summary>
 /// Entity の体力やバフなどを管理するクラス
 /// </summary>
-public partial class EntityState : Node
+public partial class EntityState : Node, IAttributeDictionary
 {
+    private readonly Dictionary<string, Variant> _attributes = new();
     private readonly EntityAttribute<float> _dodgeRate;
-    private readonly HashSet<EffectBase> _effects = new();
     private readonly EntityHealth _health;
-    private readonly ReactiveProperty<uint> _money = new();
+    private readonly EntityAttribute<uint> _money;
     private readonly EntityAttribute<float> _moveSpeed;
 
     // ===== Begin Stats =====
-
-    private bool _isDirty;
-
     /// <summary>
     /// 現在の所持金
     /// </summary>
-    // ToDo: これは Entity State ではないので, Main / Shop などの Game 側で管理する
-    [Obsolete]
-    public ReadOnlyReactiveProperty<uint> Money => _money;
+    public ReadOnlyEntityAttribute<uint> Money => _money;
 
     /// <summary>
     /// 現在の移動速度
@@ -46,13 +40,15 @@ public partial class EntityState : Node
     // Parameterless constructor for Godot
     private EntityState()
     {
+        _money = new EntityAttribute<uint>(0u);
         _health = new EntityHealth(0u, 0u);
         _moveSpeed = new EntityAttribute<float>(0f);
         _dodgeRate = new EntityAttribute<float>(0f);
     }
 
-    public EntityState(uint maxHealth, uint moveSpeed, float dodgeRate)
+    public EntityState(uint money, uint maxHealth, uint moveSpeed, float dodgeRate)
     {
+        _money = new EntityAttribute<uint>(money);
         _health = new EntityHealth(maxHealth, maxHealth);
         _moveSpeed = new EntityAttribute<float>(moveSpeed);
         _dodgeRate = new EntityAttribute<float>(dodgeRate);
@@ -60,31 +56,17 @@ public partial class EntityState : Node
 
     public override void _Notification(int what)
     {
-        if (what == NotificationEnterTree)
+        if (what == NotificationExitTree)
         {
-            // Note: Process を override していないのでここで手動で有効化する
-            SetProcess(true);
-
             // Reactive Properties の Dispose をまとめる
             var d = Disposable.Combine(_money, _moveSpeed, _health, _dodgeRate);
-            d.AddTo(this);
-        }
-        else if (what == NotificationProcess)
-        {
-            SolveEffect();
+            d.Dispose();
         }
     }
 
-    public void AddEffect(EffectBase effect)
-    {
-        _effects.Add(effect);
-        _isDirty = true;
-    }
-
-    [Obsolete]
     public void AddMoney(uint amount)
     {
-        _money.Value += amount;
+        _money.SetCurrentValue(_money.CurrentValue + amount);
     }
 
     public void ApplyDamage(uint amount)
@@ -104,15 +86,14 @@ public partial class EntityState : Node
         _health.SetCurrentValue(_health.CurrentValue + amount);
     }
 
-    [Obsolete]
     public void ReduceMoney(uint amount)
     {
-        if (_money.Value < amount)
+        if (_money.CurrentValue < amount)
         {
             throw new NotImplementedException("所持金が足りません");
         }
 
-        _money.Value -= amount;
+        _money.SetCurrentValue(_money.CurrentValue - amount);
     }
 
     public void ResetToMaxHealth()
@@ -120,58 +101,45 @@ public partial class EntityState : Node
         _health.ResetToMaxValue();
     }
 
-    private void SolveEffect()
+    private void OnUpdateAnyAttribute()
     {
-        if (_effects.Count == 0)
+        // MaxHealth
         {
-            return;
-        }
-
-        // Dispose されたエフェクトを削除
-        var count = _effects.RemoveWhere(effect => effect.IsDisposed);
-        if (count > 0)
-        {
-            _isDirty = true;
-        }
-
-        if (!_isDirty)
-        {
-            return;
-        }
-
-        _isDirty = false;
-
-        // スタートとなるパラメーターを用意
-        var maxHealth = _health.DefaultMaxValue;
-        var moveSpeed = _moveSpeed.CurrentValue;
-        var dodgeRate = 0f;
-
-        // IsSolved が false のエフェクトを解決する
-        foreach (var effect in _effects)
-        {
-            switch (effect)
+            if (_attributes.TryGetValue(EntityAttributeNames.MaxHealth, out var v))
             {
-                case Wing wing:
-                {
-                    moveSpeed += wing.Amount;
-                    break;
-                }
-                case Heart heart:
-                {
-                    maxHealth += heart.Amount;
-                    break;
-                }
-                case Dodge dodgeEffect:
-                {
-                    dodgeRate += dodgeEffect.Rate;
-                    break;
-                }
+                var maxHealth = _health.DefaultMaxValue;
+                maxHealth += (uint)v;
+                _health.SetMaxValue(maxHealth);
             }
         }
+        // MoveSpeed
+        {
+            if (_attributes.TryGetValue(EntityAttributeNames.MoveSpeed, out var v))
+            {
+                var moveSpeed = _moveSpeed.DefaultValue;
+                moveSpeed += (float)v;
+                _moveSpeed.SetCurrentValue(moveSpeed);
+            }
+        }
+        // DodgeRate
+        {
+            if (_attributes.TryGetValue(EntityAttributeNames.DodgeRate, out var v))
+            {
+                var dodgeRate = _dodgeRate.DefaultValue;
+                dodgeRate += (float)v;
+                _dodgeRate.SetCurrentValue(Mathf.Clamp(dodgeRate, 0f, 1f));
+            }
+        }
+    }
 
-        // 最終的な値を計算する
-        _health.SetMaxValue(maxHealth);
-        _moveSpeed.SetCurrentValue(moveSpeed);
-        _dodgeRate.SetCurrentValue(Mathf.Clamp(dodgeRate, 0f, 1f));
+    bool IAttributeDictionary.TryGetAttribute(string key, out Variant value)
+    {
+        return _attributes.TryGetValue(key, out value);
+    }
+
+    void IAttributeDictionary.SetAttribute(string key, Variant value)
+    {
+        _attributes[key] = value;
+        OnUpdateAnyAttribute();
     }
 }

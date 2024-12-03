@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using fms.Weapon;
 using Godot;
 using R3;
 
@@ -72,7 +71,7 @@ internal partial class BattleResultHudController : Node
                         {
                             var label = new Label();
                             label.HorizontalAlignment = HorizontalAlignment.Center;
-                            label.Text = $"{weapon.MinionId}: total {damage:0} damage";
+                            label.Text = $"{Tr(weapon.Config.Name)}: total {damage:0} damage";
                             vbox.AddChild(label);
                         }
                     }

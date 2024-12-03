@@ -62,6 +62,16 @@ public static partial class NodeExtensions
         return node.GetParent().GetChildren();
     }
 
+    public static SignalAwaiter NextFrameAsync(this Node node)
+    {
+        return node.ToSignal(node.GetTree(), SceneTree.SignalName.ProcessFrame);
+    }
+
+    public static SignalAwaiter NextPhysicsFrameAsync(this Node node)
+    {
+        return node.ToSignal(node.GetTree(), SceneTree.SignalName.PhysicsFrame);
+    }
+
     /// <summary>
     /// Wrapper for GetTree().CreateTimer()
     /// </summary>

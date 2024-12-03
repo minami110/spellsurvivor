@@ -1,15 +1,16 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://c0nirqtdouelk"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://c0nirqtdouelk"]
 
 [ext_resource type="Texture2D" uid="uid://dfxptabhlg1pr" path="res://Infinity/Weapons/Textures/katana.png" id="1_62k3s"]
-[ext_resource type="PackedScene" uid="uid://bdk07bdnvg3gj" path="res://Infinity/Weapons/(Weapon) Katana.tscn" id="2_dti03"]
-[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_ui5u8"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_lnxby"]
 
 [resource]
-script = ExtResource("3_ui5u8")
-WeaponPackedScene = ExtResource("2_dti03")
+script = ExtResource("2_lnxby")
+Damage = 10
+CooldownTime = 10
+AnimationSpeedRate = 100.0
+Knockback = 20
 Faction = 0
 Tier = 1
 Price = 5
-Name = "刀"
-Description = "薙ぎ"
 Sprite = ExtResource("1_62k3s")
+Description = "薙ぎ"

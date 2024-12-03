@@ -5,7 +5,7 @@ namespace fms.Enemy;
 /// <summary>
 /// 突進を繰り返す敵
 /// </summary>
-public partial class Charger : EnemyBase
+public partial class Charger : EntityEnemy
 {
     /// <summary>
     /// 突進後のクールダウン

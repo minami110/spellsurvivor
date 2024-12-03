@@ -1,0 +1,52 @@
+[gd_scene load_steps=3 format=3 uid="uid://d4nmnogr3ncsk"]
+
+[ext_resource type="Texture2D" uid="uid://dbmv3a2txvb04" path="res://Infinity/HUDs/Shop/coin.png" id="1_fqkg4"]
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/SellingWeaponCard/UnlockWeaponCard.cs" id="1_mekuu"]
+
+[node name="UnlockWeaponCard" type="Button"]
+custom_minimum_size = Vector2(200, 140)
+offset_right = 200.0
+offset_bottom = 140.0
+script = ExtResource("1_mekuu")
+
+[node name="BGSprite" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0.114897, 0.114897, 0.114897, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -27.0
+offset_top = -25.0
+offset_right = 27.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "SHOP_BUY_SLOT"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_fqkg4")
+expand_mode = 3
+
+[node name="Price" type="Label" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "5"

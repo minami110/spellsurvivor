@@ -34,14 +34,14 @@ public partial class Parasite : WeaponBase
     /// <summary>
     /// ウェーブ開始時に呼ばれるコールバック
     /// </summary>
-    private protected override void OnStartAttack()
+    private protected override void OnStartAttack(uint level)
     {
         // レベルに応じて数が増える
-        for (var i = 0; i < Level; i++)
+        for (var i = 0; i < level; i++)
         {
             var prj = _projectile.Instantiate<ParasiteAreaDamage>();
-            prj.Damage = BaseDamage;
-            prj.Knockback = Knockback;
+            prj.Damage = State.Damage.CurrentValue;
+            prj.Knockback = State.Knockback.CurrentValue;
             prj.DamageEveryXFrames = _attackSpan;
 
             var speed = _speed + (float)GD.Randfn(0f, _randomSpeed);

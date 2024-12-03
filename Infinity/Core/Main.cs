@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using fms.Weapon;
 using Godot;
 using R3;
 
@@ -14,14 +13,14 @@ public partial class Main : Node
 
     private static Main? _instance;
 
-    private EntityState _entityState = null!;
-    private ShopState _shopState = null!;
+    private EntityState _playerState = null!;
+    private Shop _shop = null!;
     private WaveState _waveState = null!;
 
-    public static ShopState Shop
+    public static Shop Shop
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Instance._shopState;
+        get => Instance._shop;
     }
 
     /// <summary>
@@ -59,21 +58,20 @@ public partial class Main : Node
     {
         _waveState = new WaveState { Config = _gameSettings.WaveConfig };
         AddChild(_waveState);
-        _shopState = new ShopState(_gameSettings.ShopConfig);
-        AddChild(_shopState);
+        _shop = new Shop(_gameSettings.ShopConfig);
+        AddChild(_shop);
     }
 
     public override void _Ready()
     {
         // PlayerState をキャッシュ
-        _entityState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
+        _playerState = (EntityState)GetTree().GetFirstNodeInGroup(GroupNames.PlayerState);
 
         // Battle Wave の開始時
         var d1 = _waveState.Phase.Where(x => x == WavePhase.Battle).Subscribe(this, (_, state) =>
         {
-            // ToDo: ダメージの Effect の解決方法決まり次第こちらも変える (#34)
             // Playerの体力を全回復する
-            state._entityState.ResetToMaxHealth();
+            state._playerState.ResetToMaxHealth();
 
             // Spawner に設定を渡す
             var spawner = (EnemySpawnerBase)GetTree().GetFirstNodeInGroup("EnemySpawner");
@@ -118,25 +116,20 @@ public partial class Main : Node
         });
 
         // Shop 進入時
-        var d3 = _waveState.Phase.Where(x => x == WavePhase.Shop).Subscribe(this, (_, state) =>
+        var d3 = _waveState.Phase.Where(x => x == WavePhase.Shop).Subscribe(this, (_, self) =>
         {
-            if (state._waveState.Wave.CurrentValue >= 0)
+            if (self._waveState.Wave.CurrentValue >= 0)
             {
                 // Playerに報酬を与える
-                var reward = state._waveState.CurrentWaveConfig.Reward;
-                state._entityState.AddMoney((uint)reward);
-            }
-            else
-            {
-                // PlayerController の初期化
-                ResetPlayerState();
+                var reward = self._waveState.CurrentWaveConfig.Reward;
+                self._playerState.AddMoney((uint)reward);
             }
 
             // Shop のリロール
-            state._shopState.RefreshInStoreMinions();
+            self._shop.RefreshWeaponCardsFromWave();
 
             // BGM をこもらせる (2000hz(Default) => 150hz)
-            var tween = CreateTween();
+            var tween = self.CreateTween();
             tween.TweenMethod(Callable.From((float value) => SoundManager.SetBgmBusLowPassFilterCutOff(value)), 2000f,
                 150f, 0.5d);
         });
@@ -154,11 +147,5 @@ public partial class Main : Node
         {
             _instance = null;
         }
-    }
-
-    private void ResetPlayerState()
-    {
-        // Plauer を初期化する
-        _entityState.AddMoney(_gameSettings.StartMoney);
     }
 }

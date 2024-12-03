@@ -1,0 +1,46 @@
+[gd_scene load_steps=8 format=3 uid="uid://cogfcwp2vrio"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/PiercingWeapon.cs" id="1_bb5sa"]
+[ext_resource type="Resource" uid="uid://cyaangjnv7j4l" path="res://Infinity/Datebase/Items/WoodSpear.tres" id="2_3xiph"]
+[ext_resource type="Script" path="res://Infinity/Weapons/EditorDrawer/PiercingWeaponEditorDrawer.cs" id="2_u4hc5"]
+[ext_resource type="Texture2D" uid="uid://ck28tr5m24hp0" path="res://Infinity/Weapons/Textures/wood_spear.png" id="3_i6cbw"]
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_86pk3"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="5_us2io"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5kth8"]
+size = Vector2(30, 12)
+
+[node name="WoodSpear" type="Node2D"]
+script = ExtResource("1_bb5sa")
+_pushDistance = 45
+_minRange = 85.0
+_maxRange = 140.0
+_rotateSensitivity = 0.1
+_config = ExtResource("2_3xiph")
+
+[node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]
+script = ExtResource("2_u4hc5")
+
+[node name="AimEntity" type="Area2D" parent="."]
+script = ExtResource("5_us2io")
+
+[node name="SpriteRoot" type="Node2D" parent="AimEntity"]
+unique_name_in_owner = true
+
+[node name="Sprite" type="Sprite2D" parent="AimEntity/SpriteRoot"]
+unique_name_in_owner = true
+position = Vector2(38.93, 0.785)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_i6cbw")
+
+[node name="StaticDamage" type="Area2D" parent="AimEntity/SpriteRoot"]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("4_86pk3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AimEntity/SpriteRoot/StaticDamage"]
+position = Vector2(87, 2)
+shape = SubResource("RectangleShape2D_5kth8")
+debug_color = Color(0, 0.6, 0.701961, 0)

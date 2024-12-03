@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cplggj347xuqr"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/Factions/FacionLabel.cs" id="1_2kx3o"]
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="1_2wwbt"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_0pqtt"]
+
+[node name="FactionLabel" type="HBoxContainer"]
+focus_mode = 1
+mouse_filter = 0
+script = ExtResource("1_2kx3o")
+
+[node name="Sprite" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_2wwbt")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 2
+text = "FACTION_NAME"
+label_settings = SubResource("LabelSettings_0pqtt")
+horizontal_alignment = 2

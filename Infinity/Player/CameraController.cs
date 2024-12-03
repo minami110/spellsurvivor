@@ -31,7 +31,7 @@ public partial class CameraController : Area2D
         var count = 0;
         foreach (var body in bodies)
         {
-            if (body is EnemyBase)
+            if (body is EntityEnemy)
             {
                 var enemyPos = body.GlobalPosition;
                 var vector = enemyPos - currentPos;

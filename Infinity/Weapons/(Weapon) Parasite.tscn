@@ -1,11 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://slegkjhplb1s"]
+[gd_scene load_steps=4 format=3 uid="uid://slegkjhplb1s"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Parasite.cs" id="1_2niwf"]
 [ext_resource type="PackedScene" uid="uid://b3nnqfmo1iq51" path="res://Infinity/Projectiles/(Projectile) ParasiteAreaDamage.tscn" id="2_cn863"]
+[ext_resource type="Resource" uid="uid://ddbl812oxaqit" path="res://Infinity/Datebase/Items/Parasite.tres" id="3_rxa7o"]
 
 [node name="Parasite" type="Node2D"]
 script = ExtResource("1_2niwf")
 _projectile = ExtResource("2_cn863")
-BaseDamage = 4.0
-BaseCoolDownFrame = 7200
-Knockback = 0
+_config = ExtResource("3_rxa7o")

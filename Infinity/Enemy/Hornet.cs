@@ -1,6 +1,5 @@
 using System;
 using fms.Projectile;
-using fms.Weapon;
 using Godot;
 using R3;
 
@@ -9,16 +8,13 @@ namespace fms.Enemy;
 /// <summary>
 /// 遠距離からプレイヤーに射撃を行う敵
 /// </summary>
-public partial class Hornet : EnemyBase
+public partial class Hornet : EntityEnemy
 {
     [Export(PropertyHint.Range, "0,10000,1")]
     private int _minAttackDistance = 180;
 
     [Export(PropertyHint.Range, "0,10000,1")]
     private int _maxAttackDistance = 400;
-
-    [Export(PropertyHint.Range, "1,9999,1")]
-    private uint _baseCoolDownFrame = 40u;
 
     [Export]
     private PackedScene _projectile = null!;
@@ -31,23 +27,14 @@ public partial class Hornet : EnemyBase
     {
         // Weapon が存在していなかったら作成する
         var weapon = GetNodeOrNull<WeaponBase>("Weapon");
-        if (weapon == null)
-        {
-            weapon = new WeaponBase();
-            AddChild(weapon);
-
-            weapon.BaseCoolDownFrame = _baseCoolDownFrame;
-        }
-
-        _weapon = weapon;
+        _weapon = weapon ?? throw new ApplicationException("Weapon が存在しません");
     }
 
     public override void _Ready()
     {
         // Weapon 内部にある FrameTimer の初期化/購読を行う
-        // Note: Weapon 側の実装で必ずこの名前で生成されています
-        var frameTimer = _weapon.GetNode<FrameTimer>("FrameTimer");
-        frameTimer.TimeOut.Subscribe(this, (_, state) => { state.Attack(); })
+        var frameTimer = _weapon.FindFirstChild<FrameTimer>();
+        frameTimer!.TimeOut.Subscribe(this, (_, state) => { state.Attack(); })
             .AddTo(this);
     }
 

@@ -1,64 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using fms.Effect;
 using fms.Faction;
 using fms.Projectile;
 using Godot;
+using Godot.Collections;
 using R3;
 
-namespace fms.Weapon;
+namespace fms;
 
 /// <summary>
 /// Weapon のベースクラス
 /// </summary>
 public partial class WeaponBase : Node2D
 {
-    /// <summary>
-    /// 武器の基礎ダメージ量
-    /// </summary>
-    [Export(PropertyHint.Range, "0,9999,1")]
-    public float BaseDamage { get; set; } = 10f;
-
-    /// <summary>
-    /// 武器の Cooldown にかかる基礎フレーム数
-    /// </summary>
-    [Export(PropertyHint.Range, "1,9999,1,suffix:frames")]
-    public uint BaseCoolDownFrame
-    {
-        get => _baseCoolDownFrame;
-        set
-        {
-            if (_baseCoolDownFrame == value)
-            {
-                return;
-            }
-
-            _baseCoolDownFrame = value;
-
-            if (IsNodeReady())
-            {
-                // Update Frame Timer
-                FrameTimer.WaitFrame = SolvedCoolDownFrame;
-            }
-        }
-    }
-
-    /// <summary>
-    /// 武器が敵に与えるノックバック量
-    /// </summary>
-    [Export(PropertyHint.Range, "0,999,1,suffix:px/s")]
-    public uint Knockback { get; set; } = 20u;
+    [Export]
+    private WeaponConfig _config = null!;
 
     // ---------- Animation Parameters ----------
 
     /// <summary>
-    /// ToDo: こっちでもっておくべきか検討する
     /// <see cref="WeaponPositionAnimator" /> により自動で位置を調整するかどうか
     /// </summary>
     [ExportGroup("Animation")]
     [Export]
-    public bool AutoPositioning { get; set; } = true;
+    public bool AutoPositioning { get; private set; } = true;
 
     // ---------- Debug Parameters ----------
 
@@ -74,37 +39,10 @@ public partial class WeaponBase : Node2D
     public bool AutoStart { get; set; } = true;
 
     /// <summary>
-    /// 現在の武器の Level
-    /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
-    /// </summary>
-    [Export(PropertyHint.Range, "1,5")]
-    public uint Level { get; set; } = 1;
-
-    /// <summary>
-    /// Minion が所属する Faction
-    /// Note: 通常は Minion から勝手に代入されます, Editor 直接配置での Debug 用です
+    /// エディタ上でデバッグ情報を描画するかどうか
     /// </summary>
     [Export]
-    public FactionType Faction { get; set; }
-
-    private static readonly NodePath FrameTimerPath = new("FrameTimer");
-
-    // 現在武器に付与されている Effect
-    private readonly HashSet<EffectBase> _effects = new();
-
-    private uint _baseCoolDownFrame = 10u;
-
-    // クールダウンの削減率 (範囲: 0 ~ 1 / デフォルト: 0)
-    private float _coolDownReduceRate;
-
-    // Effect の変更があったかどうか
-    private bool _isDirtyEffect;
-
-    /// <summary>
-    /// 武器の Id
-    /// Note: Minion から勝手に代入されます
-    /// </summary>
-    public string MinionId { get; internal set; } = string.Empty;
+    public bool DrawDebugInfoInEditor { get; private set; } = true;
 
     /// <summary>
     /// この武器を所有している Entity
@@ -112,21 +50,9 @@ public partial class WeaponBase : Node2D
     public IEntity OwnedEntity { get; private set; } = null!;
 
     /// <summary>
-    /// Effect の解決後の Cooldown のフレーム数
-    /// </summary>
-    public uint SolvedCoolDownFrame
-    {
-        get
-        {
-            var coolDown = (uint)Mathf.Floor(BaseCoolDownFrame * (1f - _coolDownReduceRate));
-            return Math.Max(coolDown, 1u);
-        }
-    }
-
-    /// <summary>
     /// FrameTimer を取得
     /// </summary>
-    private FrameTimer FrameTimer => GetNode<FrameTimer>(FrameTimerPath);
+    private FrameTimer FrameTimer { get; set; } = null!;
 
     /// <summary>
     /// 次の攻撃までの残りフレームを取得
@@ -134,11 +60,15 @@ public partial class WeaponBase : Node2D
     public ReadOnlyReactiveProperty<uint> CoolDownLeft => FrameTimer.FrameLeft;
 
     /// <summary>
-    /// 武器のダメージ量 (エフェクトを適用した後の値)
+    /// エフェクト適用前のベースのアニメーションフレーム数
     /// </summary>
-    public uint Damage { get; private set; }
+    public virtual uint AnimationTime => 0u;
 
-    // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装
+    public WeaponState State { get; private set; } = null!;
+
+    public WeaponConfig Config => _config;
+
+    // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装している
     public override void _Notification(int what)
     {
         if (what == NotificationEnterTree)
@@ -146,32 +76,45 @@ public partial class WeaponBase : Node2D
             // Weapon group に所属する
             AddToGroup(Constant.GroupNameWeapon);
 
+            // Create WeaponState
+            State = new WeaponState(
+                1u,
+                _config.Damage,
+                _config.CooldownTime,
+                _config.AnimationSpeedRate * 0.01f,
+                _config.Knockback
+            );
+            AddChild(State);
+
             // FrameTimer が存在していなかったら作成する
-            if (GetNodeOrNull<FrameTimer>(FrameTimerPath) == null)
             {
-                var frameTimer = new FrameTimer();
-                frameTimer.Name = FrameTimerPath.ToString();
-                AddChild(frameTimer);
+                var frametimer = this.FindFirstChild<FrameTimer>();
+                if (frametimer is null)
+                {
+                    frametimer = new FrameTimer();
+                    AddChild(frametimer);
+                }
+
+                FrameTimer = frametimer;
             }
 
-            // 親が IEntity であることを確認しこの武器の所有者として設定する
-            var parent = GetParentOrNull<IEntity>();
-            OwnedEntity = parent ?? throw new ApplicationException("WeaponBase は IEntity の子ノードでなければなりません");
+            // 武器のクールダウンが完了時のコールバックを登録
+            FrameTimer.TimeOut
+                .Subscribe(this, (_, self) => { self.OnCoolDownCompleted(self.State.Level.CurrentValue); })
+                .AddTo(this);
 
             // ToDo: 仮
             // 手前に見えるようにする
             ZIndex = 10;
 
-            // ToDO: 
-            // エフェクト解決が行われない場合の最終敵なステータスをここで更新しておく
-            Damage = (uint)BaseDamage;
+            // 親が IEntity であることを確認しこの武器の所有者として設定する
+            var parent = GetParentOrNull<IEntity>();
+            OwnedEntity = parent ?? throw new ApplicationException("WeaponBase は IEntity の子ノードでなければなりません");
         }
         else if (what == NotificationReady)
         {
-            // 武器のクールダウンが完了時のコールバックを登録
-            FrameTimer.TimeOut
-                .Subscribe(this, (_, state) => { state.OnCoolDownCompleted(state.Level); })
-                .AddTo(this);
+            // 兄弟に Faction を作成またはレベルアップ
+            CreateFactions();
 
             if (AutoStart)
             {
@@ -181,23 +124,24 @@ public partial class WeaponBase : Node2D
             {
                 StopAttack();
             }
-
-            // Note: Godot では override していないと Process が動かない
-            //       Notification で使いたいのでここでマニュアル有効化する
-            SetProcess(true);
         }
-        else if (what == NotificationProcess)
+        else if (what == NotificationExitTree)
         {
-            // ToDo: ショップでも裏で動いてるのへんかも?
-            // こっちで対応するより, Shop にいるときは削除 みたいな上位からの実装があったほうが素直かも
-            SolveEffect();
-        }
-    }
+            var sibs = GetParent().GetChildren();
+            foreach (var n in sibs)
+            {
+                if (n is not FactionBase f)
+                {
+                    continue;
+                }
 
-    public virtual void AddEffect(EffectBase effect)
-    {
-        _effects.Add(effect);
-        _isDirtyEffect = true;
+                var type = f.GetFactionType();
+                if (IsBelongTo(type))
+                {
+                    f.Level--;
+                }
+            }
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -220,9 +164,14 @@ public partial class WeaponBase : Node2D
         AddProjectile(projectile);
     }
 
+    /// <summary>
+    /// Faction (シナジー) に所属しているかどうか
+    /// </summary>
+    /// <param name="factionType"></param>
+    /// <returns></returns>
     public bool IsBelongTo(FactionType factionType)
     {
-        return Faction.HasFlag(factionType);
+        return _config.Faction.HasFlag(factionType);
     }
 
     /// <summary>
@@ -235,10 +184,10 @@ public partial class WeaponBase : Node2D
             return;
         }
 
-        FrameTimer.WaitFrame = SolvedCoolDownFrame;
+        FrameTimer.WaitFrame = State.AttackSpeed.CurrentValue;
         FrameTimer.OneShot = true;
         FrameTimer.Start();
-        OnStartAttack();
+        OnStartAttack(State.Level.CurrentValue);
     }
 
     /// <summary>
@@ -255,6 +204,25 @@ public partial class WeaponBase : Node2D
     }
 
     /// <summary>
+    /// Shop 販売の UI 用の説明文を取得
+    /// </summary>
+    /// <returns></returns>
+    internal virtual string GetDescriptionForShop()
+    {
+        var desc = _config.Description;
+
+        desc += "\n\n";
+        desc += $"Damage: {_config.Damage}\n";
+
+        var totalFrames = _config.CooldownTime + AnimationTime;
+        desc += $"Cooldown: {totalFrames}({_config.CooldownTime} + {AnimationTime}) frames\n";
+        desc += $"Speed: {_config.AnimationSpeedRate}%\n";
+        desc += $"Knockback: {_config.Knockback} px/s";
+
+        return desc;
+    }
+
+    /// <summary>
     /// 武器のクールダウンが終了した時に呼び出されるメソッド
     /// </summary>
     /// <param name="level">現在の武器のレベル</param>
@@ -263,14 +231,14 @@ public partial class WeaponBase : Node2D
         RestartCoolDown();
     }
 
-    private protected virtual void OnSolveEffect(IReadOnlySet<EffectBase> effects)
-    {
-    }
-
     /// <summary>
     /// 武器が起動したときに呼び出されるメソッド, 通常はバトルウェーブ開始時に呼ばれる
     /// </summary>
-    private protected virtual void OnStartAttack()
+    private protected virtual void OnStartAttack(uint level)
+    {
+    }
+
+    private protected virtual void OnUpdateAnyAttribute(Dictionary<string, Variant> attributes)
     {
     }
 
@@ -287,58 +255,45 @@ public partial class WeaponBase : Node2D
 
         // タイマーを再開する
         FrameTimer.OneShot = true;
-        FrameTimer.WaitFrame = SolvedCoolDownFrame;
+        FrameTimer.WaitFrame = State.AttackSpeed.CurrentValue;
         FrameTimer.Start();
     }
 
-    private void SolveEffect()
+    // 所属している Faction を作成する
+    private void CreateFactions()
     {
-        if (_effects.Count == 0)
+        foreach (var faction in FactionUtil.GetFactionTypes())
         {
-            return;
-        }
-
-        // Dispose されたエフェクトを削除
-        var count = _effects.RemoveWhere(effect => effect.IsDisposed);
-        if (count > 0)
-        {
-            _isDirtyEffect = true;
-        }
-
-        if (!_isDirtyEffect)
-        {
-            return;
-        }
-
-        _isDirtyEffect = false;
-
-        // 値を初期化する
-        var damage = (uint)BaseDamage;
-        var reduceCoolDownRate = 0f;
-
-        foreach (var effect in _effects)
-        {
-            switch (effect)
+            if (!IsBelongTo(faction))
             {
-                // Strength (武器ダメージ)
-                case Strength strengthEffect:
-                {
-                    damage += strengthEffect.Amount;
-                    break;
-                }
-                // クールダウンを減少させるエフェクト
-                case ReduceCoolDownRate reduceCoolDownRateEffect:
-                {
-                    reduceCoolDownRate += reduceCoolDownRateEffect.Value;
-                    break;
-                }
+                continue;
+            }
+
+            var f = FactionUtil.CreateFaction(faction);
+            f.Level++; // 1
+
+            // 呼び出しタイミングによっては Parent が busy なので CallDeferred で追加する
+            // 重複して Faction が存在する場合, Faction 側で勝手に合体するのでこちらでは気にしない
+            CallDeferred(Node.MethodName.AddSibling, f);
+        }
+    }
+
+    private void LevelDownFactions()
+    {
+        foreach (var faction in FactionUtil.GetFactionTypes())
+        {
+            if (!IsBelongTo(faction))
+            {
+                continue;
+            }
+
+            // すでに Faction が存在していたらレベルを下げる
+            var s = this.FindSibling("*", faction.ToString());
+            if (s.Count > 0)
+            {
+                var f = (FactionBase)s[0];
+                f.Level--;
             }
         }
-
-        // 値を更新
-        Damage = damage;
-        _coolDownReduceRate = Math.Max(reduceCoolDownRate, 0);
-
-        OnSolveEffect(_effects);
     }
 }

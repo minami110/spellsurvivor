@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using fms.Weapon;
 using Godot;
 using Godot.Collections;
 using R3;
 
 namespace fms.Projectile;
 
+/// <summary>
+/// Area2D を継承したダメージを与える静的な Projectile
+/// Note: 性質上メチャクチャ早い武器モーションだと敵を拾いきれないので, ある程度の速度になったら
+/// <see cref="AreaProjectile" /> の使用を検討してください
+/// </summary>
 [GlobalClass]
 public partial class StaticDamage : Area2D
 {
@@ -107,7 +111,7 @@ public partial class StaticDamage : Area2D
             SendHitInfo(body);
 
             // ToDo: Knockback 処理, 型があいまい
-            if (body is EnemyBase enemy)
+            if (body is EntityEnemy enemy)
             {
                 if (Knockback > 0)
                 {

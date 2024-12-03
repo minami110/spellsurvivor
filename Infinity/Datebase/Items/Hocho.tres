@@ -1,15 +1,16 @@
-[gd_resource type="Resource" script_class="MinionCoreData" load_steps=4 format=3 uid="uid://bijmvg2lbluy"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://bijmvg2lbluy"]
 
-[ext_resource type="Texture2D" uid="uid://c2edxtyae4q6n" path="res://Common/Resources/Textures/Emoji/hocho.png" id="1_ftajv"]
-[ext_resource type="PackedScene" uid="uid://donsa3j8b5ra4" path="res://Infinity/Weapons/(Weapon) Hocho.tscn" id="2_8beif"]
-[ext_resource type="Script" path="res://Infinity/Core/MinionCoreData.cs" id="3_f6t1h"]
+[ext_resource type="Texture2D" uid="uid://bqd7lbp5qxwvo" path="res://Infinity/Weapons/Textures/hocho.png" id="1_8wo3d"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_kvbxi"]
 
 [resource]
-script = ExtResource("3_f6t1h")
-WeaponPackedScene = ExtResource("2_8beif")
-Faction = 17
-Tier = 1
+script = ExtResource("2_kvbxi")
+Damage = 20
+CooldownTime = 10
+AnimationSpeedRate = 100.0
+Knockback = 20
+Faction = 192
+Tier = 2
 Price = 5
-Name = "包丁"
-Description = "近距離攻撃"
-Sprite = ExtResource("1_ftajv")
+Sprite = ExtResource("1_8wo3d")
+Description = "近距離の敵に向かって突き刺し攻撃"

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dh7nt37deh6b1"]
 
 [ext_resource type="Script" path="res://Common/Debugging/DebugGUI.cs" id="1_2o3st"]
-[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://Common/Resources/Fonts/Verdana.ttf" id="2_few3r"]
+[ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://base/fonts/Verdana.ttf" id="2_few3r"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gt8kx"]
 line_spacing = 0.0

@@ -47,8 +47,8 @@ public partial class GunTurret : WeaponBase
     {
         // タレット本体を生成する
         var prj = _body.Instantiate<GunTurretBody>();
-        prj.Damage = BaseDamage;
-        prj.Knockback = Knockback;
+        prj.Damage = State.Damage.CurrentValue;
+        prj.Knockback = State.Knockback.CurrentValue;
         prj.LifeFrame = _bodyAliveFrame; // タレット本体の生存フレーム
         prj.DamageEveryXFrames = _bodyAttackSpan; // タレット本体が攻撃を行う感覚
         prj.DetectionRadius = _bodyEnemyDetectionRadius;

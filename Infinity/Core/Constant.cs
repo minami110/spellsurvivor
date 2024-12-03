@@ -1,4 +1,7 @@
-﻿using Godot;
+﻿using System;
+using Godot;
+
+// ReSharper disable InconsistentNaming
 
 namespace fms;
 
@@ -35,4 +38,33 @@ public static class GroupNames
     public static readonly StringName Player = new("Player");
     public static readonly StringName PlayerState = new("PlayerState");
     public static readonly StringName Pawn = new("Pawn");
+    public static readonly StringName Effect = new("Effect");
+}
+
+public static class EntityAttributeNames
+{
+    public const string MaxHealth = "MaxHealth";
+    public const string MoveSpeed = "MoveSpeed";
+    public const string DodgeRate = "DodgeRate";
+}
+
+public static class WeaponAttributeNames
+{
+    public const string DamageRate = "DamageRate";
+    public const string SpeedRate = "SpeedRate";
+    public const string LifestealRate = "LifestealRate";
+
+    // 武器固有のやつ
+    public const string BounceCount = "BounceCount";
+    public const string BounceDamageRate = "BounceDamageRate";
+}
+
+[Obsolete("Use TierType.ToColor() instead.")]
+public static class FmsColors
+{
+    public static readonly Color TierCommon = new("#383838");
+    public static readonly Color TierUncommon = new("#354232");
+    public static readonly Color TierRare = new("#1e3252");
+    public static readonly Color TierEpic = new("#5f2473");
+    public static readonly Color TierLegendary = new("#9c5027");
 }

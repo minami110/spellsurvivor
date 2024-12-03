@@ -6,7 +6,7 @@ namespace fms.Enemy;
 /// <summary>
 /// 近距離 (接触) ダメージを与える敵のベースクラス
 /// </summary>
-public partial class MeleeEnemy : EnemyBase
+public partial class MeleeEnemy : EntityEnemy
 {
     /// <summary>
     /// プレイヤーと重なっている時攻撃を発生させるクールダウン

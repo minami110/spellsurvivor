@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b1is8i4sj01ki"]
+[gd_scene load_steps=6 format=3 uid="uid://b1is8i4sj01ki"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/Claw.cs" id="1_0taiu"]
+[ext_resource type="Resource" uid="uid://dmopggccbhv7l" path="res://Infinity/Datebase/Items/_Claw.tres" id="2_tqdph"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimToNearEnemy.cs" id="4_1janu"]
 [ext_resource type="Texture2D" uid="uid://dmrvxabprg7y0" path="res://Infinity/Weapons/Textures/claw.png" id="4_umwcb"]
 
@@ -12,6 +13,7 @@ outline_color = Color(0, 0, 0, 1)
 
 [node name="Claw" type="Node2D"]
 script = ExtResource("1_0taiu")
+_config = ExtResource("2_tqdph")
 
 [node name="AimToNearEnemy" type="Area2D" parent="."]
 collision_layer = 0

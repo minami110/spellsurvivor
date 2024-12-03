@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://cy2sbeagpwyat"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/Shop/OwnedWeaponContainer/OwnedWeaponContainer.cs" id="1_j3jw6"]
+[ext_resource type="PackedScene" uid="uid://j8f0f5mp7g1k" path="res://Infinity/HUDs/Shop/OwnedWeaponContainer/OwnedWeapon.tscn" id="1_sp7rg"]
+[ext_resource type="PackedScene" uid="uid://btyq3f4kavapc" path="res://Infinity/HUDs/Shop/OwnedWeaponContainer/OwnedWeaponInfo.tscn" id="3_o8lab"]
+
+[node name="OwnedWeaponContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("1_j3jw6")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+columns = 2
+
+[node name="OwnedWeapon0" parent="GridContainer" instance=ExtResource("1_sp7rg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OwnedWeapon1" parent="GridContainer" instance=ExtResource("1_sp7rg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OwnedWeapon2" parent="GridContainer" instance=ExtResource("1_sp7rg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OwnedWeapon3" parent="GridContainer" instance=ExtResource("1_sp7rg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OwnedWeapon4" parent="GridContainer" instance=ExtResource("1_sp7rg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OwnedWeapon5" parent="GridContainer" instance=ExtResource("1_sp7rg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OwnedWeaponInfo" parent="." instance=ExtResource("3_o8lab")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 204.0
+offset_right = 204.0

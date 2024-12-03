@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://dmopggccbhv7l"]
+
+[ext_resource type="Texture2D" uid="uid://dmrvxabprg7y0" path="res://Infinity/Weapons/Textures/claw.png" id="1_se7o6"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_kbxlm"]
+
+[resource]
+script = ExtResource("2_kbxlm")
+Damage = 10
+CooldownTime = 10
+AnimationSpeedRate = 100.0
+Knockback = 20
+Faction = 47
+Tier = 1
+Price = 3
+Sprite = ExtResource("1_se7o6")
+Description = "超短距離範囲攻撃"

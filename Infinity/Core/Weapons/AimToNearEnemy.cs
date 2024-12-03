@@ -10,6 +10,7 @@ namespace fms;
 /// Note: Collision がセットアップされていなくても自動で生成されます
 /// </summary>
 [GlobalClass]
+[Obsolete("Use AimEntity instead")]
 public partial class AimToNearEnemy : Area2D
 {
     /// <summary>
@@ -64,7 +65,7 @@ public partial class AimToNearEnemy : Area2D
     /// <summary>
     /// 範囲内に存在する敵のリスト
     /// </summary>
-    public readonly List<EnemyBase> Enemies = new();
+    public readonly List<EntityEnemy> Enemies = new();
 
     private Vector2? _prevPosition;
 
@@ -81,12 +82,12 @@ public partial class AimToNearEnemy : Area2D
     /// <summary>
     /// 範囲内の最も近い敵, 存在しない場合は null
     /// </summary>
-    public EnemyBase? NearestEnemy { get; private set; }
+    public EntityEnemy? NearestEnemy { get; private set; }
 
     /// <summary>
     /// 範囲内の最も遠い敵, 存在しない場合は null
     /// </summary>
-    public EnemyBase? FarthestEnemy { get; private set; }
+    public EntityEnemy? FarthestEnemy { get; private set; }
 
     public override void _EnterTree()
     {
@@ -204,7 +205,7 @@ public partial class AimToNearEnemy : Area2D
 
         foreach (var o in bodies)
         {
-            if (o is not EnemyBase e)
+            if (o is not EntityEnemy e)
             {
                 continue;
             }

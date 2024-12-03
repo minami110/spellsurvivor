@@ -8,9 +8,6 @@ namespace fms;
 public partial class PlayerStatusHudManager : Node
 {
     [Export]
-    private PlayerStatusRaw _money = null!;
-
-    [Export]
     private PlayerStatusRaw _maxHealth = null!;
 
     [Export]
@@ -26,9 +23,6 @@ public partial class PlayerStatusHudManager : Node
         {
             throw new ApplicationException("PlayerState is not found");
         }
-
-        // Money
-        playerState.Money.Subscribe(this, (v, state) => { state._money.Value = v.ToString(); }).AddTo(this);
 
         // MaxHealth
         playerState.Health.ChangedMaxValue.Subscribe(this, (v, state) => { state._maxHealth.Value = v.ToString(); })
@@ -46,6 +40,6 @@ public partial class PlayerStatusHudManager : Node
             // % 表記にするために 100 倍する
             state._dodgeRate.Value = (v * 100f).ToString(CultureInfo.InvariantCulture);
         }).AddTo(this);
-        _dodgeRate.DefaultValue = playerState.DodgeRate.CurrentValue.ToString(CultureInfo.InvariantCulture);
+        _dodgeRate.DefaultValue = (playerState.DodgeRate.DefaultValue * 100f).ToString(CultureInfo.InvariantCulture);
     }
 }

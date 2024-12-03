@@ -11,9 +11,8 @@ font_size = 26
 offset_right = 121.0
 offset_bottom = 90.0
 
-[node name="Manager" type="Node" parent="." node_paths=PackedStringArray("_money", "_maxHealth", "_moveSpeed", "_dodgeRate")]
+[node name="Manager" type="Node" parent="." node_paths=PackedStringArray("_maxHealth", "_moveSpeed", "_dodgeRate")]
 script = ExtResource("1_0jnv0")
-_money = NodePath("../Money")
 _maxHealth = NodePath("../MaxHealth")
 _moveSpeed = NodePath("../MoveSpeed")
 _dodgeRate = NodePath("../Dodge")
@@ -23,14 +22,6 @@ layout_mode = 2
 text = "stats"
 label_settings = SubResource("LabelSettings_pbqkq")
 horizontal_alignment = 1
-
-[node name="Money" parent="." instance=ExtResource("2_4p6m6")]
-layout_mode = 2
-Icon = ExtResource("2_f2iiu")
-Label = "Money"
-DefaultValue = "0"
-Prefix = "$"
-NonDefaultFontColor = Color(1, 1, 1, 1)
 
 [node name="MaxHealth" parent="." instance=ExtResource("2_4p6m6")]
 layout_mode = 2
@@ -48,5 +39,4 @@ DefaultValue = "100"
 layout_mode = 2
 Icon = ExtResource("2_f2iiu")
 Label = "Dodge"
-DefaultValue = "0"
 Suffix = "%"

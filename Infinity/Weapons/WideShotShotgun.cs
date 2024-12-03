@@ -62,8 +62,8 @@ public partial class WideShotShotgun : WeaponBase
         for (var i = 0; i < _numberOfProjectiles; i++)
         {
             var prj = _projectile.Instantiate<BaseProjectile>();
-            prj.Damage = BaseDamage;
-            prj.Knockback = Knockback;
+            prj.Damage = State.Damage.CurrentValue;
+            prj.Knockback = State.Knockback.CurrentValue;
             prj.LifeFrame = _life;
 
             var angle = _spreadAngle * (i - _numberOfProjectiles / 2f) / _numberOfProjectiles;
