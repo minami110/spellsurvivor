@@ -62,11 +62,11 @@ public partial class GunWeaponEditorDrawer : Node2D
         // 当たり判定の攻撃判定を描写する
 
         // Note: Export されてない Property は評価できないのでこっちで Muzzle を取得
-        var muzzle = (Node2D?)_weapon.Get(AssaultRifle.PropertyName._muzzle);
+        var muzzle = (Node2D?)_weapon.Get(GunWeapon.PropertyName._muzzle);
         var start = muzzle?.GlobalPosition ?? ((Node2D)_weapon).GlobalPosition;
 
-        var projectileSpeed = (float)_weapon.Get(AssaultRifle.PropertyName._speed);
-        var projectileLife = (uint)_weapon.Get(AssaultRifle.PropertyName._life);
+        var projectileSpeed = (float)_weapon.Get(GunWeapon.PropertyName._speed);
+        var projectileLife = (uint)_weapon.Get(GunWeapon.PropertyName._life);
         var length = projectileSpeed * (projectileLife / 60f);
         var end = start + new Vector2(length, 0);
         var color = _damageAreaColor;

@@ -6,7 +6,10 @@ using R3;
 
 namespace fms.Weapon;
 
-public partial class AssaultRifle : WeaponBase
+/// <summary>
+/// 銃挙動をする武器のベースクラス
+/// </summary>
+public partial class GunWeapon : WeaponBase
 {
     [ExportGroup("Damage Settings")]
     [Export]
