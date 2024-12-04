@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbj60rx32neua"
-path="res://.godot/imported/bullet_9mm.png-6bcc94f26b986b64da6b7edfeaabda0d.ctex"
+uid="uid://bgw365m1e3evf"
+path="res://.godot/imported/bow.png-0a07eccac4492d40c58cda123953d5e2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://base/textures/bullet_9mm.png"
-dest_files=["res://.godot/imported/bullet_9mm.png-6bcc94f26b986b64da6b7edfeaabda0d.ctex"]
+source_file="res://base/textures/projectiles/bow.png"
+dest_files=["res://.godot/imported/bow.png-0a07eccac4492d40c58cda123953d5e2.ctex"]
 
 [params]
 

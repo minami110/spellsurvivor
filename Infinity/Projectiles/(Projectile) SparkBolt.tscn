@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://ceuw4y35vfqm1"]
 
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/BulletProjectile.cs" id="1_tmj8r"]
-[ext_resource type="Texture2D" uid="uid://bbj60rx32neua" path="res://base/textures/bullet_9mm.png" id="2_2gfnw"]
+[ext_resource type="Texture2D" uid="uid://bbj60rx32neua" path="res://base/textures/projectiles/9mm.png" id="2_2gfnw"]
 [ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="3_w5sbp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
