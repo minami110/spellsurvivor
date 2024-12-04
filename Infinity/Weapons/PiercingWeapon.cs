@@ -62,8 +62,8 @@ public partial class PiercingWeapon : WeaponBase
     private uint _endAttackDuration = 20u;
 
     private AimEntity? _aimEntity;
+    private AimEntityEnterTargetWaiter? _aimEntityEnterTargetWaiter;
     private IDisposable? _tweenPlayingDisposable;
-    private IDisposable? _waitEnterEntityDisposable;
 
     private AimEntity AimEntity
     {
@@ -77,6 +77,7 @@ public partial class PiercingWeapon : WeaponBase
             // 初回アクセスのキャッシュ
             var a = this.FindFirstChild<AimEntity>();
             _aimEntity = a ?? throw new ApplicationException($"Failed to find AimEntity node in {Name}");
+            _aimEntityEnterTargetWaiter = new AimEntityEnterTargetWaiter(_aimEntity);
             return _aimEntity;
         }
     }
@@ -96,11 +97,6 @@ public partial class PiercingWeapon : WeaponBase
 
     public override void _Ready()
     {
-        AimEntity.Mode = AimEntity.TargetMode.NearestEntity;
-        AimEntity.MinRange = _minRange;
-        AimEntity.MaxRange = _maxRange;
-        AimEntity.RotateSensitivity = _rotateSensitivity;
-
         // "ダメージを与えたとき" の処理用にイベントを登録
         StaticDamage.Hit.Subscribe(this, (payload, state) => { state.OnHitAnyEntity(payload); }).AddTo(this);
     }
@@ -108,7 +104,7 @@ public partial class PiercingWeapon : WeaponBase
     public override void _ExitTree()
     {
         _tweenPlayingDisposable?.Dispose();
-        _waitEnterEntityDisposable?.Dispose();
+        _aimEntityEnterTargetWaiter?.Dispose();
     }
 
     internal override string GetDescriptionForShop()
@@ -121,62 +117,22 @@ public partial class PiercingWeapon : WeaponBase
 
     private protected override void OnCoolDownCompleted(uint level)
     {
-        // クールダウン終了時に範囲内に敵がいれば攻撃アニメーションを実行
-        if (AimEntity.IsAiming)
-        {
-            PlayAttackAnimation();
-        }
-        // そうでない場合は敵が入ってくるのを待つ
-        else
-        {
-            if (_waitEnterEntityDisposable is not null)
-            {
-                throw new InvalidProgramException($"_waitEnterEntityDisposable is already exist in {Name}");
-            }
-
-            // 範囲内に敵が入ってきたら攻撃アニメーションを実行
-            // 確実に当ててほしいので, 5度以内になるまで待機する
-            // 待機中に目標を見失った場合はまた敵の侵入を待機する 
-            // Note: AwaitOperation.Drop により, 待機中に来る通知は無視される
-            _waitEnterEntityDisposable = AimEntity.EnteredAnyEntity
-                .SubscribeAwait(async (_, token) =>
-                {
-                    // 狙いを定めるまで待機する
-                    var failed = false;
-                    while (true)
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            return;
-                        }
-
-                        if (!AimEntity.IsAiming)
-                        {
-                            failed = true;
-                            break;
-                        }
-
-                        await this.NextPhysicsFrameAsync();
-                        var diff = Mathf.Abs(AimEntity.AngleDiff);
-                        if (diff < 0.0872665f) // 5°
-                        {
-                            break;
-                        }
-                    }
-
-                    if (!failed)
-                    {
-                        _waitEnterEntityDisposable?.Dispose();
-                        _waitEnterEntityDisposable = null;
-                        PlayAttackAnimation();
-                    }
-                }, AwaitOperation.Drop);
-        }
+        _aimEntityEnterTargetWaiter?.Start(5f, PlayAttackAnimation);
     }
 
     private protected override void OnStartAttack(uint level)
     {
+        AimEntity.Mode = AimEntity.TargetMode.NearestEntity;
+        AimEntity.MinRange = _minRange;
+        AimEntity.MaxRange = _maxRange;
+        AimEntity.RotateSensitivity = _rotateSensitivity;
+
         StaticDamage.Disabled = true;
+    }
+
+    private protected override void OnStopAttack()
+    {
+        _aimEntityEnterTargetWaiter?.Cancel();
     }
 
     private void OnHitAnyEntity(Dictionary info)

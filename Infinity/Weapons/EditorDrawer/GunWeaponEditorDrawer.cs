@@ -9,7 +9,7 @@ namespace fms.Weapon;
 /// </summary>
 [Tool]
 [GlobalClass]
-public partial class PiercingWeaponEditorDrawer : Node2D
+public partial class GunWeaponEditorDrawer : Node2D
 {
     [Export]
     private Color _minRangeColor = new(1, 0, 0, 0.2f);
@@ -22,15 +22,15 @@ public partial class PiercingWeaponEditorDrawer : Node2D
 
     private GodotObject? _weapon;
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
         if (Engine.IsEditorHint())
         {
+            return;
         }
-        else
-        {
-            QueueFree();
-        }
+
+        SetProcess(false);
+        QueueFree();
     }
 
     public override void _Process(double delta)
@@ -49,7 +49,29 @@ public partial class PiercingWeaponEditorDrawer : Node2D
         }
 
         DrawMinMaxRange();
-        DrawStaticDamageArea();
+        DrawBulletLine();
+    }
+
+    private void DrawBulletLine()
+    {
+        if (_weapon is null)
+        {
+            return;
+        }
+
+        // 当たり判定の攻撃判定を描写する
+
+        // Note: Export されてない Property は評価できないのでこっちで Muzzle を取得
+        var muzzle = (Node2D?)_weapon.Get(GunWeapon.PropertyName._muzzle);
+        var start = muzzle?.GlobalPosition ?? ((Node2D)_weapon).GlobalPosition;
+
+        var projectileSpeed = (float)_weapon.Get(GunWeapon.PropertyName._speed);
+        var projectileLife = (uint)_weapon.Get(GunWeapon.PropertyName._life);
+        var length = projectileSpeed * (projectileLife / 60f);
+        var end = start + new Vector2(length, 0);
+        var color = _damageAreaColor;
+        var dotWidth = 3f;
+        DrawDashedLine(start, end, color, dotWidth);
     }
 
     private void DrawMinMaxRange()
@@ -68,35 +90,5 @@ public partial class PiercingWeaponEditorDrawer : Node2D
         {
             DrawCircle(Position, minRange, _minRangeColor);
         }
-    }
-
-    private void DrawStaticDamageArea()
-    {
-        if (_weapon is null)
-        {
-            return;
-        }
-
-        // 当たり判定の攻撃判定を描写する
-        var cs = GetNode<CollisionShape2D>("%StaticDamage/CollisionShape2D");
-        var csPos = cs.Position;
-        var size = ((RectangleShape2D)cs.Shape).Size;
-
-        // 矩形の描写
-        var preAttackDistance = (uint)_weapon.Get(PiercingWeapon.PropertyName._preAttackDistance);
-        var pushDistance = (uint)_weapon.Get(PiercingWeapon.PropertyName._pushDistance);
-
-        // Push 時の当たり判定の描写
-        var origin = csPos - size / 2f;
-        origin -= new Vector2(preAttackDistance, 0);
-        size += new Vector2(preAttackDistance + pushDistance, 0);
-
-        // 短径の4辺をつなぐようなラインを描写する
-        var color = _damageAreaColor;
-        var width = 0.5f;
-        DrawDashedLine(origin + new Vector2(0, 0), origin + new Vector2(size.X, 0), color, width);
-        DrawDashedLine(origin + new Vector2(size.X, 0), origin + size, color, width);
-        DrawDashedLine(origin + size, origin + new Vector2(0, size.Y), color, width);
-        DrawDashedLine(origin + new Vector2(0, size.Y), origin + new Vector2(0, 0), color, width);
     }
 }

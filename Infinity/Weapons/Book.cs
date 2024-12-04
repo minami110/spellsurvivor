@@ -28,8 +28,7 @@ public partial class Book : WeaponBase
                 prj.LifeFrame = State.AttackSpeed.CurrentValue + 2;
 
                 // 貫通設定
-                prj.PenetrateEnemy = true;
-                prj.PenetrateWall = true;
+                prj.PenetrateSettings = BulletProjectile.PenetrateType.Enemy | BulletProjectile.PenetrateType.Wall;
             }
 
             // Orbit Mod を追加

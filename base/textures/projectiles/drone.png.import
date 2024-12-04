@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5mgf28e054d7"
-path="res://.godot/imported/japanese_ogre.png-aa4f1a840445d06510c23b007a0c375f.ctex"
+uid="uid://4cwapnrsmnc1"
+path="res://.godot/imported/drone.png-fbcfa188ed0bcd29932b170c97b18842.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Emoji/japanese_ogre.png"
-dest_files=["res://.godot/imported/japanese_ogre.png-aa4f1a840445d06510c23b007a0c375f.ctex"]
+source_file="res://base/textures/projectiles/drone.png"
+dest_files=["res://.godot/imported/drone.png-fbcfa188ed0bcd29932b170c97b18842.ctex"]
 
 [params]
 

@@ -1,16 +1,16 @@
 [gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://ddbl812oxaqit"]
 
-[ext_resource type="Texture2D" uid="uid://5mgf28e054d7" path="res://Common/Resources/Textures/Emoji/japanese_ogre.png" id="1_hl37x"]
+[ext_resource type="Texture2D" uid="uid://4cwapnrsmnc1" path="res://base/textures/projectiles/drone.png" id="1_hgtwq"]
 [ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_g0rvg"]
 
 [resource]
 script = ExtResource("2_g0rvg")
-Damage = 10
+Damage = 2
 CooldownTime = 10
 AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 0
-Tier = 1
+Tier = 3
 Price = 3
-Sprite = ExtResource("1_hl37x")
-Description = "敵を追従する小さい鬼をゲーム開始時にスポーン"
+Sprite = ExtResource("1_hgtwq")
+Description = "開始時: 敵を追従するドローンをスポーン"
