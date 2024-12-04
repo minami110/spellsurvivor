@@ -97,11 +97,6 @@ public partial class PiercingWeapon : WeaponBase
 
     public override void _Ready()
     {
-        AimEntity.Mode = AimEntity.TargetMode.NearestEntity;
-        AimEntity.MinRange = _minRange;
-        AimEntity.MaxRange = _maxRange;
-        AimEntity.RotateSensitivity = _rotateSensitivity;
-
         // "ダメージを与えたとき" の処理用にイベントを登録
         StaticDamage.Hit.Subscribe(this, (payload, state) => { state.OnHitAnyEntity(payload); }).AddTo(this);
     }
@@ -127,6 +122,11 @@ public partial class PiercingWeapon : WeaponBase
 
     private protected override void OnStartAttack(uint level)
     {
+        AimEntity.Mode = AimEntity.TargetMode.NearestEntity;
+        AimEntity.MinRange = _minRange;
+        AimEntity.MaxRange = _maxRange;
+        AimEntity.RotateSensitivity = _rotateSensitivity;
+
         StaticDamage.Disabled = true;
     }
 

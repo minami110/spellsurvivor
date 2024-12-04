@@ -11,7 +11,8 @@
 script = ExtResource("1_qmpsg")
 _projectile = ExtResource("2_jk7wo")
 _speed = 800.0
-_life = 30
+_life = 24
+_magazineSize = 10
 _muzzle = NodePath("AimEntity/Muzzle")
 _minRange = 50.0
 _maxRange = 300.0
@@ -31,4 +32,4 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("5_mcygj")
 
 [node name="Muzzle" type="Node2D" parent="AimEntity"]
-position = Vector2(48, -1)
+position = Vector2(33, -1)
