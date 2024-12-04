@@ -201,6 +201,7 @@ public partial class WeaponBase : Node2D
         }
 
         FrameTimer.Stop();
+        OnStopAttack();
     }
 
     /// <summary>
@@ -235,6 +236,10 @@ public partial class WeaponBase : Node2D
     /// 武器が起動したときに呼び出されるメソッド, 通常はバトルウェーブ開始時に呼ばれる
     /// </summary>
     private protected virtual void OnStartAttack(uint level)
+    {
+    }
+
+    private protected virtual void OnStopAttack()
     {
     }
 

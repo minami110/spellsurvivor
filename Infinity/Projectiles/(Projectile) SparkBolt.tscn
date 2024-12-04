@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://ceuw4y35vfqm1"]
 
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/BulletProjectile.cs" id="1_tmj8r"]
-[ext_resource type="Texture2D" uid="uid://b5pb2hrc4yrh6" path="res://Common/Resources/Textures/Noita/Spell_light_bullet.png" id="2_lrxa5"]
+[ext_resource type="Texture2D" uid="uid://bbj60rx32neua" path="res://base/textures/bullet_9mm.png" id="2_2gfnw"]
 [ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="3_w5sbp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
@@ -14,24 +14,11 @@ monitorable = false
 script = ExtResource("1_tmj8r")
 metadata/_edit_group_ = true
 
-[node name="Sprite" type="TextureRect" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -15.0
-offset_top = -15.0
-offset_right = 15.0
-offset_bottom = 15.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(15, 15)
-texture = ExtResource("2_lrxa5")
-expand_mode = 1
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.04, 0.04)
+texture = ExtResource("2_2gfnw")
 
 [node name="DamageCollision" type="CollisionShape2D" parent="."]
-position = Vector2(15, 0)
 shape = SubResource("CircleShape2D_jrj0e")
 debug_color = Color(1, 0, 0, 0)
 
