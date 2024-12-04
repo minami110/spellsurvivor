@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://bxxdjfxf8m2al"]
+
+[ext_resource type="Texture2D" uid="uid://74e2c5vmnvrg" path="res://Infinity/Weapons/Textures/light_machine_gun.png" id="1_m10hp"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_a2txw"]
+
+[resource]
+script = ExtResource("2_a2txw")
+Damage = 2
+CooldownTime = 240
+AnimationSpeedRate = 100.0
+Knockback = 10
+Faction = 256
+Tier = 4
+Price = 10
+Sprite = ExtResource("1_m10hp")
+Description = "範囲内にいる一番近い対象に自動で攻撃を行う"
