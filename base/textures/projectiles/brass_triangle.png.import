@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cne4dh2mi2k8w"
-path="res://.godot/imported/brass_triangle.png-3e925f311b205fab351d086b478fc567.ctex"
+path="res://.godot/imported/brass_triangle.png-9ded4616d4263960e26c381963f7e3f8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Projectiles/Textures/brass_triangle.png"
-dest_files=["res://.godot/imported/brass_triangle.png-3e925f311b205fab351d086b478fc567.ctex"]
+source_file="res://base/textures/projectiles/brass_triangle.png"
+dest_files=["res://.godot/imported/brass_triangle.png-9ded4616d4263960e26c381963f7e3f8.ctex"]
 
 [params]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://ctsnxp14rpk1l"]
 
 [ext_resource type="Script" path="res://Infinity/Enemy/Hornet.cs" id="1_s0dvv"]
-[ext_resource type="PackedScene" uid="uid://cntnfk7uhqmi2" path="res://Infinity/Projectiles/(Projectile) SparkBoltDark.tscn" id="2_gjpaw"]
+[ext_resource type="PackedScene" uid="uid://cntnfk7uhqmi2" path="res://Infinity/Projectiles/(Projectile) EnemyProjectile.tscn" id="2_gjpaw"]
 [ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="3_roh7o"]
 [ext_resource type="PackedScene" uid="uid://celvufqqj3boe" path="res://Infinity/VFX/BloodSplat.tscn" id="3_t7ik7"]
 [ext_resource type="Script" path="res://Infinity/Enemy/EnemyAnimator.cs" id="4_g4016"]

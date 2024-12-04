@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b5pb2hrc4yrh6"
-path="res://.godot/imported/Spell_light_bullet.png-f9ae3bf4a077bf36f71083ee7e70f357.ctex"
+uid="uid://dn6apvbkik7u8"
+path="res://.godot/imported/wide_shot_shotgun.png-d63f4e62c218db070739401ebd0f0ffc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Noita/Spell_light_bullet.png"
-dest_files=["res://.godot/imported/Spell_light_bullet.png-f9ae3bf4a077bf36f71083ee7e70f357.ctex"]
+source_file="res://Infinity/Weapons/Textures/wide_shot_shotgun.png"
+dest_files=["res://.godot/imported/wide_shot_shotgun.png-d63f4e62c218db070739401ebd0f0ffc.ctex"]
 
 [params]
 

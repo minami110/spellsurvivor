@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2wpoue220kop"
-path="res://.godot/imported/WideShotShotgun.png-0bbeee8864ca8309980377fdf8dc22e5.ctex"
+uid="uid://qx3rdw3737l8"
+path="res://.godot/imported/knife.png-a767452057c484e16f26644bb88a1bea.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Nakagiri/WideShotShotgun.png"
-dest_files=["res://.godot/imported/WideShotShotgun.png-0bbeee8864ca8309980377fdf8dc22e5.ctex"]
+source_file="res://base/textures/projectiles/knife.png"
+dest_files=["res://.godot/imported/knife.png-a767452057c484e16f26644bb88a1bea.ctex"]
 
 [params]
 

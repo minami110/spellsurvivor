@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://dx52nto82q801"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/GunWeapon.cs" id="1_buc8b"]
-[ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) SparkBolt.tscn" id="2_gpmga"]
+[ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) 9mm.tscn" id="2_gpmga"]
 [ext_resource type="Resource" uid="uid://dxy00fxyinowg" path="res://Infinity/Datebase/Items/SniperRifle.tres" id="3_a1xjh"]
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="4_7b1uf"]
 [ext_resource type="Script" path="res://Infinity/Weapons/EditorDrawer/GunWeaponEditorDrawer.cs" id="4_chtns"]

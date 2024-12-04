@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7qsm3wpjrqd8"
-path="res://.godot/imported/Spell_bouncy_orb.webp-0d3a20b9a138f7a0c15296ea5bc6e860.ctex"
+uid="uid://vcxib7xukvxc"
+path="res://.godot/imported/energy_ball_red.png-3c9ba497c4eb31b99a9552c463e3b07f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Noita/Spell_bouncy_orb.webp"
-dest_files=["res://.godot/imported/Spell_bouncy_orb.webp-0d3a20b9a138f7a0c15296ea5bc6e860.ctex"]
+source_file="res://base/textures/projectiles/energy_ball_red.png"
+dest_files=["res://.godot/imported/energy_ball_red.png-3c9ba497c4eb31b99a9552c463e3b07f.ctex"]
 
 [params]
 
