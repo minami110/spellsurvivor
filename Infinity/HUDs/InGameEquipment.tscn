@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bycglxvkrnadg"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/InGameEquipment.cs" id="1_b1fms"]
-[ext_resource type="Texture2D" uid="uid://c2wpoue220kop" path="res://Common/Resources/Textures/Nakagiri/WideShotShotgun.png" id="2_1tbcp"]
+[ext_resource type="Texture2D" uid="uid://b4oj53y3ogy0s" path="res://Common/Resources/Textures/icon.svg" id="2_urv4s"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="3_7posd"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dadic"]
@@ -41,7 +41,7 @@ size_flags_vertical = 0
 [node name="Icon" type="TextureRect" parent="PanelContainer_2/PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-texture = ExtResource("2_1tbcp")
+texture = ExtResource("2_urv4s")
 expand_mode = 5
 stretch_mode = 5
 

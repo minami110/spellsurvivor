@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://b5yd1ajpdgy0g"]
 
-[ext_resource type="Texture2D" uid="uid://cne4dh2mi2k8w" path="res://Infinity/Projectiles/Textures/brass_triangle.png" id="1_w4as0"]
+[ext_resource type="Texture2D" uid="uid://cne4dh2mi2k8w" path="res://base/textures/projectiles/brass_triangle.png" id="1_w4as0"]
 [ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_sgd3f"]
 
 [resource]

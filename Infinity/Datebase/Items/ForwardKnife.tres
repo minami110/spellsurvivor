@@ -1,16 +1,16 @@
 [gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://brkbpmer5vx5k"]
 
-[ext_resource type="Texture2D" uid="uid://bngagbi0xt2mu" path="res://Common/Resources/Textures/Emoji/dagger_knife.png" id="2_cd5jy"]
+[ext_resource type="Texture2D" uid="uid://qx3rdw3737l8" path="res://base/textures/projectiles/knife.png" id="1_66rrh"]
 [ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_koinx"]
 
 [resource]
 script = ExtResource("2_koinx")
 Damage = 10
-CooldownTime = 10
+CooldownTime = 40
 AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 0
 Tier = 1
 Price = 3
-Sprite = ExtResource("2_cd5jy")
+Sprite = ExtResource("1_66rrh")
 Description = "プレイヤーの移動方向にナイフを投擲する"
