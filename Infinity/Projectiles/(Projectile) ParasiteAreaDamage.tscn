@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://b3nnqfmo1iq51"]
 
 [ext_resource type="Script" path="res://Infinity/Projectiles/ParasiteAreaDamage.cs" id="1_ltqpd"]
-[ext_resource type="Texture2D" uid="uid://5mgf28e054d7" path="res://Common/Resources/Textures/Emoji/japanese_ogre.png" id="2_imyyw"]
+[ext_resource type="Texture2D" uid="uid://4cwapnrsmnc1" path="res://base/textures/projectiles/drone.png" id="2_8f5sm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_j4vjk"]
 
@@ -13,20 +13,10 @@ collision_mask = 4
 monitorable = false
 script = ExtResource("1_ltqpd")
 
-[node name="Sprite" type="TextureRect" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -10.0
-offset_top = -10.0
-offset_right = 10.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_imyyw")
-expand_mode = 1
+[node name="Sprite" type="Sprite2D" parent="."]
+z_index = 1
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_8f5sm")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_j4vjk")

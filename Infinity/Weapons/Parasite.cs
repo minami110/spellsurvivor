@@ -44,9 +44,10 @@ public partial class Parasite : WeaponBase
             prj.Knockback = State.Knockback.CurrentValue;
             prj.DamageEveryXFrames = _attackSpan;
 
-            var speed = _speed + (float)GD.Randfn(0f, _randomSpeed);
+            var rand = (float)GD.Randfn(0f, _randomSpeed);
+            var speed = _speed + rand;
             speed = Mathf.Max(speed, 0f);
-            prj.FollowSpeed = _speed + (float)GD.Randfn(0f, speed); // 個体差をもたせると狙う敵がバラける
+            prj.FollowSpeed = speed;
             prj.SearchRadius = _searchRadius;
             prj.DamageRadius = _damageRadius;
 
