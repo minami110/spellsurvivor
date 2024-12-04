@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -7,13 +8,17 @@ namespace fms.Projectile;
 
 public partial class BulletProjectile : BaseProjectile
 {
-    [Export]
-    public bool PenetrateEnemy { get; set; }
-
-    [Export]
-    public bool PenetrateWall { get; set; }
+    [Flags]
+    public enum PenetrateType
+    {
+        None = 0,
+        Enemy = 1 << 0,
+        Wall = 1 << 1
+    }
 
     private readonly List<ExcludeInfo> _excludes = [];
+
+    public PenetrateType PenetrateSettings { get; set; }
 
     public override void _Notification(int what)
     {
@@ -38,12 +43,10 @@ public partial class BulletProjectile : BaseProjectile
             return;
         }
 
-
         // 壁など静的なオブジェクトとの衝突時の処理
-        // デフォルトでは壁と衝突したら常に自身は消滅する
         if (body is StaticBody2D staticBody)
         {
-            if (!PenetrateWall)
+            if (!PenetrateSettings.HasFlag(PenetrateType.Wall))
             {
                 Kill(WhyDead.CollidedWithWall);
             }
@@ -80,7 +83,7 @@ public partial class BulletProjectile : BaseProjectile
             */
 
             // 敵を貫通しないなら
-            if (!PenetrateEnemy)
+            if (!PenetrateSettings.HasFlag(PenetrateType.Enemy))
             {
                 Kill(WhyDead.CollidedWithEnemy);
                 return;

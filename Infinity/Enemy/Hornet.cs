@@ -122,8 +122,7 @@ public partial class Hornet : EntityEnemy
             prj.CollisionMask = Constant.LAYER_PLAYER | Constant.LAYER_WALL;
             prj.Damage = BaseDamage;
             prj.LifeFrame = 300;
-            prj.PenetrateEnemy = false;
-            prj.PenetrateWall = false;
+            prj.PenetrateSettings = BulletProjectile.PenetrateType.None;
         }
 
         // プレイヤーに向けて発射する

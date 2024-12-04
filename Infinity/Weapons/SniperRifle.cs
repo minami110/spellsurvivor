@@ -56,8 +56,7 @@ public partial class SniperRifle : WeaponBase
             prj.Knockback = State.Knockback.CurrentValue;
             prj.LifeFrame = _life;
             prj.ConstantForce = AimToNearEnemy.GlobalTransform.X * _speed;
-            prj.PenetrateEnemy = true;
-            prj.PenetrateWall = false;
+            prj.PenetrateSettings = BulletProjectile.PenetrateType.Enemy;
         }
 
         AddProjectile(prj, GlobalPosition);

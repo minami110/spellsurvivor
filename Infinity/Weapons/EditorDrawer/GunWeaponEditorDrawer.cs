@@ -22,15 +22,15 @@ public partial class GunWeaponEditorDrawer : Node2D
 
     private GodotObject? _weapon;
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
         if (Engine.IsEditorHint())
         {
+            return;
         }
-        else
-        {
-            QueueFree();
-        }
+
+        SetProcess(false);
+        QueueFree();
     }
 
     public override void _Process(double delta)
@@ -49,10 +49,10 @@ public partial class GunWeaponEditorDrawer : Node2D
         }
 
         DrawMinMaxRange();
-        DrawBulletArea();
+        DrawBulletLine();
     }
 
-    private void DrawBulletArea()
+    private void DrawBulletLine()
     {
         if (_weapon is null)
         {
@@ -60,15 +60,18 @@ public partial class GunWeaponEditorDrawer : Node2D
         }
 
         // 当たり判定の攻撃判定を描写する
-        var origin = (Vector2)_weapon.Get(AssaultRifle.PropertyName.Muzzle);
+
+        // Note: Export されてない Property は評価できないのでこっちで Muzzle を取得
+        var muzzle = (Node2D?)_weapon.Get(AssaultRifle.PropertyName._muzzle);
+        var start = muzzle?.GlobalPosition ?? ((Node2D)_weapon).GlobalPosition;
+
         var projectileSpeed = (float)_weapon.Get(AssaultRifle.PropertyName._speed);
         var projectileLife = (uint)_weapon.Get(AssaultRifle.PropertyName._life);
-        var end = origin + new Vector2(projectileSpeed * (projectileLife / 60f), 0);
-
-        // 短径の4辺をつなぐようなラインを描写する
+        var length = projectileSpeed * (projectileLife / 60f);
+        var end = start + new Vector2(length, 0);
         var color = _damageAreaColor;
-        var width = 3f;
-        DrawDashedLine(origin, end, color, width);
+        var dotWidth = 3f;
+        DrawDashedLine(start, end, color, dotWidth);
     }
 
     private void DrawMinMaxRange()

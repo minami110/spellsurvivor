@@ -7,12 +7,13 @@
 [ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="4_v5ywd"]
 [ext_resource type="Texture2D" uid="uid://clj0c5cvysi7o" path="res://Infinity/Weapons/Textures/assault_rifle.png" id="5_mcygj"]
 
-[node name="AssaultRifle" type="Node2D"]
+[node name="AssaultRifle" type="Node2D" node_paths=PackedStringArray("_muzzle")]
 script = ExtResource("1_qmpsg")
 _projectile = ExtResource("2_jk7wo")
-_speed = 600.0
-_life = 50
-_minRange = 40.0
+_speed = 800.0
+_life = 30
+_muzzle = NodePath("AimEntity/Muzzle")
+_minRange = 50.0
 _maxRange = 300.0
 _config = ExtResource("3_r8amf")
 
@@ -28,3 +29,6 @@ texture_filter = 1
 position = Vector2(18, 6)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("5_mcygj")
+
+[node name="Muzzle" type="Node2D" parent="AimEntity"]
+position = Vector2(48, -1)

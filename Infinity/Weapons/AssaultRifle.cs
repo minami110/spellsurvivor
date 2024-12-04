@@ -16,6 +16,12 @@ public partial class AssaultRifle : WeaponBase
     [Export(PropertyHint.Range, "0,7200,1,suffix:frames")]
     private uint _life = 120u;
 
+    [Export(PropertyHint.Flags, "Enemy:1,Wall:2")]
+    private int _penetrate;
+
+    [Export]
+    private Node2D? _muzzle;
+
     // ==== Aim Settings ====
     [ExportGroup("Aim Settings")]
     [Export(PropertyHint.Range, "0,100,,or_greater,suffix:px")]
@@ -23,9 +29,6 @@ public partial class AssaultRifle : WeaponBase
 
     [Export(PropertyHint.Range, "0,200,,or_greater,suffix:px")]
     private float _maxRange = 100f;
-
-    [Export]
-    private Node2D? _muzzle;
 
     /// <summary>
     /// 敵を狙う速度の感度 (0 ~ 1), 1 で最速, 0 で全然狙えない
@@ -53,7 +56,7 @@ public partial class AssaultRifle : WeaponBase
         }
     }
 
-    private Node2D Muzzle => _muzzle ?? this;
+    private Vector2 ProjectileSpawnPosition => _muzzle?.GlobalPosition ?? GlobalPosition;
 
     public override void _Ready()
     {
@@ -86,11 +89,10 @@ public partial class AssaultRifle : WeaponBase
             prj.Knockback = State.Knockback.CurrentValue;
             prj.LifeFrame = _life;
             prj.ConstantForce = AimEntity.GlobalTransform.X * _speed;
-            prj.PenetrateEnemy = false;
-            prj.PenetrateWall = false;
+            prj.PenetrateSettings = (BulletProjectile.PenetrateType)_penetrate;
         }
 
-        AddProjectile(prj, Muzzle.GlobalPosition);
+        AddProjectile(prj, ProjectileSpawnPosition);
         RestartCoolDown();
     }
 }
