@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using fms.Projectile;
 using Godot;
+using R3;
 
 namespace fms.Weapon;
 
@@ -51,6 +52,8 @@ public partial class AssaultRifle : WeaponBase
 
     private AimEntity? _aimEntity;
     private AimEntityEnterTargetWaiter? _enterTargetWaiter;
+
+    public override uint AnimationTime => (_magazineSize - 1) * _fireRate;
 
     private AimEntity AimEntity
     {
@@ -191,6 +194,16 @@ public partial class AssaultRifle : WeaponBase
             {
                 prj.ConstantForce = AimEntity.GlobalTransform.X * _speed;
                 AddProjectile(prj, GlobalPosition);
+            }
+
+            // Note: AddTo はシーン内にないとエラーになるので, AddProjectile の後に呼ぶ
+            // ToDo: 暫定実装, 敵にヒットするたびにダメージを半分にする
+            if (prj.PenetrateSettings.HasFlag(BulletProjectile.PenetrateType.Enemy))
+            {
+                prj.Hit
+                    .Where(x => x.HitNode is EntityEnemy)
+                    .Subscribe(prj, (x, s) => { s.Damage *= 0.5f; })
+                    .AddTo(prj);
             }
 
             // ToDo: 仮
