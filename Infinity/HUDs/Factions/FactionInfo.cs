@@ -131,7 +131,13 @@ public partial class FactionInfo : Control
         GetNode<TextureRect>("%Sprite").Texture = Faction.GetTextureResouce();
 
         // Faction major description
-        GetNode<RichTextLabel>("%Description").Text = Faction.GetMajorDescription();
+        var majorDesc = Tr(Faction.GetMajorDescription());
+        while (ReplaceStatToBbcode(majorDesc, out var replaced))
+        {
+            majorDesc = replaced;
+        }
+
+        GetNode<RichTextLabel>("%Description").Text = majorDesc;
 
         // Faction level descriptions
         var factionLevel = 0u;
