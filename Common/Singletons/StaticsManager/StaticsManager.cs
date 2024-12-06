@@ -11,6 +11,7 @@ public readonly struct DamageReport
     public required Node Victim { get; init; }
     public required IEntity Instigator { get; init; }
     public required Node Causer { get; init; }
+    public required string CauserType { get; init; }
     public required Vector2 Position { get; init; }
     public required bool IsDead { get; init; }
 }
@@ -38,11 +39,14 @@ public partial class StaticsManager : CanvasLayer
 
     private static StaticsManager? _instance;
 
-    private readonly Dictionary<ulong, List<DamageReport>> _damageInfoByCauser = new();
+    private readonly Dictionary<string, List<DamageReport>> _damageInfoByCauser = new();
 
     private readonly Subject<DamageReport> _enemyDamageOccurred = new();
 
-    public static IReadOnlyDictionary<ulong, List<DamageReport>> DamageInfoTable
+    /// <summary>
+    /// Causer ごとのダメージ情報テーブル
+    /// </summary>
+    public static IReadOnlyDictionary<string, List<DamageReport>> DamageInfoByCauser
     {
         get
         {
@@ -51,7 +55,7 @@ public partial class StaticsManager : CanvasLayer
                 return _instance._damageInfoByCauser;
             }
 
-            return ImmutableDictionary<ulong, List<DamageReport>>.Empty;
+            return ImmutableDictionary<string, List<DamageReport>>.Empty;
         }
     }
 
@@ -94,11 +98,11 @@ public partial class StaticsManager : CanvasLayer
         }
 
         // ダメージを与えたもの (Causer) ごとにダメージ情報を保存する
-        var causerId = report.Causer.GetInstanceId();
-        if (!_instance._damageInfoByCauser.TryGetValue(causerId, out var damageInfos))
+        var causerType = report.CauserType;
+        if (!_instance._damageInfoByCauser.TryGetValue(causerType, out var damageInfos))
         {
             damageInfos = new List<DamageReport>();
-            _instance._damageInfoByCauser[causerId] = damageInfos;
+            _instance._damageInfoByCauser[causerType] = damageInfos;
         }
 
         damageInfos.Add(report);

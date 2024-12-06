@@ -33,48 +33,59 @@ internal partial class BattleResultHudController : Node
                 self.GetNode<Control>("%RootPanel").Show();
 
                 // 武器の統計情報を表示する
-                var results = new Dictionary<ulong, float>();
+                var results = new Dictionary<string, float>();
                 var vbox = self.GetNode<VBoxContainer>("%VBoxWeaponStats");
 
-                var stats = StaticsManager.DamageInfoTable;
+                var stats = StaticsManager.DamageInfoByCauser;
 
-                // 現在 Player が装備している武器を取得する
+                // 現在 Player が装備している武器を取得し, Causer にいるならばその武器の統計情報をもらう
                 var player = self.GetPlayerNode();
                 foreach (var n in player.GetChildren())
                 {
                     if (n is WeaponBase weapon)
                     {
-                        var uid = weapon.GetInstanceId();
-                        if (stats.TryGetValue(uid, out var info))
+                        var type = weapon.GetType().Name;
+                        if (stats.TryGetValue(type, out var info))
                         {
                             foreach (var i in info)
                             {
-                                if (results.TryGetValue(uid, out var damage))
+                                var name = i.CauserType;
+                                if (results.TryGetValue(name, out var damage))
                                 {
-                                    results[uid] += i.Amount;
+                                    results[name] += i.Amount;
                                 }
                                 else
                                 {
-                                    results[uid] = i.Amount;
+                                    results[name] = i.Amount;
                                 }
                             }
                         }
                     }
                 }
 
-                foreach (var n in player.GetChildren())
+                // ToDo: Bat の統計情報を表示する
+                if (stats.TryGetValue("Bat", out var batInfo))
                 {
-                    if (n is WeaponBase weapon)
+                    foreach (var i in batInfo)
                     {
-                        var uid = n.GetInstanceId();
-                        if (results.TryGetValue(uid, out var damage))
+                        var name = i.CauserType;
+                        if (results.TryGetValue(name, out var damage))
                         {
-                            var label = new Label();
-                            label.HorizontalAlignment = HorizontalAlignment.Center;
-                            label.Text = $"{Tr(weapon.Config.Name)}: total {damage:0} damage";
-                            vbox.AddChild(label);
+                            results[name] += i.Amount;
+                        }
+                        else
+                        {
+                            results[name] = i.Amount;
                         }
                     }
+                }
+
+                foreach (var (key, amount) in results)
+                {
+                    var label = new Label();
+                    label.HorizontalAlignment = HorizontalAlignment.Center;
+                    label.Text = $"{key}: {amount:0} dmg";
+                    vbox.AddChild(label);
                 }
             }
             else

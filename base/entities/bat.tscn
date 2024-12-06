@@ -19,7 +19,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
-"speed": 12.0
+"speed": 20.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_njhhr"]
@@ -36,9 +36,11 @@ script = ExtResource("1_k6eiu")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
+modulate = Color(3.243, 1.081, 1.621, 1)
 z_index = 1
+scale = Vector2(0.825, 0.825)
 sprite_frames = SubResource("SpriteFrames_gnsfr")
-frame_progress = 0.442837
+frame_progress = 0.943271
 
 [node name="Damage" type="Area2D" parent="."]
 unique_name_in_owner = true
