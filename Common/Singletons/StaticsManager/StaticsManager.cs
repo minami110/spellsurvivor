@@ -56,6 +56,7 @@ public partial class StaticsManager : CanvasLayer
     }
 
     /// <summary>
+    /// 敵がダメージを受けた際に発生するイベント
     /// </summary>
     public static Observable<DamageReport> EnemyDamageOccurred =>
         _instance?._enemyDamageOccurred ?? Observable.Empty<DamageReport>();
