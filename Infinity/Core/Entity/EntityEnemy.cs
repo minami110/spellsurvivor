@@ -247,6 +247,7 @@ public partial class EntityEnemy : RigidBody2D, IEntity
             {
                 Instigator = instigator,
                 Causer = causer,
+                CauserType = causer.GetType().Name,
                 Victim = this,
                 Amount = amount,
                 Position = GlobalPosition,
@@ -263,6 +264,7 @@ public partial class EntityEnemy : RigidBody2D, IEntity
             {
                 Instigator = instigator,
                 Causer = causer,
+                CauserType = causer.GetType().Name,
                 Victim = this,
                 Amount = amount,
                 Position = GlobalPosition,

@@ -99,6 +99,7 @@ public partial class EntityPlayer : CharacterBody2D, IEntity
             Victim = this,
             Instigator = this, // 自分自身で回復ということに..
             Causer = this,
+            CauserType = GetType().Name,
             Position = GlobalPosition,
             IsDead = false
         };
@@ -142,6 +143,7 @@ public partial class EntityPlayer : CharacterBody2D, IEntity
             Victim = this,
             Instigator = instigator,
             Causer = causer,
+            CauserType = causer.GetType().Name,
             Position = GlobalPosition,
             IsDead = false
         };
