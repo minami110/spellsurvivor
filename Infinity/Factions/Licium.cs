@@ -65,7 +65,12 @@ public partial class Licium : FactionBase
                             {
                                 if (wpn.IsBelongTo(FactionType.Licium))
                                 {
-                                    this.DebugLog("This enemy killed by Licium weapon");
+                                    var choise = GD.Randf();
+                                    if (choise <= 0.25f)
+                                    {
+                                        return;
+                                    }
+
                                     // Spawn Bat
                                     var bat = _bat.Instantiate<Bat>();
                                     {
@@ -98,7 +103,12 @@ public partial class Licium : FactionBase
                             {
                                 if (wpn.IsBelongTo(FactionType.Licium))
                                 {
-                                    this.DebugLog("This enemy killed by Licium weapon");
+                                    var choise = GD.Randf();
+                                    if (choise <= 0.5f)
+                                    {
+                                        return;
+                                    }
+
                                     // Spawn Bat
                                     var bat = _bat.Instantiate<Bat>();
                                     {
