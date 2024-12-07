@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using fms.Mob;
+using Godot;
 
 namespace fms.Weapon;
 
@@ -46,19 +47,22 @@ public partial class GunTurret : WeaponBase
     private protected override void OnCoolDownCompleted(uint level)
     {
         // タレット本体を生成する
-        var prj = _body.Instantiate<GunTurretBody>();
-        prj.Damage = State.Damage.CurrentValue;
-        prj.Knockback = State.Knockback.CurrentValue;
-        prj.LifeFrame = _bodyAliveFrame; // タレット本体の生存フレーム
-        prj.DamageEveryXFrames = _bodyAttackSpan; // タレット本体が攻撃を行う感覚
-        prj.DetectionRadius = _bodyEnemyDetectionRadius;
+        var turret = _body.Instantiate<Turret>();
+        turret.Lifetime = _bodyAliveFrame; // タレット本体の生存フレーム
+        turret.AttackSpeed = _bodyAttackSpan; // タレット本体が攻撃を行う感覚
+        turret.DetectionRadius = _bodyEnemyDetectionRadius;
 
-        prj.BulletPackedScene = _bullet;
-        prj.BulletAliveFrame = _bulletAliveFrame;
-        prj.BulletSpeed = _bulletSpeed;
+        turret.BulletScene = _bullet;
+        turret.Damage = State.Damage.CurrentValue;
+        turret.Knockback = State.Knockback.CurrentValue;
+        turret.BulletLifetime = _bulletAliveFrame;
+        turret.BulletSpeed = _bulletSpeed;
 
-        // プレイヤーの位置にスポーンさせる
-        AddProjectile(prj, GlobalPosition);
+        // ワールド位置にスポーンさせる
+        // ToDO: あいまい
+        var world = GetParent().GetParent();
+        turret.GlobalPosition = GlobalPosition;
+        world.AddChild(turret);
         RestartCoolDown();
     }
 }

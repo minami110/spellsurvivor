@@ -124,8 +124,7 @@ public partial class ArcAreaProjectile : CircleAreaProjectile
 
             if (body is IEntity entity)
             {
-                // ToDo: Player / Enemy ともに Weapon が必ず直下に存在している という前提で実装してます
-                entity.ApplayDamage(Damage, Weapon.GetParent<IEntity>(), Weapon);
+                entity.ApplayDamage(Damage, Weapon.OwnedEntity, Weapon);
 
                 // 複数の敵にヒットするため, HitInfo は最初の敵に対してのみ生成する
                 // Note: Hit 通知に依存した武器の Stack 処理などがあるため, Hit したかどうかは 1回の攻撃で1回まで

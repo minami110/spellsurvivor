@@ -38,6 +38,6 @@ public partial class DeathTrigger : Node
         Payload["DeadPosition"] = parent.Position;
 
         var prj = Next(Payload);
-        weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, prj);
+        GetParent().GetParent().CallDeferred(Node.MethodName.AddSibling, prj);
     }
 }

@@ -36,7 +36,6 @@ public partial class TrickshotMod : Node
         }
 
         var parent = GetParent<BaseProjectile>();
-        var weapon = parent.Weapon;
         var hitInfo = parent.HitInfo;
 
         // Note: スクリプトベースの CircleCast を行う
@@ -89,7 +88,7 @@ public partial class TrickshotMod : Node
 
             // Spawn Next 
             var next = Next(Payload);
-            weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, next);
+            GetParent().GetParent().CallDeferred(Node.MethodName.AddSibling, next);
         }
     }
 }
