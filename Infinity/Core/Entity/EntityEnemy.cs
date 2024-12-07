@@ -70,8 +70,9 @@ public partial class EntityEnemy : RigidBody2D, IEntity
         {
             var scenePath = GetSceneFilePath();
             // ファイル名を抽出する
+            // Note: res://foo/bar/super_spider.tscn => SuperSpider 
             var fileName = Path.GetFileNameWithoutExtension(scenePath);
-            return "Enemy/" + fileName;
+            return "Enemy/" + fileName.ToPascalCase();
         }
     }
 
