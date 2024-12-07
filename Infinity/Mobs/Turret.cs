@@ -79,8 +79,8 @@ public partial class Turret : Node2D, IEntity
 
     EntityState IEntity.State => throw new NotImplementedException();
 
-    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
+    public void ApplayDamage(float amount, IEntity instigator, Node causer, string causerPath)
     {
-        // Do nothing
+        throw new NotImplementedException();
     }
 }

@@ -57,8 +57,8 @@ public partial class Licium : FactionBase
                     AddEffectToWeapon(weapon, new Lifesteal { Duration = 0u, Rate = 0.3f });
 
                     // Licium 武器により敵が死亡したときにコウモリを召喚する
-                    _staticsManagerSubscription = StaticsManager.EnemyDamageOccurred
-                        .Where(x => x.IsDead)
+                    _staticsManagerSubscription = StaticsManager.UpdatedDamageInfos
+                        .Where(x => x.IsVictimDead)
                         .Subscribe(report =>
                         {
                             if (report.Causer is WeaponBase wpn)
@@ -95,8 +95,8 @@ public partial class Licium : FactionBase
                     AddEffectToWeapon(weapon, new Lifesteal { Duration = 0u, Rate = 0.1f });
 
                     // Licium 武器により敵が死亡したときにコウモリを召喚する
-                    _staticsManagerSubscription = StaticsManager.EnemyDamageOccurred
-                        .Where(x => x.IsDead)
+                    _staticsManagerSubscription = StaticsManager.UpdatedDamageInfos
+                        .Where(x => x.IsVictimDead)
                         .Subscribe(report =>
                         {
                             if (report.Causer is WeaponBase wpn)

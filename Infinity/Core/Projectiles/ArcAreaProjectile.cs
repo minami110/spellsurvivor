@@ -72,9 +72,6 @@ public partial class ArcAreaProjectile : CircleAreaProjectile
             );
             DrawLine(start, end, new Color(0, 1, 0));
         }
-
-        // 円弧の中心を通る線
-        // DrawLine(center, center + new Vector2(radius, 0), new Color(1, 1, 0));
     }
 
     // ダメージを与える処理 をオーバーライド
@@ -124,7 +121,7 @@ public partial class ArcAreaProjectile : CircleAreaProjectile
 
             if (body is IEntity entity)
             {
-                entity.ApplayDamage(Damage, Weapon.OwnedEntity, Weapon);
+                entity.ApplayDamage(Damage, Weapon.OwnedEntity, Weapon, CauserPath);
 
                 // 複数の敵にヒットするため, HitInfo は最初の敵に対してのみ生成する
                 // Note: Hit 通知に依存した武器の Stack 処理などがあるため, Hit したかどうかは 1回の攻撃で1回まで

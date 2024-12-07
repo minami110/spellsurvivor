@@ -123,6 +123,7 @@ public partial class Hornet : EntityEnemy
             prj.Damage = BaseDamage;
             prj.LifeFrame = 300;
             prj.PenetrateSettings = BulletProjectile.PenetrateType.None;
+            prj.CauserPath = CauserPath;
         }
 
         // プレイヤーに向けて発射する

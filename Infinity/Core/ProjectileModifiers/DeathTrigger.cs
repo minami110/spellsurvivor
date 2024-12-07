@@ -31,7 +31,6 @@ public partial class DeathTrigger : Node
         }
 
         var parent = GetParent<BaseProjectile>();
-        var weapon = parent.Weapon;
 
         // Payload に死亡理由を追加
         Payload["WhyDead"] = (ulong)why;

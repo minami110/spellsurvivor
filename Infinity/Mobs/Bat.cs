@@ -29,7 +29,7 @@ public partial class Bat : RigidBody2D, IEntity
             {
                 if (node is EntityEnemy enemy)
                 {
-                    ((IEntity)enemy).ApplayDamage(Damage, this, this);
+                    ((IEntity)enemy).ApplayDamage(Damage, this, this, "Player/Bat");
                 }
             })
             .AddTo(this);
@@ -80,7 +80,7 @@ public partial class Bat : RigidBody2D, IEntity
 
     EntityState IEntity.State => throw new NotImplementedException();
 
-    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
+    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer, string causerPath)
     {
         // Do nothing
     }

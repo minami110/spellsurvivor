@@ -186,6 +186,7 @@ public partial class GunWeapon : WeaponBase
                 prj.Knockback = State.Knockback.CurrentValue;
                 prj.LifeFrame = _life;
                 prj.PenetrateSettings = (BulletProjectile.PenetrateType)_penetrate;
+                prj.CauserPath = CauserPath;
             }
 
             if (_muzzle is not null)

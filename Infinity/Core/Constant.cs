@@ -30,7 +30,6 @@ public static class Constant
     public static readonly StringName GroupNameWeapon = new("Weapon");
     public static readonly StringName GroupNameProjectile = new("Projectile");
     public static readonly StringName GroupNamePickableItem = new("PickableItem");
-    public static readonly StringName GroupNameEnemy = new("Enemy");
 }
 
 public static class GroupNames
@@ -39,6 +38,7 @@ public static class GroupNames
     public static readonly StringName PlayerState = new("PlayerState");
     public static readonly StringName Pawn = new("Pawn");
     public static readonly StringName Effect = new("Effect");
+    public static readonly StringName Enemy = new("Enemy");
 }
 
 public static class EntityAttributeNames

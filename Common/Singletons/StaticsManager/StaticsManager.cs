@@ -7,13 +7,28 @@ namespace fms;
 
 public readonly struct DamageReport
 {
+    // ダメージを発生させた Entity
+    public required IEntity? Instigator { get; init; }
+
+    // ダメージを受けた Entity
+    public required IEntity Victim { get; init; }
+
+    // 発生したダメージ量
     public required float Amount { get; init; }
-    public required Node Victim { get; init; }
-    public required IEntity Instigator { get; init; }
-    public required Node Causer { get; init; }
-    public required string CauserType { get; init; }
+
+    // ダメージが発生した Global Position
     public required Vector2 Position { get; init; }
-    public required bool IsDead { get; init; }
+
+    // ダメージを発生させた Node
+    public required Node Causer { get; init; }
+
+    // Player/TurretWeapon/Turret など Causer の 所属が確認できるパス
+    public required string CauserPath { get; init; }
+
+    /// <summary>
+    /// 死亡要因になった Damage の場合 true
+    /// </summary>
+    public required bool IsVictimDead { get; init; }
 }
 
 /// <summary>
@@ -41,7 +56,7 @@ public partial class StaticsManager : CanvasLayer
 
     private readonly Dictionary<string, List<DamageReport>> _damageInfoByCauser = new();
 
-    private readonly Subject<DamageReport> _enemyDamageOccurred = new();
+    private readonly Subject<DamageReport> _updatedDamageInfos = new();
 
     /// <summary>
     /// Causer ごとのダメージ情報テーブル
@@ -62,8 +77,8 @@ public partial class StaticsManager : CanvasLayer
     /// <summary>
     /// 敵がダメージを受けた際に発生するイベント
     /// </summary>
-    public static Observable<DamageReport> EnemyDamageOccurred =>
-        _instance?._enemyDamageOccurred ?? Observable.Empty<DamageReport>();
+    public static Observable<DamageReport> UpdatedDamageInfos =>
+        _instance?._updatedDamageInfos ?? Observable.Empty<DamageReport>();
 
     public override void _Notification(int what)
     {
@@ -74,7 +89,7 @@ public partial class StaticsManager : CanvasLayer
         else if (what == NotificationExitTree)
         {
             _instance = null;
-            _enemyDamageOccurred.Dispose();
+            _updatedDamageInfos.Dispose();
         }
     }
 
@@ -85,41 +100,35 @@ public partial class StaticsManager : CanvasLayer
 
     /// <summary>
     /// </summary>
-    public static void CommitDamage(in DamageReport report)
+    public static void ReportDamage(in DamageReport report)
     {
-        if (_instance is null)
+        if (_instance is null || !IsInstanceValid(_instance) || _instance.IsQueuedForDeletion())
         {
             return;
         }
 
-        if (_instance.IsQueuedForDeletion() || !IsInstanceValid(_instance))
-        {
-            return;
-        }
-
-        // ダメージを与えたもの (Causer) ごとにダメージ情報を保存する
-        var causerType = report.CauserType;
-        if (!_instance._damageInfoByCauser.TryGetValue(causerType, out var damageInfos))
+        // Causer Path ごとにダメージ情報を保持
+        var causerPath = report.CauserPath;
+        if (!_instance._damageInfoByCauser.TryGetValue(causerPath, out var damageInfos))
         {
             damageInfos = new List<DamageReport>();
-            _instance._damageInfoByCauser[causerType] = damageInfos;
+            _instance._damageInfoByCauser[causerPath] = damageInfos;
         }
 
         damageInfos.Add(report);
-
+        _instance._updatedDamageInfos.OnNext(report);
 
         var victim = report.Victim;
 
         // プレイヤーがダメージを受けた場合 
-        if (victim.IsInGroup(GroupNames.Player))
+        if (victim is EntityPlayer)
         {
-            _instance.PopUpDamageHud(DamageTakeOwner.Player, report.Amount, report.Position, report.IsDead);
+            _instance.PopUpDamageHud(DamageTakeOwner.Player, report.Amount, report.Position, report.IsVictimDead);
         }
         // 敵がダメージを受けた場合
-        else if (victim.IsInGroup(Constant.GroupNameEnemy))
+        else if (victim is EntityEnemy)
         {
-            _instance.PopUpDamageHud(DamageTakeOwner.Enemy, report.Amount, report.Position, report.IsDead);
-            _instance._enemyDamageOccurred.OnNext(report);
+            _instance.PopUpDamageHud(DamageTakeOwner.Enemy, report.Amount, report.Position, report.IsVictimDead);
         }
     }
 

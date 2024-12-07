@@ -99,16 +99,16 @@ public partial class EntityPlayer : CharacterBody2D, IEntity
             Victim = this,
             Instigator = this, // 自分自身で回復ということに..
             Causer = this,
-            CauserType = GetType().Name,
+            CauserPath = "Player",
             Position = GlobalPosition,
-            IsDead = false
+            IsVictimDead = false
         };
-        StaticsManager.CommitDamage(info);
+        StaticsManager.ReportDamage(info);
     }
 
     public EntityState State { get; private set; } = null!;
 
-    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
+    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer, string causerPath)
     {
         if (amount == 0f)
         {
@@ -143,11 +143,11 @@ public partial class EntityPlayer : CharacterBody2D, IEntity
             Victim = this,
             Instigator = instigator,
             Causer = causer,
-            CauserType = causer.GetType().Name,
+            CauserPath = causerPath,
             Position = GlobalPosition,
-            IsDead = false
+            IsVictimDead = false
         };
-        StaticsManager.CommitDamage(info);
+        StaticsManager.ReportDamage(info);
     }
 
     bool IEntity.IsDead => throw new NotImplementedException();

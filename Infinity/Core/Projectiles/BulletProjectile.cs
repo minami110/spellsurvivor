@@ -61,7 +61,7 @@ public partial class BulletProjectile : BaseProjectile
                 return;
             }
 
-            entity.ApplayDamage(Damage, Weapon.OwnedEntity, Weapon);
+            entity.ApplayDamage(Damage, Weapon.OwnedEntity, Weapon, CauserPath);
             SendHitInfo(body);
 
             // ToDo: Knockback 処理, 型があいまい

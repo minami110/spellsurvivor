@@ -30,6 +30,8 @@ public partial class StaticDamage : Area2D
     /// </summary>
     internal uint Knockback { get; set; }
 
+    internal string CauserPath { get; set; } = string.Empty;
+
     public Observable<Dictionary> Hit => _hitSubject;
 
     private CollisionShape2D CollisionShape
@@ -103,9 +105,8 @@ public partial class StaticDamage : Area2D
                 return;
             }
 
-            // ToDo: IEntity に雑にキャスト
             // ダメージを与える
-            entity.ApplayDamage(Damage, weapon.OwnedEntity, weapon);
+            entity.ApplayDamage(Damage, weapon.OwnedEntity, weapon, CauserPath);
 
             // Hit 通知
             SendHitInfo(body);

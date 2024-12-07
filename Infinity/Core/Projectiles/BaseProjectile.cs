@@ -82,9 +82,14 @@ public partial class BaseProjectile : Area2D
     /// </summary>
     public Vector2 LinearVelocity { get; private set; }
 
+    /// <summary>
+    /// 前のフレームの移動ベクトル
+    /// </summary>
     public Vector2 PrevLinearVelocity { get; private set; }
 
     private protected bool IsDead => _deadSubject.IsDisposed;
+
+    internal string CauserPath { get; set; } = string.Empty;
 
     protected CollisionShape2D CollisionShape
     {
