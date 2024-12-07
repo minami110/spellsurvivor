@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://hkhya7f6pxu0" path="res://Infinity/HUDs/Shop/SellingWeaponCard/SellingWeaponCardContainer.tscn" id="4_7hk4g"]
 [ext_resource type="PackedScene" uid="uid://3cf1cbaj3tc7" path="res://Infinity/HUDs/PlayerStatusHud.tscn" id="5_3laas"]
 [ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/Factions/ActiveFactionHud.tscn" id="5_jthwe"]
-[ext_resource type="PackedScene" uid="uid://618nuo8aeq2m" path="res://Developments/DamageInfo.tscn" id="6_ralin"]
+[ext_resource type="PackedScene" uid="uid://618nuo8aeq2m" path="res://Infinity/HUDs/DamageInfo/DamageInfo.tscn" id="6_ralin"]
 
 [node name="ShopHUD" type="CanvasLayer"]
 

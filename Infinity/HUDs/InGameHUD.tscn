@@ -6,7 +6,7 @@
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://base/fonts/Verdana.ttf" id="4_hsb5i"]
 [ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/Factions/ActiveFactionHud.tscn" id="5_26dji"]
 [ext_resource type="PackedScene" uid="uid://3cf1cbaj3tc7" path="res://Infinity/HUDs/PlayerStatusHud.tscn" id="6_8q06y"]
-[ext_resource type="PackedScene" uid="uid://618nuo8aeq2m" path="res://Developments/DamageInfo.tscn" id="7_d473p"]
+[ext_resource type="PackedScene" uid="uid://618nuo8aeq2m" path="res://Infinity/HUDs/DamageInfo/DamageInfo.tscn" id="7_d473p"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ntlvd"]
 font = ExtResource("4_hsb5i")

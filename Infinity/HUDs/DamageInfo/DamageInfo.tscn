@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://618nuo8aeq2m"]
+
+[ext_resource type="Script" path="res://Infinity/HUDs/DamageInfo/DamageInfo.cs" id="1_f17xu"]
+
+[node name="DamageInfo" type="Control"]
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 300.0
+offset_bottom = 200.0
+script = ExtResource("1_f17xu")
+metadata/_edit_group_ = true
+
+[node name="Tree" type="Tree" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/inner_item_margin_top = 5
+theme_override_constants/inner_item_margin_right = 5
+theme_override_constants/inner_item_margin_left = 5
+theme_override_constants/inner_item_margin_bottom = 5
+theme_override_font_sizes/font_size = 16
+columns = 2
+allow_search = false
+hide_folding = true
+hide_root = true
+select_mode = 1
