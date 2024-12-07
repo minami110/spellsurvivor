@@ -34,9 +34,6 @@ internal partial class BattleResultHudController : Node
             else
             {
                 self.GetNode<Control>("%RootPanel").Hide();
-
-                // ToDo: ここで 毎 Wave 統計情報を削除しています
-                StaticsManager.ClearDamageInfoTable();
             }
         });
 

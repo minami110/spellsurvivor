@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using Godot;
+﻿using Godot;
 using R3;
 
 namespace fms;
@@ -53,32 +51,14 @@ public partial class StaticsManager : CanvasLayer
     }
 
     private static StaticsManager? _instance;
+    private readonly Subject<DamageReport> _reportedDamage = new();
 
-    private readonly Dictionary<string, List<DamageReport>> _damageInfoByCauser = new();
-
-    private readonly Subject<DamageReport> _updatedDamageInfos = new();
-
-    /// <summary>
-    /// Causer ごとのダメージ情報テーブル
-    /// </summary>
-    public static IReadOnlyDictionary<string, List<DamageReport>> DamageInfoByCauser
-    {
-        get
-        {
-            if (_instance is not null)
-            {
-                return _instance._damageInfoByCauser;
-            }
-
-            return ImmutableDictionary<string, List<DamageReport>>.Empty;
-        }
-    }
 
     /// <summary>
     /// 敵がダメージを受けた際に発生するイベント
     /// </summary>
-    public static Observable<DamageReport> UpdatedDamageInfos =>
-        _instance?._updatedDamageInfos ?? Observable.Empty<DamageReport>();
+    public static Observable<DamageReport> ReportedDamage =>
+        _instance?._reportedDamage ?? Observable.Empty<DamageReport>();
 
     public override void _Notification(int what)
     {
@@ -89,13 +69,8 @@ public partial class StaticsManager : CanvasLayer
         else if (what == NotificationExitTree)
         {
             _instance = null;
-            _updatedDamageInfos.Dispose();
+            _reportedDamage.Dispose();
         }
-    }
-
-    public static void ClearDamageInfoTable()
-    {
-        _instance?._damageInfoByCauser.Clear();
     }
 
     /// <summary>
@@ -107,16 +82,7 @@ public partial class StaticsManager : CanvasLayer
             return;
         }
 
-        // Causer Path ごとにダメージ情報を保持
-        var causerPath = report.CauserPath;
-        if (!_instance._damageInfoByCauser.TryGetValue(causerPath, out var damageInfos))
-        {
-            damageInfos = new List<DamageReport>();
-            _instance._damageInfoByCauser[causerPath] = damageInfos;
-        }
-
-        damageInfos.Add(report);
-        _instance._updatedDamageInfos.OnNext(report);
+        _instance._reportedDamage.OnNext(report);
 
         var victim = report.Victim;
 

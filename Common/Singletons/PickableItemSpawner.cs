@@ -20,7 +20,7 @@ public partial class PickableItemSpawner : Node
             Instance = this;
             LoadPickableItemScenesDynamic();
 
-            StaticsManager.UpdatedDamageInfos
+            StaticsManager.ReportedDamage
                 .Where(x => x.IsVictimDead)
                 .Subscribe(x =>
                 {
