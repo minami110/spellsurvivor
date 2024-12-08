@@ -19,6 +19,8 @@ public partial class Bat : RigidBody2D, IEntity
 
     public override void _EnterTree()
     {
+        AddToGroup(GroupNames.Mob);
+
         _changeDirectionSpeed = (float)GD.Randfn(0.5f, 0.2f);
         _currentDirection = GlobalTransform.X;
 

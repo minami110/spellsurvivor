@@ -218,7 +218,7 @@ public partial class EntityEnemy : RigidBody2D, IEntity
     private protected void OnEndKnockback()
     {
         // Knockback 終了時に Mass を元に戻す
-        CollisionMask = Constant.LAYER_MOB;
+        CollisionMask = Constant.LAYER_ENEMY;
     }
 
     /// <summary>

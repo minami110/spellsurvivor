@@ -103,7 +103,7 @@ public partial class Licium : FactionBase
             bat.Lifetime = 240u;
             bat.GlobalPosition = report.Position;
             var world = GetParent().GetParent(); // Note: World/Player/Faction(this)
-            world.AddChild(bat);
+            world.SetDeferred(Node.MethodName.AddChild, bat);
             this.DebugLog($"Bat spawned at {report.Position} in {world}");
         }
     }

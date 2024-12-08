@@ -53,7 +53,7 @@ public partial class RectAreaProjectile : AreaProjectile
     {
         Monitorable = false;
         CollisionLayer = Constant.LAYER_NONE;
-        CollisionMask = Constant.LAYER_MOB;
+        CollisionMask = Constant.LAYER_ENEMY;
         UpdateSizeAndOffset(_size, _offset);
     }
 

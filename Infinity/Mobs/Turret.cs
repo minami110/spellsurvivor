@@ -38,6 +38,11 @@ public partial class Turret : Node2D, IEntity
 
     private AimEntity AimEntity => GetNode<AimEntity>("AimEntity");
 
+    public override void _EnterTree()
+    {
+        AddToGroup(GroupNames.Mob);
+    }
+
     public override void _Ready()
     {
         AimEntity.Mode = AimEntity.TargetMode.NearestEntity;

@@ -10,7 +10,8 @@ public static class Constant
     public const uint LAYER_NONE = 0u;
     public const uint LAYER_PLAYER = 1u << 0;
     public const uint LAYER_DAMAGE = 1u << 1;
-    public const uint LAYER_MOB = 1u << 2;
+    public const uint LAYER_ENEMY = 1u << 2;
+    public const uint LAYER_MOB = 1u << 3;
     public const uint LAYER_WALL = 1u << 4;
 
     public const uint MINION_MIN_LEVEL = 1u;
@@ -39,6 +40,7 @@ public static class GroupNames
     public static readonly StringName Pawn = new("Pawn");
     public static readonly StringName Effect = new("Effect");
     public static readonly StringName Enemy = new("Enemy");
+    public static readonly StringName Mob = new("Mob");
 }
 
 public static class EntityAttributeNames
