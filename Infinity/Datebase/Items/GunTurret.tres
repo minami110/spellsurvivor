@@ -1,16 +1,16 @@
 [gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://c34ww550xmq4t"]
 
-[ext_resource type="Texture2D" uid="uid://4ld76y2twnn7" path="res://Common/Resources/Textures/Emoji/flying_saucer.png" id="1_f7vev"]
+[ext_resource type="Texture2D" uid="uid://wqpy3eieq0ie" path="res://Infinity/Weapons/Textures/gun_turret.png" id="1_jatsm"]
 [ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_wnldf"]
 
 [resource]
 script = ExtResource("2_wnldf")
 Damage = 10
-CooldownTime = 10
+CooldownTime = 180
 AnimationSpeedRate = 100.0
 Knockback = 20
 Faction = 0
-Tier = 1
-Price = 3
-Sprite = ExtResource("1_f7vev")
+Tier = 2
+Price = 10
+Sprite = ExtResource("1_jatsm")
 Description = "タレットを配置"

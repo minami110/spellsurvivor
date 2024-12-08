@@ -40,10 +40,6 @@ size_flags_vertical = 6
 text = "Reward: $100"
 horizontal_alignment = 1
 
-[node name="VBoxWeaponStats" type="VBoxContainer" parent="RootPanel/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-
 [node name="AcceptButton" type="Button" parent="RootPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 10

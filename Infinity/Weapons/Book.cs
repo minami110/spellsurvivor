@@ -18,21 +18,22 @@ public partial class Book : WeaponBase
     {
         for (var i = 0; i < level; i++)
         {
-            var prj = _projectile.Instantiate<BulletProjectile>();
+            var factory = new BulletProjectileFactory
             {
-                // ダメージ, ノックバック を設定する
-                prj.Damage = State.Damage.CurrentValue;
-                prj.Knockback = State.Knockback.CurrentValue;
-
+                Instigator = OwnedEntity,
+                Causer = this,
+                CauserPath = CauserPath,
+                Damage = State.Damage.CurrentValue,
+                Knockback = State.Knockback.CurrentValue,
                 // 武器の持つクールダウンに揃える (+2 はちらつき防止)
-                prj.LifeFrame = State.AttackSpeed.CurrentValue + 2;
+                Lifetime = State.AttackSpeed.CurrentValue + 2,
+                PenetrateSettings = BulletProjectile.PenetrateType.Enemy | BulletProjectile.PenetrateType.Wall,
+                Position = GlobalPosition
+            };
 
-                // 貫通設定
-                prj.PenetrateSettings = BulletProjectile.PenetrateType.Enemy | BulletProjectile.PenetrateType.Wall;
-            }
+            var prj = factory.Create(_projectile);
 
             // Orbit Mod を追加
-
             // 武器の持つクールダウンにあわせて360度回転するような速度を設定する
             // Note: 360度 / クールダウン(フレーム) / 60 フレーム (= かかる秒数)
             var speed = 360f / (State.AttackSpeed.CurrentValue / 60f);
@@ -44,7 +45,7 @@ public partial class Book : WeaponBase
             prj.AddChild(
                 new Orbit { Target = (Node2D)OwnedEntity, Radius = _radius, OffsetDeg = offset, Speed = speed });
 
-            AddProjectile(prj, GlobalPosition);
+            AddProjectile(prj);
         }
 
         RestartCoolDown();

@@ -180,27 +180,37 @@ public partial class GunWeapon : WeaponBase
                 }
             }
 
-            var prj = _projectile.Instantiate<BulletProjectile>();
-            {
-                prj.Damage = State.Damage.CurrentValue;
-                prj.Knockback = State.Knockback.CurrentValue;
-                prj.LifeFrame = _life;
-                prj.PenetrateSettings = (BulletProjectile.PenetrateType)_penetrate;
-            }
-
+            Vector2 constantForce;
+            Vector2 position;
             if (_muzzle is not null)
             {
-                prj.ConstantForce = _muzzle.GlobalTransform.X * _speed;
-                AddProjectile(prj, _muzzle.GlobalPosition);
+                constantForce = _muzzle.GlobalTransform.X * _speed;
+                position = _muzzle.GlobalPosition;
             }
             else
             {
-                prj.ConstantForce = AimEntity.GlobalTransform.X * _speed;
-                AddProjectile(prj, GlobalPosition);
+                constantForce = AimEntity.GlobalTransform.X * _speed;
+                position = GlobalPosition;
             }
 
+            var factory = new BulletProjectileFactory
+            {
+                Instigator = OwnedEntity,
+                Causer = this,
+                CauserPath = CauserPath,
+                Damage = State.Damage.CurrentValue,
+                Knockback = State.Knockback.CurrentValue,
+                Lifetime = _life,
+                PenetrateSettings = (BulletProjectile.PenetrateType)_penetrate,
+                ConstantForce = constantForce,
+                Position = position
+            };
+
+            var prj = factory.Create(_projectile);
+            AddProjectile(prj);
+
             // Note: AddTo はシーン内にないとエラーになるので, AddProjectile の後に呼ぶ
-            // ToDo: 暫定実装, 敵にヒットするたびにダメージを半分にする
+            // ToDo: 暫定の共通実装, 敵にヒットするたびにダメージを半分にする
             if (prj.PenetrateSettings.HasFlag(BulletProjectile.PenetrateType.Enemy))
             {
                 prj.Hit

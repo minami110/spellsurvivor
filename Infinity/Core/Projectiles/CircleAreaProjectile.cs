@@ -55,7 +55,7 @@ public partial class CircleAreaProjectile : AreaProjectile
     {
         Monitorable = false;
         CollisionLayer = Constant.LAYER_NONE;
-        CollisionMask = Constant.LAYER_MOB;
+        CollisionMask = Constant.LAYER_ENEMY;
         UpdateRadiusAndOffset(_radius, _offset);
     }
 

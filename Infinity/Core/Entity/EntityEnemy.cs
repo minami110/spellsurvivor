@@ -1,3 +1,4 @@
+using System.IO;
 using Godot;
 using R3;
 using Range = Godot.Range;
@@ -63,13 +64,25 @@ public partial class EntityEnemy : RigidBody2D, IEntity
     /// </summary>
     public Vector2 TargetVelocity { get; private protected set; }
 
+    protected string CauserPath
+    {
+        get
+        {
+            var scenePath = GetSceneFilePath();
+            // ファイル名を抽出する
+            // Note: res://foo/bar/super_spider.tscn => SuperSpider 
+            var fileName = Path.GetFileNameWithoutExtension(scenePath);
+            return "Enemy/" + fileName.ToPascalCase();
+        }
+    }
+
     public override void _Notification(int what)
     {
         switch ((long)what)
         {
             case NotificationEnterTree:
             {
-                AddToGroup(Constant.GroupNameEnemy);
+                AddToGroup(GroupNames.Enemy);
                 break;
             }
             case NotificationReady:
@@ -205,7 +218,7 @@ public partial class EntityEnemy : RigidBody2D, IEntity
     private protected void OnEndKnockback()
     {
         // Knockback 終了時に Mass を元に戻す
-        CollisionMask = Constant.LAYER_MOB;
+        CollisionMask = Constant.LAYER_ENEMY;
     }
 
     /// <summary>
@@ -237,24 +250,22 @@ public partial class EntityEnemy : RigidBody2D, IEntity
         CallDeferred(GodotObject.MethodName.Free);
     }
 
-    private void OnTakeDamage(float amount, IEntity instigator, Node causer)
+    private void OnTakeDamage(float amount, IEntity instigator, Node causer, string causerPath)
     {
         // 体力が 0 以下になったら死亡
         if (State.Health.CurrentValue <= 0)
         {
-            // Dead
             var report = new DamageReport
             {
                 Instigator = instigator,
-                Causer = causer,
-                CauserType = causer.GetType().Name,
                 Victim = this,
                 Amount = amount,
                 Position = GlobalPosition,
-                IsDead = true
+                Causer = causer,
+                CauserPath = causerPath,
+                IsVictimDead = true
             };
-            StaticsManager.CommitDamage(report);
-
+            StaticsManager.ReportDamage(report);
             KillByDamage();
         }
         // まだ体力が残っているとき
@@ -263,14 +274,14 @@ public partial class EntityEnemy : RigidBody2D, IEntity
             var report = new DamageReport
             {
                 Instigator = instigator,
-                Causer = causer,
-                CauserType = causer.GetType().Name,
                 Victim = this,
                 Amount = amount,
                 Position = GlobalPosition,
-                IsDead = false
+                Causer = causer,
+                CauserPath = causerPath,
+                IsVictimDead = false
             };
-            StaticsManager.CommitDamage(report);
+            StaticsManager.ReportDamage(report);
             TakeDamageAnimationAsync();
             UpdateHealthBar();
         }
@@ -319,7 +330,7 @@ public partial class EntityEnemy : RigidBody2D, IEntity
     /// <summary>
     /// プレイヤーなどからダメージを受けるときの処理
     /// </summary>
-    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer)
+    void IEntity.ApplayDamage(float amount, IEntity instigator, Node causer, string causerPath)
     {
         if (IsDead || amount.Equals(0f))
         {
@@ -327,7 +338,7 @@ public partial class EntityEnemy : RigidBody2D, IEntity
         }
 
         State.ApplyDamage((uint)amount);
-        OnTakeDamage(amount, instigator, causer);
+        OnTakeDamage(amount, instigator, causer, causerPath);
     }
 
     Vector2 IEntity.Position => GlobalPosition;

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4ld76y2twnn7"
-path="res://.godot/imported/flying_saucer.png-881d177dc23b5732b204ae265e8190f2.ctex"
+uid="uid://c1lnwewcn3aec"
+path="res://.godot/imported/turrent_head.png-c794e1c4dc876983401a1b656bdf5812.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Common/Resources/Textures/Emoji/flying_saucer.png"
-dest_files=["res://.godot/imported/flying_saucer.png-881d177dc23b5732b204ae265e8190f2.ctex"]
+source_file="res://base/textures/mobs/turrent_head.png"
+dest_files=["res://.godot/imported/turrent_head.png-c794e1c4dc876983401a1b656bdf5812.ctex"]
 
 [params]
 

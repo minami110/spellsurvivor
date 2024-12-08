@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://bqvverbs14wnq"]
+
+[ext_resource type="Script" path="res://Infinity/Mobs/Turret.cs" id="1_irhf2"]
+[ext_resource type="Texture2D" uid="uid://cj3rthsrwdlnt" path="res://base/textures/mobs/turrent_leg.png" id="2_23n34"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="2_aj075"]
+[ext_resource type="Texture2D" uid="uid://c1lnwewcn3aec" path="res://base/textures/mobs/turrent_head.png" id="4_ejpil"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gko2k"]
+radius = 28.18
+
+[node name="Turret" type="Node2D"]
+script = ExtResource("1_irhf2")
+
+[node name="LegSprite" type="Sprite2D" parent="."]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_23n34")
+
+[node name="AimEntity" type="Area2D" parent="."]
+script = ExtResource("2_aj075")
+
+[node name="Sprite" type="Sprite2D" parent="AimEntity"]
+unique_name_in_owner = true
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("4_ejpil")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("CircleShape2D_gko2k")

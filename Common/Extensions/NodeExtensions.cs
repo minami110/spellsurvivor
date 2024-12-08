@@ -46,6 +46,30 @@ public static partial class NodeExtensions
     }
 
     /// <summary>
+    /// Finds the first parent node of the specified type.
+    /// </summary>
+    /// <param name="node">The starting node from which to search for a parent of type T.</param>
+    /// <typeparam name="T">The type of the parent node to find.</typeparam>
+    /// <returns>The first parent node of the specified type, or null if no such parent is found.</returns>
+    public static T? FindInParent<T>(this Node node)
+        where T : Node
+    {
+        var parent = node.GetParent();
+
+        while (parent is not null)
+        {
+            if (parent is T t)
+            {
+                return t;
+            }
+
+            parent = parent.GetParent();
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Finds sibling nodes with the specified pattern and type. GetParent().FindChildren() wrapper.
     /// </summary>
     /// <param name="node"></param>

@@ -98,6 +98,7 @@ public partial class PiercingWeapon : WeaponBase
     public override void _Ready()
     {
         // "ダメージを与えたとき" の処理用にイベントを登録
+        StaticDamage.CauserPath = CauserPath;
         StaticDamage.Hit.Subscribe(this, (payload, state) => { state.OnHitAnyEntity(payload); }).AddTo(this);
     }
 
@@ -153,7 +154,11 @@ public partial class PiercingWeapon : WeaponBase
             }
 
             // OwnedEntity (Player) を回復する
-            OwnedEntity.ApplayDamage(-5.0f, OwnedEntity, this);
+            var payload = new Dictionary
+            {
+                { "EntityType", "Player" }
+            };
+            OwnedEntity.ApplayDamage(-5.0f, OwnedEntity, this, CauserPath);
         }
     }
 

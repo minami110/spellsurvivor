@@ -46,7 +46,7 @@ public partial class ParasiteAreaDamage : AreaProjectile
             // 親の位置に戻る
             case State.FollowParent:
             {
-                var pos = Weapon.GlobalPosition;
+                var pos = GetParent<Node2D>().GlobalPosition;
                 // 近ければ近いほどゆっくりにする速度バイアスを計算する
                 var bias = Mathf.Max(1f - GlobalPosition.DistanceTo(pos) / 50f, 0f);
                 ConstantForce = (pos - GlobalPosition).Normalized() * FollowSpeed * (1f - bias);

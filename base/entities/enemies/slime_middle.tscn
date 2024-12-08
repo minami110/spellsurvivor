@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://ctawro6qd37ym"]
 
 [ext_resource type="PackedScene" uid="uid://32462tqdb2ax" path="res://Infinity/Enemy/(Template) SplitEnemy.tscn" id="1_mab6m"]
-[ext_resource type="PackedScene" uid="uid://caewigs7lr4m3" path="res://Infinity/Enemy/(Enemy) SlimeSmall.tscn" id="3_gfug3"]
+[ext_resource type="PackedScene" uid="uid://caewigs7lr4m3" path="res://base/entities/enemies/slime_small.tscn" id="3_gfug3"]
 [ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="3_xw58w"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wasxr"]
