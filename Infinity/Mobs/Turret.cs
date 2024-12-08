@@ -58,22 +58,21 @@ public partial class Turret : Node2D, IEntity
             if (AimEntity.IsAiming)
             {
                 var enemy = (Node2D)AimEntity.TargetEntity!;
-                var bullet = BulletScene.Instantiate<BulletProjectile>();
+                var factory = new BulletProjectileFactory
                 {
-                    bullet.Instigator = this;
-                    bullet.Causer = this;
-                    bullet.CauserPath = CauserPath;
-                    bullet.Damage = Damage;
-                    bullet.Knockback = Knockback;
-                    bullet.LifeFrame = BulletLifetime;
-                    bullet.GlobalPosition = GlobalPosition;
-                    bullet.ConstantForce = (enemy.GlobalPosition - GlobalPosition).Normalized() * BulletSpeed;
-                }
-                AddSibling(bullet);
+                    Instigator = this,
+                    Causer = this,
+                    CauserPath = CauserPath,
+                    Damage = Damage,
+                    Knockback = Knockback,
+                    Lifetime = BulletLifetime,
+                    Position = GlobalPosition,
+                    ConstantForce = (enemy.GlobalPosition - GlobalPosition).Normalized() * BulletSpeed
+                };
+                AddSibling(factory.Create(BulletScene));
             }
         }
     }
-
 
     void IGodotNode.AddChild(Node child)
     {
