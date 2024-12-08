@@ -7,7 +7,8 @@
 
 [node name="GunTurret" type="Node2D"]
 script = ExtResource("1_jw7g4")
-_body = ExtResource("2_k5x8q")
+_mobScene = ExtResource("2_k5x8q")
+_bodyEnemyDetectionRadius = 200
 _bullet = ExtResource("3_ay4do")
 _config = ExtResource("4_2ls55")
 AutoPositioning = false

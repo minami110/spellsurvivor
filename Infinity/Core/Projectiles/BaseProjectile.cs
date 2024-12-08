@@ -73,9 +73,20 @@ public partial class BaseProjectile : Area2D
     public uint Age { get; private set; }
 
     /// <summary>
+    /// この Projectile を発射した IEntity
+    /// </summary>
+    public IEntity Instigator { get; set; } = null!;
+
+    /// <summary>
     /// この Projectile を発射した Weapon (OnReady で自動で取得)
     /// </summary>
-    public WeaponBase Weapon { get; private set; } = null!;
+    public Node Causer { get; set; } = null!;
+
+    /// <summary>
+    /// この Projectile を発射した Causer(Weapon) の所属がわかるパス
+    /// e.g. "Player/GunTurret"
+    /// </summary>
+    internal string CauserPath { get; set; } = string.Empty;
 
     /// <summary>
     /// 移動ベクトル
@@ -88,8 +99,6 @@ public partial class BaseProjectile : Area2D
     public Vector2 PrevLinearVelocity { get; private set; }
 
     private protected bool IsDead => _deadSubject.IsDisposed;
-
-    internal string CauserPath { get; set; } = string.Empty;
 
     protected CollisionShape2D CollisionShape
     {
@@ -128,15 +137,6 @@ public partial class BaseProjectile : Area2D
 
                 // Note: Override しないと動かないので手動で
                 SetPhysicsProcess(true);
-
-                try
-                {
-                    Weapon = FindWeaponInParent();
-                }
-                catch (InvalidCastException e)
-                {
-                    throw new InvalidProgramException("Projectile の先祖に WeaponBase が見つかりませんでした", e);
-                }
 
                 break;
             }
@@ -178,6 +178,12 @@ public partial class BaseProjectile : Area2D
         OnDead(reason);
     }
 
+
+    protected void ApplayDamageToEntity(IEntity entity, float amount)
+    {
+        entity.ApplayDamage(amount, Instigator, Causer, CauserPath);
+    }
+
     private protected virtual void IntegrateForces(double delta)
     {
         LinearVelocity += ConstantForce;
@@ -197,28 +203,6 @@ public partial class BaseProjectile : Area2D
         // LinearVelocity の更新
         PrevLinearVelocity = LinearVelocity;
         LinearVelocity = Vector2.Zero; // Damping: 0 相当の挙動
-    }
-
-    /// <summary>
-    /// Projectile を生成した Weapon を取得する, 先祖の何処かにいるはずなので再帰的に検索する
-    /// </summary>
-    /// <returns></returns>
-    private WeaponBase FindWeaponInParent()
-    {
-        var parent = GetParent();
-
-        while (parent is not null)
-        {
-            if (parent is WeaponBase weapon)
-            {
-                return weapon;
-            }
-
-            parent = parent.GetParent();
-            parent.GetParentOrNull<WeaponBase>();
-        }
-
-        throw new InvalidProgramException("Failed to find WeaponBase");
     }
 
     private void OnDead(WhyDead reason)

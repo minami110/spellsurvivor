@@ -61,7 +61,7 @@ public partial class BulletProjectile : BaseProjectile
                 return;
             }
 
-            entity.ApplayDamage(Damage, Weapon.OwnedEntity, Weapon, CauserPath);
+            ApplayDamageToEntity(entity, Damage);
             SendHitInfo(body);
 
             // ToDo: Knockback 処理, 型があいまい
@@ -74,13 +74,6 @@ public partial class BulletProjectile : BaseProjectile
                     enemy.ApplyKnockback(impulse);
                 }
             }
-
-            /*
-            if (_hitSound != null)
-            {
-                SoundManager.PlaySoundEffect(_hitSound);
-            }
-            */
 
             // 敵を貫通しないなら
             if (!PenetrateSettings.HasFlag(PenetrateType.Enemy))

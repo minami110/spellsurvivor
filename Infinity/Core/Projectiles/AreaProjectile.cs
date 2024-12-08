@@ -57,7 +57,7 @@ public partial class AreaProjectile : BaseProjectile
         {
             if (body is IEntity entity)
             {
-                entity.ApplayDamage(Damage, Weapon.OwnedEntity, Weapon, CauserPath);
+                ApplayDamageToEntity(entity, Damage);
 
                 // 複数の敵にヒットするため, HitInfo は最初の敵に対してのみ生成する
                 // Note: Hit 通知に依存した武器の Stack 処理などがあるため, Hit したかどうかは 1回の攻撃で1回まで

@@ -182,11 +182,13 @@ public partial class GunWeapon : WeaponBase
 
             var prj = _projectile.Instantiate<BulletProjectile>();
             {
+                prj.Instigator = OwnedEntity;
+                prj.Causer = this;
+                prj.CauserPath = CauserPath;
                 prj.Damage = State.Damage.CurrentValue;
                 prj.Knockback = State.Knockback.CurrentValue;
                 prj.LifeFrame = _life;
                 prj.PenetrateSettings = (BulletProjectile.PenetrateType)_penetrate;
-                prj.CauserPath = CauserPath;
             }
 
             if (_muzzle is not null)

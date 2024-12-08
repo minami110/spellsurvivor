@@ -34,6 +34,8 @@ public partial class Turret : Node2D, IEntity
 
     private uint _age;
 
+    public string CauserPath { get; set; } = null!;
+
     private AimEntity AimEntity => GetNode<AimEntity>("AimEntity");
 
     public override void _Ready()
@@ -58,6 +60,9 @@ public partial class Turret : Node2D, IEntity
                 var enemy = (Node2D)AimEntity.TargetEntity!;
                 var bullet = BulletScene.Instantiate<BulletProjectile>();
                 {
+                    bullet.Instigator = this;
+                    bullet.Causer = this;
+                    bullet.CauserPath = CauserPath;
                     bullet.Damage = Damage;
                     bullet.Knockback = Knockback;
                     bullet.LifeFrame = BulletLifetime;
