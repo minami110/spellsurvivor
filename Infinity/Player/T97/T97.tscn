@@ -1,7 +1,7 @@
-[gd_scene load_steps=26 format=3 uid="uid://dcmaprrpbt7o"]
+[gd_scene load_steps=29 format=3 uid="uid://dcmaprrpbt7o"]
 
 [ext_resource type="Texture2D" uid="uid://bx4swbt6cexub" path="res://Infinity/Player/T97/97anim_parts_back.png" id="1_3eiw8"]
-[ext_resource type="Texture2D" uid="uid://b1xa82lo6vqp6" path="res://Infinity/Player/T97/97anim_parts_hair.png" id="2_02hjd"]
+[ext_resource type="Script" path="res://Infinity/Player/T97/t_97.gd" id="1_55euo"]
 [ext_resource type="Texture2D" uid="uid://dggnuw458wpo5" path="res://Infinity/Player/T97/97anim_parts_leftarm.png" id="3_3iimg"]
 [ext_resource type="Texture2D" uid="uid://cj0jmeurjs2n8" path="res://Infinity/Player/T97/97anim_parts_lefthand.png" id="4_8yk17"]
 [ext_resource type="Texture2D" uid="uid://fkyy8xngxwh5" path="res://Infinity/Player/T97/97anim_parts_body.png" id="5_nkt7m"]
@@ -12,13 +12,16 @@
 [ext_resource type="Texture2D" uid="uid://iig7pkkdc8b3" path="res://Infinity/Player/T97/97anim_parts_left_leg_upper.png" id="10_31heq"]
 [ext_resource type="Texture2D" uid="uid://l250t2sxxsc1" path="res://Infinity/Player/T97/97anim_parts_right_arm.png" id="11_07gts"]
 [ext_resource type="Texture2D" uid="uid://ct3e8vi3qoeu7" path="res://Infinity/Player/T97/97anim_parts_right_hand.png" id="12_76fkc"]
+[ext_resource type="Texture2D" uid="uid://bnp1wesf27lm7" path="res://Infinity/Player/MP37/mp37_anim_parts_hairback.png" id="13_p0dyf"]
 [ext_resource type="Texture2D" uid="uid://c6xs5iat7um8m" path="res://Infinity/Player/T97/97anim_parts_right_leg.png" id="13_rugpx"]
 [ext_resource type="Texture2D" uid="uid://b2yuermmsswjd" path="res://Infinity/Player/T97/97anim_parts_right_leg_upper.png" id="14_mvu53"]
 [ext_resource type="Texture2D" uid="uid://1cjj2ehfbtw8" path="res://Infinity/Player/T97/97anim_parts_face.png" id="15_iw5gh"]
 [ext_resource type="Texture2D" uid="uid://k8dwg28d52mv" path="res://Infinity/Player/T97/97anim_parts_eyeAcc.png" id="16_iswql"]
-[ext_resource type="Texture2D" uid="uid://ce50sn7wumw8a" path="res://Infinity/Player/T97/97anim_parts_hairfront.png" id="17_otenn"]
-[ext_resource type="Texture2D" uid="uid://k2rikl3bo60t" path="res://Infinity/Player/T97/97anim_parts_base_hairAcc.png" id="18_8oerl"]
+[ext_resource type="Script" path="res://Infinity/Player/T97/hairfront.gd" id="18_kxbko"]
+[ext_resource type="Texture2D" uid="uid://bj1chla2kf8wt" path="res://Infinity/Player/MP37/mp37_anim_parts_hairfront のコピー.png" id="18_r02qo"]
+[ext_resource type="Texture2D" uid="uid://c7uoxx2oueabi" path="res://Infinity/Player/MP37/mp37_anim_parts_hairAcc.png" id="19_0n8g2"]
 [ext_resource type="Texture2D" uid="uid://ogr27uveo83" path="res://Infinity/Player/T97/97anim_parts_eye.png" id="19_2n5av"]
+[ext_resource type="Script" path="res://Infinity/Player/T97/animation_player.gd" id="20_m23ya"]
 
 [sub_resource type="Animation" id="Animation_weimd"]
 length = 0.001
@@ -1684,6 +1687,7 @@ _data = {
 }
 
 [node name="T97" type="Node2D"]
+script = ExtResource("1_55euo")
 
 [node name="placement" type="Node2D" parent="."]
 position = Vector2(0, -59)
@@ -1694,7 +1698,7 @@ position = Vector2(0, 59)
 [node name="back" type="Node2D" parent="placement/body"]
 position = Vector2(-6, -2)
 
-[node name="97AnimPartsBack" type="Sprite2D" parent="placement/body/back"]
+[node name="Back" type="Sprite2D" parent="placement/body/back"]
 z_index = -1
 position = Vector2(6, -54)
 texture = ExtResource("1_3eiw8")
@@ -1702,70 +1706,70 @@ texture = ExtResource("1_3eiw8")
 [node name="Arm_L" type="Node2D" parent="placement/body"]
 position = Vector2(14, -33)
 
-[node name="97AnimPartsLeftarm" type="Sprite2D" parent="placement/body/Arm_L"]
+[node name="AnimPartsLeftarm" type="Sprite2D" parent="placement/body/Arm_L"]
 position = Vector2(-14, -23)
 texture = ExtResource("3_3iimg")
 
 [node name="Hand_L" type="Node2D" parent="placement/body/Arm_L"]
 position = Vector2(26, 34)
 
-[node name="97AnimPartsLefthand" type="Sprite2D" parent="placement/body/Arm_L/Hand_L"]
+[node name="AnimPartsLefthand" type="Sprite2D" parent="placement/body/Arm_L/Hand_L"]
 position = Vector2(-40, -57)
 texture = ExtResource("4_8yk17")
 
 [node name="Leg_L" type="Node2D" parent="placement/body"]
 position = Vector2(11, 18)
 
-[node name="97AnimPartsLeftLegUpper" type="Sprite2D" parent="placement/body/Leg_L"]
+[node name="AnimPartsLeftLegUpper" type="Sprite2D" parent="placement/body/Leg_L"]
 position = Vector2(-11, -74)
 texture = ExtResource("10_31heq")
 
 [node name="Foot_L" type="Node2D" parent="placement/body/Leg_L"]
 position = Vector2(5, 61)
 
-[node name="97AnimPartsLeftLeg" type="Sprite2D" parent="placement/body/Leg_L/Foot_L"]
+[node name="AnimPartsLeftLeg" type="Sprite2D" parent="placement/body/Leg_L/Foot_L"]
 position = Vector2(-16, -135)
 texture = ExtResource("9_ip71h")
 
 [node name="Leg_R" type="Node2D" parent="placement/body"]
 position = Vector2(-23, 19)
 
-[node name="97AnimPartsRightLegUpper" type="Sprite2D" parent="placement/body/Leg_R"]
+[node name="AnimPartsRightLegUpper" type="Sprite2D" parent="placement/body/Leg_R"]
 position = Vector2(23, -75)
 texture = ExtResource("14_mvu53")
 
 [node name="Foot_R" type="Node2D" parent="placement/body/Leg_R"]
 position = Vector2(8, 65)
 
-[node name="97AnimPartsRightLeg" type="Sprite2D" parent="placement/body/Leg_R/Foot_R"]
+[node name="AnimPartsRightLeg" type="Sprite2D" parent="placement/body/Leg_R/Foot_R"]
 position = Vector2(15, -140)
 texture = ExtResource("13_rugpx")
 
-[node name="97AnimPartsBody" type="Sprite2D" parent="placement/body"]
+[node name="AnimPartsBody" type="Sprite2D" parent="placement/body"]
 position = Vector2(0, -59)
 texture = ExtResource("5_nkt7m")
 
-[node name="97AnimPartsBodyUpper" type="Sprite2D" parent="placement/body"]
+[node name="AnimPartsBodyUpper" type="Sprite2D" parent="placement/body"]
 position = Vector2(0, -59)
 texture = ExtResource("8_xbyvm")
 
 [node name="bodylower" type="Node2D" parent="placement/body"]
 
-[node name="97AnimPartsBodyLower" type="Sprite2D" parent="placement/body/bodylower"]
+[node name="AnimPartsBodyLower" type="Sprite2D" parent="placement/body/bodylower"]
 position = Vector2(0, -59)
 texture = ExtResource("7_54fta")
 
 [node name="Arm_R" type="Node2D" parent="placement/body"]
 position = Vector2(-18, -33)
 
-[node name="97AnimPartsRightArm" type="Sprite2D" parent="placement/body/Arm_R"]
+[node name="AnimPartsRightArm" type="Sprite2D" parent="placement/body/Arm_R"]
 position = Vector2(18, -23)
 texture = ExtResource("11_07gts")
 
 [node name="Hand_R" type="Node2D" parent="placement/body/Arm_R"]
 position = Vector2(-31, 32)
 
-[node name="97AnimPartsRightHand" type="Sprite2D" parent="placement/body/Arm_R/Hand_R"]
+[node name="AnimPartsRightHand" type="Sprite2D" parent="placement/body/Arm_R/Hand_R"]
 position = Vector2(49, -55)
 texture = ExtResource("12_76fkc")
 
@@ -1776,40 +1780,43 @@ position = Vector2(0, -50)
 z_index = -2
 position = Vector2(6, -160)
 
-[node name="97AnimPartsHair" type="Sprite2D" parent="placement/body/head/HairBack"]
+[node name="AnimPartsHair" type="Sprite2D" parent="placement/body/head/HairBack"]
 position = Vector2(0, 146)
-texture = ExtResource("2_02hjd")
+texture = ExtResource("13_p0dyf")
 
-[node name="97AnimPartsHead" type="Sprite2D" parent="placement/body/head"]
+[node name="AnimPartsHead" type="Sprite2D" parent="placement/body/head"]
 visible = false
 position = Vector2(0, -14)
 texture = ExtResource("6_3qr8n")
 
 [node name="face" type="Node2D" parent="placement/body/head"]
 
-[node name="97AnimPartsFace" type="Sprite2D" parent="placement/body/head/face"]
+[node name="AnimPartsFace" type="Sprite2D" parent="placement/body/head/face"]
 position = Vector2(0, -13)
 texture = ExtResource("15_iw5gh")
 
-[node name="97AnimPartsEyeAcc" type="Sprite2D" parent="placement/body/head/face"]
+[node name="AnimPartsEyeAcc" type="Sprite2D" parent="placement/body/head/face"]
+modulate = Color(0.399428, 0.399428, 0.399428, 1)
 position = Vector2(0, -13)
 texture = ExtResource("16_iswql")
 
 [node name="hairfront" type="Node2D" parent="placement/body/head"]
+script = ExtResource("18_kxbko")
 
-[node name="97AnimPartsHairfront" type="Sprite2D" parent="placement/body/head/hairfront"]
+[node name="AnimPartsHairfront" type="Sprite2D" parent="placement/body/head/hairfront"]
 position = Vector2(0, -13)
-texture = ExtResource("17_otenn")
+texture = ExtResource("18_r02qo")
 
 [node name="headACC" type="Node2D" parent="placement/body/head"]
 
-[node name="97AnimPartsBaseHairAcc" type="Sprite2D" parent="placement/body/head/headACC"]
+[node name="AnimPartsBaseHairAcc" type="Sprite2D" parent="placement/body/head/headACC"]
 position = Vector2(-2.35189, 1.05567)
-texture = ExtResource("18_8oerl")
+texture = ExtResource("19_0n8g2")
 
 [node name="eye" type="Node2D" parent="placement/body/head"]
 
-[node name="97AnimPartsEye" type="Sprite2D" parent="placement/body/head/eye"]
+[node name="AnimPartsEye" type="Sprite2D" parent="placement/body/head/eye"]
+modulate = Color(0.943029, 0.333977, 0.55966, 1)
 position = Vector2(0, -13)
 texture = ExtResource("19_2n5av")
 
@@ -1817,3 +1824,5 @@ texture = ExtResource("19_2n5av")
 libraries = {
 "": SubResource("AnimationLibrary_jswm7")
 }
+speed_scale = 2.304
+script = ExtResource("20_m23ya")
