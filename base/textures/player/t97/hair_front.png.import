@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bj1chla2kf8wt"
-path="res://.godot/imported/mp37_anim_parts_hairfront のコピー.png-9275e9b2e1b20d533f23d64a3c259a99.ctex"
+uid="uid://ce50sn7wumw8a"
+path="res://.godot/imported/hair_front.png-b202d87f1af0cd42013260fb46452b37.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/MP37/mp37_anim_parts_hairfront のコピー.png"
-dest_files=["res://.godot/imported/mp37_anim_parts_hairfront のコピー.png-9275e9b2e1b20d533f23d64a3c259a99.ctex"]
+source_file="res://base/textures/player/t97/hair_front.png"
+dest_files=["res://.godot/imported/hair_front.png-b202d87f1af0cd42013260fb46452b37.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://l250t2sxxsc1"
-path="res://.godot/imported/97anim_parts_right_arm.png-f3c2f318b4b97b71d9673b16faf6db53.ctex"
+uid="uid://bsm2hmjxkohly"
+path="res://.godot/imported/head.png-95753e9951287e055eb43f86bf854512.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/T97/97anim_parts_right_arm.png"
-dest_files=["res://.godot/imported/97anim_parts_right_arm.png-f3c2f318b4b97b71d9673b16faf6db53.ctex"]
+source_file="res://base/textures/player/t97/head.png"
+dest_files=["res://.godot/imported/head.png-95753e9951287e055eb43f86bf854512.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ogr27uveo83"
-path="res://.godot/imported/97anim_parts_eye.png-911b8e1e0619d7b9a0dac9d79f282a14.ctex"
+uid="uid://dggnuw458wpo5"
+path="res://.godot/imported/arm_left.png-f1def94915c444d93ded264551a6e711.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/T97/97anim_parts_eye.png"
-dest_files=["res://.godot/imported/97anim_parts_eye.png-911b8e1e0619d7b9a0dac9d79f282a14.ctex"]
+source_file="res://base/textures/player/t97/arm_left.png"
+dest_files=["res://.godot/imported/arm_left.png-f1def94915c444d93ded264551a6e711.ctex"]
 
 [params]
 

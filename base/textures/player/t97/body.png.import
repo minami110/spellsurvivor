@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://k2rikl3bo60t"
-path="res://.godot/imported/97anim_parts_base_hairAcc.png-b6a9188f3b1dbed9c8d46c7d02b367c8.ctex"
+uid="uid://fkyy8xngxwh5"
+path="res://.godot/imported/body.png-d30989e125c345476fbd258ed0a030d6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/T97/97anim_parts_base_hairAcc.png"
-dest_files=["res://.godot/imported/97anim_parts_base_hairAcc.png-b6a9188f3b1dbed9c8d46c7d02b367c8.ctex"]
+source_file="res://base/textures/player/t97/body.png"
+dest_files=["res://.godot/imported/body.png-d30989e125c345476fbd258ed0a030d6.ctex"]
 
 [params]
 

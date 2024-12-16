@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsm2hmjxkohly"
-path="res://.godot/imported/97anim_parts_head.png-9165880238a23ec481708d9b1f429da5.ctex"
+uid="uid://ogr27uveo83"
+path="res://.godot/imported/eye.png-446adc3edd9181d448935d524698b119.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/T97/97anim_parts_head.png"
-dest_files=["res://.godot/imported/97anim_parts_head.png-9165880238a23ec481708d9b1f429da5.ctex"]
+source_file="res://base/textures/player/t97/eye.png"
+dest_files=["res://.godot/imported/eye.png-446adc3edd9181d448935d524698b119.ctex"]
 
 [params]
 
