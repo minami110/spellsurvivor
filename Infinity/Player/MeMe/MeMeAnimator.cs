@@ -38,7 +38,7 @@ public partial class MeMeAnimator : BasePlayerAnimator
         _movingFootTween.Stop();
     }
 
-    private protected override void SendSignalMove()
+    private protected override void SendSignalMove(double delta)
     {
         _movingFootTween.Play();
     }

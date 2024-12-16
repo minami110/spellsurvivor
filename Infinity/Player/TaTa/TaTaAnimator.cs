@@ -4,31 +4,39 @@ namespace fms;
 
 public partial class TaTaAnimator : BasePlayerAnimator
 {
-    private AnimatedSprite2D _sprite = null!;
+    private static readonly StringName TrackNameIdle = new("idle");
+    private static readonly StringName TrackNameRunning = new("running");
+    private Vector2 _defaultScale;
+    private AnimationPlayer _player = null!;
+    private Node2D _skin = null!;
 
     public override void _Ready()
     {
-        _sprite = GetNode<AnimatedSprite2D>("%Sprite");
-        _sprite.Play("default");
+        _skin = GetNode<Node2D>("../Skin");
+        _player = _skin.GetNode<AnimationPlayer>("AnimationPlayer");
+        _defaultScale = _skin.Scale;
     }
 
-    private protected override void SendSignalMove()
+    private protected override void SendSignalMove(double delta)
     {
-        _sprite.Play("run");
+        _player.Play(TrackNameRunning);
+
+        var currentSpeed = LinearVelocity.Length() / (float)delta;
+        _player.SpeedScale = currentSpeed / 100f; // アニメーションが 100px/s 想定
     }
 
     private protected override void SendSignalMoveLeft()
     {
-        _sprite.FlipH = true;
+        _skin.Scale = _defaultScale * new Vector2(-1, 1);
     }
 
     private protected override void SendSignalMoveRight()
     {
-        _sprite.FlipH = false;
+        _skin.Scale = _defaultScale * new Vector2(1, 1);
     }
 
     private protected override void SendSignalStop()
     {
-        _sprite.SetAnimation("default");
+        _player.Play(TrackNameIdle);
     }
 }

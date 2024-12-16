@@ -60,7 +60,7 @@ public partial class HiHiAnimator : BasePlayerAnimator
         t.SetLoops();
     }
 
-    private protected override void SendSignalMove()
+    private protected override void SendSignalMove(double delta)
     {
         _movingFootTween.Play();
     }
