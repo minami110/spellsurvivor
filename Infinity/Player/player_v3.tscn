@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://bqakclm5yppti"]
 
 [ext_resource type="Script" path="res://Infinity/Core/Entity/EntityPlayer.cs" id="1_o5lua"]
-[ext_resource type="PackedScene" uid="uid://dcmaprrpbt7o" path="res://Infinity/Player/t97/t97.tscn" id="2_4k58w"]
+[ext_resource type="PackedScene" uid="uid://dcmaprrpbt7o" path="res://Infinity/Player/skins/t97.tscn" id="2_4k58w"]
 [ext_resource type="Script" path="res://Infinity/Player/SkinAnimator.cs" id="3_xvyta"]
 [ext_resource type="Script" path="res://Common/Singletons/PlayerController/PhysicsBody2DPawn.cs" id="4_mlutf"]
 [ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="5_5jsd4"]
