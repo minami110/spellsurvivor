@@ -4,7 +4,7 @@
 [ext_resource type="Resource" uid="uid://cc2mm30mcw05i" path="res://Infinity/Datebase/Shop/(ShopConfig) Version1.tres" id="2_gfx80"]
 [ext_resource type="Resource" uid="uid://be2x0iah5qoa3" path="res://Infinity/Datebase/BattleWaveData/(BattleWaveConfig) Dev.tres" id="3_n6vl4"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/InfinityGameSettings.cs" id="5_g1fii"]
-[ext_resource type="PackedScene" uid="uid://bqakclm5yppti" path="res://Infinity/Player/TaTa/player_v3.tscn" id="5_tlax1"]
+[ext_resource type="PackedScene" uid="uid://bqakclm5yppti" path="res://Infinity/Player/player_v3.tscn" id="5_tlax1"]
 [ext_resource type="PackedScene" uid="uid://flhgl4ot2gv2" path="res://Infinity/EnemySpawner/EnemySpawnerRandomArea.tscn" id="11_mwu1c"]
 [ext_resource type="PackedScene" uid="uid://dndrw60tkxjwx" path="res://Infinity/HUDs/InfinityHud.tscn" id="12_e5x4t"]
 
@@ -26,7 +26,7 @@ _gameSettings = SubResource("Resource_pdcir")
 [node name="World" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="TaTa" parent="World" instance=ExtResource("5_tlax1")]
+[node name="PlayerV3" parent="World" instance=ExtResource("5_tlax1")]
 
 [node name="EnemySpawner (RandomArea)" parent="World" instance=ExtResource("11_mwu1c")]
 _spawnHalfRectSize = Vector2i(400, 400)

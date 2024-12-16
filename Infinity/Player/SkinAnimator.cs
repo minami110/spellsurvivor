@@ -2,7 +2,7 @@ using Godot;
 
 namespace fms;
 
-public partial class TaTaAnimator : BasePlayerAnimator
+public partial class SkinAnimator : BasePlayerAnimator
 {
     private static readonly StringName TrackNameIdle = new("idle");
     private static readonly StringName TrackNameRunning = new("running");
