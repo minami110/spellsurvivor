@@ -1,0 +1,85 @@
+[gd_scene load_steps=11 format=3 uid="uid://bqakclm5yppti"]
+
+[ext_resource type="Script" path="res://Infinity/Core/Entity/EntityPlayer.cs" id="1_o5lua"]
+[ext_resource type="PackedScene" uid="uid://dcmaprrpbt7o" path="res://Infinity/Player/skins/t97.tscn" id="2_4k58w"]
+[ext_resource type="Script" path="res://Infinity/Player/SkinAnimator.cs" id="3_xvyta"]
+[ext_resource type="Script" path="res://Common/Singletons/PlayerController/PhysicsBody2DPawn.cs" id="4_mlutf"]
+[ext_resource type="Script" path="res://Infinity/Player/WeaponPositionAnimator.cs" id="5_5jsd4"]
+[ext_resource type="Script" path="res://Infinity/Player/CameraController.cs" id="6_oiten"]
+[ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="7_2fhxy"]
+[ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="8_t4xl0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5leg6"]
+radius = 223.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_awajj"]
+radius = 20.0
+
+[node name="PlayerV3" type="CharacterBody2D"]
+collision_mask = 16
+script = ExtResource("1_o5lua")
+_moveSpeed = 175
+
+[node name="Skin" parent="." instance=ExtResource("2_4k58w")]
+scale = Vector2(0.15, 0.15)
+
+[node name="SkinAnimator" type="Node" parent="."]
+script = ExtResource("3_xvyta")
+
+[node name="PhysicsBody2DPawn" type="Node" parent="."]
+script = ExtResource("4_mlutf")
+
+[node name="WeaponPositionAnimator" type="Node" parent="."]
+script = ExtResource("5_5jsd4")
+
+[node name="MainCamera" type="Camera2D" parent="."]
+unique_name_in_owner = true
+zoom = Vector2(1.5, 1.5)
+position_smoothing_enabled = true
+editor_draw_screen = false
+
+[node name="CameraController" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("6_oiten")
+_moveSpeed = 0.12
+_zoomSpeed = 0.45
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CameraController"]
+visible = false
+shape = SubResource("CircleShape2D_5leg6")
+debug_color = Color(1, 1, 1, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_awajj")
+debug_color = Color(0, 0.365, 0.702, 0)
+
+[node name="PointLightForEnemyShadow" type="PointLight2D" parent="."]
+blend_mode = 1
+range_layer_min = -5
+range_item_cull_mask = 2
+shadow_enabled = true
+shadow_color = Color(1, 1, 1, 1)
+texture = ExtResource("7_2fhxy")
+texture_scale = 2.0
+
+[node name="HealthBar" type="TextureProgressBar" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.0
+offset_top = -60.0
+offset_right = 54.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("8_t4xl0")
+texture_progress = ExtResource("8_t4xl0")
+tint_under = Color(0, 0, 0, 1)
+tint_progress = Color(1, 0, 0, 1)

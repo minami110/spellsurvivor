@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bukjngkktj10d"
-path="res://.godot/imported/tata_idol.png-4266f56713c71ff365ba3bf4287d074e.ctex"
+uid="uid://diar6i6uijje"
+path="res://.godot/imported/leg_left.png-d6ca99617508c112ecc62e6079c4e354.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Infinity/Player/TaTa/tata_idol.png"
-dest_files=["res://.godot/imported/tata_idol.png-4266f56713c71ff365ba3bf4287d074e.ctex"]
+source_file="res://base/textures/player/fumo_type_a/leg_left.png"
+dest_files=["res://.godot/imported/leg_left.png-d6ca99617508c112ecc62e6079c4e354.ctex"]
 
 [params]
 

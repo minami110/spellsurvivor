@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using fms.Projectile;
 using Godot;
 using Godot.Collections;
