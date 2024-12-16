@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsm2hmjxkohly"
-path="res://.godot/imported/head.png-95753e9951287e055eb43f86bf854512.ctex"
+uid="uid://nlumcaivrf4f"
+path="res://.godot/imported/body_lower.png-d0d8f4e59ec6beb6bbb84ed9b19247f4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://base/textures/player/t97/head.png"
-dest_files=["res://.godot/imported/head.png-95753e9951287e055eb43f86bf854512.ctex"]
+source_file="res://base/textures/player/fumo_type_a/body_lower.png"
+dest_files=["res://.godot/imported/body_lower.png-d0d8f4e59ec6beb6bbb84ed9b19247f4.ctex"]
 
 [params]
 

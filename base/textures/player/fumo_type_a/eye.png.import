@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cj0jmeurjs2n8"
-path="res://.godot/imported/hand_left.png-311b6f79068a1687f240548c8382699e.ctex"
+uid="uid://ogr27uveo83"
+path="res://.godot/imported/eye.png-3f1dd7b763b2ea5581991f88a54fa2fd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://base/textures/player/t97/hand_left.png"
-dest_files=["res://.godot/imported/hand_left.png-311b6f79068a1687f240548c8382699e.ctex"]
+source_file="res://base/textures/player/fumo_type_a/eye.png"
+dest_files=["res://.godot/imported/eye.png-3f1dd7b763b2ea5581991f88a54fa2fd.ctex"]
 
 [params]
 
