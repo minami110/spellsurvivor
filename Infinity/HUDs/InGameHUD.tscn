@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bali3cj5bhs2q"]
+[gd_scene load_steps=12 format=3 uid="uid://bali3cj5bhs2q"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/InGameHUD.cs" id="1_6o03e"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="2_l31n5"]
@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://base/fonts/Verdana.ttf" id="4_hsb5i"]
 [ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/Factions/ActiveFactionHud.tscn" id="5_26dji"]
 [ext_resource type="PackedScene" uid="uid://3cf1cbaj3tc7" path="res://Infinity/HUDs/PlayerStatusHud.tscn" id="6_8q06y"]
+[ext_resource type="PackedScene" uid="uid://618nuo8aeq2m" path="res://Infinity/HUDs/DamageInfo/DamageInfo.tscn" id="7_d473p"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ntlvd"]
 font = ExtResource("4_hsb5i")
@@ -149,3 +150,17 @@ offset_right = -64.0
 offset_bottom = -87.0
 grow_horizontal = 0
 grow_vertical = 2
+
+[node name="DamageInfo" parent="." instance=ExtResource("7_d473p")]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -279.0
+offset_top = -223.0
+offset_right = 21.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.8, 0.8)

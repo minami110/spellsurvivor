@@ -59,7 +59,7 @@ public partial class MeleeEnemy : EntityEnemy
         {
             if (node is IEntity entity)
             {
-                entity.ApplayDamage(BaseDamage, this, this);
+                entity.ApplayDamage(BaseDamage, this, this, CauserPath);
             }
         }
     }

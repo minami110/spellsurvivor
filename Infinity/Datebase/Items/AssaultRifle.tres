@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("2_tjeaf")
 Damage = 3
-CooldownTime = 15
+CooldownTime = 60
 AnimationSpeedRate = 100.0
 Knockback = 5
 Faction = 256

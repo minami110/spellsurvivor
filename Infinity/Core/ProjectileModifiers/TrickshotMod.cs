@@ -36,7 +36,6 @@ public partial class TrickshotMod : Node
         }
 
         var parent = GetParent<BaseProjectile>();
-        var weapon = parent.Weapon;
         var hitInfo = parent.HitInfo;
 
         // Note: スクリプトベースの CircleCast を行う
@@ -50,7 +49,7 @@ public partial class TrickshotMod : Node
             Transform = parent.Transform, // ToDo: 親の座標をつかう
             CollideWithAreas = false,
             CollideWithBodies = true,
-            CollisionMask = Constant.LAYER_MOB
+            CollisionMask = Constant.LAYER_ENEMY
         };
         if (hitInfo.HitNode is CollisionObject2D col)
         {
@@ -89,7 +88,7 @@ public partial class TrickshotMod : Node
 
             // Spawn Next 
             var next = Next(Payload);
-            weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, next);
+            GetParent().GetParent().CallDeferred(Node.MethodName.AddSibling, next);
         }
     }
 }

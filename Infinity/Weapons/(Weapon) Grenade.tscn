@@ -17,7 +17,8 @@ collision_mask = 4
 monitorable = false
 script = ExtResource("5_6386n")
 
-[node name="Sprite2D" type="Sprite2D" parent="AimToNearEnemy"]
+[node name="Sprite" type="Sprite2D" parent="AimToNearEnemy"]
+unique_name_in_owner = true
 texture_filter = 1
 scale = Vector2(0.14, 0.14)
 texture = ExtResource("5_x0eeh")

@@ -113,7 +113,7 @@ public partial class AimEntity : Area2D
         Monitorable = false;
         CollisionLayer = Constant.LAYER_NONE;
         // Note: 現在プレイヤーしか使っていないので敵のみを検知する設定
-        CollisionMask = Constant.LAYER_MOB;
+        CollisionMask = Constant.LAYER_ENEMY;
 
         // 子の Shape を初期化する
         UpdateCollisionRadius(MaxRange);

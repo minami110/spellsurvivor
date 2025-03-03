@@ -1,0 +1,34 @@
+[gd_scene load_steps=7 format=3 uid="uid://b1o3a57y686qs"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/GunWeapon.cs" id="1_n2mrp"]
+[ext_resource type="PackedScene" uid="uid://cg1vmj847dynn" path="res://Infinity/Projectiles/(Projectile) Bow.tscn" id="2_j4i5k"]
+[ext_resource type="Resource" uid="uid://ero0vh4egmyx" path="res://Infinity/Datebase/Items/Crossbow.tres" id="3_3makg"]
+[ext_resource type="Script" path="res://Infinity/Weapons/EditorDrawer/GunWeaponEditorDrawer.cs" id="4_bqboj"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="5_ln3mu"]
+[ext_resource type="Texture2D" uid="uid://cxfxmeo000c50" path="res://Infinity/Weapons/Textures/crossbow.png" id="6_qkfoh"]
+
+[node name="Crossbow" type="Node2D" node_paths=PackedStringArray("_muzzle")]
+script = ExtResource("1_n2mrp")
+_projectile = ExtResource("2_j4i5k")
+_speed = 1600.0
+_life = 14
+_muzzle = NodePath("AimEntity/Muzzle")
+_targetMode = 1
+_minRange = 80.0
+_maxRange = 370.0
+_config = ExtResource("3_3makg")
+
+[node name="GunWeaponEditorDrawer" type="Node2D" parent="."]
+script = ExtResource("4_bqboj")
+
+[node name="AimEntity" type="Area2D" parent="."]
+script = ExtResource("5_ln3mu")
+
+[node name="Sprite" type="Sprite2D" parent="AimEntity"]
+unique_name_in_owner = true
+position = Vector2(22, 2)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("6_qkfoh")
+
+[node name="Muzzle" type="Node2D" parent="AimEntity"]
+position = Vector2(46, -2)

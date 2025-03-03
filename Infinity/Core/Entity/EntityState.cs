@@ -37,13 +37,10 @@ public partial class EntityState : Node, IAttributeDictionary
     /// </summary>
     public ReadOnlyEntityHealth Health => _health;
 
-    // Parameterless constructor for Godot
     private EntityState()
     {
-        _money = new EntityAttribute<uint>(0u);
-        _health = new EntityHealth(0u, 0u);
-        _moveSpeed = new EntityAttribute<float>(0f);
-        _dodgeRate = new EntityAttribute<float>(0f);
+        // Parameterless constructor for Godot
+        throw new ApplicationException("Parameterless constructor is not supported");
     }
 
     public EntityState(uint money, uint maxHealth, uint moveSpeed, float dodgeRate)
@@ -107,8 +104,7 @@ public partial class EntityState : Node, IAttributeDictionary
         {
             if (_attributes.TryGetValue(EntityAttributeNames.MaxHealth, out var v))
             {
-                var maxHealth = _health.DefaultMaxValue;
-                maxHealth += (uint)v;
+                var maxHealth = _health.DefaultMaxValue + (uint)v;
                 _health.SetMaxValue(maxHealth);
             }
         }
@@ -116,8 +112,7 @@ public partial class EntityState : Node, IAttributeDictionary
         {
             if (_attributes.TryGetValue(EntityAttributeNames.MoveSpeed, out var v))
             {
-                var moveSpeed = _moveSpeed.DefaultValue;
-                moveSpeed += (float)v;
+                var moveSpeed = _moveSpeed.DefaultValue + (float)v;
                 _moveSpeed.SetCurrentValue(moveSpeed);
             }
         }
@@ -125,9 +120,8 @@ public partial class EntityState : Node, IAttributeDictionary
         {
             if (_attributes.TryGetValue(EntityAttributeNames.DodgeRate, out var v))
             {
-                var dodgeRate = _dodgeRate.DefaultValue;
-                dodgeRate += (float)v;
-                _dodgeRate.SetCurrentValue(Mathf.Clamp(dodgeRate, 0f, 1f));
+                var dodgeRate = Mathf.Clamp(_dodgeRate.DefaultValue + (float)v, 0f, 1f);
+                _dodgeRate.SetCurrentValue(dodgeRate);
             }
         }
     }

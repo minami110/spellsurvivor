@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://ceuw4y35vfqm1"]
+
+[ext_resource type="Script" path="res://Infinity/Core/Projectiles/BulletProjectile.cs" id="1_tmj8r"]
+[ext_resource type="Texture2D" uid="uid://bbj60rx32neua" path="res://base/textures/projectiles/9mm.png" id="2_2gfnw"]
+[ext_resource type="Texture2D" uid="uid://coqfq8jdjvxb4" path="res://Common/Resources/Textures/2d_lights_and_shadows_neutral_point_light.webp" id="3_w5sbp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
+radius = 5.0
+
+[node name="9mm" type="Area2D" groups=["Projectile"]]
+collision_layer = 0
+collision_mask = 20
+monitorable = false
+script = ExtResource("1_tmj8r")
+metadata/_edit_group_ = true
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.04, 0.04)
+texture = ExtResource("2_2gfnw")
+
+[node name="DamageCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jrj0e")
+debug_color = Color(1, 0, 0, 0)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.98274, 0.756911, 0.52964, 1)
+range_layer_min = -5
+shadow_enabled = true
+texture = ExtResource("3_w5sbp")
+texture_scale = 1.34

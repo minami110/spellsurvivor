@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://caewigs7lr4m3"]
+
+[ext_resource type="PackedScene" uid="uid://32462tqdb2ax" path="res://Infinity/Enemy/(Template) SplitEnemy.tscn" id="1_kv0ec"]
+[ext_resource type="Shader" path="res://Infinity/Enemy/Enemy.gdshader" id="3_b0iut"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wasxr"]
+resource_local_to_scene = true
+shader = ExtResource("3_b0iut")
+shader_parameter/hit = 0.0
+shader_parameter/offset = Vector2(5, 5)
+shader_parameter/modulate = Color(0, 0, 1, 1)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o8pnm"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_24god"]
+resource_local_to_scene = true
+radius = 12.0
+
+[node name="SlimeSmall" instance=ExtResource("1_kv0ec")]
+mass = 0.25
+_splitCount = 0
+_coolDownFrame = 30
+BaseHealth = 10.0
+BaseSpeed = 140.0
+_randomSpeed = 10.0
+BaseDamage = 2.0
+
+[node name="Sprite" parent="." index="1"]
+material = SubResource("ShaderMaterial_wasxr")
+scale = Vector2(0.3, 0.3)
+
+[node name="CollisionForRigidbody" parent="." index="2"]
+shape = SubResource("CircleShape2D_o8pnm")
+
+[node name="CollisionForDamage" parent="DamageArea" index="0"]
+shape = SubResource("CircleShape2D_24god")
+
+[node name="LightOccluder2D" parent="." index="4"]
+scale = Vector2(0.3, 0.3)

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Godot;
 using R3;
 
@@ -31,65 +30,10 @@ internal partial class BattleResultHudController : Node
                 self._titleLabel.Text = $"Wave {Main.WaveState.Wave.CurrentValue} Result";
                 self._rewardLabel.Text = $"Money: ${playerMoney + reward} (+${reward})";
                 self.GetNode<Control>("%RootPanel").Show();
-
-                // 武器の統計情報を表示する
-                var results = new Dictionary<ulong, float>();
-                var vbox = self.GetNode<VBoxContainer>("%VBoxWeaponStats");
-
-                var stats = StaticsManager.DamageInfoTable;
-
-                // 現在 Player が装備している武器を取得する
-                var player = self.GetPlayerNode();
-                foreach (var n in player.GetChildren())
-                {
-                    if (n is WeaponBase weapon)
-                    {
-                        var uid = weapon.GetInstanceId();
-                        if (stats.TryGetValue(uid, out var info))
-                        {
-                            foreach (var i in info)
-                            {
-                                if (results.TryGetValue(uid, out var damage))
-                                {
-                                    results[uid] += i.Amount;
-                                }
-                                else
-                                {
-                                    results[uid] = i.Amount;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                foreach (var n in player.GetChildren())
-                {
-                    if (n is WeaponBase weapon)
-                    {
-                        var uid = n.GetInstanceId();
-                        if (results.TryGetValue(uid, out var damage))
-                        {
-                            var label = new Label();
-                            label.HorizontalAlignment = HorizontalAlignment.Center;
-                            label.Text = $"{Tr(weapon.Config.Name)}: total {damage:0} damage";
-                            vbox.AddChild(label);
-                        }
-                    }
-                }
             }
             else
             {
                 self.GetNode<Control>("%RootPanel").Hide();
-
-                // ToDo: ここで 毎 Wave 統計情報を削除しています
-                StaticsManager.ClearDamageInfoTable();
-
-                var vbox = self.GetNode<VBoxContainer>("%VBoxWeaponStats");
-                // Clear all children
-                foreach (var c in vbox.GetChildren())
-                {
-                    c.QueueFree();
-                }
             }
         });
 

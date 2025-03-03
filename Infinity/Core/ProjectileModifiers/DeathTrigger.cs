@@ -31,13 +31,12 @@ public partial class DeathTrigger : Node
         }
 
         var parent = GetParent<BaseProjectile>();
-        var weapon = parent.Weapon;
 
         // Payload に死亡理由を追加
         Payload["WhyDead"] = (ulong)why;
         Payload["DeadPosition"] = parent.Position;
 
         var prj = Next(Payload);
-        weapon.CallDeferred(WeaponBase.MethodName.AddProjectile, prj);
+        GetParent().GetParent().CallDeferred(Node.MethodName.AddSibling, prj);
     }
 }

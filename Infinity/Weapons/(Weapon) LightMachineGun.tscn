@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://chqiv8qanmc4c"]
+
+[ext_resource type="Script" path="res://Infinity/Weapons/GunWeapon.cs" id="1_e808h"]
+[ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) 9mm.tscn" id="2_hjwdf"]
+[ext_resource type="Resource" uid="uid://bxxdjfxf8m2al" path="res://Infinity/Datebase/Items/LightMachineGun.tres" id="3_cmy80"]
+[ext_resource type="Script" path="res://Infinity/Weapons/EditorDrawer/GunWeaponEditorDrawer.cs" id="4_m5mvg"]
+[ext_resource type="Script" path="res://Infinity/Core/Weapons/AimEntity.cs" id="5_bovkl"]
+[ext_resource type="Texture2D" uid="uid://74e2c5vmnvrg" path="res://Infinity/Weapons/Textures/light_machine_gun.png" id="6_h4iug"]
+
+[node name="LightMachineGun" type="Node2D" node_paths=PackedStringArray("_muzzle")]
+script = ExtResource("1_e808h")
+_projectile = ExtResource("2_hjwdf")
+_speed = 1000.0
+_life = 24
+_magazineSize = 60
+_fireRate = 3
+_muzzle = NodePath("AimEntity/Muzzle")
+_minRange = 75.0
+_maxRange = 400.0
+_rotateSensitivity = 0.2
+_config = ExtResource("3_cmy80")
+
+[node name="GunWeaponEditorDrawer" type="Node2D" parent="."]
+script = ExtResource("4_m5mvg")
+
+[node name="AimEntity" type="Area2D" parent="."]
+script = ExtResource("5_bovkl")
+
+[node name="Sprite" type="Sprite2D" parent="AimEntity"]
+unique_name_in_owner = true
+texture_filter = 1
+position = Vector2(23, 3)
+scale = Vector2(0.55, 0.55)
+texture = ExtResource("6_h4iug")
+
+[node name="Muzzle" type="Node2D" parent="AimEntity"]
+position = Vector2(33, -1)

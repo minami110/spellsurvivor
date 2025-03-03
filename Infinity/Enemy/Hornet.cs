@@ -17,24 +17,20 @@ public partial class Hornet : EntityEnemy
     private int _maxAttackDistance = 400;
 
     [Export]
+    private uint _attackSpeed = 40u;
+
+    [Export]
     private PackedScene _projectile = null!;
 
     private MovementState _moveState = MovementState.FollowPlayer;
 
-    private WeaponBase _weapon = null!;
+    private FrameTimer FrameTimer => GetNode<FrameTimer>("FrameTimer");
 
-    public override void _EnterTree()
-    {
-        // Weapon が存在していなかったら作成する
-        var weapon = GetNodeOrNull<WeaponBase>("Weapon");
-        _weapon = weapon ?? throw new ApplicationException("Weapon が存在しません");
-    }
 
     public override void _Ready()
     {
         // Weapon 内部にある FrameTimer の初期化/購読を行う
-        var frameTimer = _weapon.FindFirstChild<FrameTimer>();
-        frameTimer!.TimeOut.Subscribe(this, (_, state) => { state.Attack(); })
+        FrameTimer.TimeOut.Subscribe(this, (_, state) => { state.Attack(); })
             .AddTo(this);
     }
 
@@ -52,8 +48,7 @@ public partial class Hornet : EntityEnemy
             if (lengthSqr <= Math.Pow(_maxAttackDistance - softLength, 2))
             {
                 _moveState = MovementState.AttackPlayer;
-
-                _weapon.StartAttack();
+                StartAttack();
             }
         }
         // 逃走モードの時
@@ -71,13 +66,13 @@ public partial class Hornet : EntityEnemy
             if (lengthSqr <= _minAttackDistance * _minAttackDistance)
             {
                 _moveState = MovementState.AwayPlayer;
-                _weapon.StopAttack();
+                StopAttack();
             }
             // プレイヤーが 最大距離以上離れたら追跡モードに移行する
             else if (lengthSqr >= _maxAttackDistance * _maxAttackDistance)
             {
                 _moveState = MovementState.FollowPlayer;
-                _weapon.StopAttack();
+                StopAttack();
             }
         }
     }
@@ -115,25 +110,43 @@ public partial class Hornet : EntityEnemy
     private void Attack()
     {
         // 弾生成
-        var prj = _projectile.Instantiate<BulletProjectile>();
+        var factory = new BulletProjectileFactory
         {
-            // ToDo: 発射する弾の仕様 (仮実装)
-            // プレイヤー / 壁 に当たるようにする
-            prj.CollisionMask = Constant.LAYER_PLAYER | Constant.LAYER_WALL;
-            prj.Damage = BaseDamage;
-            prj.LifeFrame = 300;
-            prj.PenetrateEnemy = false;
-            prj.PenetrateWall = false;
+            Instigator = this,
+            Causer = this,
+            CauserPath = CauserPath,
+            Damage = BaseDamage,
+            Knockback = 0,
+            Lifetime = 300,
+            Position = GlobalPosition,
+            ConstantForce = (_playerNode.GlobalPosition - GlobalPosition).Normalized() * 180,
+            PenetrateSettings = BulletProjectile.PenetrateType.None
+        };
+
+        var prj = factory.Create(_projectile);
+        prj.CollisionMask = Constant.LAYER_PLAYER | Constant.LAYER_WALL;
+        AddSibling(prj);
+    }
+
+    private void StartAttack()
+    {
+        if (!FrameTimer.IsStopped)
+        {
+            return;
         }
 
-        // プレイヤーに向けて発射する
-        var direction = (_playerNode.GlobalPosition - GlobalPosition).Normalized();
-        prj.ConstantForce = direction * 180;
+        FrameTimer.WaitFrame = _attackSpeed;
+        FrameTimer.Start();
+    }
 
-        var pos = GlobalPosition;
+    private void StopAttack()
+    {
+        if (FrameTimer.IsStopped)
+        {
+            return;
+        }
 
-        // 武器から発射する
-        _weapon.AddProjectile(prj, pos);
+        FrameTimer.Stop();
     }
 
     private enum MovementState

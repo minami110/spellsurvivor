@@ -35,7 +35,10 @@ public partial class FactionBase : Node
             // レベルアップ時に以前のレベルまでに発行済のエフェクトすべてを削除する
             foreach (var effect in _publishedEffects)
             {
-                effect.QueueFree();
+                if (IsInstanceValid(effect))
+                {
+                    effect.QueueFree();
+                }
             }
 
             _publishedEffects.Clear();
@@ -43,7 +46,36 @@ public partial class FactionBase : Node
         }
     }
 
-    private readonly List<EffectBase> _publishedEffects = new();
+    private readonly HashSet<EffectBase> _publishedEffects = new();
+
+    private protected EntityState OwnerState
+    {
+        get
+        {
+            var entityState = GetParent().FindFirstChild<EntityState>();
+            if (entityState is null)
+            {
+                throw new InvalidProgramException($"{nameof(EntityState)} is not found in siblings.");
+            }
+
+            return entityState;
+        }
+    }
+
+    private protected IEnumerable<WeaponBase> SiblingWeapons
+    {
+        get
+        {
+            var siblings = GetParent().GetChildren();
+            foreach (var sibling in siblings)
+            {
+                if (sibling is WeaponBase weapon)
+                {
+                    yield return weapon;
+                }
+            }
+        }
+    }
 
     public virtual string MainDescription => "Faction Description";
 
@@ -97,13 +129,7 @@ public partial class FactionBase : Node
         _publishedEffects.Add(effect);
 
         // PlayerState の子にに Effect を追加
-        var ps = GetParent().FindFirstChild<EntityState>();
-        if (ps is null)
-        {
-            throw new ApplicationException("Failed to find PlayerState");
-        }
-
-        ps.AddChild(effect);
+        OwnerState.AddChild(effect);
     }
 
     private protected void AddEffectToWeapon(WeaponBase weapon, EffectBase effect)

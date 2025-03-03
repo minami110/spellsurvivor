@@ -68,6 +68,8 @@ public partial class WeaponBase : Node2D
 
     public WeaponConfig Config => _config;
 
+    protected string CauserPath { get; private set; } = null!;
+
     // Note: 継承先が気軽にオーバーライドできるようにするためにここでは _Notification で @ready などを実装している
     public override void _Notification(int what)
     {
@@ -110,6 +112,16 @@ public partial class WeaponBase : Node2D
             // 親が IEntity であることを確認しこの武器の所有者として設定する
             var parent = GetParentOrNull<IEntity>();
             OwnedEntity = parent ?? throw new ApplicationException("WeaponBase は IEntity の子ノードでなければなりません");
+
+            // CauserPath を設定する
+            if (OwnedEntity is EntityPlayer)
+            {
+                CauserPath = $"Player/{_config.Id}";
+            }
+            else
+            {
+                CauserPath = "Other/";
+            }
         }
         else if (what == NotificationReady)
         {
@@ -201,6 +213,7 @@ public partial class WeaponBase : Node2D
         }
 
         FrameTimer.Stop();
+        OnStopAttack();
     }
 
     /// <summary>
@@ -235,6 +248,10 @@ public partial class WeaponBase : Node2D
     /// 武器が起動したときに呼び出されるメソッド, 通常はバトルウェーブ開始時に呼ばれる
     /// </summary>
     private protected virtual void OnStartAttack(uint level)
+    {
+    }
+
+    private protected virtual void OnStopAttack()
     {
     }
 

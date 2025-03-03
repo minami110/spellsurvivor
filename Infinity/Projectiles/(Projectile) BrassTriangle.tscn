@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dc8rn6v6qs5uy"]
 
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/BulletProjectile.cs" id="1_i5hda"]
-[ext_resource type="Texture2D" uid="uid://cne4dh2mi2k8w" path="res://Infinity/Projectiles/Textures/brass_triangle.png" id="2_7bvbg"]
+[ext_resource type="Texture2D" uid="uid://cne4dh2mi2k8w" path="res://base/textures/projectiles/brass_triangle.png" id="2_7bvbg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrj0e"]
 

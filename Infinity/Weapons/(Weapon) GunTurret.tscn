@@ -1,18 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://bqnyajck8crv4"]
+[gd_scene load_steps=5 format=3 uid="uid://bqnyajck8crv4"]
 
 [ext_resource type="Script" path="res://Infinity/Weapons/GunTurret.cs" id="1_jw7g4"]
-[ext_resource type="PackedScene" uid="uid://b7p20xw3fushu" path="res://Infinity/Projectiles/(Projectile) GunTurretBody.tscn" id="2_35k6a"]
-[ext_resource type="Texture2D" uid="uid://bufla4g8aocx6" path="res://Common/Resources/Textures/2dgizmo_8x8.png" id="3_3lv3t"]
-[ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) SparkBolt.tscn" id="3_ay4do"]
+[ext_resource type="PackedScene" uid="uid://bqvverbs14wnq" path="res://base/entities/turret.tscn" id="2_k5x8q"]
+[ext_resource type="PackedScene" uid="uid://ceuw4y35vfqm1" path="res://Infinity/Projectiles/(Projectile) 9mm.tscn" id="3_ay4do"]
 [ext_resource type="Resource" uid="uid://c34ww550xmq4t" path="res://Infinity/Datebase/Items/GunTurret.tres" id="4_2ls55"]
 
 [node name="GunTurret" type="Node2D"]
 script = ExtResource("1_jw7g4")
-_body = ExtResource("2_35k6a")
+_mobScene = ExtResource("2_k5x8q")
+_bodyEnemyDetectionRadius = 200
 _bullet = ExtResource("3_ay4do")
 _config = ExtResource("4_2ls55")
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture_filter = 1
-texture = ExtResource("3_3lv3t")
-centered = false
+AutoPositioning = false

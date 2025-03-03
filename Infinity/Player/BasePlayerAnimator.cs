@@ -3,6 +3,7 @@ using Godot;
 public partial class BasePlayerAnimator : Node
 {
     private Vector2? _prevPosition;
+    private protected Vector2 LinearVelocity { get; private set; } = Vector2.Zero;
 
     public override void _Process(double delta)
     {
@@ -12,11 +13,13 @@ public partial class BasePlayerAnimator : Node
             var vel = currentPosition - _prevPosition.Value;
             if (vel.LengthSquared() <= 0f)
             {
+                LinearVelocity = Vector2.Zero;
                 SendSignalStop();
             }
             else
             {
-                SendSignalMove();
+                LinearVelocity = vel;
+                SendSignalMove(delta);
                 switch (vel.X)
                 {
                     case > 0:
@@ -32,7 +35,7 @@ public partial class BasePlayerAnimator : Node
         _prevPosition = GetParent<Node2D>().GlobalPosition;
     }
 
-    private protected virtual void SendSignalMove()
+    private protected virtual void SendSignalMove(double delta)
     {
     }
 

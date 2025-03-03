@@ -1,15 +1,15 @@
 [gd_resource type="Resource" script_class="BattleWaveConfig" load_steps=27 format=3 uid="uid://be2x0iah5qoa3"]
 
-[ext_resource type="PackedScene" uid="uid://bk4lqg74pvkki" path="res://Infinity/Enemy/(Enemy) Tori.tscn" id="1_o064c"]
+[ext_resource type="PackedScene" uid="uid://bk4lqg74pvkki" path="res://base/entities/enemies/tori.tscn" id="1_o064c"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfigRaw.cs" id="2_w0xua"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/EnemySpawnConfig.cs" id="3_a71e0"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfigRaw.cs" id="4_7oht8"]
-[ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://Infinity/Enemy/(Enemy) Obake.tscn" id="5_blxl0"]
-[ext_resource type="PackedScene" uid="uid://ctsnxp14rpk1l" path="res://Infinity/Enemy/(Enemy) Hornet.tscn" id="6_7xseb"]
-[ext_resource type="PackedScene" uid="uid://dmpddu2xgoy8a" path="res://Infinity/Enemy/(Enemy) SlimeLarge.tscn" id="7_eny5l"]
-[ext_resource type="PackedScene" uid="uid://ctawro6qd37ym" path="res://Infinity/Enemy/(Enemy) SlimeMiddle.tscn" id="7_gqufv"]
+[ext_resource type="PackedScene" uid="uid://b4i1jhq1jsnm5" path="res://base/entities/enemies/obake.tscn" id="5_blxl0"]
+[ext_resource type="PackedScene" uid="uid://ctsnxp14rpk1l" path="res://base/entities/enemies/hornet.tscn" id="6_7xseb"]
+[ext_resource type="PackedScene" uid="uid://dmpddu2xgoy8a" path="res://base/entities/enemies/slime_large.tscn" id="7_eny5l"]
+[ext_resource type="PackedScene" uid="uid://ctawro6qd37ym" path="res://base/entities/enemies/slime_middle.tscn" id="7_gqufv"]
 [ext_resource type="Script" path="res://Infinity/Datebase/BattleWaveData/BattleWaveConfig.cs" id="7_xvddx"]
-[ext_resource type="PackedScene" uid="uid://dds6a2ry211qk" path="res://Infinity/Enemy/(Enemy) Charger.tscn" id="8_81kj1"]
+[ext_resource type="PackedScene" uid="uid://dds6a2ry211qk" path="res://base/entities/enemies/charger.tscn" id="8_81kj1"]
 
 [sub_resource type="Resource" id="Resource_6njts"]
 script = ExtResource("2_w0xua")

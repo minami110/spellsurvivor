@@ -113,6 +113,9 @@ public partial class Main : Node
 
             // 残った Item をすべてコロス
             tree.CallGroup(Constant.GroupNamePickableItem, Node.MethodName.QueueFree);
+
+            // 残った Mob をすべてコロス
+            tree.CallGroup(GroupNames.Mob, Node.MethodName.QueueFree);
         });
 
         // Shop 進入時

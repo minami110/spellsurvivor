@@ -1,18 +1,16 @@
-﻿using Godot;
+﻿using fms.Mob;
+using Godot;
 
 namespace fms.Weapon;
 
 /// <summary>
-/// ガンタレットを生成する
+/// MobEntity を一定間隔で現在の位置に配置する Weapon のベースクラス
 /// </summary>
 public partial class GunTurret : WeaponBase
 {
-    /// <summary>
-    /// タレット本体 の PackedScene
-    /// </summary>
-    [ExportGroup("Body Settings")]
+    [ExportGroup("Mob Settings")]
     [Export]
-    private PackedScene _body = null!;
+    private PackedScene _mobScene = null!;
 
     /// <summary>
     /// タレットの生存フレーム
@@ -46,19 +44,25 @@ public partial class GunTurret : WeaponBase
     private protected override void OnCoolDownCompleted(uint level)
     {
         // タレット本体を生成する
-        var prj = _body.Instantiate<GunTurretBody>();
-        prj.Damage = State.Damage.CurrentValue;
-        prj.Knockback = State.Knockback.CurrentValue;
-        prj.LifeFrame = _bodyAliveFrame; // タレット本体の生存フレーム
-        prj.DamageEveryXFrames = _bodyAttackSpan; // タレット本体が攻撃を行う感覚
-        prj.DetectionRadius = _bodyEnemyDetectionRadius;
+        var turret = _mobScene.Instantiate<Turret>();
+        {
+            turret.CauserPath = CauserPath;
+            // Body
+            turret.Lifetime = _bodyAliveFrame; // タレット本体の生存フレーム
+            turret.AttackSpeed = _bodyAttackSpan; // タレット本体が攻撃を行う感覚
+            turret.DetectionRadius = _bodyEnemyDetectionRadius;
+            // Bullet
+            turret.BulletScene = _bullet;
+            turret.Damage = State.Damage.CurrentValue;
+            turret.Knockback = State.Knockback.CurrentValue;
+            turret.BulletLifetime = _bulletAliveFrame;
+            turret.BulletSpeed = _bulletSpeed;
+        }
+        turret.GlobalPosition = GlobalPosition;
 
-        prj.BulletPackedScene = _bullet;
-        prj.BulletAliveFrame = _bulletAliveFrame;
-        prj.BulletSpeed = _bulletSpeed;
-
-        // プレイヤーの位置にスポーンさせる
-        AddProjectile(prj, GlobalPosition);
+        // ワールド位置にスポーンさせる
+        var world = GetNode("../../"); // World/Player/Weapon(this)
+        world.AddChild(turret);
         RestartCoolDown();
     }
 }
