@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -19,7 +19,24 @@ public enum FactionType
     Scrap = 1 << 5,
     Licium = 1 << 6,
     Incandescent = 1 << 7,
-    Arctic = 1 << 8
+    Arctic = 1 << 8,
+    Prestigious = 1 << 9,
+    Numoric = 1 << 10,
+    Translucent = 1 << 11,
+    Acacia = 1 << 12,
+    Moonlight = 1 << 13,
+    Krolik = 1 << 14,
+    Tradition = 1 << 15,
+    Ingenuity = 1 << 16,
+    Armor = 1 << 17,
+    Evade = 1 << 18,
+    Vamp = 1 << 19,
+    Wand = 1 << 20,
+    Sharpener = 1 << 21,
+    Knock = 1 << 22,
+    Regen = 1 << 23,
+    Elf = 1 << 24,
+    Deployables = 1 << 25
 
     // Note: ↓ に新しい Faction を追加していく
 }
@@ -41,6 +58,23 @@ public static class FactionUtil
             FactionType.Licium => new Licium(),
             FactionType.Incandescent => new Incandescent(),
             FactionType.Arctic => new Arctic(),
+            FactionType.Prestigious => new Prestigious(),
+            FactionType.Numoric => new Numoric(),
+            FactionType.Translucent => new Translucent(),
+            FactionType.Acacia => new Acacia(),
+            FactionType.Moonlight => new Moonlight(),
+            FactionType.Krolik => new Krolik(),
+            FactionType.Tradition => new Traditon(),
+            FactionType.Ingenuity => new Ingenuity(),
+            FactionType.Armor => new Armor(),
+            FactionType.Evade => new Evade(),
+            FactionType.Vamp => new Vamp(),
+            FactionType.Wand => new Wand(),
+            FactionType.Sharpener => new Sharpener(),
+            FactionType.Knock => new Knock(),
+            FactionType.Regen => new Regen(),
+            FactionType.Elf => new Elf(),
+            FactionType.Deployables => new Deployables(),
 
             // Note: ↓ に新しい Faction を追加していく
 
