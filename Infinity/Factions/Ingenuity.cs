@@ -7,7 +7,7 @@ namespace fms.Faction;
 [GlobalClass]
 public partial class Ingenuity : FactionBase
 {
-    public override void  _Ready()
+    public override void _Ready()
     {
     }
 }
