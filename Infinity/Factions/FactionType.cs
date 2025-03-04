@@ -99,8 +99,7 @@ public static class FactionUtil
         // Is exist?
         if (!ResourceLoader.Exists(path))
         {
-            GD.PrintErr($"Failed to load texture: {path}");
-            return null;
+            return ResourceLoader.Load<Texture2D>("res://base/textures/factions/fallback.svg");
         }
 
         return ResourceLoader.Load<Texture2D>(path);
