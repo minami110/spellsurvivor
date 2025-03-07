@@ -8,12 +8,16 @@
 [ext_resource type="Script" path="res://Infinity/Core/Projectiles/StaticDamage.cs" id="4_u34iq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5kth8"]
-size = Vector2(38, 15)
+size = Vector2(38, 26)
 
 [node name="Hocho" type="Node2D"]
 script = ExtResource("1_3f756")
-_pushDistance = 65
+_pushDistance = 80
 _minRange = 15.0
+_maxRange = 120.0
+_beginAttackDuration = 6
+_pushFrontDuration = 6
+_pushBackDuration = 8
 _config = ExtResource("2_aj4em")
 
 [node name="(Editor Only) DebugDrawer" type="Node2D" parent="."]
@@ -28,7 +32,7 @@ unique_name_in_owner = true
 [node name="Sprite" type="Sprite2D" parent="AimEntity/SpriteRoot"]
 unique_name_in_owner = true
 position = Vector2(18, 0)
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.3, 0.3)
 texture = ExtResource("3_xu3dq")
 
 [node name="StaticDamage" type="Area2D" parent="AimEntity/SpriteRoot"]
@@ -38,6 +42,6 @@ collision_mask = 4
 script = ExtResource("4_u34iq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AimEntity/SpriteRoot/StaticDamage"]
-position = Vector2(30, 4)
+position = Vector2(30, 0)
 shape = SubResource("RectangleShape2D_5kth8")
 debug_color = Color(0, 0.6, 0.701961, 0)
