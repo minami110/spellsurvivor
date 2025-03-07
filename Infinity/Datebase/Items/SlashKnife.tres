@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=3 format=3 uid="uid://brbbsqheckb41"]
+
+[ext_resource type="Texture2D" uid="uid://dfxptabhlg1pr" path="res://Infinity/Weapons/Textures/katana.png" id="1_fvbln"]
+[ext_resource type="Script" path="res://Infinity/Core/WeaponConfig.cs" id="2_j7kdu"]
+
+[resource]
+script = ExtResource("2_j7kdu")
+Damage = 10
+CooldownTime = 10
+AnimationSpeedRate = 100.0
+Knockback = 0
+Faction = 64
+Tier = 1
+Price = 5
+Sprite = ExtResource("1_fvbln")
+Description = "薙ぎ"
