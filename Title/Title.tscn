@@ -16,13 +16,14 @@ font_size = 12
 [sub_resource type="LabelSettings" id="LabelSettings_55c07"]
 font_size = 50
 
-[node name="Title" type="Node" node_paths=PackedStringArray("_appNameLabel", "_appVersionLabel", "_godotVersionLabel")]
+[node name="Title" type="Node" node_paths=PackedStringArray("_appNameLabel", "_appVersionLabel", "_godotVersionLabel", "_settingsButton")]
 script = ExtResource("1_1tswy")
 _mainGameScene = "res://Infinity/Infinity.tscn"
 _titleBgm = ExtResource("4_lpogd")
 _appNameLabel = NodePath("CenterContainer/VBoxContainer/Title Group/appTitle")
 _appVersionLabel = NodePath("CenterContainer/VBoxContainer/Title Group/appVersion")
 _godotVersionLabel = NodePath("powerdbygodot")
+_settingsButton = NodePath("CenterContainer/VBoxContainer/VBox Button Menu/SettingsButton")
 
 [node name="BG" type="Panel" parent="."]
 anchors_preset = 15

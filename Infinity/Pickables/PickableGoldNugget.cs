@@ -6,13 +6,13 @@ namespace fms;
 public partial class PickableGoldNugget : Node2D
 {
     [Export]
-    private uint _amount = 10;
+    private uint _amount = 1;
 
     [Export]
     private double _attractionSec = 0.4d;
 
     [Export]
-    private AudioStream _pickSound = null!;
+    private AudioStream? _pickSound;
 
     private Vector2 _attractionStartPosition;
     private Tween? _idlingAnimationTween;
@@ -56,12 +56,15 @@ public partial class PickableGoldNugget : Node2D
         // ToDo: Pick 時のパーティクルの再生
 
         // Pick 時のサウンドの再生
-        SoundManager.PlaySoundEffect(_pickSound);
+        if (_pickSound != null)
+        {
+            SoundManager.PlaySoundEffect(_pickSound);
+        }
 
         // Player の GoldNugget を増加
         if (_targetNode is EntityPlayer player)
         {
-            //  pass
+            player.State.AddGoldNugget(_amount);
         }
 
         QueueFree();
