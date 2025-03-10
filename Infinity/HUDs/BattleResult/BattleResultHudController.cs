@@ -35,14 +35,16 @@ internal partial class BattleResultHudController : Node
                 // 1 .現在の GoldNugget を換金する
                 // https://scrapbox.io/FUMOSurvivor/%E3%82%B4%E3%83%BC%E3%83%AB%E3%83%89%E3%83%8A%E3%82%B2%E3%83%83%E3%83%88%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB
                 // TODO: 仮の処理, 10 GoldNugget を 1 Money に換金して減らす
-                var next = 10u;
+                var goldNuggetShopLevel = Main.GoldNuggetShop.ShopLevel;
+                var nextGoldNugget = GoldNuggetShop.GetGoldNuggetAmount(goldNuggetShopLevel);
                 var prevGoldNugget = playerState.GoldNugget.CurrentValue;
-                while (prevGoldNugget >= next)
+                while (nextGoldNugget <= prevGoldNugget)
                 {
                     willMoney += 1;
                     goldNuggetPlus += 1;
-                    prevGoldNugget -= next;
-                    next = 10;
+                    prevGoldNugget -= nextGoldNugget;
+                    goldNuggetShopLevel += 1;
+                    nextGoldNugget = GoldNuggetShop.GetGoldNuggetAmount(goldNuggetShopLevel);
                 }
 
                 // 2. 現在の所持金から利子を発生させる

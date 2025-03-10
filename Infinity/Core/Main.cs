@@ -12,10 +12,17 @@ public partial class Main : Node
     private InfinityGameSettings _gameSettings = null!;
 
     private static Main? _instance;
+    private GoldNuggetShop _goldNuggetShop = null!;
 
     private EntityState _playerState = null!;
     private Shop _shop = null!;
     private WaveState _waveState = null!;
+
+    public static GoldNuggetShop GoldNuggetShop
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Instance._goldNuggetShop;
+    }
 
     public static Shop Shop
     {
@@ -60,6 +67,8 @@ public partial class Main : Node
         AddChild(_waveState);
         _shop = new Shop(_gameSettings.ShopConfig);
         AddChild(_shop);
+        _goldNuggetShop = new GoldNuggetShop();
+        AddChild(_goldNuggetShop);
     }
 
     public override void _Ready()
@@ -124,16 +133,15 @@ public partial class Main : Node
             if (self._waveState.Wave.CurrentValue >= 0)
             {
                 // 1 .現在の GoldNugget を換金する
-                // https://scrapbox.io/FUMOSurvivor/%E3%82%B4%E3%83%BC%E3%83%AB%E3%83%89%E3%83%8A%E3%82%B2%E3%83%83%E3%83%88%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB
-                // TODO: 仮の処理, 10 GoldNugget を 1 Money に換金して減らす
-                var next = 10;
                 var current = self._playerState.GoldNugget.CurrentValue;
-                while (current >= next)
+                var next = _goldNuggetShop.ExchangeGoldNugget(current);
+                while (next > 0)
                 {
                     self._playerState.AddMoney(1);
                     self._playerState.AddGoldNugget((uint)-next);
-                    next = 10;
+
                     current = self._playerState.GoldNugget.CurrentValue;
+                    next = _goldNuggetShop.ExchangeGoldNugget(current);
                 }
 
                 // 2. 現在の所持金から利子を発生させる

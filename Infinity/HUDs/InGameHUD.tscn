@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://bali3cj5bhs2q"]
+[gd_scene load_steps=13 format=3 uid="uid://bali3cj5bhs2q"]
 
 [ext_resource type="Script" path="res://Infinity/HUDs/InGameHUD.cs" id="1_6o03e"]
 [ext_resource type="Texture2D" uid="uid://cxvitewt46k05" path="res://Common/Resources/Textures/white_4x4_srgb.png" id="2_l31n5"]
 [ext_resource type="PackedScene" uid="uid://bycglxvkrnadg" path="res://Infinity/HUDs/InGameEquipment.tscn" id="4_1mss2"]
 [ext_resource type="FontFile" uid="uid://b13jmbc8o7ebo" path="res://base/fonts/Verdana.ttf" id="4_hsb5i"]
+[ext_resource type="PackedScene" uid="uid://smdg3xhbf7gc" path="res://Infinity/HUDs/in_game/gold_nugget_progress_bar.tscn" id="5_8ju7o"]
 [ext_resource type="PackedScene" uid="uid://28gdcb4eskv" path="res://Infinity/HUDs/Factions/ActiveFactionHud.tscn" id="5_26dji"]
 [ext_resource type="PackedScene" uid="uid://3cf1cbaj3tc7" path="res://Infinity/HUDs/PlayerStatusHud.tscn" id="6_8q06y"]
 [ext_resource type="PackedScene" uid="uid://618nuo8aeq2m" path="res://Infinity/HUDs/DamageInfo/DamageInfo.tscn" id="7_d473p"]
@@ -91,14 +92,11 @@ size_flags_horizontal = 8
 text = "NA/NA"
 label_settings = SubResource("LabelSettings_ntlvd")
 
-[node name="GoldNuggetLabel" type="Label" parent="Container"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 51.0
-offset_top = 93.0
-offset_right = 181.0
-offset_bottom = 116.0
-text = "GoldNugget: N/A"
+[node name="GoldNuggetProgressBar" parent="Container" instance=ExtResource("5_8ju7o")]
+offset_left = 50.0
+offset_top = 100.0
+offset_right = 350.0
+offset_bottom = 150.0
 
 [node name="Top VBoxContainer" type="VBoxContainer" parent="Container"]
 layout_mode = 1
