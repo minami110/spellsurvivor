@@ -12,6 +12,7 @@ public partial class EntityState : Node, IAttributeDictionary
 {
     private readonly Dictionary<string, Variant> _attributes = new();
     private readonly EntityAttribute<float> _dodgeRate;
+    private readonly EntityAttribute<uint> _goldNugget;
     private readonly EntityHealth _health;
     private readonly EntityAttribute<uint> _money;
     private readonly EntityAttribute<float> _moveSpeed;
@@ -21,6 +22,10 @@ public partial class EntityState : Node, IAttributeDictionary
     /// 現在の所持金
     /// </summary>
     public ReadOnlyEntityAttribute<uint> Money => _money;
+
+    /// <summary>
+    /// </summary>
+    public ReadOnlyEntityAttribute<uint> GoldNugget => _goldNugget;
 
     /// <summary>
     /// 現在の移動速度
@@ -49,6 +54,9 @@ public partial class EntityState : Node, IAttributeDictionary
         _health = new EntityHealth(maxHealth, maxHealth);
         _moveSpeed = new EntityAttribute<float>(moveSpeed);
         _dodgeRate = new EntityAttribute<float>(dodgeRate);
+
+        // 以下は引数に未対応
+        _goldNugget = new EntityAttribute<uint>(0);
     }
 
     public override void _Notification(int what)
@@ -56,9 +64,14 @@ public partial class EntityState : Node, IAttributeDictionary
         if (what == NotificationExitTree)
         {
             // Reactive Properties の Dispose をまとめる
-            var d = Disposable.Combine(_money, _moveSpeed, _health, _dodgeRate);
+            var d = Disposable.Combine(_money, _goldNugget, _moveSpeed, _health, _dodgeRate);
             d.Dispose();
         }
+    }
+
+    public void AddGoldNugget(uint amount)
+    {
+        _goldNugget.SetCurrentValue(_goldNugget.CurrentValue + amount);
     }
 
     public void AddMoney(uint amount)

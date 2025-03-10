@@ -32,6 +32,9 @@ public partial class EntityEnemy : RigidBody2D, IEntity
     [Export(PropertyHint.Range, "0,1000,1")]
     private protected float BaseDamage { get; private set; } = 10f;
 
+    [Export(PropertyHint.Range, "1,20,1")]
+    private protected int GoldNuggetDropCount { get; private set; } = 1;
+
     /// <summary>
     /// 現在の Enemy のLevel, Main Game では Spawner から自動で代入される
     /// </summary>
@@ -193,6 +196,15 @@ public partial class EntityEnemy : RigidBody2D, IEntity
         onDeadParticle.GlobalPosition = GlobalPosition;
         GetParent().CallDeferred(Node.MethodName.AddChild, onDeadParticle);
         onDeadParticle.Emitting = true;
+
+        // ゴールドナゲットをスポーンする
+        var gold_nugget = GD.Load<PackedScene>("res://Infinity/Pickables/pickable_gold_nugget.tscn");
+        for (var i = 0; i < GoldNuggetDropCount; i++)
+        {
+            var nugget = gold_nugget.Instantiate<Node2D>();
+            nugget.GlobalPosition = GlobalPosition;
+            GetParent().CallDeferred(Node.MethodName.AddChild, nugget);
+        }
 
         // Scale を小さく, くるくる回転させる Tween を再生する
         // Note: sprite をいじる, this を対象にすると Knockback がのらなくなる

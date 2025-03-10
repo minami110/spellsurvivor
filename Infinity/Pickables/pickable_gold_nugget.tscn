@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://dqxb3kxdhbad6"]
+
+[ext_resource type="Script" path="res://Infinity/Pickables/PickableGoldNugget.cs" id="1_dpja2"]
+[ext_resource type="Script" path="res://Infinity/Pickables/PickableAnimator.cs" id="2_dtpqa"]
+[ext_resource type="Texture2D" uid="uid://b58t0b5v02a42" path="res://base/textures/pickables/gold_nugget_a.svg" id="6_reb42"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ko4ev"]
+radius = 30.0
+
+[node name="PickableGoldNugget" type="Node2D"]
+script = ExtResource("1_dpja2")
+
+[node name="PickableAnimator" type="Node" parent="." node_paths=PackedStringArray("_sprite")]
+script = ExtResource("2_dtpqa")
+_sprite = NodePath("../Sprite")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("6_reb42")
+
+[node name="AttractionArea" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape" type="CollisionShape2D" parent="AttractionArea"]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_ko4ev")
+debug_color = Color(0, 0.6, 0.701961, 0)

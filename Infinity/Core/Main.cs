@@ -123,7 +123,27 @@ public partial class Main : Node
         {
             if (self._waveState.Wave.CurrentValue >= 0)
             {
-                // Playerに報酬を与える
+                // 1 .現在の GoldNugget を換金する
+                // https://scrapbox.io/FUMOSurvivor/%E3%82%B4%E3%83%BC%E3%83%AB%E3%83%89%E3%83%8A%E3%82%B2%E3%83%83%E3%83%88%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB
+                // TODO: 仮の処理, 10 GoldNugget を 1 Money に換金して減らす
+                var next = 10;
+                var current = self._playerState.GoldNugget.CurrentValue;
+                while (current >= next)
+                {
+                    self._playerState.AddMoney(1);
+                    self._playerState.AddGoldNugget((uint)-next);
+                    next = 10;
+                    current = self._playerState.GoldNugget.CurrentValue;
+                }
+
+                // 2. 現在の所持金から利子を発生させる
+                // 現在の所持金 の 10% の切り捨て, 最大 5 まで
+                // 32 => 3, 48 => 4, 96 => 5
+                current = self._playerState.Money.CurrentValue;
+                var interest = (uint)Mathf.Min(Mathf.Floor(current * 0.1f), 5.0);
+                self._playerState.AddMoney(interest);
+
+                // 3. Wave 報酬を与える
                 var reward = self._waveState.CurrentWaveConfig.Reward;
                 self._playerState.AddMoney((uint)reward);
             }
