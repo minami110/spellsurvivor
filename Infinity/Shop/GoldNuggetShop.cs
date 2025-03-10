@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Godot;
 
 namespace fms;
@@ -21,7 +22,7 @@ public partial class GoldNuggetShop : Node
     // 換金時に内部の ShopLevel が1増加して次の換金レートが高くなっていく
     public uint ExchangeGoldNugget(uint amount)
     {
-        var exchangeAmount = GetNextGoldNuggetAmount();
+        var exchangeAmount = GetGoldNuggetAmount(ShopLevel);
         if (amount < exchangeAmount)
         {
             return 0;
@@ -33,18 +34,12 @@ public partial class GoldNuggetShop : Node
 
     public static uint GetGoldNuggetAmount(int idx)
     {
-        if (idx < 0 || idx >= NuggetTable.Count)
+        if (idx < 0)
         {
-            return NuggetTable[^1];
+            throw new ArgumentOutOfRangeException(nameof(idx), "Index must be greater than or equal to 0");
         }
 
-        return NuggetTable[idx];
-    }
-
-    // 次の換金に必要な GoldNugget の量
-    public uint GetNextGoldNuggetAmount()
-    {
-        // 事前定義したものテーブルを超えたら最後の値を返し続ける
-        return ShopLevel >= NuggetTable.Count ? NuggetTable[^1] : NuggetTable[ShopLevel];
+        // 範囲が不正なら最後の値を返す
+        return idx >= NuggetTable.Count ? NuggetTable[^1] : NuggetTable[idx];
     }
 }
