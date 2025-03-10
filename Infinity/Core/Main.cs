@@ -128,10 +128,12 @@ public partial class Main : Node
                 // TODO: 仮の処理, 10 GoldNugget を 1 Money に換金して減らす
                 var next = 10;
                 var current = self._playerState.GoldNugget.CurrentValue;
-                if (current >= next)
+                while (current >= next)
                 {
                     self._playerState.AddMoney(1);
                     self._playerState.AddGoldNugget((uint)-next);
+                    next = 10;
+                    current = self._playerState.GoldNugget.CurrentValue;
                 }
 
                 // 2. 現在の所持金から利子を発生させる
