@@ -35,6 +35,9 @@ public sealed partial class InGameHUD : CanvasLayer
         var d1 = playerState.Health.ChangedCurrentValue.Subscribe(OnHealthChanged);
         var d2 = playerState.Health.ChangedMaxValue.Subscribe(OnHealthChanged);
 
+        // Subscribe player goldnugget
+        var d3 = playerState.GoldNugget.ChangedCurrentValue.Subscribe(OnGoldNuggetChanged);
+
         // Subscribe wave info
         var ws = Main.WaveState;
         var d4 = ws.BattlePhaseTimeLeft.Subscribe(x => _waveTimerLabel.Text = $"{x:000}");
@@ -52,8 +55,9 @@ public sealed partial class InGameHUD : CanvasLayer
             }
         });
 
+
         // Add disposables when this node is exited tree
-        Disposable.Combine(d1, d2, d4, d5).AddTo(this);
+        Disposable.Combine(d1, d2, d3, d4, d5).AddTo(this);
     }
 
     private void OnBattleWaveEnded()
@@ -92,6 +96,11 @@ public sealed partial class InGameHUD : CanvasLayer
 
         // Show
         Show();
+    }
+
+    private void OnGoldNuggetChanged(uint v)
+    {
+        GetNode<Label>("%GoldNuggetLabel").Text = $"GoldNugget: {v.ToString()}";
     }
 
     private void OnHealthChanged(uint _)

@@ -91,6 +91,15 @@ size_flags_horizontal = 8
 text = "NA/NA"
 label_settings = SubResource("LabelSettings_ntlvd")
 
+[node name="GoldNuggetLabel" type="Label" parent="Container"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 51.0
+offset_top = 93.0
+offset_right = 181.0
+offset_bottom = 116.0
+text = "GoldNugget: N/A"
+
 [node name="Top VBoxContainer" type="VBoxContainer" parent="Container"]
 layout_mode = 1
 anchors_preset = 5
